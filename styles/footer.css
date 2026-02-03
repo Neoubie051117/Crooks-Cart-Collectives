@@ -1,0 +1,115 @@
+.footer {
+  background-color: var(--color-background-B);
+  padding: var(--size-header-padding);
+  box-shadow: var(--effect-box-shadow-default);
+  border-top: 2px solid var(--color-border-A);
+  width: 100vw !important;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  margin: 0 !important;
+}
+
+.footer-upper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--size-navigation-gap);
+  margin: 0;
+  color: var(--color-text-B);
+}
+
+.queries {
+  max-width: 50%;
+  color: var(--color-text-A);
+}
+
+.queries h2 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.queries span {
+  color: var(--color-accent-A);
+}
+
+.socials {
+  display: flex;
+  gap: var(--size-navigation-gap);
+}
+
+.socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.socials a img {
+  width:  40px;
+  height: 40px;
+}
+
+.footer-lower {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 0;
+  font-size: var(--font-size-base);
+  margin-top: 20px;
+  border-top: 2px solid var(--color-border-A);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mail-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--color-text-A);
+}
+
+.mail-button img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0);
+}
+
+.policy-links {
+  display: flex;
+  gap: var(--size-navigation-gap);
+  padding: 5px 0;
+}
+
+.policy-links a {
+  color: var(--color-text-A);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.policy-links a:hover {
+  color: var(--color-accent-A);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .policy-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .footer-lower {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mail-button {
+    margin-bottom: 10px;
+  }
+}

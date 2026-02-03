@@ -1,0 +1,1726 @@
+Web Project: Crooks-Cart-Collectives
+Preset: All Files
+Generated: 2026-02-03 22:14:42
+
+=== File: Crooks-Cart-Collectives/index.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Header-related CSS and PHP -->
+    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
+    <script defer src="/Barangay-System/scripts/header.js"></script>
+    <?php include_once('./pages/header.php'); ?>
+
+    <!-- Index (current page) CSS and PHP -->
+    <link rel="stylesheet" href="/Barangay-System/styles/index.css">
+    <script defer src="/Barangay-System/scripts/index.js"></script>
+
+    <!-- Footer-related CSS and PHP -->
+    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+
+</head>
+
+<body>
+
+    <div class="content">
+
+        <!-- Upper Background Hook -->
+        <section class="quoteSection">
+            <div class="quoteImageShowcase" id="quoteImageShowcase"
+                style="background-image: url('/Barangay-System/assets/Showcase1.png');"></div>
+            <div class="quoteText" id="quoteText">
+                <h1>Burden becomes lighter when <span>everyone</span> helps</h1>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <section class="body-content">
+            <div class="image-container">
+                <img src="/Barangay-System/assets/BodyContentImage.png" alt="Body Content">
+            </div>
+
+            <div class="text-container">
+                <div class="title-container">
+                    <div class="vertical-line"></div>
+                    <h2>Community Introductions</h2>
+                </div>
+                <p>Welcome to the official portal of our barangay. We are dedicated to serving the needs of our
+                    community through transparent governance and efficient public service</p>
+                <p>This digital platform was created to bring our services closer to you, making it easier for every
+                    resident to connect with the barangay anytime and anywhere.</p>
+                <a href="https://www.cainta.gov.ph/newsandarticles" class="join-button" target="_blank">EXPLORE</a>
+            </div>
+
+        </section>
+
+    </div>
+
+    <?php include_once('./pages/footer.php'); ?>
+</body>
+
+</html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/complaint.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+include_once('./header.php');
+require_once(__DIR__ . '/../database/database-connect.php');
+
+// Fetch resident ID from session using username
+$residentID = null;
+
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $query = $connection->prepare("SELECT residentID FROM residents WHERE username = :username");
+    $query->execute([':username' => $username]);
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+        $residentID = (int)$result['residentID'];
+    }
+}
+
+// Get resident's full name using resident ID
+function getResidentName($connection, $residentID) {
+    $query = $connection->prepare("SELECT firstName, middleName, lastName FROM residents WHERE residentID = :residentID");
+    $query->execute([':residentID' => $residentID]);
+    $resident = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($resident) {
+        $name = htmlspecialchars($resident['firstName']);
+        if (!empty($resident['middleName'])) {
+            $name .= ' ' . htmlspecialchars($resident['middleName']);
+        }
+        $name .= ' ' . htmlspecialchars($resident['lastName']);
+        return $name;
+    }
+    return 'Unknown Resident';
+}
+
+// Load complaints from JSON files
+$complaints = [];
+$baseDir = realpath(__DIR__ . '/../database/user-data');
+
+if ($baseDir && is_dir($baseDir)) {
+    $residentDirs = array_diff(scandir($baseDir), ['.', '..']);
+    foreach ($residentDirs as $residentFolderID) {
+        $complaintDir = $baseDir . '/' . $residentFolderID . '/complaint';
+        if (is_dir($complaintDir)) {
+            $complaintFiles = array_diff(scandir($complaintDir), ['.', '..']);
+            foreach ($complaintFiles as $file) {
+                if (pathinfo($file, PATHINFO_EXTENSION) === 'json') {
+                    $filePath = $complaintDir . '/' . $file;
+                    $jsonData = file_get_contents($filePath);
+                    $complaint = json_decode($jsonData, true);
+                    if ($complaint) {
+                        $complaint['fileName'] = $file;
+                        $complaint['filePath'] = $filePath;
+                        $complaints[] = $complaint;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sort complaints by submittedAt (latest first)
+    usort($complaints, function($a, $b) {
+        return strtotime($b['submittedAt']) - strtotime($a['submittedAt']);
+    });
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Complaints</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/complaint-page.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+
+    <!-- Scripts -->
+    <script defer src="/Barangay-System/scripts/header.js"></script>
+
+</head>
+
+<script>
+const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['residentID']) : 'null' ?>;
+</script>
+
+<body>
+    <div class="content">
+        <h1 class="page-title">Community Complaints</h1>
+
+        <div class="complaints-container">
+            <?php if (empty($complaints)): ?>
+            <div class="no-complaints">No complaints have been submitted yet.</div>
+            <?php else: ?>
+            <?php foreach ($complaints as $complaint): ?>
+            <?php
+                        $authorName = getResidentName($connection, $complaint['residentID']);
+                        $submittedDate = date('F j, Y, g:i a', strtotime($complaint['submittedAt']));
+                    ?>
+            <div class="complaint-card">
+                <div class="complaint-header">
+                    <h3 class="complaint-about"><?= htmlspecialchars($complaint['about']) ?></h3>
+                    <div class="complaint-author">Submitted by: <?= $authorName ?></div>
+                    <div class="complaint-date"><?= $submittedDate ?></div>
+                </div>
+                <div class="complaint-body">
+                    <p><?= nl2br(htmlspecialchars($complaint['message'])) ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <button id="openComplaintButton" class="floating-complaint-button">
+        <img src="/Barangay-System/assets/complaint-icon.png" alt="Complaint"> File a Complaint
+    </button>
+
+    <!-- Complaint Modal Overlay -->
+    <div id="complaintOverlay" class="complaint-overlay">
+        <div class="complaint-modal">
+            <form id="complaintForm" class="complaint-form">
+                <h2>File a Complaint</h2>
+                <button type="button" id="closeComplaint" class="close-button">×</button>
+
+                <div class="form-group">
+                    <label for="complaint-about">About:</label>
+                    <input type="text" id="complaint-about" name="complaintAbout" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="complaint-text">Complaint:</label>
+                    <textarea id="complaint-text" name="complaintText" rows="6" required></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" id="cancelComplaint" class="cancel-button">Cancel</button>
+                    <button type="submit" class="submit-button">Submit Complaint</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/Barangay-System/scripts/complaint-form.js"></script>
+
+    <?php include_once('../pages/footer.php'); ?>
+</body>
+
+</html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/footer.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<footer class="footer">
+    <div class="footer-upper">
+        <div class="queries">
+            <h2>For more <span>inqiuries</span> & <span>questions</span></h2>
+            <h2>Visit our <span>FAQs</span> in our <span>socials</span></h2>
+        </div>
+        <div class="socials">
+            <a href="https://web.facebook.com/share/g/1EbBqNZHcK/" target="_blank"><img
+                    src="/Barangay-System/assets/icons8-facebook.svg" alt="Facebook"></a>
+            <a href="https://www.instagram.com/explore/locations/277280053/cainta-municipal-hall-caintarizal/?utm_source"
+                target="_blank"><img src="/Barangay-System/assets/icons8-instagram.svg" alt="Instagram"></a>
+            <a href="https://youtu.be/IXPuSHtnImE?si=PDIWER9ZU_M5NEuq" target="_blank"><img
+                    src="/Barangay-System/assets/icons8-youtube.svg" alt="Youtube"></a>
+        </div>
+    </div>
+    <div class="footer-lower">
+        <div class="mail-button">
+            <img src="/Barangay-System/assets/mail.svg" alt="Mail">
+            <span>vist-us@baranggay-system.com</span>
+        </div>
+        <div class="policy-links">
+            <a href="/Barangay-System/privacy-policy.html">Privacy Policy</a>
+            <a href="/Barangay-System/terms-and-conditions.html">Terms & Conditions</a>
+        </div>
+    </div>
+</footer>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/header.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userRole = $isLoggedIn ? $_SESSION['is_verified'] : -1;
+?>
+
+<header class="header-bar no-transition">
+    <div class="header-logo">
+        <img id="logo" src="/Barangay-System/assets/Logo.png" alt="Logo" style="opacity: 0; visibility: hidden;">
+        <div class="title">Bara<span>ngay</span> Sys<span>tem</span></div>
+    </div>
+    <button class="hamburger-menu" id="menuButton" aria-label="Toggle menu">
+        <img src="/Barangay-System/assets/hamburger-menu.svg" alt="Menu icon" class="hamburger-icon">
+    </button>
+    <div class="nav-container">
+        <nav class="nav-bar">
+            <?php if ($isLoggedIn && $userRole == 2): ?>
+            <a href="/Barangay-System/pages/workdesk.php" class="nav-link">WORKDESK</a>
+            <?php endif; ?>
+            <?php if ($isLoggedIn && $userRole == 3): ?>
+            <a href="/Barangay-System/pages/admin-dashboard.php" class="nav-link">ADMIN</a>
+            <?php endif; ?>
+
+            <?php if ($isLoggedIn): ?>
+            <a href="/Barangay-System/pages/home.php" class="nav-link">HOME</a>
+            <a href="/Barangay-System/pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+            <a href="/Barangay-System/pages/complaint.php" class="nav-link">COMPLAINTS</a>
+            <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+            <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
+            <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
+            <?php else: ?>
+            <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+            <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
+            <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
+            <?php endif; ?>
+        </nav>
+
+        <?php if ($isLoggedIn): ?>
+        <a href="/Barangay-System/database/sign-out-handler.php" class="sign-in">LOGOUT</a>
+        <?php else: ?>
+        <a href="/Barangay-System/pages/sign-in.php" class="sign-in">SIGN IN</a>
+        <?php endif; ?>
+    </div>
+</header>
+
+<nav class="mobile-nav no-transition" id="mobileNav">
+    <?php if ($isLoggedIn && $userRole == 2): ?>
+    <a href="/Barangay-System/pages/workdesk.php" class="nav-link">WORKDESK</a>
+    <?php endif; ?>
+    <?php if ($isLoggedIn && $userRole == 3): ?>
+    <a href="/Barangay-System/pages/admin-dashboard.php" class="nav-link">ADMIN</a>
+    <?php endif; ?>
+
+    <?php if ($isLoggedIn): ?>
+    <a href="/Barangay-System/pages/home.php" class="nav-link">HOME</a>
+    <a href="/Barangay-System/pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+    <a href="/Barangay-System/pages/complaint.php" class="nav-link">COMPLAINTS</a>
+    <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+    <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
+    <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
+    <a href="/Barangay-System/database/sign-out-handler.php" class="sign-in">LOG OUT</a>
+    <?php else: ?>
+    <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+    <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
+    <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
+    <a href="/Barangay-System/pages/sign-in.php" class="sign-in">SIGN IN</a>
+    <?php endif; ?>
+</nav>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/home.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+// Start session and include database connection
+include_once('./header.php');
+require_once('../database/database-connect.php');
+
+// Modified session check to match old version's approach
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
+    header('Location: sign-in.php');
+    exit;
+}
+
+// Fetch resident data from database using username
+try {
+    $username = $_SESSION['username'];
+    $stmt = $connection->prepare("SELECT * FROM residents WHERE username = :username");
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->execute();
+    $resident = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$resident) {
+        throw new Exception("Resident not found");
+    }
+    
+    // Store residentID in session for future use
+    $_SESSION['residentID'] = $resident['residentID'];
+    
+    // Calculate age from birthdate
+    $birthdate = new DateTime($resident['birthdate']);
+    $today = new DateTime();
+    $age = $today->diff($birthdate)->y;
+    
+    // Format registration date
+    $dateRegistered = new DateTime($resident['dateRegistered']);
+    $formattedDate = $dateRegistered->format('F j, Y');
+    
+    // Format resident ID
+    $residentIDFormatted = 'BAR-' . date('Y', strtotime($resident['dateRegistered'])) . '-' . str_pad($resident['residentID'], 5, '0', STR_PAD_LEFT);
+    
+    // Get first name for welcome message
+    $firstName = $resident['firstName'];
+    
+    // Generate initials for avatar
+    $initials = substr($resident['firstName'], 0, 1) . substr($resident['lastName'], 0, 1);
+    
+    // Verification status
+    $verificationStatus = $resident['isVerified'] ? 'Verified' : 'Pending';
+    $statusClass = $resident['isVerified'] ? 'status-verified' : 'status-pending';
+    
+    // Handle profile image
+    $proofPath = $resident['proofOfResidencyPath'];
+    $relativeImagePath = '/Barangay-System/' . $proofPath;
+    $absolutePath = realpath(__DIR__ . '/../' . $proofPath);
+    
+    if (!$proofPath || !file_exists($absolutePath)) {
+        $relativeImagePath = '/Barangay-System/assets/images/default-profile.png';
+    }
+    
+} catch (Exception $e) {
+    // Handle errors gracefully
+    error_log("Error fetching resident data: " . $e->getMessage());
+    $errorMessage = "Unable to load profile data. Please try again later.";
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Profile - Barangay System</title>
+
+    <!-- FIXED Styles -->
+    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/home.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+
+    <!-- FIXED Scripts -->
+    <script defer src="/Barangay-System/scripts/header.js"></script>
+    <script defer src="/Barangay-System/scripts/home.js"></script>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <div class="content">
+        <?php if(isset($errorMessage)): ?>
+        <div class="error-message">
+            <?php echo $errorMessage; ?>
+        </div>
+        <?php else: ?>
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <img src="<?php echo $relativeImagePath; ?>" alt="Profile Picture" class="formal-picture">
+            <div class="welcome-text">Welcome, <?php echo $firstName; ?>!</div>
+            <div class="resident-id">Resident ID: <?php echo $residentIDFormatted; ?></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-button" id="complaintButton">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                    stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    <path d="M8 7h6"></path>
+                    <path d="M8 11h8"></path>
+                </svg>
+                <span>File Complaint</span>
+            </button>
+            <button class="action-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                    stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Request Document</span>
+            </button>
+            <button class="action-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                    stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>View Events</span>
+            </button>
+        </div>
+
+        <!-- Resident Information -->
+        <section class="info-section">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="info-grid">
+                <!-- Column 1 -->
+                <div class="info-column">
+                    <div class="info-item">
+                        <span class="info-label">Full Name:</span>
+                        <span
+                            class="info-value"><?php echo $resident['firstName'] . ' ' . $resident['middleName'] . ' ' . $resident['lastName']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Birthdate:</span>
+                        <span
+                            class="info-value"><?php echo date('F j, Y', strtotime($resident['birthdate'])) . ' (Age: ' . $age . ')'; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Gender:</span>
+                        <span class="info-value"><?php echo $resident['gender']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Civil Status:</span>
+                        <span class="info-value"><?php echo $resident['civilStatus']; ?></span>
+                    </div>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="info-column">
+                    <div class="info-item">
+                        <span class="info-label">Contact Number:</span>
+                        <span class="info-value"><?php echo $resident['contact']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value"><?php echo $resident['email']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Nationality:</span>
+                        <span class="info-value"><?php echo $resident['nationality']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Resident Type:</span>
+                        <span class="info-value"><?php echo $resident['residentType']; ?></span>
+                    </div>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="info-column">
+                    <div class="info-item">
+                        <span class="info-label">Address:</span>
+                        <span
+                            class="info-value"><?php echo $resident['houseStreet'] . ', ' . $resident['barangay']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value"><?php echo $resident['username']; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date Registered:</span>
+                        <span class="info-value"><?php echo $formattedDate; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Verification Status:</span>
+                        <span class="info-value <?php echo $statusClass; ?>"><?php echo $verificationStatus; ?></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Actions -->
+        <section class="actions-section">
+            <h2 class="section-title">Account Actions</h2>
+            <div class="action-buttons">
+                <button class="account-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                        stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                    </svg>
+                    <span>Edit Profile</span>
+                </button>
+                <button class="account-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                        stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                        </path>
+                    </svg>
+                    <span>Change Password</span>
+                </button>
+                <button class="account-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                        stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span>View History</span>
+                </button>
+            </div>
+        </section>
+        <?php endif; ?>
+    </div>
+
+    </div>
+
+    <?php include_once('./footer.php'); ?>
+</body>
+
+</html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/sign-in.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+
+    <?php include_once('../pages/header.php'); ?>
+    <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/sign-in.css">
+    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+</head>
+
+<body>
+
+
+    <div class="content">
+        <div class="pageTitleHeader">Account Log In</div>
+
+        <form id="loginForm" class="section" method="POST" autocomplete="on"
+            action="/Barangay-System/database/sign-in-handler.php">
+            <!-- Username/Email -->
+            <div class="group">
+                <label for="usernameOrEmail">Username or Email</label>
+                <input type="text" id="usernameOrEmail" name="usernameOrEmail" required autocomplete="username">
+            </div>
+
+            <!-- Password -->
+            <div class="group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="loginPassword" required autocomplete="current-password">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="btn-container">
+                <button type="submit" class="btn submit-btn">Log In</button>
+            </div>
+
+            <div id="notifierModal" class="notifier hidden">
+                <div class="notifier-content">
+                    <p id="notifierMessage"></p>
+                    <button id="notifierCloseBtn" class="btn" type="button">OK</button>
+                </div>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="sign-up-link-container">
+                <p>
+                    Don't have an account?
+                    <a href="/Barangay-System/pages/sign-up.php" class="sign-up-colored-link">Sign Up</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <?php include_once('../pages/footer.php'); ?>
+
+    <!-- Scripts -->
+    <script src="/Barangay-System/scripts/header.js"></script>
+    <script src="/Barangay-System/scripts/sign-in.js"></script>
+</body>
+
+</html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/pages/sign-up.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+
+        <!--Database Related PHP-->
+        <?php include_once('./header.php'); ?>
+        <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
+        <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
+
+        <!-- Header-related CSS and PHP -->
+        <link rel="stylesheet" href="/Barangay-System/styles/header.css">
+        <script defer src="/Barangay-System/scripts/header.js"></script>
+
+        <!-- Sign Up (current page) CSS and JS -->
+        <link rel="stylesheet" href="/Barangay-System/styles/sign-up.css">
+        <script defer src="/Barangay-System/scripts/sign-up.js"></script>
+
+        <!-- Footer-related CSS and PHP -->
+        <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+
+    </head>
+
+    <body>
+
+        <div class="content">
+            <div class="pageTitleHeader">Registration</div>
+
+            <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
+
+                <!-- Upload Proof of Residency -->
+                <div class="section">
+                    <div class="section-title">Proof of Residency</div>
+
+                    <div class="group image-upload">
+                        <img id="imageFormalPicturePreview" class="image-preview"
+                            src="/Barangay-System/assets/Formal-Picture.png" alt="Upload Formal Picture Preview">
+                        <label for="imageFormalPictureUpload">Upload Formal Picture</label>
+                        <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload"
+                            accept="image/*" required autocomplete="off">
+                    </div>
+
+                    <div class="group image-upload">
+                        <img id="imageResidencyProofPreview" class="image-preview"
+                            src="/Barangay-System/assets/Valid-id-icon.png" alt="Valid ID Preview">
+                        <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
+                        <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload"
+                            accept="image/*" required autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="section">
+                    <div class="section-title">Personal Information</div>
+
+                    <div class="group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="Juan"
+                            autocomplete="given-name">
+                    </div>
+
+                    <div class="group">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
+                            autocomplete="additional-name">
+                    </div>
+
+                    <div class="group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
+                            autocomplete="family-name">
+                    </div>
+
+                    <div class="group">
+                        <label for="birthdate">Birthdate</label>
+                        <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
+                    </div>
+
+                    <div class="group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required autocomplete="sex">
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Contact and Account Details -->
+                <div class="section">
+                    <div class="section-title">Contact and Account Details</div>
+
+                    <div class="group">
+                        <label for="contact">Contact Number</label>
+                        <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
+                            autocomplete="tel">
+                    </div>
+
+                    <div class="group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="example@mail.com"
+                            autocomplete="email">
+                    </div>
+
+                    <div class="group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Do not use real name"
+                            autocomplete="username">
+                    </div>
+
+                    <div class="group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="new-password">
+                    </div>
+
+                    <div class="group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                            autocomplete="new-password">
+                    </div>
+                </div>
+
+                <!-- Address and Demographics -->
+                <div class="section" id="bottom-section">
+                    <div class="section-title">Address and Demographics</div>
+
+                    <div class="group">
+                        <label for="houseStreet">House/Lot No. & Street</label>
+                        <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
+                            autocomplete="street-address">
+                    </div>
+
+                    <div class="group">
+                        <label for="barangay">Barangay</label>
+                        <select id="barangay" name="barangay" required autocomplete="off">
+                            <option value="" disabled selected>Select Barangay</option>
+                            <option value="San Andres">San Andres</option>
+                            <option value="Santo Domingo">Santo Domingo</option>
+                            <option value="San Isidro">San Isidro</option>
+                            <option value="San Juan">San Juan</option>
+                            <option value="San Roque">San Roque</option>
+                            <option value="Santa Rosa">Santa Rosa</option>
+                            <option value="Santo Niño">Santo Niño</option>
+
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label for="residentType">Resident Type</label>
+                        <select id="residentType" name="residentType" required autocomplete="off">
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Tenant">Tenant</option>
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label for="civilStatus">Civil Status</label>
+                        <select id="civilStatus" name="civilStatus" required autocomplete="off">
+                            <option value="" disabled selected>Select</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label for="nationality">Nationality</label>
+                        <select id="nationality" name="nationality" required autocomplete="country-name">
+                            <option value="" disabled selected>Select Nationality</option>
+                            <option value="Filipino">Filipino</option>
+                            <option value="Foreigner">Foreigner</option>
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="btn-container">
+                        <button type="submit" class="btn submit-btn">Submit</button>
+                        <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+        <div id="notifierModal" class="notifier hidden">
+            <div class="notifier-content">
+                <p id="notifierMessage"></p>
+                <button id="notifierCloseBtn" class="btn">OK</button>
+            </div>
+        </div>
+
+        <div class="sign-in-link-container">
+            <p style="text-align:center; margin-top: 20px;">
+                Already have account?
+                <a href="/Barangay-System/pages/sign-in.php" class="log-in-colored-link">Log In</a>
+            </p>
+        </div>
+
+        <?php include_once('../pages/footer.php'); ?>
+
+
+    </body>
+
+    </html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/central-link-navigation.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+/* JavaScript File Content: central-link-navigation.js - SIMPLIFIED VERSION */
+
+/**
+ * Central Path Manager - Simple Version
+ * Provides consistent paths for all resources
+ */
+
+const PathManager = {
+    // Base paths configuration
+    config: {
+        projectRoot: '', // Will be auto-detected
+        assets: 'assets/',
+        styles: 'styles/',
+        scripts: 'scripts/',
+        pages: 'pages/',
+        database: 'database/'
+    },
+
+    // Initialize with current path
+    init() {
+        // Detect project root from current URL
+        const currentPath = window.location.pathname;
+        
+        // If we're in the project folder
+        if (currentPath.includes('Crooks-Cart-Collectives')) {
+            const parts = currentPath.split('/');
+            const projectIndex = parts.indexOf('Crooks-Cart-Collectives');
+            if (projectIndex !== -1) {
+                this.config.projectRoot = '/' + parts.slice(1, projectIndex + 1).join('/') + '/';
+            }
+        } else {
+            // Assume we're at root
+            this.config.projectRoot = '/';
+        }
+        
+        // If still empty, try to detect from current directory
+        if (!this.config.projectRoot) {
+            const depth = currentPath.split('/').length - 2;
+            this.config.projectRoot = depth > 0 ? '../'.repeat(depth) : './';
+        }
+        
+        console.log('PathManager initialized with root:', this.config.projectRoot);
+    },
+
+    // Get full path for a resource
+    getPath(type, filename) {
+        if (!this.config.projectRoot) this.init();
+        
+        const baseTypes = {
+            'asset': this.config.assets,
+            'style': this.config.styles,
+            'script': this.config.scripts,
+            'page': this.config.pages,
+            'database': this.config.database,
+            'root': ''
+        };
+        
+        if (baseTypes[type]) {
+            return this.config.projectRoot + baseTypes[type] + filename;
+        }
+        
+        console.error('Unknown path type:', type);
+        return this.config.projectRoot + filename;
+    },
+
+    // Convenience methods
+    getAsset(name) { return this.getPath('asset', name); },
+    getStyle(name) { return this.getPath('style', name); },
+    getScript(name) { return this.getPath('script', name); },
+    getPage(name) { return this.getPath('page', name); },
+    getDatabase(name) { return this.getPath('database', name); },
+    
+    // Fix all absolute paths on the page
+    fixAbsolutePaths() {
+        // Fix image sources
+        document.querySelectorAll('img').forEach(img => {
+            let src = img.getAttribute('src');
+            if (src && src.includes('/Barangay-System/')) {
+                img.src = src.replace('/Barangay-System/', this.config.projectRoot);
+            }
+        });
+        
+        // Fix link hrefs
+        document.querySelectorAll('a').forEach(link => {
+            let href = link.getAttribute('href');
+            if (href && href.includes('/Barangay-System/') && !href.startsWith('http')) {
+                link.href = href.replace('/Barangay-System/', this.config.projectRoot);
+            }
+        });
+        
+        // Fix form actions
+        document.querySelectorAll('form').forEach(form => {
+            let action = form.getAttribute('action');
+            if (action && action.includes('/Barangay-System/')) {
+                form.action = action.replace('/Barangay-System/', this.config.projectRoot);
+            }
+        });
+    }
+};
+
+// Initialize and expose
+window.PathManager = PathManager;
+
+// Auto-initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    PathManager.init();
+    PathManager.fixAbsolutePaths();
+});
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/complaint-form.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+
+    const openButton = document.getElementById("openComplaintButton");
+    const overlay = document.getElementById("complaintOverlay");
+    const form = document.getElementById("complaintForm");
+    const cancelButton = document.getElementById("cancelComplaint");
+    const closeButton = document.getElementById("closeComplaint");
+
+    const closeForm = () => {
+        overlay.style.display = "none";
+        document.body.classList.remove("blurred-background");
+    };
+
+    openButton?.addEventListener("click", () => {
+        document.body.classList.add("blurred-background");
+        overlay.style.display = "flex";
+    });
+
+    overlay?.addEventListener("click", (e) => {
+        if (e.target === overlay) closeForm();
+    });
+
+    if (closeButton) {
+        closeButton.addEventListener("click", closeForm);
+    } else {
+        console.warn("Close button not found.");
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", closeForm);
+    } else {
+        console.warn("Cancel button not found.");
+    }
+
+    form?.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const about = document.getElementById("complaint-about").value.trim();
+        const message = document.getElementById("complaint-text").value.trim();
+
+        if (!about || !message) {
+            alert("Both fields are required.");
+            return;
+        }
+
+        if (typeof residentID === "undefined" || !residentID) {
+            alert("User not identified.");
+            return;
+        }
+
+        fetch("/Barangay-System/database/complaint-handler.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ about, message, residentID })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Complaint submitted.");
+                form.reset();
+                closeForm();
+            } else {
+                alert("Failed: " + (data.message || "Try again."));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error occurred.");
+        });
+    });
+
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/error-handler.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/header.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+document.addEventListener("DOMContentLoaded", () => {
+
+    const content = document.querySelector('.content');
+    if (content) {
+        content.style.opacity = 0;
+        content.style.transition = "opacity 0.5s ease-in-out";
+        setTimeout(() => {
+            content.style.opacity = 1;
+        }, 500);
+    }
+    
+
+    function initializeHeader() {
+        const menuButton = document.getElementById('menuButton');
+        const mobileNav = document.getElementById('mobileNav');
+        const navLinks = document.querySelectorAll(".nav-link, .sign-up");
+       const logo = document.getElementById('logo');
+
+if (logo) {
+    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s"; // delay visibility off toggle
+    logo.style.cursor = "pointer";
+
+    logo.addEventListener("click", () => {
+        window.location.href = window.location.origin + "/Barangay-System/index.php";
+    });
+
+    const fadeInLogo = () => {
+        setTimeout(() => {
+            logo.style.visibility = "visible";
+            logo.style.opacity = 1;
+        }, 1000); // 1s delay, match with content or header
+    };
+
+    if (logo.complete && logo.naturalHeight !== 0) {
+        fadeInLogo(); // Image already loaded
+    } else {
+        logo.addEventListener("load", fadeInLogo); // Wait until it loads
+    }
+}
+
+
+        if (menuButton && mobileNav) {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'menu-backdrop fade-transition';
+            document.body.appendChild(backdrop);
+
+            const toggleMenu = () => {
+                const isOpen = mobileNav.classList.toggle('open');
+                backdrop.classList.toggle('active', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+                menuButton.classList.toggle('open', isOpen);
+            };
+
+            const closeMenu = () => {
+                mobileNav.classList.remove('open');
+                backdrop.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                menuButton.classList.remove('open');
+            };
+
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            backdrop.addEventListener('click', closeMenu);
+            document.addEventListener('click', (e) => {
+                if (!mobileNav.contains(e.target) && !menuButton.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+
+            mobileNav.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') closeMenu();
+            });
+        }
+
+        highlightActiveLink(navLinks);
+        addPageTransition(navLinks);
+        adjustContentMargin();
+        window.addEventListener('resize', adjustContentMargin);
+    }
+
+    function highlightActiveLink(navLinks) {
+        let currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === '' || currentPage === '/') {
+            currentPage = 'index.php';
+        }
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').endsWith(currentPage)) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    function addPageTransition(navLinks) {
+        navLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                const href = link.getAttribute("href");
+                if (href && !href.startsWith("#") && !href.includes("mailto:")) {
+                    e.preventDefault();
+                    fadeOutAndNavigate(href);
+                }
+            });
+        });
+    }
+
+    function fadeOutAndNavigate(url) {
+        const content = document.querySelector('.content');
+        if (content) {
+            content.style.opacity = 0;
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        } else {
+            window.location.href = url;
+        }
+    }
+
+    function adjustContentMargin() {
+        const header = document.querySelector('.header-bar');
+        const content = document.querySelector('.content');
+        if (header && content) {
+            const currentPage = window.location.pathname.split('/').pop();
+            const marginRules = {
+                "container-activities.html": "0px",
+                "sign-up.php": "0px"
+            };
+            content.style.marginTop = marginRules[currentPage] || "0";
+        }
+    }
+
+    function addFavicon() {
+        if (!document.querySelector("link[rel='icon']")) {
+            const favicon = document.createElement("link");
+            favicon.rel = "icon";
+            favicon.type = "image/png";
+            favicon.href = "./assets/Logo.png";
+            document.head.appendChild(favicon);
+        }
+    }
+
+    initializeHeader();
+    addFavicon();
+
+    // Optional: remove no-transition class if you’re using it for delay logic
+  const header = document.querySelector('.header-bar');
+const mobileNav = document.getElementById('mobileNav');
+
+if (header) {
+  header.classList.add('header-delay');
+}
+
+if (mobileNav) {
+  mobileNav.classList.add('header-delay');
+}
+
+setTimeout(() => {
+  if (header) header.classList.remove('header-delay');
+  if (mobileNav) mobileNav.classList.remove('header-delay');
+}, 500); // 2 seconds delay
+
+});
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/home.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+document.addEventListener("DOMContentLoaded", () => {
+    const content = document.querySelector('.content');
+    if (content) {
+        content.style.opacity = 0;
+        content.style.transition = "opacity 0.5s ease-in-out";
+        setTimeout(() => content.style.opacity = 1, 50);
+    }
+
+    function initializeHeader() {
+        const menuButton = document.getElementById('menuButton');
+        const mobileNav = document.getElementById('mobileNav');
+        const navLinks = document.querySelectorAll(".nav-link, .sign-up");
+        const logo = document.getElementById('logo');
+
+        if (logo) {
+            logo.style.cursor = "pointer";
+            logo.addEventListener("click", () => {
+                window.location.href = window.location.origin + "/Barangay-System/index.php";
+            });
+        }
+
+        if (menuButton && mobileNav) {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'menu-backdrop fade-transition';
+            document.body.appendChild(backdrop);
+
+            const toggleMenu = () => {
+                const isOpen = mobileNav.classList.toggle('open');
+                backdrop.classList.toggle('active', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+                menuButton.classList.toggle('open', isOpen);
+            };
+
+            const closeMenu = () => {
+                mobileNav.classList.remove('open');
+                backdrop.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                menuButton.classList.remove('open');
+            };
+
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            backdrop.addEventListener('click', closeMenu);
+            document.addEventListener('click', (e) => {
+                if (!mobileNav.contains(e.target) && !menuButton.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+
+            mobileNav.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') closeMenu();
+            });
+        }
+
+        highlightActiveLink(navLinks);
+        addPageTransition(navLinks);
+        adjustContentMargin();
+        window.addEventListener('resize', adjustContentMargin);
+    }
+
+    function highlightActiveLink(navLinks) {
+        let currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === '' || currentPage === '/') {
+            currentPage = 'index.php';
+        }
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').endsWith(currentPage)) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    function addPageTransition(navLinks) {
+        navLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                const href = link.getAttribute("href");
+                if (href && !href.startsWith("#") && !href.includes("mailto:")) {
+                    e.preventDefault();
+                    fadeOutAndNavigate(href);
+                }
+            });
+        });
+    }
+
+    function fadeOutAndNavigate(url) {
+        const content = document.querySelector('.content');
+        if (content) {
+            content.style.opacity = 0;
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        } else {
+            window.location.href = url;
+        }
+    }
+
+    function adjustContentMargin() {
+        const header = document.querySelector('.header-bar');
+        const content = document.querySelector('.content');
+        if (header && content) {
+            const currentPage = window.location.pathname.split('/').pop();
+            const marginRules = {
+                "container-activities.html": "0px",
+                "sign-up.php": "0px"
+            };
+            content.style.marginTop = marginRules[currentPage] || "0";
+        }
+    }
+
+    function addFavicon() {
+        if (!document.querySelector("link[rel='icon']")) {
+            const favicon = document.createElement("link");
+            favicon.rel = "icon";
+            favicon.type = "image/png";
+            favicon.href = "./assets/Logo.png";
+            document.head.appendChild(favicon);
+        }
+    }
+
+    initializeHeader();
+    addFavicon();
+
+    // Redirect to complaint.php on button click
+    const complaintButton = document.getElementById('complaintButton');
+    if (complaintButton) {
+        complaintButton.addEventListener('click', () => {
+            window.location.href = "/Barangay-System/pages/complaint.php";
+        });
+    }
+});
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/index.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+// Hero Slider Functionality
+const quoteImageShowcase = document.getElementById("quoteImageShowcase");
+const quoteText = document.getElementById("quoteText");
+
+if (quoteImageShowcase && quoteText) {
+    const slides = [
+        { image: "./assets/Showcase1.png", text: "Burden becomes lighter when everyone helps." },
+        { image: "./assets/Showcase2.png", text: "No strong fence against a united people." },
+        { image: "./assets/Showcase3.png", text: "The pain of one may affect everyone." },
+        { image: "./assets/Showcase4.png", text: "Community are people that strives for better tomorrow." }
+    ];
+    
+    let imagesLoaded = 0;
+    slides.forEach(slide => {
+        const img = new Image();
+        img.src = slide.image;
+        img.onload = () => {
+            imagesLoaded++;
+            if (imagesLoaded === slides.length) {
+                quoteImageShowcase.classList.add('loaded');
+            }
+        };
+    });
+    
+    let currentIndex = 0;
+    const slideDuration = 5000;
+    
+    function changeBackground() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        quoteImageShowcase.style.opacity = "0";
+        quoteText.style.opacity = "0";
+        
+        setTimeout(() => {
+            quoteImageShowcase.style.backgroundImage = `url('${slides[currentIndex].image}')`;
+            quoteText.innerHTML = `<h1>${slides[currentIndex].text.replace(/(everyone|united|pain|people)/g, '<span>$1</span>')}</h1>`;
+            quoteImageShowcase.style.opacity = "1";
+            quoteText.style.opacity = "1";
+        }, 1000);
+    }
+    
+    const checkLoad = setInterval(() => {
+        if (imagesLoaded === slides.length) {
+            clearInterval(checkLoad);
+            setInterval(changeBackground, slideDuration);
+        }
+    }, 100);
+}
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/sign-in.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('notifierModal');
+  const modalMessage = document.getElementById('notifierMessage');
+  const modalClose = document.getElementById('notifierCloseBtn');
+  const form = document.getElementById('loginForm');
+
+  let isModalOpen = false;
+
+  function showNotifier(message) {
+    if (isModalOpen) return;
+    modalMessage.textContent = message;
+    modal.classList.remove('hidden');
+    isModalOpen = true;
+  }
+
+  modalClose.addEventListener('click', (e) => {
+    e.preventDefault(); // important: prevent default form behavior
+    modal.classList.add('hidden');
+    isModalOpen = false;
+    usernameOrEmail.blur();
+loginPassword.blur();
+
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (form.dataset.submitting) return;
+    form.dataset.submitting = "true";
+
+    const usernameOrEmail = document.getElementById('usernameOrEmail');
+    const loginPassword = document.getElementById('loginPassword');
+
+    if (!usernameOrEmail.value.trim() || !loginPassword.value) {
+      showNotifier('All fields are required');
+      delete form.dataset.submitting;
+      return;
+    }
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          usernameOrEmail: usernameOrEmail.value.trim(),
+          loginPassword: loginPassword.value
+        })
+      });
+
+      const responseText = await response.text();
+      let data;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch (err) {
+        throw new Error('Unexpected response from server');
+      }
+
+      if (response.ok && data.status === 'success') {
+        window.location.href = data.redirectPath;
+      } else {
+        showNotifier(data.message || 'Login failed');
+      }
+
+    } catch (error) {
+      console.error('Login error:', error);
+      showNotifier(error.message || 'Unexpected error');
+    } finally {
+      delete form.dataset.submitting;
+    }
+  });
+});
+
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/scripts/sign-up.js ===
+
+[FOUND]
+
+/* JavaScript File Content */
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('signupForm');
+  const clearButton = document.getElementById('clearForm');
+  const submitButton = document.querySelector('.submit-btn');
+
+  const emailField = document.getElementById('email');
+  const usernameField = document.getElementById('username');
+  const passwordField = document.getElementById('password');
+  const confirmPasswordField = document.getElementById('confirmPassword');
+
+  const imageFormalPictureUpload = document.getElementById('imageFormalPictureUpload');
+  const imageResidencyProofUpload = document.getElementById('imageResidencyProofUpload');
+  const imageFormalPicturePreview = document.getElementById('imageFormalPicturePreview');
+  const imageResidencyProofPreview = document.getElementById('imageResidencyProofPreview');
+
+  const modal = document.getElementById('notifierModal');
+  const modalMessage = document.getElementById('notifierMessage');
+  const modalClose = document.getElementById('notifierCloseBtn');
+
+  function showNotifier(message) {
+    modalMessage.textContent = message;
+    modal.classList.remove('hidden');
+  }
+
+  modalClose.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  function setupImagePreview(input, preview) {
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => preview.src = reader.result;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  setupImagePreview(imageFormalPictureUpload, imageFormalPicturePreview);
+  setupImagePreview(imageResidencyProofUpload, imageResidencyProofPreview);
+
+  function isEmailValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function highlightField(field, highlight = true) {
+    field.style.borderColor = highlight ? 'red' : '';
+    field.style.boxShadow = highlight ? '0 0 5px red' : '';
+  }
+
+  function resetHighlights() {
+    form.querySelectorAll('input, select').forEach(field => highlightField(field, false));
+  }
+
+  clearButton.addEventListener('click', () => {
+    form.reset();
+    form.classList.remove('submitted');
+    imageFormalPicturePreview.src = '/Barangay-System/assets/Formal-Picture.png';
+    imageResidencyProofPreview.src = '/Barangay-System/assets/Valid-id-icon.png';
+    resetHighlights();
+  });
+
+  submitButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    form.classList.add('submitted');
+    resetHighlights();
+
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    let message = '';
+    let missing = [];
+
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        highlightField(field);
+        if (!['password', 'confirmPassword'].includes(field.id)) {
+          missing.push(field.name || field.id);
+        }
+        isValid = false;
+      }
+    });
+
+    if (imageFormalPictureUpload.files.length === 0) {
+      highlightField(imageFormalPictureUpload);
+      missing.push('Formal Picture');
+      isValid = false;
+    }
+
+    if (imageResidencyProofUpload.files.length === 0) {
+      highlightField(imageResidencyProofUpload);
+      missing.push('Proof of Residency');
+      isValid = false;
+    }
+
+    if (emailField.value && !isEmailValid(emailField.value)) {
+      highlightField(emailField);
+      message = 'Please enter a valid email address.';
+      isValid = false;
+    }
+
+    const password = passwordField.value.trim();
+    const confirmPassword = confirmPasswordField.value.trim();
+
+    if (!password && !confirmPassword) {
+      highlightField(passwordField);
+      highlightField(confirmPasswordField);
+      message = 'Password and Confirm Password are required.';
+      isValid = false;
+    } else if (!password) {
+      highlightField(passwordField);
+      message = 'Please enter your password.';
+      isValid = false;
+    } else if (!confirmPassword) {
+      highlightField(confirmPasswordField);
+      message = 'Please confirm your password.';
+      isValid = false;
+    } else if (password !== confirmPassword) {
+      highlightField(passwordField);
+      highlightField(confirmPasswordField);
+      message = 'Passwords do not match.';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      if (message) {
+        showNotifier(message);
+      } else if (missing.length === 1) {
+        showNotifier(`Missing: ${formatFieldName(missing[0])}`);
+      } else {
+        showNotifier(`Please complete all required fields.`);
+      }
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    fetch('/Barangay-System/database/sign-up-handler.php', {
+  method: 'POST',
+  body: formData
+})
+  .then(res => res.json())
+  .then(response => {
+    if (response.status === 'success') {
+      showNotifier('Registration successful. Present proof at barangay.');
+      setTimeout(() => window.location.href = './sign-in.php', 2000);
+    } else if (response.message === 'duplicate-email duplicate-username') {
+      highlightField(emailField);
+      highlightField(usernameField);
+      showNotifier('Email and Username already exist.');
+    } else if (response.message === 'duplicate-email') {
+      highlightField(emailField);
+      showNotifier('Email already exists.');
+    } else if (response.message === 'duplicate-username') {
+      highlightField(usernameField);
+      showNotifier('Username already exists.');
+    } else {
+      showNotifier('Something went wrong. Try again later.');
+    }
+  })
+  .catch(error => {
+    console.error('Fetch error:', error);
+    showNotifier('Something went wrong. Please check your internet or try again later.');
+  });
+  });
+
+  function formatFieldName(fieldId) {
+    return fieldId.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase()).trim();
+  }
+}); 
+
+
+==============================================
+
