@@ -4,10 +4,10 @@ const quoteText = document.getElementById("quoteText");
 
 if (quoteImageShowcase && quoteText) {
     const slides = [
-        { image: "./assets/Showcase1.png", text: "Burden becomes lighter when everyone helps." },
-        { image: "./assets/Showcase2.png", text: "No strong fence against a united people." },
-        { image: "./assets/Showcase3.png", text: "The pain of one may affect everyone." },
-        { image: "./assets/Showcase4.png", text: "Community are people that strives for better tomorrow." }
+        { image: "assets/Showcase1.png", text: "Burden becomes lighter when everyone helps." },
+        { image: "assets/Showcase2.png", text: "No strong fence against a united people." },
+        { image: "assets/Showcase3.png", text: "The pain of one may affect everyone." },
+        { image: "assets/Showcase4.png", text: "Community are people that strives for better tomorrow." }
     ];
     
     let imagesLoaded = 0;

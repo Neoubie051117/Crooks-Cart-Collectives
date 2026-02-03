@@ -1,3 +1,8 @@
+<?php
+// Determine path prefix based on where this file is included from
+$pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
+?>
+
 <footer class="footer">
     <div class="footer-upper">
         <div class="queries">
@@ -6,21 +11,21 @@
         </div>
         <div class="socials">
             <a href="https://web.facebook.com/share/g/1EbBqNZHcK/" target="_blank"><img
-                    src="/Barangay-System/assets/icons8-facebook.svg" alt="Facebook"></a>
+                    src="<?php echo $pathPrefix; ?>assets/icons8-facebook.svg" alt="Facebook"></a>
             <a href="https://www.instagram.com/explore/locations/277280053/cainta-municipal-hall-caintarizal/?utm_source"
-                target="_blank"><img src="/Barangay-System/assets/icons8-instagram.svg" alt="Instagram"></a>
+                target="_blank"><img src="<?php echo $pathPrefix; ?>assets/icons8-instagram.svg" alt="Instagram"></a>
             <a href="https://youtu.be/IXPuSHtnImE?si=PDIWER9ZU_M5NEuq" target="_blank"><img
-                    src="/Barangay-System/assets/icons8-youtube.svg" alt="Youtube"></a>
+                    src="<?php echo $pathPrefix; ?>assets/icons8-youtube.svg" alt="Youtube"></a>
         </div>
     </div>
     <div class="footer-lower">
         <div class="mail-button">
-            <img src="/Barangay-System/assets/mail.svg" alt="Mail">
+            <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail">
             <span>vist-us@baranggay-system.com</span>
         </div>
         <div class="policy-links">
-            <a href="/Barangay-System/privacy-policy.html">Privacy Policy</a>
-            <a href="/Barangay-System/terms-and-conditions.html">Terms & Conditions</a>
+            <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>
+            <a href="<?php echo $pathPrefix; ?>terms-and-conditions.html">Terms & Conditions</a>
         </div>
     </div>
 </footer>

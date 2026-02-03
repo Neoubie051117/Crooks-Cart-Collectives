@@ -4,19 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Community Portal</title>
 
-    <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <script defer src="/Barangay-System/scripts/header.js"></script>
-    <?php include_once('./pages/header.php'); ?>
+    <!-- Load CSS and JS FIRST -->
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/footer.css">
 
-    <!-- Index (current page) CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/index.css">
-    <script defer src="/Barangay-System/scripts/index.js"></script>
+    <script defer src="scripts/central-link-navigation.js"></script>
+    <script defer src="scripts/header.js"></script>
+    <script defer src="scripts/index.js"></script>
 
-    <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <!-- THEN include header.php -->
+    <?php 
+    // Define a constant to tell header.php we're in root
+    define('IN_ROOT', true);
+    include_once('pages/header.php'); 
+    ?>
 
 </head>
 
@@ -27,7 +31,7 @@
         <!-- Upper Background Hook -->
         <section class="quoteSection">
             <div class="quoteImageShowcase" id="quoteImageShowcase"
-                style="background-image: url('/Barangay-System/assets/Showcase1.png');"></div>
+                style="background-image: url('assets/Showcase1.png');"></div>
             <div class="quoteText" id="quoteText">
                 <h1>Burden becomes lighter when <span>everyone</span> helps</h1>
             </div>
@@ -36,7 +40,7 @@
         <!-- Content Section -->
         <section class="body-content">
             <div class="image-container">
-                <img src="/Barangay-System/assets/BodyContentImage.png" alt="Body Content">
+                <img src="assets/BodyContentImage.png" alt="Body Content">
             </div>
 
             <div class="text-container">
@@ -55,7 +59,11 @@
 
     </div>
 
-    <?php include_once('./pages/footer.php'); ?>
+    <?php 
+    // Define constant for footer.php too
+    define('IN_ROOT_FOOTER', true);
+    include_once('pages/footer.php'); 
+    ?>
 </body>
 
 </html>

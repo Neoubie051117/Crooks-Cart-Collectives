@@ -16,25 +16,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
        const logo = document.getElementById('logo');
 
+// In header.js, find the logo click handler and update it:
+
 if (logo) {
-    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s"; // delay visibility off toggle
+    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
     logo.style.cursor = "pointer";
 
     logo.addEventListener("click", () => {
-        window.location.href = window.location.origin + "/Barangay-System/index.php";
+        // Use relative path to index.php - simpler approach
+        const currentPath = window.location.pathname;
+        
+        // Check if we're already on index.php
+        if (currentPath.endsWith('index.php') || currentPath.endsWith('/')) {
+            return; // Already on homepage
+        }
+        
+        // Navigate to index.php
+        window.location.href = "index.php";
     });
 
     const fadeInLogo = () => {
         setTimeout(() => {
             logo.style.visibility = "visible";
             logo.style.opacity = 1;
-        }, 1000); // 1s delay, match with content or header
+        }, 1000);
     };
 
     if (logo.complete && logo.naturalHeight !== 0) {
-        fadeInLogo(); // Image already loaded
+        fadeInLogo();
     } else {
-        logo.addEventListener("load", fadeInLogo); // Wait until it loads
+        logo.addEventListener("load", fadeInLogo);
     }
 }
 

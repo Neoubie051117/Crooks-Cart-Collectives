@@ -1,108 +1,98 @@
-/* JavaScript File Content: central-link-navigation.js - SIMPLIFIED VERSION */
+/* JavaScript File Content: central-link-navigation.js - FIXED VERSION */
 
 /**
- * Central Path Manager - Simple Version
- * Provides consistent paths for all resources
+ * Central Path Manager - Fixed Version
+ * Dynamically fixes all broken paths
  */
 
 const PathManager = {
-    // Base paths configuration
-    config: {
-        projectRoot: '', // Will be auto-detected
-        assets: 'assets/',
-        styles: 'styles/',
-        scripts: 'scripts/',
-        pages: 'pages/',
-        database: 'database/'
-    },
-
-    // Initialize with current path
+    // Initialize
     init() {
-        // Detect project root from current URL
+        console.log('PathManager initializing...');
+        
+        // Fix paths immediately
+        this.fixAllPaths();
+        
+        // Also fix paths after a short delay (in case of dynamically added content)
+        setTimeout(() => this.fixAllPaths(), 500);
+        
+        return this;
+    },
+
+    // Fix all broken paths on the page
+    fixAllPaths() {
+        console.log('Fixing all broken paths...');
+        
+        // Get current directory
         const currentPath = window.location.pathname;
+        let basePath = '';
         
-        // If we're in the project folder
-        if (currentPath.includes('Crooks-Cart-Collectives')) {
-            const parts = currentPath.split('/');
-            const projectIndex = parts.indexOf('Crooks-Cart-Collectives');
-            if (projectIndex !== -1) {
-                this.config.projectRoot = '/' + parts.slice(1, projectIndex + 1).join('/') + '/';
-            }
+        // Determine base path
+        if (currentPath.includes('/pages/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/database/')) {
+            basePath = '../';
         } else {
-            // Assume we're at root
-            this.config.projectRoot = '/';
+            basePath = '';
         }
         
-        // If still empty, try to detect from current directory
-        if (!this.config.projectRoot) {
-            const depth = currentPath.split('/').length - 2;
-            this.config.projectRoot = depth > 0 ? '../'.repeat(depth) : './';
-        }
+        // Fix CSS links
+        document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('//')) {
+                if (href.includes('Barangay-System')) {
+                    link.href = href.replace(/\/?Barangay-System\//g, basePath);
+                } else if (href.startsWith('/')) {
+                    // Convert absolute path to relative
+                    link.href = basePath + href.substring(1);
+                }
+            }
+        });
         
-        console.log('PathManager initialized with root:', this.config.projectRoot);
-    },
-
-    // Get full path for a resource
-    getPath(type, filename) {
-        if (!this.config.projectRoot) this.init();
+        // Fix script sources
+        document.querySelectorAll('script[src]').forEach(script => {
+            const src = script.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('//')) {
+                if (src.includes('Barangay-System')) {
+                    script.src = src.replace(/\/?Barangay-System\//g, basePath);
+                } else if (src.startsWith('/')) {
+                    // Convert absolute path to relative
+                    script.src = basePath + src.substring(1);
+                }
+            }
+        });
         
-        const baseTypes = {
-            'asset': this.config.assets,
-            'style': this.config.styles,
-            'script': this.config.scripts,
-            'page': this.config.pages,
-            'database': this.config.database,
-            'root': ''
-        };
-        
-        if (baseTypes[type]) {
-            return this.config.projectRoot + baseTypes[type] + filename;
-        }
-        
-        console.error('Unknown path type:', type);
-        return this.config.projectRoot + filename;
-    },
-
-    // Convenience methods
-    getAsset(name) { return this.getPath('asset', name); },
-    getStyle(name) { return this.getPath('style', name); },
-    getScript(name) { return this.getPath('script', name); },
-    getPage(name) { return this.getPath('page', name); },
-    getDatabase(name) { return this.getPath('database', name); },
-    
-    // Fix all absolute paths on the page
-    fixAbsolutePaths() {
         // Fix image sources
-        document.querySelectorAll('img').forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && src.includes('/Barangay-System/')) {
-                img.src = src.replace('/Barangay-System/', this.config.projectRoot);
+        document.querySelectorAll('img[src]').forEach(img => {
+            const src = img.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('//') && !src.startsWith('data:')) {
+                if (src.includes('Barangay-System')) {
+                    img.src = src.replace(/\/?Barangay-System\//g, basePath);
+                } else if (src.startsWith('/')) {
+                    // Convert absolute path to relative
+                    img.src = basePath + src.substring(1);
+                }
             }
         });
         
-        // Fix link hrefs
-        document.querySelectorAll('a').forEach(link => {
-            let href = link.getAttribute('href');
-            if (href && href.includes('/Barangay-System/') && !href.startsWith('http')) {
-                link.href = href.replace('/Barangay-System/', this.config.projectRoot);
+        // Fix inline styles with background images
+        document.querySelectorAll('[style*="background-image"]').forEach(el => {
+            const style = el.getAttribute('style');
+            if (style.includes('Barangay-System')) {
+                el.style.backgroundImage = style.replace(/\/?Barangay-System\//g, basePath);
             }
         });
         
-        // Fix form actions
-        document.querySelectorAll('form').forEach(form => {
-            let action = form.getAttribute('action');
-            if (action && action.includes('/Barangay-System/')) {
-                form.action = action.replace('/Barangay-System/', this.config.projectRoot);
-            }
-        });
+        console.log('Path fixing complete. Base path:', basePath);
     }
 };
 
-// Initialize and expose
+// Make it globally available
 window.PathManager = PathManager;
 
-// Auto-initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+// Auto-initialize immediately
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => PathManager.init());
+} else {
     PathManager.init();
-    PathManager.fixAbsolutePaths();
-});
+}

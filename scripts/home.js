@@ -12,12 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
         const logo = document.getElementById('logo');
 
-        if (logo) {
-            logo.style.cursor = "pointer";
-            logo.addEventListener("click", () => {
-                window.location.href = window.location.origin + "/Barangay-System/index.php";
-            });
-        }
+    if (logo) {
+        logo.style.cursor = "pointer";
+        logo.addEventListener("click", () => {
+            // Navigate to index.php from any page
+            window.location.href = "../index.php";
+        });
+    }
 
         if (menuButton && mobileNav) {
             const backdrop = document.createElement('div');
@@ -133,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const complaintButton = document.getElementById('complaintButton');
     if (complaintButton) {
         complaintButton.addEventListener('click', () => {
-            window.location.href = "/Barangay-System/pages/complaint.php";
+            window.location.href = "complaint.php";
         });
     }
 });

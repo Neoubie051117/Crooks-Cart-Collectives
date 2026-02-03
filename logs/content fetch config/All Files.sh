@@ -1,6 +1,7 @@
 # Paths must start with '/' and be relative to the project root (/Mint-OS-Configuration/)
 filesToCheck=(
     "index.php"
+    "fix-all-paths.php"
     
     "pages/complaint.php"
     "pages/footer.php"

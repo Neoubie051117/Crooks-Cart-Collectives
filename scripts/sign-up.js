@@ -55,10 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
   clearButton.addEventListener('click', () => {
     form.reset();
     form.classList.remove('submitted');
-    imageFormalPicturePreview.src = '/Barangay-System/assets/Formal-Picture.png';
-    imageResidencyProofPreview.src = '/Barangay-System/assets/Valid-id-icon.png';
+    
+    // Use relative paths for default images
+    const currentPath = window.location.pathname;
+    let prefix = "../";
+    if (currentPath.includes('/pages/')) {
+        prefix = "../";
+    } else {
+        prefix = "";
+    }
+    
+    imageFormalPicturePreview.src = prefix + 'assets/Formal-Picture.png';
+    imageResidencyProofPreview.src = prefix + 'assets/Valid-id-icon.png';
     resetHighlights();
-  });
+});
 
   submitButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -134,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formData = new FormData(form);
 
-    fetch('/Barangay-System/database/sign-up-handler.php', {
+  fetch('../database/sign-up-handler.php', {
   method: 'POST',
   body: formData
 })

@@ -1,6 +1,6 @@
 <?php
-include_once('./header.php');
-require_once(__DIR__ . '/../database/database-connect.php');
+include_once('header.php');
+require_once('../database/database-connect.php');
 
 // Fetch resident ID from session using username
 $residentID = null;
@@ -74,12 +74,13 @@ if ($baseDir && is_dir($baseDir)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/complaint-page.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/complaint-page.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <script defer src="../scripts/central-link-navigation.js"></script>
 
     <!-- Scripts -->
-    <script defer src="/Barangay-System/scripts/header.js"></script>
+    <script defer src="../scripts/header.js"></script>
 
 </head>
 
@@ -117,7 +118,7 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
 
     <!-- Floating Button -->
     <button id="openComplaintButton" class="floating-complaint-button">
-        <img src="/Barangay-System/assets/complaint-icon.png" alt="Complaint"> File a Complaint
+        <img src="../assets/complaint-icon.png" alt="Complaint"> File a Complaint
     </button>
 
     <!-- Complaint Modal Overlay -->
@@ -145,9 +146,9 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
         </div>
     </div>
 
-    <script src="/Barangay-System/scripts/complaint-form.js"></script>
+    <script src="../scripts/complaint-form.js"></script>
 
-    <?php include_once('../pages/footer.php'); ?>
+    <?php include_once('footer.php'); ?>
 </body>
 
 </html>

@@ -32,39 +32,46 @@
     }
 
     form?.addEventListener("submit", function (event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        const about = document.getElementById("complaint-about").value.trim();
-        const message = document.getElementById("complaint-text").value.trim();
+    const about = document.getElementById("complaint-about").value.trim();
+    const message = document.getElementById("complaint-text").value.trim();
 
-        if (!about || !message) {
-            alert("Both fields are required.");
-            return;
+    if (!about || !message) {
+        alert("Both fields are required.");
+        return;
+    }
+
+    if (typeof residentID === "undefined" || !residentID) {
+        alert("User not identified.");
+        return;
+    }
+
+    // Use relative path - determine based on current location
+    const currentPath = window.location.pathname;
+    let fetchPath = "database/complaint-handler.php";
+    
+    if (currentPath.includes('/pages/')) {
+        fetchPath = "../database/complaint-handler.php";
+    }
+
+    fetch(fetchPath, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ about, message, residentID })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("Complaint submitted.");
+            form.reset();
+            closeForm();
+        } else {
+            alert("Failed: " + (data.message || "Try again."));
         }
-
-        if (typeof residentID === "undefined" || !residentID) {
-            alert("User not identified.");
-            return;
-        }
-
-        fetch("/Barangay-System/database/complaint-handler.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ about, message, residentID })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                alert("Complaint submitted.");
-                form.reset();
-                closeForm();
-            } else {
-                alert("Failed: " + (data.message || "Try again."));
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Error occurred.");
-        });
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error occurred.");
     });
-
+});

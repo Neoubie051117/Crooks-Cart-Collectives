@@ -1,6 +1,6 @@
 <?php
 // Start session and include database connection
-include_once('./header.php');
+include_once('header.php');
 require_once('../database/database-connect.php');
 
 // Modified session check to match old version's approach
@@ -48,11 +48,11 @@ try {
     
     // Handle profile image
     $proofPath = $resident['proofOfResidencyPath'];
-    $relativeImagePath = '/Barangay-System/' . $proofPath;
+    $relativeImagePath = '../' . $proofPath;
     $absolutePath = realpath(__DIR__ . '/../' . $proofPath);
     
     if (!$proofPath || !file_exists($absolutePath)) {
-        $relativeImagePath = '/Barangay-System/assets/images/default-profile.png';
+        $relativeImagePath = '../assets/images/default-profile.png';
     }
     
 } catch (Exception $e) {
@@ -69,14 +69,15 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resident Profile - Barangay System</title>
 
-    <!-- FIXED Styles -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/home.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <script defer src="../scripts/central-link-navigation.js"></script>
 
-    <!-- FIXED Scripts -->
-    <script defer src="/Barangay-System/scripts/header.js"></script>
-    <script defer src="/Barangay-System/scripts/home.js"></script>
+    <!-- Scripts -->
+    <script defer src="../scripts/header.js"></script>
+    <script defer src="../scripts/home.js"></script>
 </head>
 
 <body>
@@ -229,9 +230,7 @@ try {
         <?php endif; ?>
     </div>
 
-    </div>
-
-    <?php include_once('./footer.php'); ?>
+    <?php include_once('footer.php'); ?>
 </body>
 
 </html>

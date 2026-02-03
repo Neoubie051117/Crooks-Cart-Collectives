@@ -1,6 +1,6 @@
 Web Project: Crooks-Cart-Collectives
 Preset: All Files
-Generated: 2026-02-03 22:14:42
+Generated: 2026-02-03 22:47:41
 
 === File: Crooks-Cart-Collectives/index.php ===
 
@@ -13,19 +13,26 @@ Generated: 2026-02-03 22:14:42
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Community Portal</title>
 
     <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <script defer src="/Barangay-System/scripts/header.js"></script>
-    <?php include_once('./pages/header.php'); ?>
+    <link rel="stylesheet" href="styles/header.css">
+    <script defer src="scripts/header.js"></script>
+    <script defer src="scripts/central-link-navigation.js"></script>
+
+    <!-- Load header.php with root context -->
+    <?php 
+    // Define a constant to tell header.php we're in root
+    define('IN_ROOT', true);
+    include_once('pages/header.php'); 
+    ?>
 
     <!-- Index (current page) CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/index.css">
-    <script defer src="/Barangay-System/scripts/index.js"></script>
+    <link rel="stylesheet" href="styles/index.css">
+    <script defer src="scripts/index.js"></script>
 
     <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <link rel="stylesheet" href="styles/footer.css">
 
 </head>
 
@@ -36,7 +43,7 @@ Generated: 2026-02-03 22:14:42
         <!-- Upper Background Hook -->
         <section class="quoteSection">
             <div class="quoteImageShowcase" id="quoteImageShowcase"
-                style="background-image: url('/Barangay-System/assets/Showcase1.png');"></div>
+                style="background-image: url('assets/Showcase1.png');"></div>
             <div class="quoteText" id="quoteText">
                 <h1>Burden becomes lighter when <span>everyone</span> helps</h1>
             </div>
@@ -45,7 +52,7 @@ Generated: 2026-02-03 22:14:42
         <!-- Content Section -->
         <section class="body-content">
             <div class="image-container">
-                <img src="/Barangay-System/assets/BodyContentImage.png" alt="Body Content">
+                <img src="assets/BodyContentImage.png" alt="Body Content">
             </div>
 
             <div class="text-container">
@@ -64,10 +71,51 @@ Generated: 2026-02-03 22:14:42
 
     </div>
 
-    <?php include_once('./pages/footer.php'); ?>
+    <?php 
+    // Define constant for footer.php too
+    define('IN_ROOT_FOOTER', true);
+    include_once('pages/footer.php'); 
+    ?>
 </body>
 
 </html>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/fix-all-paths.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+// fix-all-paths.php
+// Run this script once to fix all remaining hardcoded paths
+
+function replaceInFile($file, $search, $replace) {
+    $content = file_get_contents($file);
+    $newContent = str_replace($search, $replace, $content);
+    file_put_contents($file, $newContent);
+    echo "Fixed: $file\n";
+}
+
+// Fix all PHP files
+$phpFiles = glob('**/*.php', GLOB_BRACE);
+foreach ($phpFiles as $file) {
+    replaceInFile($file, '/Barangay-System/', '');
+    replaceInFile($file, '"Barangay-System/', '"');
+    replaceInFile($file, "'Barangay-System/", "'");
+}
+
+// Fix all JS files
+$jsFiles = glob('**/*.js', GLOB_BRACE);
+foreach ($jsFiles as $file) {
+    replaceInFile($file, '/Barangay-System/', '');
+    replaceInFile($file, '"Barangay-System/', '"');
+    replaceInFile($file, "'Barangay-System/", "'");
+}
+
+echo "All paths fixed!\n";
+?>
 
 ==============================================
 
@@ -77,8 +125,8 @@ Generated: 2026-02-03 22:14:42
 
 <?php // PHP File Content ?>
 <?php
-include_once('./header.php');
-require_once(__DIR__ . '/../database/database-connect.php');
+include_once('header.php');
+require_once('../database/database-connect.php');
 
 // Fetch resident ID from session using username
 $residentID = null;
@@ -152,12 +200,13 @@ if ($baseDir && is_dir($baseDir)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/complaint-page.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/complaint-page.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <script defer src="../scripts/central-link-navigation.js"></script>
 
     <!-- Scripts -->
-    <script defer src="/Barangay-System/scripts/header.js"></script>
+    <script defer src="../scripts/header.js"></script>
 
 </head>
 
@@ -195,7 +244,7 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
 
     <!-- Floating Button -->
     <button id="openComplaintButton" class="floating-complaint-button">
-        <img src="/Barangay-System/assets/complaint-icon.png" alt="Complaint"> File a Complaint
+        <img src="../assets/complaint-icon.png" alt="Complaint"> File a Complaint
     </button>
 
     <!-- Complaint Modal Overlay -->
@@ -223,9 +272,9 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
         </div>
     </div>
 
-    <script src="/Barangay-System/scripts/complaint-form.js"></script>
+    <script src="../scripts/complaint-form.js"></script>
 
-    <?php include_once('../pages/footer.php'); ?>
+    <?php include_once('footer.php'); ?>
 </body>
 
 </html>
@@ -237,6 +286,11 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
 [FOUND]
 
 <?php // PHP File Content ?>
+<?php
+// Determine path prefix based on where this file is included from
+$pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
+?>
+
 <footer class="footer">
     <div class="footer-upper">
         <div class="queries">
@@ -245,21 +299,21 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
         </div>
         <div class="socials">
             <a href="https://web.facebook.com/share/g/1EbBqNZHcK/" target="_blank"><img
-                    src="/Barangay-System/assets/icons8-facebook.svg" alt="Facebook"></a>
+                    src="<?php echo $pathPrefix; ?>assets/icons8-facebook.svg" alt="Facebook"></a>
             <a href="https://www.instagram.com/explore/locations/277280053/cainta-municipal-hall-caintarizal/?utm_source"
-                target="_blank"><img src="/Barangay-System/assets/icons8-instagram.svg" alt="Instagram"></a>
+                target="_blank"><img src="<?php echo $pathPrefix; ?>assets/icons8-instagram.svg" alt="Instagram"></a>
             <a href="https://youtu.be/IXPuSHtnImE?si=PDIWER9ZU_M5NEuq" target="_blank"><img
-                    src="/Barangay-System/assets/icons8-youtube.svg" alt="Youtube"></a>
+                    src="<?php echo $pathPrefix; ?>assets/icons8-youtube.svg" alt="Youtube"></a>
         </div>
     </div>
     <div class="footer-lower">
         <div class="mail-button">
-            <img src="/Barangay-System/assets/mail.svg" alt="Mail">
+            <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail">
             <span>vist-us@baranggay-system.com</span>
         </div>
         <div class="policy-links">
-            <a href="/Barangay-System/privacy-policy.html">Privacy Policy</a>
-            <a href="/Barangay-System/terms-and-conditions.html">Terms & Conditions</a>
+            <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>
+            <a href="<?php echo $pathPrefix; ?>terms-and-conditions.html">Terms & Conditions</a>
         </div>
     </div>
 </footer>
@@ -275,68 +329,72 @@ const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['r
 session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
 $userRole = $isLoggedIn ? $_SESSION['is_verified'] : -1;
+
+// Determine path prefix based on where this file is included from
+$pathPrefix = (defined('IN_ROOT') && IN_ROOT) ? '' : '../';
 ?>
 
 <header class="header-bar no-transition">
     <div class="header-logo">
-        <img id="logo" src="/Barangay-System/assets/Logo.png" alt="Logo" style="opacity: 0; visibility: hidden;">
+        <img id="logo" src="<?php echo $pathPrefix; ?>assets/Logo.png" alt="Logo"
+            style="opacity: 0; visibility: hidden;">
         <div class="title">Bara<span>ngay</span> Sys<span>tem</span></div>
     </div>
     <button class="hamburger-menu" id="menuButton" aria-label="Toggle menu">
-        <img src="/Barangay-System/assets/hamburger-menu.svg" alt="Menu icon" class="hamburger-icon">
+        <img src="<?php echo $pathPrefix; ?>assets/hamburger-menu.svg" alt="Menu icon" class="hamburger-icon">
     </button>
     <div class="nav-container">
         <nav class="nav-bar">
             <?php if ($isLoggedIn && $userRole == 2): ?>
-            <a href="/Barangay-System/pages/workdesk.php" class="nav-link">WORKDESK</a>
+            <a href="workdesk.php" class="nav-link">WORKDESK</a>
             <?php endif; ?>
             <?php if ($isLoggedIn && $userRole == 3): ?>
-            <a href="/Barangay-System/pages/admin-dashboard.php" class="nav-link">ADMIN</a>
+            <a href="admin-dashboard.php" class="nav-link">ADMIN</a>
             <?php endif; ?>
 
             <?php if ($isLoggedIn): ?>
-            <a href="/Barangay-System/pages/home.php" class="nav-link">HOME</a>
-            <a href="/Barangay-System/pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
-            <a href="/Barangay-System/pages/complaint.php" class="nav-link">COMPLAINTS</a>
-            <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
-            <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
-            <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
+            <a href="home.php" class="nav-link">HOME</a>
+            <a href="announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+            <a href="complaint.php" class="nav-link">COMPLAINTS</a>
+            <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+            <a href="#" class="nav-link">SUPPORT</a>
+            <a href="#" class="nav-link">ABOUT</a>
             <?php else: ?>
-            <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
-            <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
-            <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
+            <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+            <a href="#" class="nav-link">ABOUT</a>
+            <a href="#" class="nav-link">SUPPORT</a>
             <?php endif; ?>
         </nav>
 
         <?php if ($isLoggedIn): ?>
-        <a href="/Barangay-System/database/sign-out-handler.php" class="sign-in">LOGOUT</a>
+        <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="sign-in">LOGOUT</a>
         <?php else: ?>
-        <a href="/Barangay-System/pages/sign-in.php" class="sign-in">SIGN IN</a>
+        <a href="sign-in.php" class="sign-in">SIGN IN</a>
         <?php endif; ?>
     </div>
 </header>
 
 <nav class="mobile-nav no-transition" id="mobileNav">
     <?php if ($isLoggedIn && $userRole == 2): ?>
-    <a href="/Barangay-System/pages/workdesk.php" class="nav-link">WORKDESK</a>
+    <a href="workdesk.php" class="nav-link">WORKDESK</a>
     <?php endif; ?>
     <?php if ($isLoggedIn && $userRole == 3): ?>
-    <a href="/Barangay-System/pages/admin-dashboard.php" class="nav-link">ADMIN</a>
+    <a href="admin-dashboard.php" class="nav-link">ADMIN</a>
     <?php endif; ?>
 
     <?php if ($isLoggedIn): ?>
-    <a href="/Barangay-System/pages/home.php" class="nav-link">HOME</a>
-    <a href="/Barangay-System/pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
-    <a href="/Barangay-System/pages/complaint.php" class="nav-link">COMPLAINTS</a>
-    <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
-    <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
-    <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
-    <a href="/Barangay-System/database/sign-out-handler.php" class="sign-in">LOG OUT</a>
+    <a href="home.php" class="nav-link">HOME</a>
+    <a href="announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+    <a href="complaint.php" class="nav-link">COMPLAINTS</a>
+    <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+    <a href="#" class="nav-link">SUPPORT</a>
+    <a href="#" class="nav-link">ABOUT</a>
+    <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="sign-in">LOG OUT</a>
     <?php else: ?>
-    <a href="/Barangay-System/pages/#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
-    <a href="/Barangay-System/pages/#" class="nav-link">ABOUT</a>
-    <a href="/Barangay-System/pages/#" class="nav-link">SUPPORT</a>
-    <a href="/Barangay-System/pages/sign-in.php" class="sign-in">SIGN IN</a>
+    <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
+    <a href="#" class="nav-link">ABOUT</a>
+    <a href="#" class="nav-link">SUPPORT</a>
+    <a href="sign-in.php" class="sign-in">SIGN IN</a>
     <?php endif; ?>
 </nav>
 
@@ -349,7 +407,7 @@ $userRole = $isLoggedIn ? $_SESSION['is_verified'] : -1;
 <?php // PHP File Content ?>
 <?php
 // Start session and include database connection
-include_once('./header.php');
+include_once('header.php');
 require_once('../database/database-connect.php');
 
 // Modified session check to match old version's approach
@@ -397,11 +455,11 @@ try {
     
     // Handle profile image
     $proofPath = $resident['proofOfResidencyPath'];
-    $relativeImagePath = '/Barangay-System/' . $proofPath;
+    $relativeImagePath = '../' . $proofPath;
     $absolutePath = realpath(__DIR__ . '/../' . $proofPath);
     
     if (!$proofPath || !file_exists($absolutePath)) {
-        $relativeImagePath = '/Barangay-System/assets/images/default-profile.png';
+        $relativeImagePath = '../assets/images/default-profile.png';
     }
     
 } catch (Exception $e) {
@@ -418,14 +476,15 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resident Profile - Barangay System</title>
 
-    <!-- FIXED Styles -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/home.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <script defer src="../scripts/central-link-navigation.js"></script>
 
-    <!-- FIXED Scripts -->
-    <script defer src="/Barangay-System/scripts/header.js"></script>
-    <script defer src="/Barangay-System/scripts/home.js"></script>
+    <!-- Scripts -->
+    <script defer src="../scripts/header.js"></script>
+    <script defer src="../scripts/home.js"></script>
 </head>
 
 <body>
@@ -578,9 +637,7 @@ try {
         <?php endif; ?>
     </div>
 
-    </div>
-
-    <?php include_once('./footer.php'); ?>
+    <?php include_once('footer.php'); ?>
 </body>
 
 </html>
@@ -598,64 +655,206 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In</title>
+    <title>Registration</title>
 
-    <?php include_once('../pages/header.php'); ?>
+    <!--Database Related PHP-->
+    <?php include_once('header.php'); ?>
     <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
+    <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/sign-in.css">
-    <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <!-- Header-related CSS and PHP -->
+    <link rel="stylesheet" href="../styles/header.css">
+    <script defer src="../scripts/header.js"></script>
+    <script defer src="../scripts/central-link-navigation.js"></script>
+
+    <!-- Sign Up (current page) CSS and JS -->
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <script defer src="../scripts/sign-up.js"></script>
+
+    <!-- Footer-related CSS and PHP -->
+    <link rel="stylesheet" href="../styles/footer.css">
+
 </head>
 
 <body>
 
-
     <div class="content">
-        <div class="pageTitleHeader">Account Log In</div>
+        <div class="pageTitleHeader">Registration</div>
 
-        <form id="loginForm" class="section" method="POST" autocomplete="on"
-            action="/Barangay-System/database/sign-in-handler.php">
-            <!-- Username/Email -->
-            <div class="group">
-                <label for="usernameOrEmail">Username or Email</label>
-                <input type="text" id="usernameOrEmail" name="usernameOrEmail" required autocomplete="username">
-            </div>
+        <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
 
-            <!-- Password -->
-            <div class="group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="loginPassword" required autocomplete="current-password">
-            </div>
+            <!-- Upload Proof of Residency -->
+            <div class="section">
+                <div class="section-title">Proof of Residency</div>
 
-            <!-- Submit Button -->
-            <div class="btn-container">
-                <button type="submit" class="btn submit-btn">Log In</button>
-            </div>
+                <div class="group image-upload">
+                    <img id="imageFormalPicturePreview" class="image-preview" src="../assets/Formal-Picture.png"
+                        alt="Upload Formal Picture Preview">
+                    <label for="imageFormalPictureUpload">Upload Formal Picture</label>
+                    <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
+                        required autocomplete="off">
+                </div>
 
-            <div id="notifierModal" class="notifier hidden">
-                <div class="notifier-content">
-                    <p id="notifierMessage"></p>
-                    <button id="notifierCloseBtn" class="btn" type="button">OK</button>
+                <div class="group image-upload">
+                    <img id="imageResidencyProofPreview" class="image-preview" src="../assets/Valid-id-icon.png"
+                        alt="Valid ID Preview">
+                    <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
+                    <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
+                        required autocomplete="off">
                 </div>
             </div>
 
-            <!-- Sign Up Link -->
-            <div class="sign-up-link-container">
-                <p>
-                    Don't have an account?
-                    <a href="/Barangay-System/pages/sign-up.php" class="sign-up-colored-link">Sign Up</a>
-                </p>
+            <!-- Personal Information -->
+            <div class="section">
+                <div class="section-title">Personal Information</div>
+
+                <div class="group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Juan"
+                        autocomplete="given-name">
+                </div>
+
+                <div class="group">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
+                        autocomplete="additional-name">
+                </div>
+
+                <div class="group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
+                        autocomplete="family-name">
+                </div>
+
+                <div class="group">
+                    <label for="birthdate">Birthdate</label>
+                    <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
+                </div>
+
+                <div class="group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required autocomplete="sex">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Contact and Account Details -->
+            <div class="section">
+                <div class="section-title">Contact and Account Details</div>
+
+                <div class="group">
+                    <label for="contact">Contact Number</label>
+                    <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
+                        autocomplete="tel">
+                </div>
+
+                <div class="group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="example@mail.com"
+                        autocomplete="email">
+                </div>
+
+                <div class="group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Do not use real name"
+                        autocomplete="username">
+                </div>
+
+                <div class="group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                </div>
+
+                <div class="group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                        autocomplete="new-password">
+                </div>
+            </div>
+
+            <!-- Address and Demographics -->
+            <div class="section" id="bottom-section">
+                <div class="section-title">Address and Demographics</div>
+
+                <div class="group">
+                    <label for="houseStreet">House/Lot No. & Street</label>
+                    <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
+                        autocomplete="street-address">
+                </div>
+
+                <div class="group">
+                    <label for="barangay">Barangay</label>
+                    <select id="barangay" name="barangay" required autocomplete="off">
+                        <option value="" disabled selected>Select Barangay</option>
+                        <option value="San Andres">San Andres</option>
+                        <option value="Santo Domingo">Santo Domingo</option>
+                        <option value="San Isidro">San Isidro</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="San Roque">San Roque</option>
+                        <option value="Santa Rosa">Santa Rosa</option>
+                        <option value="Santo Niño">Santo Niño</option>
+
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="residentType">Resident Type</label>
+                    <select id="residentType" name="residentType" required autocomplete="off">
+                        <option value="" disabled selected>Select Type</option>
+                        <option value="Owner">Owner</option>
+                        <option value="Tenant">Tenant</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="civilStatus">Civil Status</label>
+                    <select id="civilStatus" name="civilStatus" required autocomplete="off">
+                        <option value="" disabled selected>Select</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="nationality">Nationality</label>
+                    <select id="nationality" name="nationality" required autocomplete="country-name">
+                        <option value="" disabled selected>Select Nationality</option>
+                        <option value="Filipino">Filipino</option>
+                        <option value="Foreigner">Foreigner</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="btn-container">
+                    <button type="submit" class="btn submit-btn">Submit</button>
+                    <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
+                </div>
             </div>
         </form>
+
+
     </div>
 
-    <?php include_once('../pages/footer.php'); ?>
+    <div id="notifierModal" class="notifier hidden">
+        <div class="notifier-content">
+            <p id="notifierMessage"></p>
+            <button id="notifierCloseBtn" class="btn">OK</button>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <script src="/Barangay-System/scripts/header.js"></script>
-    <script src="/Barangay-System/scripts/sign-in.js"></script>
+    <div class="sign-in-link-container">
+        <p style="text-align:center; margin-top: 20px;">
+            Already have account?
+            <a href="sign-in.php" class="log-in-colored-link">Log In</a>
+        </p>
+    </div>
+
+    <?php include_once('footer.php'); ?>
+
 </body>
 
 </html>
@@ -667,215 +866,216 @@ try {
 [FOUND]
 
 <?php // PHP File Content ?>
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
 
-        <!--Database Related PHP-->
-        <?php include_once('./header.php'); ?>
-        <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
-        <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
+    <!--Database Related PHP-->
+    <?php 
+    // Define path prefix
+    $pathPrefix = '../';
+    include_once('header.php'); 
+    ?>
+    <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
+    <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
 
-        <!-- Header-related CSS and PHP -->
-        <link rel="stylesheet" href="/Barangay-System/styles/header.css">
-        <script defer src="/Barangay-System/scripts/header.js"></script>
+    <!-- Header-related CSS and PHP -->
+    <link rel="stylesheet" href="../styles/header.css">
+    <script defer src="../scripts/header.js"></script>
+    <script defer src="../scripts/central-link-navigation.js"></script>
 
-        <!-- Sign Up (current page) CSS and JS -->
-        <link rel="stylesheet" href="/Barangay-System/styles/sign-up.css">
-        <script defer src="/Barangay-System/scripts/sign-up.js"></script>
+    <!-- Sign Up (current page) CSS and JS -->
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <script defer src="../scripts/sign-up.js"></script>
 
-        <!-- Footer-related CSS and PHP -->
-        <link rel="stylesheet" href="/Barangay-System/styles/footer.css">
+    <!-- Footer-related CSS and PHP -->
+    <link rel="stylesheet" href="../styles/footer.css">
 
-    </head>
+</head>
 
-    <body>
+<body>
 
-        <div class="content">
-            <div class="pageTitleHeader">Registration</div>
+    <div class="content">
+        <div class="pageTitleHeader">Registration</div>
 
-            <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
+        <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
 
-                <!-- Upload Proof of Residency -->
-                <div class="section">
-                    <div class="section-title">Proof of Residency</div>
+            <!-- Upload Proof of Residency -->
+            <div class="section">
+                <div class="section-title">Proof of Residency</div>
 
-                    <div class="group image-upload">
-                        <img id="imageFormalPicturePreview" class="image-preview"
-                            src="/Barangay-System/assets/Formal-Picture.png" alt="Upload Formal Picture Preview">
-                        <label for="imageFormalPictureUpload">Upload Formal Picture</label>
-                        <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload"
-                            accept="image/*" required autocomplete="off">
-                    </div>
-
-                    <div class="group image-upload">
-                        <img id="imageResidencyProofPreview" class="image-preview"
-                            src="/Barangay-System/assets/Valid-id-icon.png" alt="Valid ID Preview">
-                        <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
-                        <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload"
-                            accept="image/*" required autocomplete="off">
-                    </div>
+                <div class="group image-upload">
+                    <img id="imageFormalPicturePreview" class="image-preview" src="../assets/Formal-Picture.png"
+                        alt="Upload Formal Picture Preview">
+                    <label for="imageFormalPictureUpload">Upload Formal Picture</label>
+                    <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
+                        required autocomplete="off">
                 </div>
 
-                <!-- Personal Information -->
-                <div class="section">
-                    <div class="section-title">Personal Information</div>
-
-                    <div class="group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" required placeholder="Juan"
-                            autocomplete="given-name">
-                    </div>
-
-                    <div class="group">
-                        <label for="middleName">Middle Name</label>
-                        <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
-                            autocomplete="additional-name">
-                    </div>
-
-                    <div class="group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
-                            autocomplete="family-name">
-                    </div>
-
-                    <div class="group">
-                        <label for="birthdate">Birthdate</label>
-                        <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
-                    </div>
-
-                    <div class="group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender" required autocomplete="sex">
-                            <option value="" disabled selected>Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
+                <div class="group image-upload">
+                    <img id="imageResidencyProofPreview" class="image-preview" src="../assets/Valid-id-icon.png"
+                        alt="Valid ID Preview">
+                    <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
+                    <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
+                        required autocomplete="off">
                 </div>
-
-                <!-- Contact and Account Details -->
-                <div class="section">
-                    <div class="section-title">Contact and Account Details</div>
-
-                    <div class="group">
-                        <label for="contact">Contact Number</label>
-                        <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
-                            autocomplete="tel">
-                    </div>
-
-                    <div class="group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required placeholder="example@mail.com"
-                            autocomplete="email">
-                    </div>
-
-                    <div class="group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required placeholder="Do not use real name"
-                            autocomplete="username">
-                    </div>
-
-                    <div class="group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required autocomplete="new-password">
-                    </div>
-
-                    <div class="group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" required
-                            autocomplete="new-password">
-                    </div>
-                </div>
-
-                <!-- Address and Demographics -->
-                <div class="section" id="bottom-section">
-                    <div class="section-title">Address and Demographics</div>
-
-                    <div class="group">
-                        <label for="houseStreet">House/Lot No. & Street</label>
-                        <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
-                            autocomplete="street-address">
-                    </div>
-
-                    <div class="group">
-                        <label for="barangay">Barangay</label>
-                        <select id="barangay" name="barangay" required autocomplete="off">
-                            <option value="" disabled selected>Select Barangay</option>
-                            <option value="San Andres">San Andres</option>
-                            <option value="Santo Domingo">Santo Domingo</option>
-                            <option value="San Isidro">San Isidro</option>
-                            <option value="San Juan">San Juan</option>
-                            <option value="San Roque">San Roque</option>
-                            <option value="Santa Rosa">Santa Rosa</option>
-                            <option value="Santo Niño">Santo Niño</option>
-
-                        </select>
-                    </div>
-
-                    <div class="group">
-                        <label for="residentType">Resident Type</label>
-                        <select id="residentType" name="residentType" required autocomplete="off">
-                            <option value="" disabled selected>Select Type</option>
-                            <option value="Owner">Owner</option>
-                            <option value="Tenant">Tenant</option>
-                        </select>
-                    </div>
-
-                    <div class="group">
-                        <label for="civilStatus">Civil Status</label>
-                        <select id="civilStatus" name="civilStatus" required autocomplete="off">
-                            <option value="" disabled selected>Select</option>
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                            <option value="Widowed">Widowed</option>
-                        </select>
-                    </div>
-
-                    <div class="group">
-                        <label for="nationality">Nationality</label>
-                        <select id="nationality" name="nationality" required autocomplete="country-name">
-                            <option value="" disabled selected>Select Nationality</option>
-                            <option value="Filipino">Filipino</option>
-                            <option value="Foreigner">Foreigner</option>
-                        </select>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="btn-container">
-                        <button type="submit" class="btn submit-btn">Submit</button>
-                        <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
-                    </div>
-                </div>
-            </form>
-
-
-        </div>
-
-        <div id="notifierModal" class="notifier hidden">
-            <div class="notifier-content">
-                <p id="notifierMessage"></p>
-                <button id="notifierCloseBtn" class="btn">OK</button>
             </div>
+
+            <!-- Personal Information -->
+            <div class="section">
+                <div class="section-title">Personal Information</div>
+
+                <div class="group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Juan"
+                        autocomplete="given-name">
+                </div>
+
+                <div class="group">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
+                        autocomplete="additional-name">
+                </div>
+
+                <div class="group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
+                        autocomplete="family-name">
+                </div>
+
+                <div class="group">
+                    <label for="birthdate">Birthdate</label>
+                    <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
+                </div>
+
+                <div class="group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required autocomplete="sex">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Contact and Account Details -->
+            <div class="section">
+                <div class="section-title">Contact and Account Details</div>
+
+                <div class="group">
+                    <label for="contact">Contact Number</label>
+                    <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
+                        autocomplete="tel">
+                </div>
+
+                <div class="group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="example@mail.com"
+                        autocomplete="email">
+                </div>
+
+                <div class="group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Do not use real name"
+                        autocomplete="username">
+                </div>
+
+                <div class="group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                </div>
+
+                <div class="group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                        autocomplete="new-password">
+                </div>
+            </div>
+
+            <!-- Address and Demographics -->
+            <div class="section" id="bottom-section">
+                <div class="section-title">Address and Demographics</div>
+
+                <div class="group">
+                    <label for="houseStreet">House/Lot No. & Street</label>
+                    <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
+                        autocomplete="street-address">
+                </div>
+
+                <div class="group">
+                    <label for="barangay">Barangay</label>
+                    <select id="barangay" name="barangay" required autocomplete="off">
+                        <option value="" disabled selected>Select Barangay</option>
+                        <option value="San Andres">San Andres</option>
+                        <option value="Santo Domingo">Santo Domingo</option>
+                        <option value="San Isidro">San Isidro</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="San Roque">San Roque</option>
+                        <option value="Santa Rosa">Santa Rosa</option>
+                        <option value="Santo Niño">Santo Niño</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="residentType">Resident Type</label>
+                    <select id="residentType" name="residentType" required autocomplete="off">
+                        <option value="" disabled selected>Select Type</option>
+                        <option value="Owner">Owner</option>
+                        <option value="Tenant">Tenant</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="civilStatus">Civil Status</label>
+                    <select id="civilStatus" name="civilStatus" required autocomplete="off">
+                        <option value="" disabled selected>Select</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="nationality">Nationality</label>
+                    <select id="nationality" name="nationality" required autocomplete="country-name">
+                        <option value="" disabled selected>Select Nationality</option>
+                        <option value="Filipino">Filipino</option>
+                        <option value="Foreigner">Foreigner</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="btn-container">
+                    <button type="submit" class="btn submit-btn">Submit</button>
+                    <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="notifierModal" class="notifier hidden">
+        <div class="notifier-content">
+            <p id="notifierMessage"></p>
+            <button id="notifierCloseBtn" class="btn">OK</button>
         </div>
+    </div>
 
-        <div class="sign-in-link-container">
-            <p style="text-align:center; margin-top: 20px;">
-                Already have account?
-                <a href="/Barangay-System/pages/sign-in.php" class="log-in-colored-link">Log In</a>
-            </p>
-        </div>
+    <div class="sign-in-link-container">
+        <p style="text-align:center; margin-top: 20px;">
+            Already have account?
+            <a href="sign-in.php" class="log-in-colored-link">Log In</a>
+        </p>
+    </div>
 
-        <?php include_once('../pages/footer.php'); ?>
+    <?php include_once('footer.php'); ?>
 
+</body>
 
-    </body>
-
-    </html>
+</html>
 
 ==============================================
 
@@ -884,114 +1084,104 @@ try {
 [FOUND]
 
 /* JavaScript File Content */
-/* JavaScript File Content: central-link-navigation.js - SIMPLIFIED VERSION */
+/* JavaScript File Content: central-link-navigation.js - FIXED VERSION */
 
 /**
- * Central Path Manager - Simple Version
- * Provides consistent paths for all resources
+ * Central Path Manager - Fixed Version
+ * Dynamically fixes all broken paths
  */
 
 const PathManager = {
-    // Base paths configuration
-    config: {
-        projectRoot: '', // Will be auto-detected
-        assets: 'assets/',
-        styles: 'styles/',
-        scripts: 'scripts/',
-        pages: 'pages/',
-        database: 'database/'
-    },
-
-    // Initialize with current path
+    // Initialize
     init() {
-        // Detect project root from current URL
+        console.log('PathManager initializing...');
+        
+        // Fix paths immediately
+        this.fixAllPaths();
+        
+        // Also fix paths after a short delay (in case of dynamically added content)
+        setTimeout(() => this.fixAllPaths(), 500);
+        
+        return this;
+    },
+
+    // Fix all broken paths on the page
+    fixAllPaths() {
+        console.log('Fixing all broken paths...');
+        
+        // Get current directory
         const currentPath = window.location.pathname;
+        let basePath = '';
         
-        // If we're in the project folder
-        if (currentPath.includes('Crooks-Cart-Collectives')) {
-            const parts = currentPath.split('/');
-            const projectIndex = parts.indexOf('Crooks-Cart-Collectives');
-            if (projectIndex !== -1) {
-                this.config.projectRoot = '/' + parts.slice(1, projectIndex + 1).join('/') + '/';
-            }
+        // Determine base path
+        if (currentPath.includes('/pages/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/database/')) {
+            basePath = '../';
         } else {
-            // Assume we're at root
-            this.config.projectRoot = '/';
+            basePath = '';
         }
         
-        // If still empty, try to detect from current directory
-        if (!this.config.projectRoot) {
-            const depth = currentPath.split('/').length - 2;
-            this.config.projectRoot = depth > 0 ? '../'.repeat(depth) : './';
-        }
+        // Fix CSS links
+        document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('//')) {
+                if (href.includes('Barangay-System')) {
+                    link.href = href.replace(/\/?Barangay-System\//g, basePath);
+                } else if (href.startsWith('/')) {
+                    // Convert absolute path to relative
+                    link.href = basePath + href.substring(1);
+                }
+            }
+        });
         
-        console.log('PathManager initialized with root:', this.config.projectRoot);
-    },
-
-    // Get full path for a resource
-    getPath(type, filename) {
-        if (!this.config.projectRoot) this.init();
+        // Fix script sources
+        document.querySelectorAll('script[src]').forEach(script => {
+            const src = script.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('//')) {
+                if (src.includes('Barangay-System')) {
+                    script.src = src.replace(/\/?Barangay-System\//g, basePath);
+                } else if (src.startsWith('/')) {
+                    // Convert absolute path to relative
+                    script.src = basePath + src.substring(1);
+                }
+            }
+        });
         
-        const baseTypes = {
-            'asset': this.config.assets,
-            'style': this.config.styles,
-            'script': this.config.scripts,
-            'page': this.config.pages,
-            'database': this.config.database,
-            'root': ''
-        };
-        
-        if (baseTypes[type]) {
-            return this.config.projectRoot + baseTypes[type] + filename;
-        }
-        
-        console.error('Unknown path type:', type);
-        return this.config.projectRoot + filename;
-    },
-
-    // Convenience methods
-    getAsset(name) { return this.getPath('asset', name); },
-    getStyle(name) { return this.getPath('style', name); },
-    getScript(name) { return this.getPath('script', name); },
-    getPage(name) { return this.getPath('page', name); },
-    getDatabase(name) { return this.getPath('database', name); },
-    
-    // Fix all absolute paths on the page
-    fixAbsolutePaths() {
         // Fix image sources
-        document.querySelectorAll('img').forEach(img => {
-            let src = img.getAttribute('src');
-            if (src && src.includes('/Barangay-System/')) {
-                img.src = src.replace('/Barangay-System/', this.config.projectRoot);
+        document.querySelectorAll('img[src]').forEach(img => {
+            const src = img.getAttribute('src');
+            if (src && !src.startsWith('http') && !src.startsWith('//') && !src.startsWith('data:')) {
+                if (src.includes('Barangay-System')) {
+                    img.src = src.replace(/\/?Barangay-System\//g, basePath);
+                } else if (src.startsWith('/')) {
+                    // Convert absolute path to relative
+                    img.src = basePath + src.substring(1);
+                }
             }
         });
         
-        // Fix link hrefs
-        document.querySelectorAll('a').forEach(link => {
-            let href = link.getAttribute('href');
-            if (href && href.includes('/Barangay-System/') && !href.startsWith('http')) {
-                link.href = href.replace('/Barangay-System/', this.config.projectRoot);
+        // Fix inline styles with background images
+        document.querySelectorAll('[style*="background-image"]').forEach(el => {
+            const style = el.getAttribute('style');
+            if (style.includes('Barangay-System')) {
+                el.style.backgroundImage = style.replace(/\/?Barangay-System\//g, basePath);
             }
         });
         
-        // Fix form actions
-        document.querySelectorAll('form').forEach(form => {
-            let action = form.getAttribute('action');
-            if (action && action.includes('/Barangay-System/')) {
-                form.action = action.replace('/Barangay-System/', this.config.projectRoot);
-            }
-        });
+        console.log('Path fixing complete. Base path:', basePath);
     }
 };
 
-// Initialize and expose
+// Make it globally available
 window.PathManager = PathManager;
 
-// Auto-initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+// Auto-initialize immediately
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => PathManager.init());
+} else {
     PathManager.init();
-    PathManager.fixAbsolutePaths();
-});
+}
 
 ==============================================
 
@@ -1034,42 +1224,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form?.addEventListener("submit", function (event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        const about = document.getElementById("complaint-about").value.trim();
-        const message = document.getElementById("complaint-text").value.trim();
+    const about = document.getElementById("complaint-about").value.trim();
+    const message = document.getElementById("complaint-text").value.trim();
 
-        if (!about || !message) {
-            alert("Both fields are required.");
-            return;
+    if (!about || !message) {
+        alert("Both fields are required.");
+        return;
+    }
+
+    if (typeof residentID === "undefined" || !residentID) {
+        alert("User not identified.");
+        return;
+    }
+
+    // Use relative path - determine based on current location
+    const currentPath = window.location.pathname;
+    let fetchPath = "database/complaint-handler.php";
+    
+    if (currentPath.includes('/pages/')) {
+        fetchPath = "../database/complaint-handler.php";
+    }
+
+    fetch(fetchPath, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ about, message, residentID })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("Complaint submitted.");
+            form.reset();
+            closeForm();
+        } else {
+            alert("Failed: " + (data.message || "Try again."));
         }
-
-        if (typeof residentID === "undefined" || !residentID) {
-            alert("User not identified.");
-            return;
-        }
-
-        fetch("/Barangay-System/database/complaint-handler.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ about, message, residentID })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                alert("Complaint submitted.");
-                form.reset();
-                closeForm();
-            } else {
-                alert("Failed: " + (data.message || "Try again."));
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Error occurred.");
-        });
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error occurred.");
     });
-
+});
 
 
 ==============================================
@@ -1106,25 +1303,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
        const logo = document.getElementById('logo');
 
+// In header.js, find the logo click handler and update it:
+
 if (logo) {
-    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s"; // delay visibility off toggle
+    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
     logo.style.cursor = "pointer";
 
     logo.addEventListener("click", () => {
-        window.location.href = window.location.origin + "/Barangay-System/index.php";
+        // Use relative path to index.php - simpler approach
+        const currentPath = window.location.pathname;
+        
+        // Check if we're already on index.php
+        if (currentPath.endsWith('index.php') || currentPath.endsWith('/')) {
+            return; // Already on homepage
+        }
+        
+        // Navigate to index.php
+        window.location.href = "index.php";
     });
 
     const fadeInLogo = () => {
         setTimeout(() => {
             logo.style.visibility = "visible";
             logo.style.opacity = 1;
-        }, 1000); // 1s delay, match with content or header
+        }, 1000);
     };
 
     if (logo.complete && logo.naturalHeight !== 0) {
-        fadeInLogo(); // Image already loaded
+        fadeInLogo();
     } else {
-        logo.addEventListener("load", fadeInLogo); // Wait until it loads
+        logo.addEventListener("load", fadeInLogo);
     }
 }
 
@@ -1280,12 +1488,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
         const logo = document.getElementById('logo');
 
-        if (logo) {
-            logo.style.cursor = "pointer";
-            logo.addEventListener("click", () => {
-                window.location.href = window.location.origin + "/Barangay-System/index.php";
-            });
-        }
+    if (logo) {
+        logo.style.cursor = "pointer";
+        logo.addEventListener("click", () => {
+            // Navigate to index.php from any page
+            window.location.href = "../index.php";
+        });
+    }
 
         if (menuButton && mobileNav) {
             const backdrop = document.createElement('div');
@@ -1401,7 +1610,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const complaintButton = document.getElementById('complaintButton');
     if (complaintButton) {
         complaintButton.addEventListener('click', () => {
-            window.location.href = "/Barangay-System/pages/complaint.php";
+            window.location.href = "complaint.php";
         });
     }
 });
@@ -1420,10 +1629,10 @@ const quoteText = document.getElementById("quoteText");
 
 if (quoteImageShowcase && quoteText) {
     const slides = [
-        { image: "./assets/Showcase1.png", text: "Burden becomes lighter when everyone helps." },
-        { image: "./assets/Showcase2.png", text: "No strong fence against a united people." },
-        { image: "./assets/Showcase3.png", text: "The pain of one may affect everyone." },
-        { image: "./assets/Showcase4.png", text: "Community are people that strives for better tomorrow." }
+        { image: "assets/Showcase1.png", text: "Burden becomes lighter when everyone helps." },
+        { image: "assets/Showcase2.png", text: "No strong fence against a united people." },
+        { image: "assets/Showcase3.png", text: "The pain of one may affect everyone." },
+        { image: "assets/Showcase4.png", text: "Community are people that strives for better tomorrow." }
     ];
     
     let imagesLoaded = 0;
@@ -1461,7 +1670,6 @@ if (quoteImageShowcase && quoteText) {
         }
     }, 100);
 }
-
 
 ==============================================
 
@@ -1608,10 +1816,20 @@ document.addEventListener('DOMContentLoaded', () => {
   clearButton.addEventListener('click', () => {
     form.reset();
     form.classList.remove('submitted');
-    imageFormalPicturePreview.src = '/Barangay-System/assets/Formal-Picture.png';
-    imageResidencyProofPreview.src = '/Barangay-System/assets/Valid-id-icon.png';
+    
+    // Use relative paths for default images
+    const currentPath = window.location.pathname;
+    let prefix = "../";
+    if (currentPath.includes('/pages/')) {
+        prefix = "../";
+    } else {
+        prefix = "";
+    }
+    
+    imageFormalPicturePreview.src = prefix + 'assets/Formal-Picture.png';
+    imageResidencyProofPreview.src = prefix + 'assets/Valid-id-icon.png';
     resetHighlights();
-  });
+});
 
   submitButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -1687,7 +1905,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formData = new FormData(form);
 
-    fetch('/Barangay-System/database/sign-up-handler.php', {
+  fetch('../database/sign-up-handler.php', {
   method: 'POST',
   body: formData
 })

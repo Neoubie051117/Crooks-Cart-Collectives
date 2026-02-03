@@ -1,0 +1,10 @@
+Now here's the issues:
+Number 1 My php file works  well in windows the css and js, php, assets loads well, but when it's in linux it doesn't load those css and js  etc.  even when it's the same link
+
+I wanna solve it by making a js file where it has all hyperlinks, css, js, or those images for assets
+this file will be act as central control so each file can learn how to navigate each of their pages weather the user clicks prev or next of the browser, even in windows or linux it will work, That's why I added a new file called central link navigation
+
+Number 2 It's hard to refactor, Example my root folder name before is Barangay-System, now I changed it to Crooks-Cart-Collectives, I can't refactor a link, so maybe the central-link-navigation.js must use relative path so even when index file is on root, and other page is on another folder, it will be easier to refactor, since all php will call this js, so retain those php,css,js or image links those each page are calling and when it fails the central link navigation script will help those page to fetch what they need like those css, other js, no matter what os are they in, cause im running it locally, and troubleshooting it on different os's
+Revise each file, cause they have hard coded root folder link
+
+ Here's my file structure:
