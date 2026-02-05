@@ -21,7 +21,7 @@ $pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
     <div class="footer-lower">
         <div class="mail-button">
             <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail">
-            <span>vist-us@baranggay-system.com</span>
+            <span>@crooks-cart-community.com</span>
         </div>
         <div class="policy-links">
             <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>

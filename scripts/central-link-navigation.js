@@ -1,14 +1,14 @@
-/* JavaScript File Content: central-link-navigation.js - FIXED VERSION */
+/* JavaScript File Content: central-link-navigation.js - UPDATED FOR NEW STRUCTURE */
 
 /**
- * Central Path Manager - Fixed Version
- * Dynamically fixes all broken paths
+ * Central Path Manager - Updated for Crooks-Cart-Collectives
+ * Dynamically fixes all broken paths for the new structure
  */
 
 const PathManager = {
     // Initialize
     init() {
-        console.log('PathManager initializing...');
+        console.log('PathManager initializing for new structure...');
         
         // Fix paths immediately
         this.fixAllPaths();
@@ -19,32 +19,45 @@ const PathManager = {
         return this;
     },
 
-    // Fix all broken paths on the page
-    fixAllPaths() {
-        console.log('Fixing all broken paths...');
-        
-        // Get current directory
+    // Get base path based on current location
+    getBasePath() {
         const currentPath = window.location.pathname;
         let basePath = '';
         
-        // Determine base path
+        // Determine base path based on current directory
         if (currentPath.includes('/pages/')) {
             basePath = '../';
         } else if (currentPath.includes('/database/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/scripts/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/styles/')) {
             basePath = '../';
         } else {
             basePath = '';
         }
         
+        return basePath;
+    },
+
+    // Fix all broken paths on the page
+    fixAllPaths() {
+        console.log('Fixing all paths for Crooks-Cart-Collectives...');
+        
+        const basePath = this.getBasePath();
+        
         // Fix CSS links
         document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
             const href = link.getAttribute('href');
-            if (href && !href.startsWith('http') && !href.startsWith('//')) {
+            if (href && !href.startsWith('http') && !href.startsWith('//') && !href.startsWith('data:')) {
                 if (href.includes('Barangay-System')) {
                     link.href = href.replace(/\/?Barangay-System\//g, basePath);
                 } else if (href.startsWith('/')) {
                     // Convert absolute path to relative
                     link.href = basePath + href.substring(1);
+                } else if (!href.startsWith('../') && !href.startsWith('./') && href.indexOf('/') !== 0) {
+                    // Add base path to relative paths that need it
+                    link.href = basePath + href;
                 }
             }
         });
@@ -75,6 +88,32 @@ const PathManager = {
             }
         });
         
+        // Fix anchor hrefs
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('//')) {
+                if (href.includes('Barangay-System')) {
+                    link.href = href.replace(/\/?Barangay-System\//g, basePath);
+                } else if (href.startsWith('/')) {
+                    // Convert absolute path to relative
+                    link.href = basePath + href.substring(1);
+                }
+            }
+        });
+        
+        // Fix form actions
+        document.querySelectorAll('form[action]').forEach(form => {
+            const action = form.getAttribute('action');
+            if (action && !action.startsWith('http') && !action.startsWith('#') && !action.startsWith('//')) {
+                if (action.includes('Barangay-System')) {
+                    form.action = action.replace(/\/?Barangay-System\//g, basePath);
+                } else if (action.startsWith('/')) {
+                    // Convert absolute path to relative
+                    form.action = basePath + action.substring(1);
+                }
+            }
+        });
+        
         // Fix inline styles with background images
         document.querySelectorAll('[style*="background-image"]').forEach(el => {
             const style = el.getAttribute('style');
@@ -84,6 +123,12 @@ const PathManager = {
         });
         
         console.log('Path fixing complete. Base path:', basePath);
+    },
+    
+    // Helper to get correct path for database files
+    getDatabasePath(fileName) {
+        const basePath = this.getBasePath();
+        return basePath + 'database/' + fileName;
     }
 };
 

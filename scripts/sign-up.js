@@ -17,21 +17,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalMessage = document.getElementById('notifierMessage');
   const modalClose = document.getElementById('notifierCloseBtn');
 
+  let isModalOpen = false;
+  let isSubmitting = false;
+
   function showNotifier(message) {
+    if (isModalOpen) return;
     modalMessage.textContent = message;
     modal.classList.remove('hidden');
+    isModalOpen = true;
   }
 
-  modalClose.addEventListener('click', () => {
+  function closeNotifier() {
     modal.classList.add('hidden');
-  });
+    isModalOpen = false;
+  }
+
+  modalClose.addEventListener('click', closeNotifier);
 
   function setupImagePreview(input, preview) {
     input.addEventListener('change', () => {
       const file = input.files[0];
       if (!file) return;
+      
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        showNotifier('File size too large. Maximum size is 5MB.');
+        input.value = ''; // Clear the file input
+        return;
+      }
+      
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!validTypes.includes(file.type)) {
+        showNotifier('Invalid file type. Please upload JPG, PNG, or GIF images only.');
+        input.value = ''; // Clear the file input
+        return;
+      }
+      
       const reader = new FileReader();
-      reader.onload = () => preview.src = reader.result;
+      reader.onload = () => {
+        preview.src = reader.result;
+        preview.style.display = 'block';
+      };
       reader.readAsDataURL(file);
     });
   }
@@ -43,137 +71,219 @@ document.addEventListener('DOMContentLoaded', () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  function highlightField(field, highlight = true) {
-    field.style.borderColor = highlight ? 'red' : '';
-    field.style.boxShadow = highlight ? '0 0 5px red' : '';
+  function isPasswordValid(password) {
+    // At least 8 characters, with at least one uppercase, one lowercase, and one number
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+  }
+
+  function highlightField(field, highlight = true, message = '') {
+    field.style.borderColor = highlight ? '#e74c3c' : '';
+    field.style.boxShadow = highlight ? '0 0 0 2px rgba(231, 76, 60, 0.2)' : '';
+    
+    // Remove existing error message
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    // Add error message if provided
+    if (highlight && message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'field-error';
+      errorDiv.textContent = message;
+      errorDiv.style.color = '#e74c3c';
+      errorDiv.style.fontSize = '12px';
+      errorDiv.style.marginTop = '4px';
+      field.parentNode.appendChild(errorDiv);
+    }
   }
 
   function resetHighlights() {
-    form.querySelectorAll('input, select').forEach(field => highlightField(field, false));
+    form.querySelectorAll('input, select').forEach(field => {
+      highlightField(field, false);
+      const error = field.parentNode.querySelector('.field-error');
+      if (error) error.remove();
+    });
   }
 
   clearButton.addEventListener('click', () => {
     form.reset();
     form.classList.remove('submitted');
+    resetHighlights();
     
-    // Use relative paths for default images
+    // Reset to default images using correct relative paths
     const currentPath = window.location.pathname;
-    let prefix = "../";
-    if (currentPath.includes('/pages/')) {
+    let prefix = "";
+      
+    if (currentPath.includes('/pages/sign-up.php')) {
         prefix = "../";
-    } else {
-        prefix = "";
     }
     
     imageFormalPicturePreview.src = prefix + 'assets/Formal-Picture.png';
     imageResidencyProofPreview.src = prefix + 'assets/Valid-id-icon.png';
-    resetHighlights();
-});
+  });
 
-  submitButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    form.classList.add('submitted');
-    resetHighlights();
-
-    const requiredFields = form.querySelectorAll('input[required], select[required]');
+  function validateForm() {
     let isValid = true;
-    let message = '';
-    let missing = [];
+    let errorMessage = '';
+    resetHighlights();
 
+    // Validate required fields
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
     requiredFields.forEach(field => {
       if (!field.value.trim()) {
-        highlightField(field);
-        if (!['password', 'confirmPassword'].includes(field.id)) {
-          missing.push(field.name || field.id);
-        }
+        highlightField(field, true, 'This field is required');
         isValid = false;
       }
     });
 
+    // Validate image uploads
     if (imageFormalPictureUpload.files.length === 0) {
-      highlightField(imageFormalPictureUpload);
-      missing.push('Formal Picture');
+      highlightField(imageFormalPictureUpload, true, 'Formal picture is required');
       isValid = false;
     }
 
     if (imageResidencyProofUpload.files.length === 0) {
-      highlightField(imageResidencyProofUpload);
-      missing.push('Proof of Residency');
+      highlightField(imageResidencyProofUpload, true, 'Proof of residency is required');
       isValid = false;
     }
 
+    // Validate email
     if (emailField.value && !isEmailValid(emailField.value)) {
-      highlightField(emailField);
-      message = 'Please enter a valid email address.';
+      highlightField(emailField, true, 'Please enter a valid email address');
       isValid = false;
     }
 
+    // Validate password
     const password = passwordField.value.trim();
     const confirmPassword = confirmPasswordField.value.trim();
 
-    if (!password && !confirmPassword) {
-      highlightField(passwordField);
-      highlightField(confirmPasswordField);
-      message = 'Password and Confirm Password are required.';
-      isValid = false;
-    } else if (!password) {
-      highlightField(passwordField);
-      message = 'Please enter your password.';
-      isValid = false;
-    } else if (!confirmPassword) {
-      highlightField(confirmPasswordField);
-      message = 'Please confirm your password.';
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      highlightField(passwordField);
-      highlightField(confirmPasswordField);
-      message = 'Passwords do not match.';
+    if (password && !isPasswordValid(password)) {
+      highlightField(passwordField, true, 'Password must be at least 8 characters with uppercase, lowercase, and number');
       isValid = false;
     }
 
-    if (!isValid) {
-      if (message) {
-        showNotifier(message);
-      } else if (missing.length === 1) {
-        showNotifier(`Missing: ${formatFieldName(missing[0])}`);
-      } else {
-        showNotifier(`Please complete all required fields.`);
+    if (password && confirmPassword && password !== confirmPassword) {
+      highlightField(passwordField, true, 'Passwords do not match');
+      highlightField(confirmPasswordField, true, 'Passwords do not match');
+      isValid = false;
+    }
+
+    // Validate contact number (Philippines format)
+    const contactField = document.getElementById('contact');
+    if (contactField.value) {
+      const contactRegex = /^(09|\+639)\d{9}$/;
+      const cleanContact = contactField.value.replace(/\s+/g, '');
+      if (!contactRegex.test(cleanContact)) {
+        highlightField(contactField, true, 'Please enter a valid Philippine mobile number (09XXXXXXXXX or +639XXXXXXXXX)');
+        isValid = false;
       }
-      return;
     }
 
-    const formData = new FormData(form);
-
-  fetch('../database/sign-up-handler.php', {
-  method: 'POST',
-  body: formData
-})
-  .then(res => res.json())
-  .then(response => {
-    if (response.status === 'success') {
-      showNotifier('Registration successful. Present proof at barangay.');
-      setTimeout(() => window.location.href = './sign-in.php', 2000);
-    } else if (response.message === 'duplicate-email duplicate-username') {
-      highlightField(emailField);
-      highlightField(usernameField);
-      showNotifier('Email and Username already exist.');
-    } else if (response.message === 'duplicate-email') {
-      highlightField(emailField);
-      showNotifier('Email already exists.');
-    } else if (response.message === 'duplicate-username') {
-      highlightField(usernameField);
-      showNotifier('Username already exists.');
-    } else {
-      showNotifier('Something went wrong. Try again later.');
-    }
-  })
-  .catch(error => {
-    console.error('Fetch error:', error);
-    showNotifier('Something went wrong. Please check your internet or try again later.');
-  });
-  });
+    return isValid;
+  }
 
   function formatFieldName(fieldId) {
     return fieldId.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase()).trim();
   }
-}); 
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    form.classList.add('submitted');
+    
+    if (!validateForm()) {
+      showNotifier('Please fix the errors in the form before submitting.');
+      return;
+    }
+    
+    isSubmitting = true;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+    
+    const formData = new FormData(form);
+    
+    // Determine the correct path for the API endpoint
+    const currentPath = window.location.pathname;
+    let apiUrl = 'database/sign-up-handler.php';
+    
+    if (currentPath.includes('/pages/')) {
+      apiUrl = '../database/sign-up-handler.php';
+    }
+    
+    fetch(apiUrl, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(response => {
+      if (response.status === 'success') {
+        showNotifier('Registration successful! Please present your proof at the barangay office for verification.');
+        
+        // Redirect to sign-in page after 3 seconds
+        setTimeout(() => {
+          const redirectPath = currentPath.includes('/pages/') ? './sign-in.php' : 'pages/sign-in.php';
+          window.location.href = redirectPath;
+        }, 3000);
+        
+      } else if (response.message === 'duplicate-email duplicate-username') {
+        highlightField(emailField, true, 'Email already registered');
+        highlightField(usernameField, true, 'Username already taken');
+        showNotifier('Both email and username are already registered.');
+        
+      } else if (response.message === 'duplicate-email') {
+        highlightField(emailField, true, 'Email already registered');
+        showNotifier('This email address is already registered.');
+        
+      } else if (response.message === 'duplicate-username') {
+        highlightField(usernameField, true, 'Username already taken');
+        showNotifier('This username is already taken.');
+        
+      } else {
+        showNotifier(response.message || 'Something went wrong. Please try again later.');
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      showNotifier('Network error. Please check your internet connection and try again.');
+    })
+    .finally(() => {
+      isSubmitting = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Submit';
+    });
+  });
+
+  // Add input validation on blur for better UX
+  emailField.addEventListener('blur', () => {
+    if (emailField.value && !isEmailValid(emailField.value)) {
+      highlightField(emailField, true, 'Please enter a valid email address');
+    }
+  });
+
+  passwordField.addEventListener('blur', () => {
+    if (passwordField.value && !isPasswordValid(passwordField.value)) {
+      highlightField(passwordField, true, 'Password must be at least 8 characters with uppercase, lowercase, and number');
+    }
+  });
+
+  confirmPasswordField.addEventListener('blur', () => {
+    if (passwordField.value && confirmPasswordField.value && passwordField.value !== confirmPasswordField.value) {
+      highlightField(confirmPasswordField, true, 'Passwords do not match');
+    }
+  });
+
+  // Clear error on focus
+  form.querySelectorAll('input, select').forEach(field => {
+    field.addEventListener('focus', () => {
+      highlightField(field, false);
+    });
+  });
+});

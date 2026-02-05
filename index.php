@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Portal</title>
+    <title>Crook's Cart Collectives</title>
 
     <!-- Load CSS and JS FIRST -->
     <link rel="stylesheet" href="styles/header.css">

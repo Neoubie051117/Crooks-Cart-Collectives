@@ -1,3 +1,7 @@
+<?php
+// Start session and define path prefix
+$pathPrefix = '../';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,26 +10,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
 
-    <!--Database Related PHP-->
+    <!-- Database and Header -->
+    <?php include_once('header.php'); ?>
+
     <?php 
-    // Define path prefix
-    $pathPrefix = '../';
-    include_once('header.php'); 
+    // Try to include database connection
+    $dbConnected = false;
+    if (file_exists(__DIR__ . '/../database/database-connect.php')) {
+        require_once(__DIR__ . '/../database/database-connect.php');
+        $dbConnected = ($connection !== null);
+    }
     ?>
-    <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
-    <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
 
     <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/header.css">
-    <script defer src="../scripts/header.js"></script>
-    <script defer src="../scripts/central-link-navigation.js"></script>
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
+    <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
+    <script defer src="<?php echo $pathPrefix; ?>scripts/central-link-navigation.js"></script>
 
     <!-- Sign Up (current page) CSS and JS -->
-    <link rel="stylesheet" href="../styles/sign-up.css">
-    <script defer src="../scripts/sign-up.js"></script>
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-up.css">
+    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-up.js"></script>
 
     <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/footer.css">
 
 </head>
 
@@ -41,16 +48,16 @@
                 <div class="section-title">Proof of Residency</div>
 
                 <div class="group image-upload">
-                    <img id="imageFormalPicturePreview" class="image-preview" src="../assets/Formal-Picture.png"
-                        alt="Upload Formal Picture Preview">
+                    <img id="imageFormalPicturePreview" class="image-preview"
+                        src="<?php echo $pathPrefix; ?>assets/Formal-Picture.png" alt="Upload Formal Picture Preview">
                     <label for="imageFormalPictureUpload">Upload Formal Picture</label>
                     <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
                         required autocomplete="off">
                 </div>
 
                 <div class="group image-upload">
-                    <img id="imageResidencyProofPreview" class="image-preview" src="../assets/Valid-id-icon.png"
-                        alt="Valid ID Preview">
+                    <img id="imageResidencyProofPreview" class="image-preview"
+                        src="<?php echo $pathPrefix; ?>assets/Valid-id-icon.png" alt="Valid ID Preview">
                     <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
                     <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
                         required autocomplete="off">
@@ -187,20 +194,31 @@
                 </div>
             </div>
         </form>
-    </div>
+        <!-- END OF FORM -->
 
-    <div id="notifierModal" class="notifier hidden">
-        <div class="notifier-content">
-            <p id="notifierMessage"></p>
-            <button id="notifierCloseBtn" class="btn">OK</button>
+        <!-- Sign In Link - MOVED OUTSIDE THE FORM -->
+        <div class="sign-in-link-container">
+            <p style="text-align:center; margin-top: 20px;">
+                Already have account?
+                <a href="./sign-in.php" class="log-in-colored-link" onclick="return navigateToSignIn(event)">Log In</a>
+            </p>
         </div>
-    </div>
 
-    <div class="sign-in-link-container">
-        <p style="text-align:center; margin-top: 20px;">
-            Already have account?
-            <a href="sign-in.php" class="log-in-colored-link">Log In</a>
-        </p>
+        <script>
+        function navigateToSignIn(e) {
+            e.preventDefault();
+            window.location.href = "./sign-in.php";
+            return false;
+        }
+        </script>
+
+        <!-- Notifier Modal -->
+        <div id="notifierModal" class="notifier hidden">
+            <div class="notifier-content">
+                <p id="notifierMessage"></p>
+                <button id="notifierCloseBtn" class="btn">OK</button>
+            </div>
+        </div>
     </div>
 
     <?php include_once('footer.php'); ?>

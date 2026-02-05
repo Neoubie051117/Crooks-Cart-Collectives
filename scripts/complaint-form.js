@@ -1,4 +1,4 @@
-
+document.addEventListener("DOMContentLoaded", () => {
     const openButton = document.getElementById("openComplaintButton");
     const overlay = document.getElementById("complaintOverlay");
     const form = document.getElementById("complaintForm");
@@ -32,46 +32,97 @@
     }
 
     form?.addEventListener("submit", function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const about = document.getElementById("complaint-about").value.trim();
-    const message = document.getElementById("complaint-text").value.trim();
+        const about = document.getElementById("complaint-about").value.trim();
+        const message = document.getElementById("complaint-text").value.trim();
 
-    if (!about || !message) {
-        alert("Both fields are required.");
-        return;
-    }
-
-    if (typeof residentID === "undefined" || !residentID) {
-        alert("User not identified.");
-        return;
-    }
-
-    // Use relative path - determine based on current location
-    const currentPath = window.location.pathname;
-    let fetchPath = "database/complaint-handler.php";
-    
-    if (currentPath.includes('/pages/')) {
-        fetchPath = "../database/complaint-handler.php";
-    }
-
-    fetch(fetchPath, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ about, message, residentID })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert("Complaint submitted.");
-            form.reset();
-            closeForm();
-        } else {
-            alert("Failed: " + (data.message || "Try again."));
+        if (!about || !message) {
+            alert("Both fields are required.");
+            return;
         }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error occurred.");
+
+        // Get user ID from session (using the new userID instead of residentID)
+        const userID = typeof userID !== 'undefined' ? userID : 
+                      (typeof residentID !== 'undefined' ? residentID : null);
+        
+        if (!userID) {
+            alert("User not identified. Please log in.");
+            return;
+        }
+
+        // Use PathManager to get correct path
+        let fetchPath = "database/complaint-handler.php";
+        
+        // Fallback logic for PathManager
+        if (typeof PathManager !== 'undefined' && typeof PathManager.getDatabasePath === 'function') {
+            fetchPath = PathManager.getDatabasePath('complaint-handler.php');
+        } else {
+            // Manual fallback if PathManager is not available
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/pages/')) {
+                fetchPath = "../database/complaint-handler.php";
+            } else if (currentPath.includes('/database/')) {
+                fetchPath = "complaint-handler.php";
+            }
+        }
+
+        fetch(fetchPath, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                about, 
+                message, 
+                userID: userID // Using userID for the new system
+            })
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.status === "success") {
+                alert("Complaint submitted successfully!");
+                form.reset();
+                closeForm();
+                
+                // Optionally refresh the page or update the complaints list
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                alert("Failed: " + (data.message || "Please try again."));
+            }
+        })
+        .catch(err => {
+            console.error("Complaint submission error:", err);
+            alert("Error occurred while submitting complaint. Please check your connection and try again.");
+        });
     });
+
+    // Add input validation feedback
+    const aboutInput = document.getElementById("complaint-about");
+    const messageInput = document.getElementById("complaint-text");
+    
+    if (aboutInput) {
+        aboutInput.addEventListener("input", function() {
+            if (this.value.trim().length > 0) {
+                this.style.borderColor = "#4CAF50";
+            } else {
+                this.style.borderColor = "";
+            }
+        });
+    }
+    
+    if (messageInput) {
+        messageInput.addEventListener("input", function() {
+            if (this.value.trim().length > 0) {
+                this.style.borderColor = "#4CAF50";
+            } else {
+                this.style.borderColor = "";
+            }
+        });
+    }
 });

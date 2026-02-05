@@ -1,12 +1,15 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/complaint_errors.log');
 
 // Check if user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     echo json_encode(["status" => "error", "message" => "Not logged in."]);
     exit;
 }
@@ -19,51 +22,37 @@ $rawData = file_get_contents("php://input");
 $data = json_decode($rawData, true);
 
 // Validate input
-if (!$data || !isset($data['about']) || !isset($data['message']) || !isset($data['residentID'])) {
+if (!$data || !isset($data['about']) || !isset($data['message'])) {
     echo json_encode(["status" => "error", "message" => "Invalid input."]);
     exit;
 }
 
 $about = trim($data['about']);
 $message = trim($data['message']);
-$residentID = (int)$data['residentID'];
+$userID = $_SESSION['user_id'];
 
-// Validate resident ID
-if ($residentID <= 0) {
-    echo json_encode(["status" => "error", "message" => "Invalid resident ID."]);
-    exit;
-}
-
-// Base directory where complaints are stored
-$baseDir = realpath(__DIR__ . '/../database/user-data');
-$folderPath = $baseDir . '/' . $residentID . '/complaint';
-
-// Create directory if it doesn't exist
-if (!is_dir($folderPath)) {
-    if (!mkdir($folderPath, 0755, true)) {
-        error_log("Failed to create directory: $folderPath");
-        echo json_encode(["status" => "error", "message" => "Failed to create directory."]);
-        exit;
-    }
-}
-
-// Create unique file name using date and time
-$timestamp = date('m-d-Y_H-i-s');
-$fileName = "{$residentID}_{$timestamp}.json";
-$filePath = $folderPath . '/' . $fileName;
-
-// Complaint content
-$complaintData = [
-    "residentID" => $residentID,
-    "about" => $about,
-    "message" => $message,
-    "submittedAt" => date("Y-m-d H:i:s")
-];
-
-// Save complaint as JSON file
-if (file_put_contents($filePath, json_encode($complaintData, JSON_PRETTY_PRINT))) {
-    echo json_encode(["status" => "success"]);
-} else {
-    error_log("Failed to write to file: $filePath");
+try {
+    // Insert complaint into database (you'll need to create a complaints table)
+    $query = "INSERT INTO complaints (userID, about, message, status, createdAt) 
+              VALUES (:userID, :about, :message, 'pending', NOW())";
+    
+    $stmt = $connection->prepare($query);
+    $stmt->execute([
+        ':userID' => $userID,
+        ':about' => $about,
+        ':message' => $message
+    ]);
+    
+    $complaintID = $connection->lastInsertId();
+    
+    echo json_encode([
+        "status" => "success",
+        "message" => "Complaint submitted successfully.",
+        "complaintID" => $complaintID
+    ]);
+    
+} catch (Exception $e) {
+    error_log("Complaint submission error: " . $e->getMessage());
     echo json_encode(["status" => "error", "message" => "Failed to save complaint."]);
 }
+?>

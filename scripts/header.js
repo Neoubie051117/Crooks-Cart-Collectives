@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+    // Content fade in effect
     const content = document.querySelector('.content');
     if (content) {
         content.style.opacity = 0;
@@ -9,47 +9,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 500);
     }
     
-
     function initializeHeader() {
         const menuButton = document.getElementById('menuButton');
         const mobileNav = document.getElementById('mobileNav');
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
-       const logo = document.getElementById('logo');
-
-// In header.js, find the logo click handler and update it:
-
-if (logo) {
-    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
-    logo.style.cursor = "pointer";
-
-    logo.addEventListener("click", () => {
-        // Use relative path to index.php - simpler approach
-        const currentPath = window.location.pathname;
+        const logo = document.getElementById('logo');
         
-        // Check if we're already on index.php
-        if (currentPath.endsWith('index.php') || currentPath.endsWith('/')) {
-            return; // Already on homepage
+        // Handle logo click for consistent navigation
+        if (logo) {
+            logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
+            logo.style.cursor = "pointer";
+            
+            // Remove existing click handlers to prevent conflicts with the HTML anchor
+            const newLogo = logo.cloneNode(true);
+            logo.parentNode.replaceChild(newLogo, logo);
+            
+            // Fade in logo after load
+            const fadeInLogo = () => {
+                setTimeout(() => {
+                    newLogo.style.visibility = "visible";
+                    newLogo.style.opacity = 1;
+                }, 1000);
+            };
+
+            if (newLogo.complete && newLogo.naturalHeight !== 0) {
+                fadeInLogo();
+            } else {
+                newLogo.addEventListener("load", fadeInLogo);
+            }
         }
-        
-        // Navigate to index.php
-        window.location.href = "index.php";
-    });
 
-    const fadeInLogo = () => {
-        setTimeout(() => {
-            logo.style.visibility = "visible";
-            logo.style.opacity = 1;
-        }, 1000);
-    };
-
-    if (logo.complete && logo.naturalHeight !== 0) {
-        fadeInLogo();
-    } else {
-        logo.addEventListener("load", fadeInLogo);
-    }
-}
-
-
+        // Mobile menu functionality
         if (menuButton && mobileNav) {
             const backdrop = document.createElement('div');
             backdrop.className = 'menu-backdrop fade-transition';
@@ -90,8 +80,13 @@ if (logo) {
             });
         }
 
+        // Highlight active navigation link
         highlightActiveLink(navLinks);
+        
+        // Add page transition effects to navigation links
         addPageTransition(navLinks);
+        
+        // Adjust content margin based on header
         adjustContentMargin();
         window.addEventListener('resize', adjustContentMargin);
     }
@@ -104,23 +99,32 @@ if (logo) {
 
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href').endsWith(currentPage)) {
+            const href = link.getAttribute('href');
+            if (href && (href.endsWith(currentPage) || href.includes(currentPage.replace('.php', '')))) {
                 link.classList.add('active');
             }
         });
     }
 
     function addPageTransition(navLinks) {
-        navLinks.forEach(link => {
-            link.addEventListener("click", (e) => {
-                const href = link.getAttribute("href");
-                if (href && !href.startsWith("#") && !href.includes("mailto:")) {
-                    e.preventDefault();
-                    fadeOutAndNavigate(href);
-                }
-            });
+    navLinks.forEach(link => {
+        // Check if this is a navigation link from the header/menu
+        const isHeaderLink = link.classList.contains('nav-link') || 
+                             link.classList.contains('sign-in') || 
+                             link.classList.contains('social-button');
+        
+        link.addEventListener("click", (e) => {
+            const href = link.getAttribute("href");
+            
+            // Only apply transition to navigation links (not form buttons or regular links in content)
+            if (href && isHeaderLink && !href.startsWith("#") && !href.includes("mailto:") && !href.startsWith("http")) {
+                e.preventDefault();
+                fadeOutAndNavigate(href);
+            }
+            // Let regular links (like "Log In" in sign-up.php) work normally
         });
-    }
+    });
+}
 
     function fadeOutAndNavigate(url) {
         const content = document.querySelector('.content');
@@ -141,7 +145,8 @@ if (logo) {
             const currentPage = window.location.pathname.split('/').pop();
             const marginRules = {
                 "container-activities.html": "0px",
-                "sign-up.php": "0px"
+                "sign-up.php": "0px",
+                "sign-in.php": "0px"
             };
             content.style.marginTop = marginRules[currentPage] || "0";
         }
@@ -152,29 +157,37 @@ if (logo) {
             const favicon = document.createElement("link");
             favicon.rel = "icon";
             favicon.type = "image/png";
-            favicon.href = "./assets/Logo.png";
+            
+            // Determine correct path for favicon
+            const currentPath = window.location.pathname;
+            let faviconPath = "assets/Logo.png";
+            if (currentPath.includes('/pages/')) {
+                faviconPath = "../assets/Logo.png";
+            }
+            
+            favicon.href = faviconPath;
             document.head.appendChild(favicon);
         }
     }
 
+    // Initialize header functionality
     initializeHeader();
     addFavicon();
 
-    // Optional: remove no-transition class if you’re using it for delay logic
-  const header = document.querySelector('.header-bar');
-const mobileNav = document.getElementById('mobileNav');
+    // Remove no-transition classes after delay for smooth animations
+    const header = document.querySelector('.header-bar');
+    const mobileNav = document.getElementById('mobileNav');
 
-if (header) {
-  header.classList.add('header-delay');
-}
+    if (header) {
+        header.classList.add('header-delay');
+    }
 
-if (mobileNav) {
-  mobileNav.classList.add('header-delay');
-}
+    if (mobileNav) {
+        mobileNav.classList.add('header-delay');
+    }
 
-setTimeout(() => {
-  if (header) header.classList.remove('header-delay');
-  if (mobileNav) mobileNav.classList.remove('header-delay');
-}, 500); // 2 seconds delay
-
+    setTimeout(() => {
+        if (header) header.classList.remove('header-delay');
+        if (mobileNav) mobileNav.classList.remove('header-delay');
+    }, 500);
 });

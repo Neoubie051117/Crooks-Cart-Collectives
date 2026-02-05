@@ -1,6 +1,6 @@
 Web Project: Crooks-Cart-Collectives
 Preset: All Files
-Generated: 2026-02-03 22:47:41
+Generated: 2026-02-05 18:02:24
 
 === File: Crooks-Cart-Collectives/index.php ===
 
@@ -13,26 +13,23 @@ Generated: 2026-02-03 22:47:41
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Portal</title>
+    <title>Crook's Cart Collectives</title>
 
-    <!-- Header-related CSS and PHP -->
+    <!-- Load CSS and JS FIRST -->
     <link rel="stylesheet" href="styles/header.css">
-    <script defer src="scripts/header.js"></script>
-    <script defer src="scripts/central-link-navigation.js"></script>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/footer.css">
 
-    <!-- Load header.php with root context -->
+    <script defer src="scripts/central-link-navigation.js"></script>
+    <script defer src="scripts/header.js"></script>
+    <script defer src="scripts/index.js"></script>
+
+    <!-- THEN include header.php -->
     <?php 
     // Define a constant to tell header.php we're in root
     define('IN_ROOT', true);
     include_once('pages/header.php'); 
     ?>
-
-    <!-- Index (current page) CSS and PHP -->
-    <link rel="stylesheet" href="styles/index.css">
-    <script defer src="scripts/index.js"></script>
-
-    <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="styles/footer.css">
 
 </head>
 
@@ -79,43 +76,6 @@ Generated: 2026-02-03 22:47:41
 </body>
 
 </html>
-
-==============================================
-
-=== File: Crooks-Cart-Collectives/fix-all-paths.php ===
-
-[FOUND]
-
-<?php // PHP File Content ?>
-<?php
-// fix-all-paths.php
-// Run this script once to fix all remaining hardcoded paths
-
-function replaceInFile($file, $search, $replace) {
-    $content = file_get_contents($file);
-    $newContent = str_replace($search, $replace, $content);
-    file_put_contents($file, $newContent);
-    echo "Fixed: $file\n";
-}
-
-// Fix all PHP files
-$phpFiles = glob('**/*.php', GLOB_BRACE);
-foreach ($phpFiles as $file) {
-    replaceInFile($file, '/Barangay-System/', '');
-    replaceInFile($file, '"Barangay-System/', '"');
-    replaceInFile($file, "'Barangay-System/", "'");
-}
-
-// Fix all JS files
-$jsFiles = glob('**/*.js', GLOB_BRACE);
-foreach ($jsFiles as $file) {
-    replaceInFile($file, '/Barangay-System/', '');
-    replaceInFile($file, '"Barangay-System/', '"');
-    replaceInFile($file, "'Barangay-System/", "'");
-}
-
-echo "All paths fixed!\n";
-?>
 
 ==============================================
 
@@ -309,7 +269,7 @@ $pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
     <div class="footer-lower">
         <div class="mail-button">
             <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail">
-            <span>vist-us@baranggay-system.com</span>
+            <span>@crooks-cart-community.com</span>
         </div>
         <div class="policy-links">
             <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>
@@ -336,9 +296,11 @@ $pathPrefix = (defined('IN_ROOT') && IN_ROOT) ? '' : '../';
 
 <header class="header-bar no-transition">
     <div class="header-logo">
-        <img id="logo" src="<?php echo $pathPrefix; ?>assets/Logo.png" alt="Logo"
-            style="opacity: 0; visibility: hidden;">
-        <div class="title">Bara<span>ngay</span> Sys<span>tem</span></div>
+        <a href="<?php echo $pathPrefix; ?>index.php" class="logo-link" style="display: contents;">
+            <img id="logo" src="<?php echo $pathPrefix; ?>assets/Logo.png" alt="Logo"
+                style="opacity: 0; visibility: hidden;">
+            <div class="title"><span>Crook's</span> Cart <span>Collectives</span></div>
+        </a>
     </div>
     <button class="hamburger-menu" id="menuButton" aria-label="Toggle menu">
         <img src="<?php echo $pathPrefix; ?>assets/hamburger-menu.svg" alt="Menu icon" class="hamburger-icon">
@@ -346,16 +308,16 @@ $pathPrefix = (defined('IN_ROOT') && IN_ROOT) ? '' : '../';
     <div class="nav-container">
         <nav class="nav-bar">
             <?php if ($isLoggedIn && $userRole == 2): ?>
-            <a href="workdesk.php" class="nav-link">WORKDESK</a>
+            <a href="<?php echo $pathPrefix; ?>pages/workdesk.php" class="nav-link">WORKDESK</a>
             <?php endif; ?>
             <?php if ($isLoggedIn && $userRole == 3): ?>
-            <a href="admin-dashboard.php" class="nav-link">ADMIN</a>
+            <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">ADMIN</a>
             <?php endif; ?>
 
             <?php if ($isLoggedIn): ?>
-            <a href="home.php" class="nav-link">HOME</a>
-            <a href="announcements.php" class="nav-link">ANNOUNCEMENTS</a>
-            <a href="complaint.php" class="nav-link">COMPLAINTS</a>
+            <a href="<?php echo $pathPrefix; ?>pages/home.php" class="nav-link">HOME</a>
+            <a href="<?php echo $pathPrefix; ?>pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+            <a href="<?php echo $pathPrefix; ?>pages/complaint.php" class="nav-link">COMPLAINTS</a>
             <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
             <a href="#" class="nav-link">SUPPORT</a>
             <a href="#" class="nav-link">ABOUT</a>
@@ -367,34 +329,34 @@ $pathPrefix = (defined('IN_ROOT') && IN_ROOT) ? '' : '../';
         </nav>
 
         <?php if ($isLoggedIn): ?>
-        <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="sign-in">LOGOUT</a>
+        <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="social-button">LOGOUT</a>
         <?php else: ?>
-        <a href="sign-in.php" class="sign-in">SIGN IN</a>
+        <a href="<?php echo $pathPrefix; ?>pages/sign-up.php" class="social-button">SIGN UP</a>
         <?php endif; ?>
     </div>
 </header>
 
 <nav class="mobile-nav no-transition" id="mobileNav">
     <?php if ($isLoggedIn && $userRole == 2): ?>
-    <a href="workdesk.php" class="nav-link">WORKDESK</a>
+    <a href="<?php echo $pathPrefix; ?>pages/workdesk.php" class="nav-link">WORKDESK</a>
     <?php endif; ?>
     <?php if ($isLoggedIn && $userRole == 3): ?>
-    <a href="admin-dashboard.php" class="nav-link">ADMIN</a>
+    <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">ADMIN</a>
     <?php endif; ?>
 
     <?php if ($isLoggedIn): ?>
-    <a href="home.php" class="nav-link">HOME</a>
-    <a href="announcements.php" class="nav-link">ANNOUNCEMENTS</a>
-    <a href="complaint.php" class="nav-link">COMPLAINTS</a>
+    <a href="<?php echo $pathPrefix; ?>pages/home.php" class="nav-link">HOME</a>
+    <a href="<?php echo $pathPrefix; ?>pages/announcements.php" class="nav-link">ANNOUNCEMENTS</a>
+    <a href="<?php echo $pathPrefix; ?>pages/complaint.php" class="nav-link">COMPLAINTS</a>
     <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
     <a href="#" class="nav-link">SUPPORT</a>
     <a href="#" class="nav-link">ABOUT</a>
-    <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="sign-in">LOG OUT</a>
+    <a href="<?php echo $pathPrefix; ?>database/sign-out-handler.php" class="social-button">LOG OUT</a>
     <?php else: ?>
     <a href="#" class="nav-link" id="activities-mobile-highlight">EVENTS</a>
     <a href="#" class="nav-link">ABOUT</a>
     <a href="#" class="nav-link">SUPPORT</a>
-    <a href="sign-in.php" class="sign-in">SIGN IN</a>
+    <a href="<?php echo $pathPrefix; ?>pages/sign-up.php" class="social-button">SIGN UP</a> <!-- CHANGED THIS LINE -->
     <?php endif; ?>
 </nav>
 
@@ -649,208 +611,108 @@ try {
 [FOUND]
 
 <?php // PHP File Content ?>
+<?php
+// Start session and define path prefix
+$pathPrefix = '../';
+echo "<!-- PHP is working -->";
+
+// Include header AFTER setting path prefix
+include_once('header.php');
+
+// Check database connection (but DON'T include the handler)
+$dbConnected = false;
+if (file_exists(__DIR__ . '/../database/database-connect.php')) {
+    require_once(__DIR__ . '/../database/database-connect.php');
+    $dbConnected = ($connection !== null);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
+    <title>Account Log In</title>
 
-    <!--Database Related PHP-->
-    <?php include_once('header.php'); ?>
-    <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
-    <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-up.css"> <!-- Using sign-up.css for now -->
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/footer.css">
 
-    <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/header.css">
-    <script defer src="../scripts/header.js"></script>
-    <script defer src="../scripts/central-link-navigation.js"></script>
-
-    <!-- Sign Up (current page) CSS and JS -->
-    <link rel="stylesheet" href="../styles/sign-up.css">
-    <script defer src="../scripts/sign-up.js"></script>
-
-    <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/footer.css">
+    <!-- Scripts (with defer) -->
+    <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
+    <script defer src="<?php echo $pathPrefix; ?>scripts/central-link-navigation.js"></script>
+    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-in.js"></script>
 
 </head>
 
 <body>
 
     <div class="content">
-        <div class="pageTitleHeader">Registration</div>
+        <div class="pageTitleHeader">Account Log In</div>
 
-        <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
+        <!-- Database Warning -->
+        <?php if (!$dbConnected): ?>
+        <div class="db-warning"
+            style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; margin: 20px 0; border-radius: 5px; text-align: center;">
+            Database is currently unavailable. You can view the page, but login functionality is disabled.
+        </div>
+        <?php endif; ?>
 
-            <!-- Upload Proof of Residency -->
+        <form id="loginForm" class="container" method="POST" autocomplete="on"
+            action="<?php echo $dbConnected ? $pathPrefix . 'database/sign-in-handler.php' : '#'; ?>">
+
             <div class="section">
-                <div class="section-title">Proof of Residency</div>
+                <div class="section-title">Account Details</div>
 
-                <div class="group image-upload">
-                    <img id="imageFormalPicturePreview" class="image-preview" src="../assets/Formal-Picture.png"
-                        alt="Upload Formal Picture Preview">
-                    <label for="imageFormalPictureUpload">Upload Formal Picture</label>
-                    <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
-                        required autocomplete="off">
-                </div>
-
-                <div class="group image-upload">
-                    <img id="imageResidencyProofPreview" class="image-preview" src="../assets/Valid-id-icon.png"
-                        alt="Valid ID Preview">
-                    <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
-                    <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
-                        required autocomplete="off">
-                </div>
-            </div>
-
-            <!-- Personal Information -->
-            <div class="section">
-                <div class="section-title">Personal Information</div>
-
+                <!-- Username/Email -->
                 <div class="group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" required placeholder="Juan"
-                        autocomplete="given-name">
+                    <label for="usernameOrEmail">Username or Email</label>
+                    <input type="text" id="usernameOrEmail" name="usernameOrEmail" required
+                        placeholder="Enter your username or email" autocomplete="username"
+                        <?php echo !$dbConnected ? 'disabled' : ''; ?>>
                 </div>
 
+                <!-- Password -->
                 <div class="group">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
-                        autocomplete="additional-name">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required
+                        placeholder="Enter your password" autocomplete="current-password"
+                        <?php echo !$dbConnected ? 'disabled' : ''; ?>>
                 </div>
 
-                <div class="group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
-                        autocomplete="family-name">
-                </div>
-
-                <div class="group">
-                    <label for="birthdate">Birthdate</label>
-                    <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
-                </div>
-
-                <div class="group">
-                    <label for="gender">Gender</label>
-                    <select id="gender" name="gender" required autocomplete="sex">
-                        <option value="" disabled selected>Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Contact and Account Details -->
-            <div class="section">
-                <div class="section-title">Contact and Account Details</div>
-
-                <div class="group">
-                    <label for="contact">Contact Number</label>
-                    <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
-                        autocomplete="tel">
-                </div>
-
-                <div class="group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="example@mail.com"
-                        autocomplete="email">
-                </div>
-
-                <div class="group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Do not use real name"
-                        autocomplete="username">
-                </div>
-
-                <div class="group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required autocomplete="new-password">
-                </div>
-
-                <div class="group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required
-                        autocomplete="new-password">
-                </div>
-            </div>
-
-            <!-- Address and Demographics -->
-            <div class="section" id="bottom-section">
-                <div class="section-title">Address and Demographics</div>
-
-                <div class="group">
-                    <label for="houseStreet">House/Lot No. & Street</label>
-                    <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
-                        autocomplete="street-address">
-                </div>
-
-                <div class="group">
-                    <label for="barangay">Barangay</label>
-                    <select id="barangay" name="barangay" required autocomplete="off">
-                        <option value="" disabled selected>Select Barangay</option>
-                        <option value="San Andres">San Andres</option>
-                        <option value="Santo Domingo">Santo Domingo</option>
-                        <option value="San Isidro">San Isidro</option>
-                        <option value="San Juan">San Juan</option>
-                        <option value="San Roque">San Roque</option>
-                        <option value="Santa Rosa">Santa Rosa</option>
-                        <option value="Santo Niño">Santo Niño</option>
-
-                    </select>
-                </div>
-
-                <div class="group">
-                    <label for="residentType">Resident Type</label>
-                    <select id="residentType" name="residentType" required autocomplete="off">
-                        <option value="" disabled selected>Select Type</option>
-                        <option value="Owner">Owner</option>
-                        <option value="Tenant">Tenant</option>
-                    </select>
-                </div>
-
-                <div class="group">
-                    <label for="civilStatus">Civil Status</label>
-                    <select id="civilStatus" name="civilStatus" required autocomplete="off">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Widowed">Widowed</option>
-                    </select>
-                </div>
-
-                <div class="group">
-                    <label for="nationality">Nationality</label>
-                    <select id="nationality" name="nationality" required autocomplete="country-name">
-                        <option value="" disabled selected>Select Nationality</option>
-                        <option value="Filipino">Filipino</option>
-                        <option value="Foreigner">Foreigner</option>
-                    </select>
-                </div>
-
-                <!-- Buttons -->
+                <!-- Submit Button -->
                 <div class="btn-container">
-                    <button type="submit" class="btn submit-btn">Submit</button>
-                    <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
+                    <button type="submit" class="btn submit-btn" <?php echo !$dbConnected ? 'disabled' : ''; ?>>
+                        <?php echo $dbConnected ? 'Log In' : 'Database Offline'; ?>
+                    </button>
                 </div>
             </div>
         </form>
 
-
-    </div>
-
-    <div id="notifierModal" class="notifier hidden">
-        <div class="notifier-content">
-            <p id="notifierMessage"></p>
-            <button id="notifierCloseBtn" class="btn">OK</button>
+        <!-- Notifier Modal -->
+        <div id="notifierModal" class="notifier hidden">
+            <div class="notifier-content">
+                <p id="notifierMessage"></p>
+                <button id="notifierCloseBtn" class="btn" type="button">OK</button>
+            </div>
         </div>
-    </div>
 
-    <div class="sign-in-link-container">
-        <p style="text-align:center; margin-top: 20px;">
-            Already have account?
-            <a href="sign-in.php" class="log-in-colored-link">Log In</a>
-        </p>
+        <!-- Sign Up Link -->
+        <div class="sign-in-link-container">
+            <p style="text-align:center; margin-top: 20px;">
+                Don't have an account?
+                <a href="./sign-up.php" class="log-in-colored-link" onclick="return navigateToSignUp(event)">Sign Up</a>
+            </p>
+        </div>
+
+        <script>
+        function navigateToSignUp(e) {
+            e.preventDefault();
+            window.location.href = "./sign-up.php";
+            return false;
+        }
+        </script>
     </div>
 
     <?php include_once('footer.php'); ?>
@@ -866,6 +728,10 @@ try {
 [FOUND]
 
 <?php // PHP File Content ?>
+<?php
+// Start session and define path prefix
+$pathPrefix = '../';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -874,26 +740,29 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
 
-    <!--Database Related PHP-->
+    <!-- Database and Header -->
+    <?php include_once('header.php'); ?>
+
     <?php 
-    // Define path prefix
-    $pathPrefix = '../';
-    include_once('header.php'); 
+    // Try to include database connection
+    $dbConnected = false;
+    if (file_exists(__DIR__ . '/../database/database-connect.php')) {
+        require_once(__DIR__ . '/../database/database-connect.php');
+        $dbConnected = ($connection !== null);
+    }
     ?>
-    <?php require_once(__DIR__ . '/../database/database-connect.php'); ?>
-    <?php require_once(__DIR__ . '/../database/sign-up-handler.php'); ?>
 
     <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/header.css">
-    <script defer src="../scripts/header.js"></script>
-    <script defer src="../scripts/central-link-navigation.js"></script>
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
+    <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
+    <script defer src="<?php echo $pathPrefix; ?>scripts/central-link-navigation.js"></script>
 
     <!-- Sign Up (current page) CSS and JS -->
-    <link rel="stylesheet" href="../styles/sign-up.css">
-    <script defer src="../scripts/sign-up.js"></script>
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-up.css">
+    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-up.js"></script>
 
     <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/footer.css">
 
 </head>
 
@@ -909,16 +778,16 @@ try {
                 <div class="section-title">Proof of Residency</div>
 
                 <div class="group image-upload">
-                    <img id="imageFormalPicturePreview" class="image-preview" src="../assets/Formal-Picture.png"
-                        alt="Upload Formal Picture Preview">
+                    <img id="imageFormalPicturePreview" class="image-preview"
+                        src="<?php echo $pathPrefix; ?>assets/Formal-Picture.png" alt="Upload Formal Picture Preview">
                     <label for="imageFormalPictureUpload">Upload Formal Picture</label>
                     <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
                         required autocomplete="off">
                 </div>
 
                 <div class="group image-upload">
-                    <img id="imageResidencyProofPreview" class="image-preview" src="../assets/Valid-id-icon.png"
-                        alt="Valid ID Preview">
+                    <img id="imageResidencyProofPreview" class="image-preview"
+                        src="<?php echo $pathPrefix; ?>assets/Valid-id-icon.png" alt="Valid ID Preview">
                     <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
                     <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
                         required autocomplete="off">
@@ -1055,20 +924,31 @@ try {
                 </div>
             </div>
         </form>
-    </div>
+        <!-- END OF FORM -->
 
-    <div id="notifierModal" class="notifier hidden">
-        <div class="notifier-content">
-            <p id="notifierMessage"></p>
-            <button id="notifierCloseBtn" class="btn">OK</button>
+        <!-- Sign In Link - MOVED OUTSIDE THE FORM -->
+        <div class="sign-in-link-container">
+            <p style="text-align:center; margin-top: 20px;">
+                Already have account?
+                <a href="./sign-in.php" class="log-in-colored-link" onclick="return navigateToSignIn(event)">Log In</a>
+            </p>
         </div>
-    </div>
 
-    <div class="sign-in-link-container">
-        <p style="text-align:center; margin-top: 20px;">
-            Already have account?
-            <a href="sign-in.php" class="log-in-colored-link">Log In</a>
-        </p>
+        <script>
+        function navigateToSignIn(e) {
+            e.preventDefault();
+            window.location.href = "./sign-in.php";
+            return false;
+        }
+        </script>
+
+        <!-- Notifier Modal -->
+        <div id="notifierModal" class="notifier hidden">
+            <div class="notifier-content">
+                <p id="notifierMessage"></p>
+                <button id="notifierCloseBtn" class="btn">OK</button>
+            </div>
+        </div>
     </div>
 
     <?php include_once('footer.php'); ?>
@@ -1084,17 +964,17 @@ try {
 [FOUND]
 
 /* JavaScript File Content */
-/* JavaScript File Content: central-link-navigation.js - FIXED VERSION */
+/* JavaScript File Content: central-link-navigation.js - UPDATED FOR NEW STRUCTURE */
 
 /**
- * Central Path Manager - Fixed Version
- * Dynamically fixes all broken paths
+ * Central Path Manager - Updated for Crooks-Cart-Collectives
+ * Dynamically fixes all broken paths for the new structure
  */
 
 const PathManager = {
     // Initialize
     init() {
-        console.log('PathManager initializing...');
+        console.log('PathManager initializing for new structure...');
         
         // Fix paths immediately
         this.fixAllPaths();
@@ -1105,32 +985,45 @@ const PathManager = {
         return this;
     },
 
-    // Fix all broken paths on the page
-    fixAllPaths() {
-        console.log('Fixing all broken paths...');
-        
-        // Get current directory
+    // Get base path based on current location
+    getBasePath() {
         const currentPath = window.location.pathname;
         let basePath = '';
         
-        // Determine base path
+        // Determine base path based on current directory
         if (currentPath.includes('/pages/')) {
             basePath = '../';
         } else if (currentPath.includes('/database/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/scripts/')) {
+            basePath = '../';
+        } else if (currentPath.includes('/styles/')) {
             basePath = '../';
         } else {
             basePath = '';
         }
         
+        return basePath;
+    },
+
+    // Fix all broken paths on the page
+    fixAllPaths() {
+        console.log('Fixing all paths for Crooks-Cart-Collectives...');
+        
+        const basePath = this.getBasePath();
+        
         // Fix CSS links
         document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
             const href = link.getAttribute('href');
-            if (href && !href.startsWith('http') && !href.startsWith('//')) {
+            if (href && !href.startsWith('http') && !href.startsWith('//') && !href.startsWith('data:')) {
                 if (href.includes('Barangay-System')) {
                     link.href = href.replace(/\/?Barangay-System\//g, basePath);
                 } else if (href.startsWith('/')) {
                     // Convert absolute path to relative
                     link.href = basePath + href.substring(1);
+                } else if (!href.startsWith('../') && !href.startsWith('./') && href.indexOf('/') !== 0) {
+                    // Add base path to relative paths that need it
+                    link.href = basePath + href;
                 }
             }
         });
@@ -1161,6 +1054,32 @@ const PathManager = {
             }
         });
         
+        // Fix anchor hrefs
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('//')) {
+                if (href.includes('Barangay-System')) {
+                    link.href = href.replace(/\/?Barangay-System\//g, basePath);
+                } else if (href.startsWith('/')) {
+                    // Convert absolute path to relative
+                    link.href = basePath + href.substring(1);
+                }
+            }
+        });
+        
+        // Fix form actions
+        document.querySelectorAll('form[action]').forEach(form => {
+            const action = form.getAttribute('action');
+            if (action && !action.startsWith('http') && !action.startsWith('#') && !action.startsWith('//')) {
+                if (action.includes('Barangay-System')) {
+                    form.action = action.replace(/\/?Barangay-System\//g, basePath);
+                } else if (action.startsWith('/')) {
+                    // Convert absolute path to relative
+                    form.action = basePath + action.substring(1);
+                }
+            }
+        });
+        
         // Fix inline styles with background images
         document.querySelectorAll('[style*="background-image"]').forEach(el => {
             const style = el.getAttribute('style');
@@ -1170,6 +1089,12 @@ const PathManager = {
         });
         
         console.log('Path fixing complete. Base path:', basePath);
+    },
+    
+    // Helper to get correct path for database files
+    getDatabasePath(fileName) {
+        const basePath = this.getBasePath();
+        return basePath + 'database/' + fileName;
     }
 };
 
@@ -1190,7 +1115,7 @@ if (document.readyState === 'loading') {
 [FOUND]
 
 /* JavaScript File Content */
-
+document.addEventListener("DOMContentLoaded", () => {
     const openButton = document.getElementById("openComplaintButton");
     const overlay = document.getElementById("complaintOverlay");
     const form = document.getElementById("complaintForm");
@@ -1224,50 +1149,100 @@ if (document.readyState === 'loading') {
     }
 
     form?.addEventListener("submit", function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const about = document.getElementById("complaint-about").value.trim();
-    const message = document.getElementById("complaint-text").value.trim();
+        const about = document.getElementById("complaint-about").value.trim();
+        const message = document.getElementById("complaint-text").value.trim();
 
-    if (!about || !message) {
-        alert("Both fields are required.");
-        return;
-    }
-
-    if (typeof residentID === "undefined" || !residentID) {
-        alert("User not identified.");
-        return;
-    }
-
-    // Use relative path - determine based on current location
-    const currentPath = window.location.pathname;
-    let fetchPath = "database/complaint-handler.php";
-    
-    if (currentPath.includes('/pages/')) {
-        fetchPath = "../database/complaint-handler.php";
-    }
-
-    fetch(fetchPath, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ about, message, residentID })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert("Complaint submitted.");
-            form.reset();
-            closeForm();
-        } else {
-            alert("Failed: " + (data.message || "Try again."));
+        if (!about || !message) {
+            alert("Both fields are required.");
+            return;
         }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error occurred.");
-    });
-});
 
+        // Get user ID from session (using the new userID instead of residentID)
+        const userID = typeof userID !== 'undefined' ? userID : 
+                      (typeof residentID !== 'undefined' ? residentID : null);
+        
+        if (!userID) {
+            alert("User not identified. Please log in.");
+            return;
+        }
+
+        // Use PathManager to get correct path
+        let fetchPath = "database/complaint-handler.php";
+        
+        // Fallback logic for PathManager
+        if (typeof PathManager !== 'undefined' && typeof PathManager.getDatabasePath === 'function') {
+            fetchPath = PathManager.getDatabasePath('complaint-handler.php');
+        } else {
+            // Manual fallback if PathManager is not available
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/pages/')) {
+                fetchPath = "../database/complaint-handler.php";
+            } else if (currentPath.includes('/database/')) {
+                fetchPath = "complaint-handler.php";
+            }
+        }
+
+        fetch(fetchPath, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                about, 
+                message, 
+                userID: userID // Using userID for the new system
+            })
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.status === "success") {
+                alert("Complaint submitted successfully!");
+                form.reset();
+                closeForm();
+                
+                // Optionally refresh the page or update the complaints list
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                alert("Failed: " + (data.message || "Please try again."));
+            }
+        })
+        .catch(err => {
+            console.error("Complaint submission error:", err);
+            alert("Error occurred while submitting complaint. Please check your connection and try again.");
+        });
+    });
+
+    // Add input validation feedback
+    const aboutInput = document.getElementById("complaint-about");
+    const messageInput = document.getElementById("complaint-text");
+    
+    if (aboutInput) {
+        aboutInput.addEventListener("input", function() {
+            if (this.value.trim().length > 0) {
+                this.style.borderColor = "#4CAF50";
+            } else {
+                this.style.borderColor = "";
+            }
+        });
+    }
+    
+    if (messageInput) {
+        messageInput.addEventListener("input", function() {
+            if (this.value.trim().length > 0) {
+                this.style.borderColor = "#4CAF50";
+            } else {
+                this.style.borderColor = "";
+            }
+        });
+    }
+});
 
 ==============================================
 
@@ -1277,7 +1252,6 @@ if (document.readyState === 'loading') {
 
 /* JavaScript File Content */
 
-
 ==============================================
 
 === File: Crooks-Cart-Collectives/scripts/header.js ===
@@ -1286,7 +1260,7 @@ if (document.readyState === 'loading') {
 
 /* JavaScript File Content */
 document.addEventListener("DOMContentLoaded", () => {
-
+    // Content fade in effect
     const content = document.querySelector('.content');
     if (content) {
         content.style.opacity = 0;
@@ -1296,47 +1270,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 500);
     }
     
-
     function initializeHeader() {
         const menuButton = document.getElementById('menuButton');
         const mobileNav = document.getElementById('mobileNav');
         const navLinks = document.querySelectorAll(".nav-link, .sign-up");
-       const logo = document.getElementById('logo');
-
-// In header.js, find the logo click handler and update it:
-
-if (logo) {
-    logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
-    logo.style.cursor = "pointer";
-
-    logo.addEventListener("click", () => {
-        // Use relative path to index.php - simpler approach
-        const currentPath = window.location.pathname;
+        const logo = document.getElementById('logo');
         
-        // Check if we're already on index.php
-        if (currentPath.endsWith('index.php') || currentPath.endsWith('/')) {
-            return; // Already on homepage
+        // Handle logo click for consistent navigation
+        if (logo) {
+            logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
+            logo.style.cursor = "pointer";
+            
+            // Remove existing click handlers to prevent conflicts with the HTML anchor
+            const newLogo = logo.cloneNode(true);
+            logo.parentNode.replaceChild(newLogo, logo);
+            
+            // Fade in logo after load
+            const fadeInLogo = () => {
+                setTimeout(() => {
+                    newLogo.style.visibility = "visible";
+                    newLogo.style.opacity = 1;
+                }, 1000);
+            };
+
+            if (newLogo.complete && newLogo.naturalHeight !== 0) {
+                fadeInLogo();
+            } else {
+                newLogo.addEventListener("load", fadeInLogo);
+            }
         }
-        
-        // Navigate to index.php
-        window.location.href = "index.php";
-    });
 
-    const fadeInLogo = () => {
-        setTimeout(() => {
-            logo.style.visibility = "visible";
-            logo.style.opacity = 1;
-        }, 1000);
-    };
-
-    if (logo.complete && logo.naturalHeight !== 0) {
-        fadeInLogo();
-    } else {
-        logo.addEventListener("load", fadeInLogo);
-    }
-}
-
-
+        // Mobile menu functionality
         if (menuButton && mobileNav) {
             const backdrop = document.createElement('div');
             backdrop.className = 'menu-backdrop fade-transition';
@@ -1377,8 +1341,13 @@ if (logo) {
             });
         }
 
+        // Highlight active navigation link
         highlightActiveLink(navLinks);
+        
+        // Add page transition effects to navigation links
         addPageTransition(navLinks);
+        
+        // Adjust content margin based on header
         adjustContentMargin();
         window.addEventListener('resize', adjustContentMargin);
     }
@@ -1391,23 +1360,32 @@ if (logo) {
 
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href').endsWith(currentPage)) {
+            const href = link.getAttribute('href');
+            if (href && (href.endsWith(currentPage) || href.includes(currentPage.replace('.php', '')))) {
                 link.classList.add('active');
             }
         });
     }
 
     function addPageTransition(navLinks) {
-        navLinks.forEach(link => {
-            link.addEventListener("click", (e) => {
-                const href = link.getAttribute("href");
-                if (href && !href.startsWith("#") && !href.includes("mailto:")) {
-                    e.preventDefault();
-                    fadeOutAndNavigate(href);
-                }
-            });
+    navLinks.forEach(link => {
+        // Check if this is a navigation link from the header/menu
+        const isHeaderLink = link.classList.contains('nav-link') || 
+                             link.classList.contains('sign-in') || 
+                             link.classList.contains('social-button');
+        
+        link.addEventListener("click", (e) => {
+            const href = link.getAttribute("href");
+            
+            // Only apply transition to navigation links (not form buttons or regular links in content)
+            if (href && isHeaderLink && !href.startsWith("#") && !href.includes("mailto:") && !href.startsWith("http")) {
+                e.preventDefault();
+                fadeOutAndNavigate(href);
+            }
+            // Let regular links (like "Log In" in sign-up.php) work normally
         });
-    }
+    });
+}
 
     function fadeOutAndNavigate(url) {
         const content = document.querySelector('.content');
@@ -1428,7 +1406,8 @@ if (logo) {
             const currentPage = window.location.pathname.split('/').pop();
             const marginRules = {
                 "container-activities.html": "0px",
-                "sign-up.php": "0px"
+                "sign-up.php": "0px",
+                "sign-in.php": "0px"
             };
             content.style.marginTop = marginRules[currentPage] || "0";
         }
@@ -1439,33 +1418,40 @@ if (logo) {
             const favicon = document.createElement("link");
             favicon.rel = "icon";
             favicon.type = "image/png";
-            favicon.href = "./assets/Logo.png";
+            
+            // Determine correct path for favicon
+            const currentPath = window.location.pathname;
+            let faviconPath = "assets/Logo.png";
+            if (currentPath.includes('/pages/')) {
+                faviconPath = "../assets/Logo.png";
+            }
+            
+            favicon.href = faviconPath;
             document.head.appendChild(favicon);
         }
     }
 
+    // Initialize header functionality
     initializeHeader();
     addFavicon();
 
-    // Optional: remove no-transition class if you’re using it for delay logic
-  const header = document.querySelector('.header-bar');
-const mobileNav = document.getElementById('mobileNav');
+    // Remove no-transition classes after delay for smooth animations
+    const header = document.querySelector('.header-bar');
+    const mobileNav = document.getElementById('mobileNav');
 
-if (header) {
-  header.classList.add('header-delay');
-}
+    if (header) {
+        header.classList.add('header-delay');
+    }
 
-if (mobileNav) {
-  mobileNav.classList.add('header-delay');
-}
+    if (mobileNav) {
+        mobileNav.classList.add('header-delay');
+    }
 
-setTimeout(() => {
-  if (header) header.classList.remove('header-delay');
-  if (mobileNav) mobileNav.classList.remove('header-delay');
-}, 500); // 2 seconds delay
-
+    setTimeout(() => {
+        if (header) header.classList.remove('header-delay');
+        if (mobileNav) mobileNav.classList.remove('header-delay');
+    }, 500);
 });
-
 
 ==============================================
 
@@ -1615,7 +1601,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
 ==============================================
 
 === File: Crooks-Cart-Collectives/scripts/index.js ===
@@ -1751,7 +1736,6 @@ loginPassword.blur();
   });
 });
 
-
 ==============================================
 
 === File: Crooks-Cart-Collectives/scripts/sign-up.js ===
@@ -1778,21 +1762,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalMessage = document.getElementById('notifierMessage');
   const modalClose = document.getElementById('notifierCloseBtn');
 
+  let isModalOpen = false;
+  let isSubmitting = false;
+
   function showNotifier(message) {
+    if (isModalOpen) return;
     modalMessage.textContent = message;
     modal.classList.remove('hidden');
+    isModalOpen = true;
   }
 
-  modalClose.addEventListener('click', () => {
+  function closeNotifier() {
     modal.classList.add('hidden');
-  });
+    isModalOpen = false;
+  }
+
+  modalClose.addEventListener('click', closeNotifier);
 
   function setupImagePreview(input, preview) {
     input.addEventListener('change', () => {
       const file = input.files[0];
       if (!file) return;
+      
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        showNotifier('File size too large. Maximum size is 5MB.');
+        input.value = ''; // Clear the file input
+        return;
+      }
+      
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!validTypes.includes(file.type)) {
+        showNotifier('Invalid file type. Please upload JPG, PNG, or GIF images only.');
+        input.value = ''; // Clear the file input
+        return;
+      }
+      
       const reader = new FileReader();
-      reader.onload = () => preview.src = reader.result;
+      reader.onload = () => {
+        preview.src = reader.result;
+        preview.style.display = 'block';
+      };
       reader.readAsDataURL(file);
     });
   }
@@ -1804,141 +1816,498 @@ document.addEventListener('DOMContentLoaded', () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  function highlightField(field, highlight = true) {
-    field.style.borderColor = highlight ? 'red' : '';
-    field.style.boxShadow = highlight ? '0 0 5px red' : '';
+  function isPasswordValid(password) {
+    // At least 8 characters, with at least one uppercase, one lowercase, and one number
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+  }
+
+  function highlightField(field, highlight = true, message = '') {
+    field.style.borderColor = highlight ? '#e74c3c' : '';
+    field.style.boxShadow = highlight ? '0 0 0 2px rgba(231, 76, 60, 0.2)' : '';
+    
+    // Remove existing error message
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    // Add error message if provided
+    if (highlight && message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'field-error';
+      errorDiv.textContent = message;
+      errorDiv.style.color = '#e74c3c';
+      errorDiv.style.fontSize = '12px';
+      errorDiv.style.marginTop = '4px';
+      field.parentNode.appendChild(errorDiv);
+    }
   }
 
   function resetHighlights() {
-    form.querySelectorAll('input, select').forEach(field => highlightField(field, false));
+    form.querySelectorAll('input, select').forEach(field => {
+      highlightField(field, false);
+      const error = field.parentNode.querySelector('.field-error');
+      if (error) error.remove();
+    });
   }
 
   clearButton.addEventListener('click', () => {
     form.reset();
     form.classList.remove('submitted');
+    resetHighlights();
     
-    // Use relative paths for default images
+    // Reset to default images using correct relative paths
     const currentPath = window.location.pathname;
-    let prefix = "../";
-    if (currentPath.includes('/pages/')) {
+    let prefix = "";
+      
+    if (currentPath.includes('/pages/sign-up.php')) {
         prefix = "../";
-    } else {
-        prefix = "";
     }
     
     imageFormalPicturePreview.src = prefix + 'assets/Formal-Picture.png';
     imageResidencyProofPreview.src = prefix + 'assets/Valid-id-icon.png';
-    resetHighlights();
-});
+  });
 
-  submitButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    form.classList.add('submitted');
-    resetHighlights();
-
-    const requiredFields = form.querySelectorAll('input[required], select[required]');
+  function validateForm() {
     let isValid = true;
-    let message = '';
-    let missing = [];
+    let errorMessage = '';
+    resetHighlights();
 
+    // Validate required fields
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
     requiredFields.forEach(field => {
       if (!field.value.trim()) {
-        highlightField(field);
-        if (!['password', 'confirmPassword'].includes(field.id)) {
-          missing.push(field.name || field.id);
-        }
+        highlightField(field, true, 'This field is required');
         isValid = false;
       }
     });
 
+    // Validate image uploads
     if (imageFormalPictureUpload.files.length === 0) {
-      highlightField(imageFormalPictureUpload);
-      missing.push('Formal Picture');
+      highlightField(imageFormalPictureUpload, true, 'Formal picture is required');
       isValid = false;
     }
 
     if (imageResidencyProofUpload.files.length === 0) {
-      highlightField(imageResidencyProofUpload);
-      missing.push('Proof of Residency');
+      highlightField(imageResidencyProofUpload, true, 'Proof of residency is required');
       isValid = false;
     }
 
+    // Validate email
     if (emailField.value && !isEmailValid(emailField.value)) {
-      highlightField(emailField);
-      message = 'Please enter a valid email address.';
+      highlightField(emailField, true, 'Please enter a valid email address');
       isValid = false;
     }
 
+    // Validate password
     const password = passwordField.value.trim();
     const confirmPassword = confirmPasswordField.value.trim();
 
-    if (!password && !confirmPassword) {
-      highlightField(passwordField);
-      highlightField(confirmPasswordField);
-      message = 'Password and Confirm Password are required.';
-      isValid = false;
-    } else if (!password) {
-      highlightField(passwordField);
-      message = 'Please enter your password.';
-      isValid = false;
-    } else if (!confirmPassword) {
-      highlightField(confirmPasswordField);
-      message = 'Please confirm your password.';
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      highlightField(passwordField);
-      highlightField(confirmPasswordField);
-      message = 'Passwords do not match.';
+    if (password && !isPasswordValid(password)) {
+      highlightField(passwordField, true, 'Password must be at least 8 characters with uppercase, lowercase, and number');
       isValid = false;
     }
 
-    if (!isValid) {
-      if (message) {
-        showNotifier(message);
-      } else if (missing.length === 1) {
-        showNotifier(`Missing: ${formatFieldName(missing[0])}`);
-      } else {
-        showNotifier(`Please complete all required fields.`);
+    if (password && confirmPassword && password !== confirmPassword) {
+      highlightField(passwordField, true, 'Passwords do not match');
+      highlightField(confirmPasswordField, true, 'Passwords do not match');
+      isValid = false;
+    }
+
+    // Validate contact number (Philippines format)
+    const contactField = document.getElementById('contact');
+    if (contactField.value) {
+      const contactRegex = /^(09|\+639)\d{9}$/;
+      const cleanContact = contactField.value.replace(/\s+/g, '');
+      if (!contactRegex.test(cleanContact)) {
+        highlightField(contactField, true, 'Please enter a valid Philippine mobile number (09XXXXXXXXX or +639XXXXXXXXX)');
+        isValid = false;
       }
-      return;
     }
 
-    const formData = new FormData(form);
-
-  fetch('../database/sign-up-handler.php', {
-  method: 'POST',
-  body: formData
-})
-  .then(res => res.json())
-  .then(response => {
-    if (response.status === 'success') {
-      showNotifier('Registration successful. Present proof at barangay.');
-      setTimeout(() => window.location.href = './sign-in.php', 2000);
-    } else if (response.message === 'duplicate-email duplicate-username') {
-      highlightField(emailField);
-      highlightField(usernameField);
-      showNotifier('Email and Username already exist.');
-    } else if (response.message === 'duplicate-email') {
-      highlightField(emailField);
-      showNotifier('Email already exists.');
-    } else if (response.message === 'duplicate-username') {
-      highlightField(usernameField);
-      showNotifier('Username already exists.');
-    } else {
-      showNotifier('Something went wrong. Try again later.');
-    }
-  })
-  .catch(error => {
-    console.error('Fetch error:', error);
-    showNotifier('Something went wrong. Please check your internet or try again later.');
-  });
-  });
+    return isValid;
+  }
 
   function formatFieldName(fieldId) {
     return fieldId.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase()).trim();
   }
-}); 
 
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    form.classList.add('submitted');
+    
+    if (!validateForm()) {
+      showNotifier('Please fix the errors in the form before submitting.');
+      return;
+    }
+    
+    isSubmitting = true;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+    
+    const formData = new FormData(form);
+    
+    // Determine the correct path for the API endpoint
+    const currentPath = window.location.pathname;
+    let apiUrl = 'database/sign-up-handler.php';
+    
+    if (currentPath.includes('/pages/')) {
+      apiUrl = '../database/sign-up-handler.php';
+    }
+    
+    fetch(apiUrl, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(response => {
+      if (response.status === 'success') {
+        showNotifier('Registration successful! Please present your proof at the barangay office for verification.');
+        
+        // Redirect to sign-in page after 3 seconds
+        setTimeout(() => {
+          const redirectPath = currentPath.includes('/pages/') ? './sign-in.php' : 'pages/sign-in.php';
+          window.location.href = redirectPath;
+        }, 3000);
+        
+      } else if (response.message === 'duplicate-email duplicate-username') {
+        highlightField(emailField, true, 'Email already registered');
+        highlightField(usernameField, true, 'Username already taken');
+        showNotifier('Both email and username are already registered.');
+        
+      } else if (response.message === 'duplicate-email') {
+        highlightField(emailField, true, 'Email already registered');
+        showNotifier('This email address is already registered.');
+        
+      } else if (response.message === 'duplicate-username') {
+        highlightField(usernameField, true, 'Username already taken');
+        showNotifier('This username is already taken.');
+        
+      } else {
+        showNotifier(response.message || 'Something went wrong. Please try again later.');
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      showNotifier('Network error. Please check your internet connection and try again.');
+    })
+    .finally(() => {
+      isSubmitting = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Submit';
+    });
+  });
+
+  // Add input validation on blur for better UX
+  emailField.addEventListener('blur', () => {
+    if (emailField.value && !isEmailValid(emailField.value)) {
+      highlightField(emailField, true, 'Please enter a valid email address');
+    }
+  });
+
+  passwordField.addEventListener('blur', () => {
+    if (passwordField.value && !isPasswordValid(passwordField.value)) {
+      highlightField(passwordField, true, 'Password must be at least 8 characters with uppercase, lowercase, and number');
+    }
+  });
+
+  confirmPasswordField.addEventListener('blur', () => {
+    if (passwordField.value && confirmPasswordField.value && passwordField.value !== confirmPasswordField.value) {
+      highlightField(confirmPasswordField, true, 'Passwords do not match');
+    }
+  });
+
+  // Clear error on focus
+  form.querySelectorAll('input, select').forEach(field => {
+    field.addEventListener('focus', () => {
+      highlightField(field, false);
+    });
+  });
+});
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/database/database-connect.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+// Database configuration for Crooks-Cart-Collectives
+$host = 'localhost';
+$dbName = 'crooks_cart_collectives'; // Updated database name
+$username = 'root';
+$password = ''; // default for XAMPP
+
+try {
+    $connection = new PDO("mysql:host=$host;dbname=$dbName;charset=utf8mb4", $username, $password);
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $error) {
+    error_log("Database connection failed: " . $error->getMessage());
+    die(json_encode(['status' => 'error', 'message' => 'Database connection error.']));
+}
+?>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/database/sign-in-handler.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/auth_errors.log');
+
+// Connect to database
+require_once(__DIR__ . '/database-connect.php');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
+
+if (empty($_POST['usernameOrEmail']) || empty($_POST['loginPassword'])) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
+    exit;
+}
+
+$identifier = trim($_POST['usernameOrEmail']);
+$password = $_POST['loginPassword'];
+
+try {
+    // Check if identifier is email or username
+    $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL);
+    
+    // Query for user in new users table
+    $query = "SELECT userID, username, email, passwordHash, accountType
+              FROM users 
+              WHERE " . ($isEmail ? "email = :identifier" : "username = :identifier");
+    
+    $stmt = $connection->prepare($query);
+    $stmt->bindValue(':identifier', $identifier, PDO::PARAM_STR);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user || !password_verify($password, $user['passwordHash'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid username/email or password']);
+        exit;
+    }
+
+    // Set session data
+    $_SESSION['user_id'] = $user['userID'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['email'] = $user['email'];
+    $_SESSION['account_type'] = $user['accountType'];
+    
+    // Check if user is also a customer
+    $customerStmt = $connection->prepare("SELECT customerID FROM customers WHERE userID = :userID");
+    $customerStmt->execute([':userID' => $user['userID']]);
+    $_SESSION['is_customer'] = $customerStmt->fetch() !== false;
+    
+    // Check if user is also a seller
+    $sellerStmt = $connection->prepare("SELECT sellerID, isVerified FROM sellers WHERE userID = :userID");
+    $sellerStmt->execute([':userID' => $user['userID']]);
+    $seller = $sellerStmt->fetch();
+    $_SESSION['is_seller'] = $seller !== false;
+    $_SESSION['seller_verified'] = $seller ? $seller['isVerified'] : false;
+
+    // Determine redirect path based on account type
+    $redirectPath = '../pages/home.php'; // Default for normal users
+    
+    if ($user['accountType'] === 'Admin') {
+        $redirectPath = '../pages/admin-dashboard.php';
+    }
+
+    echo json_encode([
+        'status' => 'success',
+        'redirectPath' => $redirectPath,
+        'accountType' => $user['accountType']
+    ]);
+    
+} catch (Exception $error) {
+    error_log("Authentication error: " . $error->getMessage());
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'Authentication service unavailable']);
+}
+?>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/database/sign-out-handler.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+session_start();
+
+// Unset all session variables
+$_SESSION = array();
+
+// Destroy the session cookie
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Destroy the session
+session_destroy();
+
+// Redirect to sign-in page with relative path
+header("Location: ../pages/sign-in.php");
+exit;
+?>
+
+==============================================
+
+=== File: Crooks-Cart-Collectives/database/sign-up-handler.php ===
+
+[FOUND]
+
+<?php // PHP File Content ?>
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/signup_errors.log');
+
+// Connect to database
+require_once(__DIR__ . '/database-connect.php');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
+
+// Get and validate input
+$input = [];
+foreach (['firstName', 'lastName', 'birthdate', 'gender', 'contact', 'email', 'username', 'password'] as $field) {
+    if (empty($_POST[$field])) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => "Field '$field' is required"]);
+        exit;
+    }
+    $input[$field] = trim($_POST[$field]);
+}
+
+// Additional fields (optional)
+$input['middleName'] = isset($_POST['middleName']) ? trim($_POST['middleName']) : null;
+$input['address'] = isset($_POST['address']) ? trim($_POST['address']) : null;
+
+// Validate email
+if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid email format']);
+    exit;
+}
+
+// Validate password strength (optional)
+if (strlen($input['password']) < 8) {
+    echo json_encode(['status' => 'error', 'message' => 'Password must be at least 8 characters long']);
+    exit;
+}
+
+try {
+    // Check for duplicate email
+    $emailCheck = $connection->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+    $emailCheck->execute([':email' => $input['email']]);
+    if ($emailCheck->fetchColumn() > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'duplicate-email']);
+        exit;
+    }
+
+    // Check for duplicate username
+    $usernameCheck = $connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+    $usernameCheck->execute([':username' => $input['username']]);
+    if ($usernameCheck->fetchColumn() > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'duplicate-username']);
+        exit;
+    }
+
+    // Hash password
+    $passwordHash = password_hash($input['password'], PASSWORD_DEFAULT);
+
+    // Insert into users table
+    $query = "INSERT INTO users (
+                firstName, middleName, lastName, birthdate, gender,
+                contact, email, username, passwordHash, address,
+                accountType, isActive
+              ) VALUES (
+                :firstName, :middleName, :lastName, :birthdate, :gender,
+                :contact, :email, :username, :passwordHash, :address,
+                'Normal', TRUE
+              )";
+
+    $params = [
+        ':firstName' => $input['firstName'],
+        ':middleName' => $input['middleName'],
+        ':lastName' => $input['lastName'],
+        ':birthdate' => $input['birthdate'],
+        ':gender' => $input['gender'],
+        ':contact' => $input['contact'],
+        ':email' => $input['email'],
+        ':username' => $input['username'],
+        ':passwordHash' => $passwordHash,
+        ':address' => $input['address']
+    ];
+
+    $stmt = $connection->prepare($query);
+    $stmt->execute($params);
+    $userID = $connection->lastInsertId();
+
+    // Create user directory for future use (if needed for seller documents)
+    $userDataDir = __DIR__ . '/user-data/' . $userID;
+    if (!is_dir($userDataDir)) {
+        mkdir($userDataDir, 0755, true);
+    }
+
+    // Auto-login after registration
+    $_SESSION['user_id'] = $userID;
+    $_SESSION['username'] = $input['username'];
+    $_SESSION['email'] = $input['email'];
+    $_SESSION['account_type'] = 'Normal';
+    $_SESSION['is_customer'] = false;
+    $_SESSION['is_seller'] = false;
+
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Registration successful!',
+        'userID' => $userID
+    ]);
+
+} catch (Exception $e) {
+    error_log("Registration error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'Registration failed: ' . $e->getMessage()]);
+}
+?>
 
 ==============================================
 

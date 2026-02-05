@@ -4,7 +4,6 @@
 filesToCheck = [
     # Root directory files
     "index.php",
-    "fix-all-paths.php",
     
     # Pages directory
     "pages/complaint.php",
@@ -23,6 +22,12 @@ filesToCheck = [
     "scripts/index.js",
     "scripts/sign-in.js",
     "scripts/sign-up.js",
+    
+    "database/database-connect.php",
+    "database/sign-in-handler.php",   
+    "database/sign-out-handler.php",
+    "database/sign-up-handler.php",
+    
 
     # Styles directory (commented out as in original)
     # "styles/complaint-page.css",

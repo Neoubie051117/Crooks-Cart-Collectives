@@ -11,7 +11,6 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-
 # Text colors
 GREEN="\033[1;32m"
 YELLOW="\033[1;33m"

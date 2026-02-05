@@ -1,0 +1,1 @@
+python "D:\Application Program\Xampp\htdocs\Crooks-Cart-Collectives\logs\content-fetcher.py"
