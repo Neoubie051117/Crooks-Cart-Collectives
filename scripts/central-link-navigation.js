@@ -2,98 +2,91 @@
 
 const PathManager = {
     init() {
-        console.log('PathManager initializing...');
+        console.log('PathManager initializing for Crooks-Cart-Collectives...');
         
-        this.fixAllPaths();
-        
-        setTimeout(() => this.fixAllPaths(), 500);
+        // Only fix dashboard navigation links
+        this.fixDashboardLinks();
         
         return this;
     },
 
     getBasePath() {
         const currentPath = window.location.pathname;
-        let basePath = '';
         
-        console.log('Current path:', currentPath);
-        
+        // Simple base path detection for navigation
         if (currentPath.includes('/pages/')) {
-            basePath = '../';
-        } else if (currentPath.includes('/database/') || 
-                   currentPath.includes('/scripts/') || 
-                   currentPath.includes('/styles/')) {
-            basePath = '../';
-        } else if (currentPath.includes('/Crooks-Cart-Collectives/')) {
-            basePath = '';
-        } else {
-            basePath = '';
+            return '../';
         }
-        
-        console.log('Base path determined:', basePath);
-        return basePath;
+        return '';
     },
 
-    fixAllPaths() {
-        console.log('Fixing all paths...');
+    // ONLY fix dashboard navigation links - NOT stylesheets or scripts
+    fixDashboardLinks() {
+        console.log('Fixing dashboard navigation links...');
         
         const basePath = this.getBasePath();
         const currentPage = window.location.pathname.split('/').pop();
         
+        // Only process anchor tags with href attributes
         document.querySelectorAll('a[href]').forEach(link => {
             const href = link.getAttribute('href');
             if (!href) return;
             
+            // Skip external links, anchors, mailto, etc.
             if (href.startsWith('http') || href.startsWith('#') || 
-                href.startsWith('mailto:') || href.startsWith('//')) {
+                href.startsWith('mailto:') || href.startsWith('//') ||
+                href.startsWith('tel:') || href.startsWith('javascript:')) {
                 return;
             }
             
+            // Fix dashboard links that don't have the correct path
             if (href.includes('dashboard') && !href.includes('/pages/')) {
                 if (currentPage === 'sign-in.php' || currentPage === 'customer-sign-up.php') {
                     link.href = 'customer-dashboard.php';
+                    console.log(`Fixed dashboard link: ${href} -> ${link.href}`);
                 } else if (currentPage === 'index.php') {
                     link.href = 'pages/customer-dashboard.php';
+                    console.log(`Fixed dashboard link: ${href} -> ${link.href}`);
+                }
+            }
+            
+            // Fix profile link
+            if (href.includes('customer-profile') && !href.includes('/pages/')) {
+                if (currentPage === 'index.php') {
+                    link.href = 'pages/customer-profile.php';
+                    console.log(`Fixed profile link: ${href} -> ${link.href}`);
                 }
             }
         });
         
-        document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && !href.startsWith('http') && !href.startsWith('//') && !href.startsWith('data:')) {
-                if (href.includes('Barangay-System')) {
-                    link.href = href.replace(/\/?Barangay-System\//g, basePath);
-                } else if (href.startsWith('/')) {
-                    link.href = basePath + href.substring(1);
-                } else if (!href.startsWith('../') && !href.startsWith('./') && href.indexOf('/') !== 0) {
-                    link.href = basePath + href;
-                }
-            }
-        });
-        
-        document.querySelectorAll('script[src]').forEach(script => {
-            const src = script.getAttribute('src');
-            if (src && !src.startsWith('http') && !src.startsWith('//')) {
-                if (src.includes('Barangay-System')) {
-                    script.src = src.replace(/\/?Barangay-System\//g, basePath);
-                } else if (src.startsWith('/')) {
-                    script.src = basePath + src.substring(1);
-                }
-            }
-        });
-        
-        console.log('Path fixing complete');
+        console.log('Dashboard link fixing complete');
     },
     
+    // Helper method for database paths (kept for compatibility)
     getDatabasePath(fileName) {
         const basePath = this.getBasePath();
         return basePath + 'database/' + fileName;
+    },
+    
+    // Helper method for asset paths (kept for compatibility)
+    getAssetPath(fileName) {
+        const basePath = this.getBasePath();
+        return basePath + 'assets/' + fileName;
+    },
+    
+    // Helper method for page paths (kept for compatibility)
+    getPagePath(fileName) {
+        const basePath = this.getBasePath();
+        return basePath + 'pages/' + fileName;
     }
 };
 
 window.PathManager = PathManager;
 
+// Initialize on DOM ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => PathManager.init());
 } else {
-    PathManager.init();
+    // Run after a tiny delay to ensure DOM is ready
+    setTimeout(() => PathManager.init(), 10);
 }

@@ -82,13 +82,13 @@ if (isset($_SESSION['user_id'])) {
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required placeholder="Create a strong password"
-                        autocomplete="new-password">
+                        autocomplete="new-password" maxlength="16"> <!-- ADD THIS -->
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
                     <input type="password" id="confirm_password" name="confirm_password" required
-                        placeholder="Confirm your password" autocomplete="new-password">
+                        placeholder="Confirm your password" autocomplete="new-password" maxlength="16">
                 </div>
             </div>
 

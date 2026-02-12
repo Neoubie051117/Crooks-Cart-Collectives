@@ -1,5 +1,3 @@
--- Database schema for Crooks-Cart-Collectives E-commerce Platform (Revised)
-
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
 
@@ -18,7 +16,7 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
 
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
 
     address VARCHAR(255),
     profile_picture VARCHAR(255),
@@ -38,7 +36,8 @@ CREATE TABLE administrators (
     contact_number VARCHAR(15),
 
     username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    -- CHANGED: Renamed from password_hash to password
+    password VARCHAR(255) NOT NULL,
 
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

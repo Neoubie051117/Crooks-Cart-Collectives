@@ -1,6 +1,6 @@
 /* ===== RESET & BASE STYLES ===== */
 .content {
-    margin-top: 80px; /* This should match your header height exactly */
+    margin-top: 100px; /* This should match your header height exactly */
 }
 
 /* ===== SHOWCASE SECTION ===== */
@@ -8,7 +8,7 @@
     position: relative;
     height: 70vh; /* Restored original height */
     overflow: hidden;
-    margin-top: -80px; /* Negative margin to pull it up to the header */
+    margin-top: 70px; /* Negative margin to pull it up to the header */
     margin-bottom: 40px;
 }
 

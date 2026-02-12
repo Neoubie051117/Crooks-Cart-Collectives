@@ -6,38 +6,50 @@ filesToCheck = [
     "index.php",
 
     # Pages directory (PHP)
-    "pages/footer.php",
+    "pages/home.php",
     "pages/header.php",
+    "pages/footer.php",
     "pages/sign-in.php",
-    "pages/customer-sign-up.php",      # fixed name
+    "pages/sign-up.php",
+    "pages/customer-sign-up.php",
     "pages/customer-dashboard.php",
     "pages/customer-profile.php",
     "pages/seller-dashboard.php",
     "pages/seller-registration.php",
-    "pages/products.php",              # added
+    "pages/products.php",
+    "pages/product-details.php",
+    "pages/complaint.php",
+    "pages/admin-dashboard.php",
 
     # Scripts directory (JS)
-    "scripts/central-link-navigation.js",
-    "scripts/error-handler.js",
-    "scripts/header.js",
-    "scripts/home.js",                 # added
     "scripts/index.js",
+    "scripts/header.js",
+    "scripts/home.js",
     "scripts/sign-in.js",
     "scripts/sign-up.js",
+    "scripts/central-link-navigation.js",
+    "scripts/error-handler.js",
+    "scripts/showcase-slider.js",
+    "scripts/complaint-form.js",
 
     # Database directory (PHP)
     "database/database-connect.php",
     "database/auth-handler.php",
-    "database/profile-handler.php",
+    "database/sign-in-handler.php",
+    "database/sign-up-handler.php",
     "database/sign-out-handler.php",
+    "database/profile-handler.php",
+    "database/complaint-handler.php",
 
-    # # Styles directory (CSS)
-    # "styles/footer.css",
-    # "styles/header.css",
-    # "styles/home.css",
+    # Styles directory (CSS)
     # "styles/index.css",
-    # "styles/products.css",             # added
-    # "styles/seller-registration.css",  # added
+    # "styles/header.css",
+    # "styles/footer.css",
+    # "styles/home.css",
     # "styles/sign-in.css",
     # "styles/sign-up.css",
+    # "styles/products.css",
+    # "styles/profile.css",
+    # "styles/seller-registration.css",
+    # "styles/complaint-page.css",
 ]

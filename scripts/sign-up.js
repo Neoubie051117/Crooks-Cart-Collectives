@@ -295,10 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                showNotifier('Account created successfully! Redirecting to dashboard...');
+                const delayTime = result.delay || 5000;
+                showNotifier(result.message || 'Account created successfully! Please sign in.');
                 setTimeout(() => {
                     window.location.href = result.redirect;
-                }, 2000);
+                }, delayTime);
             } else {
                 if (result.message === 'duplicate-email duplicate-username') {
                     highlightField(emailField);

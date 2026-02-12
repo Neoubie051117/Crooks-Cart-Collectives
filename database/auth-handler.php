@@ -71,6 +71,11 @@ function handleSignup() {
         echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
         exit;
     }
+
+    if (strlen($password) > 16) {
+        echo json_encode(['status' => 'error', 'message' => 'password-too-long']);
+        exit;
+    }
     
     if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password)) {
         echo json_encode(['status' => 'error', 'message' => 'password-requirements']);
@@ -121,15 +126,16 @@ function handleSignup() {
         echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
         exit;
     }
-    
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // TEMPORARY: Store plain text password for testing
+    $plain_password = $password; // No hashing during testing phase
     
     $user_data = [
         'first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
         'last_name' => htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8'),
         'email' => $email,
         'username' => htmlspecialchars($username, ENT_QUOTES, 'UTF-8'),
-        'password_hash' => $password_hash,
+        'password' => $plain_password,
         'middle_name' => !empty($_POST['middle_name']) ? 
             htmlspecialchars(trim($_POST['middle_name']), ENT_QUOTES, 'UTF-8') : null,
         'birthdate' => $_POST['birthdate'],
@@ -153,10 +159,10 @@ function handleSignup() {
         $stmt = $connection->prepare("
             INSERT INTO users (
                 first_name, middle_name, last_name, email, username, 
-                password_hash, birthdate, gender, contact_number, address
+                password, birthdate, gender, contact_number, address
             ) VALUES (
                 :first_name, :middle_name, :last_name, :email, :username,
-                :password_hash, :birthdate, :gender, :contact_number, :address
+                :password, :birthdate, :gender, :contact_number, :address
             )
         ");
         
@@ -178,20 +184,22 @@ function handleSignup() {
         $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
         $stmt->execute([$customer_id]);
         
-        $_SESSION['user_id'] = $userID;
-        $_SESSION['customer_id'] = $customer_id;
-        $_SESSION['username'] = $username;
-        $_SESSION['email'] = $email;
-        $_SESSION['is_customer'] = true;
-        $_SESSION['is_seller'] = false;
-        $_SESSION['is_admin'] = false;
+        // AUTO-LOGIN COMPLETELY REMOVED - User must sign in manually
         
         $connection->commit();
         
+        // ============================================================
+        // SUCCESS RESPONSE WITH 5-SECOND DELAY BEFORE REDIRECT
+        // ============================================================
+        // The frontend JavaScript will show "Account created successfully! 
+        // Please sign in." message for 5 seconds, then redirect to sign-in page
+        // ============================================================
+        
         echo json_encode([
             'status' => 'success',
-            'message' => 'Account created successfully!',
-            'redirect' => '../pages/customer-dashboard.php'
+            'message' => 'Account created successfully! Please sign in.',
+            'redirect' => '../pages/sign-in.php',
+            'delay' => 5000 // 5 seconds delay (in milliseconds)
         ]);
         
     } catch (PDOException $e) {
@@ -227,9 +235,9 @@ function handleSignin() {
     
     $identifier = trim($identifier);
     
-    // FIRST: Check if it's an admin login (admins are separate from users)
+    // FIRST: Check if it's an admin login
     $stmt = $connection->prepare("
-        SELECT admin_id, username, email, password_hash 
+        SELECT admin_id, username, email, password 
         FROM administrators 
         WHERE email = ? OR username = ?
     ");
@@ -237,8 +245,8 @@ function handleSignin() {
     $admin = $stmt->fetch();
     
     if ($admin) {
-        // Check admin password
-        if (!password_verify($password, $admin['password_hash']) && $password !== $admin['password_hash']) {
+        // Check admin password - admins use hashed passwords
+        if (!password_verify($password, $admin['password'])) {
             echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
             exit;
         }
@@ -261,7 +269,7 @@ function handleSignin() {
     
     // If not admin, check regular user
     $stmt = $connection->prepare("
-        SELECT user_id, username, email, password_hash 
+        SELECT user_id, username, email, password 
         FROM users 
         WHERE email = ? OR username = ?
     ");
@@ -273,28 +281,13 @@ function handleSignin() {
         exit;
     }
     
-    // Check password - first try password_verify, then check plain text as fallback
-    $password_valid = false;
-    
-    // Method 1: Try password_verify (for hashed passwords)
-    if (password_verify($password, $user['password_hash'])) {
-        $password_valid = true;
-    } 
-    // Method 2: Check if it's plain text (temporary for testing)
-    elseif ($password === $user['password_hash']) {
-        $password_valid = true;
-        
-        // Auto-upgrade plain text password to hash
-        $new_hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $connection->prepare("UPDATE users SET password_hash = ? WHERE user_id = ?");
-        $stmt->execute([$new_hash, $user['user_id']]);
-    }
-    
-    if (!$password_valid) {
+    // Check password - plain text comparison for testing
+    if ($password !== $user['password']) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
         exit;
     }
     
+    // Get customer information
     $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     $customer = $stmt->fetch();
@@ -310,10 +303,12 @@ function handleSignin() {
         $customer_id = $customer['customer_id'];
     }
     
+    // Check if user is a seller
     $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     $seller = $stmt->fetch();
     
+    // Set session variables
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['customer_id'] = $customer_id;
     $_SESSION['username'] = $user['username'];
@@ -330,9 +325,11 @@ function handleSignin() {
         $_SESSION['seller_verified'] = false;
     }
     
+    // Update last login timestamp
     $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     
+    // Determine redirect path
     if ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
         $redirect = '../pages/seller-dashboard.php';
     } else {
@@ -347,6 +344,16 @@ function handleSignin() {
 }
 
 function handleSignout() {
+    // Check if actually logged in
+    if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Already logged out',
+            'redirect' => '../index.php'
+        ]);
+        exit;
+    }
+    
     $_SESSION = array();
     
     if (ini_get("session.use_cookies")) {

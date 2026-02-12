@@ -2,16 +2,17 @@
 """
 Web Content Fetcher - Modular file collection for web development
 Python version of Content_Fetcher.sh
+Revised to check file existence BEFORE creating temp file
 """
 
 import os
 import sys
 import re
-import shutil
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 import glob
+import tempfile
 
 # Text colors for terminal output
 class Colors:
@@ -20,6 +21,7 @@ class Colors:
     RED = '\033[1;31m'
     BLUE = '\033[1;34m'
     RESET = '\033[0m'
+    CYAN = '\033[1;36m'
 
 def color_text(text: str, color: str) -> str:
     """Return colored text for terminal output."""
@@ -223,29 +225,57 @@ def get_file_header(file_path: Path) -> str:
     
     return headers.get(suffix, '')
 
+def determine_output_file(output_folder: Path, preset_name: str) -> Path:
+    """
+    Determine the output file path, handling existing files.
+    
+    Args:
+        output_folder: Directory for output files
+        preset_name: Name of the preset being used
+        
+    Returns:
+        Path to the output file
+    """
+    base_file = output_folder / f"{preset_name}_Summary.txt"
+    
+    # Check if file already exists
+    if base_file.exists():
+        print(color_text(f"Existing file detected: {base_file}", Colors.YELLOW))
+        confirm = input(color_text("Overwrite it? (y/N): ", Colors.YELLOW)).strip().lower()
+        
+        if confirm != 'y':
+            index = 1
+            while (output_folder / f"{preset_name}_Summary-{index}.txt").exists():
+                index += 1
+            output_file = output_folder / f"{preset_name}_Summary-{index}.txt"
+            print(color_text(f"Saving as new file: {output_file}", Colors.BLUE))
+            return output_file
+        else:
+            print(color_text("Overwriting existing file...", Colors.BLUE))
+            return base_file
+    else:
+        return base_file
+
 def process_files(
     project_root: Path,
     main_folder_name: str,
     preset_name: str,
     files_to_check: List[str],
-    output_folder: Path,
-    temp_file: Path,
-    final_file: Path
+    output_file: Path
 ) -> None:
     """
-    Process all files and generate the output.
+    Process all files and generate the output directly to the target file.
     
     Args:
         project_root: Root directory of the project
         main_folder_name: Name of the main folder
         preset_name: Name of the preset being used
         files_to_check: List of file paths to process
-        output_folder: Directory for output files
-        temp_file: Temporary file path
-        final_file: Final output file path
+        output_file: Final output file path
     """
     try:
-        with open(temp_file, 'w', encoding='utf-8') as f:
+        # Write directly to the output file
+        with open(output_file, 'w', encoding='utf-8') as f:
             # Write header
             f.write(f"Web Project: {main_folder_name}\n")
             f.write(f"Preset: {preset_name}\n")
@@ -296,32 +326,12 @@ def process_files(
                     f.write("[MISSING]\n")
                 
                 f.write(f"\n{'=' * 46}\n\n")
-    
-    except IOError as e:
-        print(color_text(f"Error writing to temporary file: {e}", Colors.RED), file=sys.stderr)
-        raise
-    
-    # Handle output saving
-    file_index = 0
-    if final_file.exists():
-        user_choice = input(
-            color_text(f"File already exists: {final_file}. Overwrite? (y/N): ", Colors.YELLOW)
-        )
         
-        if user_choice.lower() == 'y':
-            shutil.move(temp_file, final_file)
-            print(color_text(f"Overwritten: {final_file}", Colors.GREEN))
-        else:
-            # Find next available indexed file name
-            while (output_folder / f"{preset_name}_Summary-{file_index}.txt").exists():
-                file_index += 1
-            
-            new_file = output_folder / f"{preset_name}_Summary-{file_index}.txt"
-            shutil.move(temp_file, new_file)
-            print(color_text(f"Saved as: {new_file}", Colors.GREEN))
-    else:
-        shutil.move(temp_file, final_file)
-        print(color_text(f"Saved as: {final_file}", Colors.GREEN))
+        print(color_text(f"Saved as: {output_file}", Colors.GREEN))
+        
+    except IOError as e:
+        print(color_text(f"Error writing to output file: {e}", Colors.RED), file=sys.stderr)
+        raise
 
 # =============================================================================
 # Main Execution
@@ -330,11 +340,16 @@ def process_files(
 def main() -> None:
     """Main execution function."""
     # Display banner
-    print(color_text("File Content Fetcher (Python Version)", Colors.YELLOW))
+    print(color_text("\n=== File Content Fetcher (Python Version) ===", Colors.CYAN))
     print()
     
     # Setup paths
     script_dir, source_folder, output_folder, main_folder_name, config_dir = setup_paths()
+    
+    print(color_text(f"Project Root: {script_dir.parent}", Colors.GREEN))
+    print(color_text(f"Project Name: {main_folder_name}", Colors.GREEN))
+    print(color_text(f"Output Folder: {output_folder}", Colors.GREEN))
+    print()
     
     # Load presets
     preset_files = load_presets(config_dir)
@@ -360,42 +375,34 @@ def main() -> None:
         print(color_text("Failed to load files list. Exiting.", Colors.RED))
         sys.exit(1)
     
-    # Set up file names
-    temp_file = output_folder / "temp_output.txt"
-    final_file = output_folder / f"{preset_name}_Summary.txt"
-    
-    # Cleanup function for temp file
-    def cleanup():
-        if temp_file.exists():
-            try:
-                temp_file.unlink()
-            except:
-                pass
+    # Determine output file (handles existing file check BEFORE processing)
+    output_file = determine_output_file(output_folder, preset_name)
     
     try:
-        # Process files
-        print(color_text("Processing web files...", Colors.YELLOW))
+        # Process files directly to the determined output file
+        print(color_text("\nProcessing web files...", Colors.YELLOW))
         
         process_files(
             script_dir.parent,
             main_folder_name,
             preset_name,
             files_to_check,
-            output_folder,
-            temp_file,
-            final_file
+            output_file
         )
         
-        print(color_text("Web content fetch completed successfully!", Colors.GREEN))
+        print(color_text("\nWeb content fetch completed successfully!", Colors.GREEN))
         
     except Exception as e:
-        print(color_text(f"Error during processing: {e}", Colors.RED), file=sys.stderr)
-        cleanup()
+        print(color_text(f"\nError during processing: {e}", Colors.RED), file=sys.stderr)
+        
+        # If error occurred and file was partially written, clean it up
+        if output_file.exists() and output_file.stat().st_size == 0:
+            try:
+                output_file.unlink()
+            except:
+                pass
+        
         sys.exit(1)
-    
-    finally:
-        # Clean up temp file if it still exists
-        cleanup()
 
 if __name__ == "__main__":
     main()

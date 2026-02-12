@@ -30,7 +30,7 @@ $pathPrefix = $is_root ? '' : '../';
         <div class="mail-button">
             <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail"
                 onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/Logo.png';">
-            <span>@crooks-cart-community.com</span>
+            <span>@crooks-cart-inquiry.com</span>
         </div>
         <div class="policy-links">
             <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>
