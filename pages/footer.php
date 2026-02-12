@@ -1,6 +1,8 @@
 <?php
 // Determine path prefix based on where this file is included from
-$pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
+$current_page = basename($_SERVER['PHP_SELF']);
+$is_root = ($current_page == 'index.php');
+$pathPrefix = $is_root ? '' : '../';
 ?>
 
 <footer class="footer">
@@ -10,17 +12,24 @@ $pathPrefix = (defined('IN_ROOT_FOOTER') && IN_ROOT_FOOTER) ? '' : '../';
             <h2>Visit our <span>FAQs</span> in our <span>socials</span></h2>
         </div>
         <div class="socials">
-            <a href="https://web.facebook.com/share/g/1EbBqNZHcK/" target="_blank"><img
-                    src="<?php echo $pathPrefix; ?>assets/icons8-facebook.svg" alt="Facebook"></a>
-            <a href="https://www.instagram.com/explore/locations/277280053/cainta-municipal-hall-caintarizal/?utm_source"
-                target="_blank"><img src="<?php echo $pathPrefix; ?>assets/icons8-instagram.svg" alt="Instagram"></a>
-            <a href="https://youtu.be/IXPuSHtnImE?si=PDIWER9ZU_M5NEuq" target="_blank"><img
-                    src="<?php echo $pathPrefix; ?>assets/icons8-youtube.svg" alt="Youtube"></a>
+            <a href="https://www.facebook.com/LNMNeoubie" target="_blank" rel="noopener noreferrer">
+                <img src="<?php echo $pathPrefix; ?>assets/icons8-facebook.svg" alt="Facebook"
+                    onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/facebook.svg';">
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                <img src="<?php echo $pathPrefix; ?>assets/icons8-instagram.svg" alt="Instagram"
+                    onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/Logo.png';">
+            </a>
+            <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer">
+                <img src="<?php echo $pathPrefix; ?>assets/icons8-youtube.svg" alt="YouTube"
+                    onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/Logo.png';">
+            </a>
         </div>
     </div>
     <div class="footer-lower">
         <div class="mail-button">
-            <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail">
+            <img src="<?php echo $pathPrefix; ?>assets/mail.svg" alt="Mail"
+                onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/Logo.png';">
             <span>@crooks-cart-community.com</span>
         </div>
         <div class="policy-links">

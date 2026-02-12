@@ -1,7 +1,7 @@
-// Hero Slider Functionality
-class HeroSlider {
+// Showcase Slider Functionality (formerly Hero Slider)
+class ShowcaseSlider {
     constructor() {
-        this.slides = document.querySelectorAll('.slide');
+        this.slides = document.querySelectorAll('.showcase-slide');
         this.prevBtn = document.querySelector('.prev-slide');
         this.nextBtn = document.querySelector('.next-slide');
         this.currentSlide = 0;
@@ -35,7 +35,7 @@ class HeroSlider {
         }
         
         // Pause on hover
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (slider) {
             slider.addEventListener('mouseenter', () => this.stopAutoSlide());
             slider.addEventListener('mouseleave', () => this.startAutoSlide());
@@ -43,11 +43,21 @@ class HeroSlider {
         
         // Touch/swipe support for mobile
         this.initTouchEvents();
+        
+        // Keyboard navigation
+        this.initKeyboardEvents();
     }
     
     showSlide(index) {
         this.slides.forEach(slide => slide.classList.remove('active'));
         this.slides[index].classList.add('active');
+        
+        // Update aria-live for screen readers
+        const activeSlide = this.slides[index];
+        const slideContent = activeSlide.querySelector('.showcase-content');
+        if (slideContent) {
+            slideContent.setAttribute('aria-live', 'polite');
+        }
     }
     
     nextSlide() {
@@ -81,16 +91,30 @@ class HeroSlider {
         let touchStartX = 0;
         let touchEndX = 0;
         
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (!slider) return;
         
         slider.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
+            this.stopAutoSlide(); // Pause auto-slide during touch
         });
         
         slider.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
+            this.resetAutoSlide(); // Resume auto-slide after touch
+        });
+    }
+    
+    initKeyboardEvents() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                this.prevSlide();
+                this.resetAutoSlide();
+            } else if (e.key === 'ArrowRight') {
+                this.nextSlide();
+                this.resetAutoSlide();
+            }
         });
     }
     
@@ -102,38 +126,49 @@ class HeroSlider {
         } else if (endX - startX > minSwipeDistance) {
             this.prevSlide();
         }
-        this.resetAutoSlide();
     }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new HeroSlider();
+    new ShowcaseSlider();
     
-    // REMOVE the loadFeaturedProducts() call - PHP handles this
-    // loadFeaturedProducts();
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Adjust content margin for header
+    function adjustContentMargin() {
+        const header = document.querySelector('.header-bar');
+        const content = document.querySelector('.content');
+        if (header && content) {
+            const headerHeight = header.offsetHeight;
+            content.style.marginTop = headerHeight + 'px';
+            
+            // Also adjust showcase section height
+            const showcaseSection = document.querySelector('.showcase-section');
+            if (showcaseSection) {
+                const viewportHeight = window.innerHeight;
+                showcaseSection.style.height = `calc(${viewportHeight * 0.6}px - ${headerHeight}px)`;
+            }
+        }
+    }
+    
+    // Adjust on load and resize
+    adjustContentMargin();
+    window.addEventListener('resize', adjustContentMargin);
+    window.addEventListener('orientationchange', adjustContentMargin);
 });
-
-// REMOVE or comment out the loadFeaturedProducts function entirely
-// It's conflicting with PHP-generated content
-/*
-async function loadFeaturedProducts() {
-    // This will be replaced with actual API call
-    const productsGrid = document.querySelector('.products-grid');
-    if (!productsGrid) return;
-    
-    // Placeholder - replace with actual API call
-    setTimeout(() => {
-        productsGrid.innerHTML = `
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250x200" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Sample Product 1</h3>
-                    <p class="product-price">₱999.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-            </div>
-        `;
-    }, 1000);
-}
-*/

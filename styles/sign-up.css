@@ -1,385 +1,456 @@
+/* Crooks-Cart-Collectives/styles/sign-up.css */
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --form-group-gap: 20px;
+    --input-height: 50px;
+    --border-radius: 12px;
+    
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
+    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  outline: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    outline: none;
 }
 
 body {
-  font-family: var(--font-family-base);
+    font-family: var(--font-family-base);
+    background-color: var(--color-background-A);
+    color: var(--color-text-A);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .pageTitleHeader {
-  font-size: calc(15px + var(--font-size-title));
-  padding: var(--size-header-padding);
-  margin: 10px auto calc(var(--size-navigation-gap) - 20px);
-  text-align: center;
-  width: 100%;
-}
-
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--size-navigation-gap);
-  padding: 0 var(--size-header-padding);
-}
-
-.section {
-  flex: 1;
-  min-width: 300px;
-  padding: 20px;
-  border-radius: var(--size-button-radius);
-  border: 1px solid;
-  margin-bottom: var(--size-navigation-gap);
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.section-title {
-  margin: 0 0 20px;
-}
-
-.image-preview {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-  margin: 10px auto 0;
-  border: 1px solid;
-}
-
-#imageUpload {
-  margin: 0 auto var(--size-navigation-gap);
-  display: block;
-  font-size: var(--font-size-base);
-  width: 100%;
-  max-width: 250px;
-}
-
-label {
-  font-size: var(--font-size-base);
-  margin-bottom: 5px;
-}
-
-select,
-input,
-textarea {
-  width: 100%;
-  max-width: 100%;
-  font-size: var(--font-size-base);
-  padding: 12px;
-  border: 1px solid;
-  border-radius: var(--size-button-radius);
-}
-
-select:focus,
-input:focus,
-textarea:focus {
-  outline: none;
-  border: 1px solid;
-}
-
-.group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: var(--size-navigation-gap);
-  width: 100%;
-}
-
-.btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: var(--size-navigation-gap);
-  flex-direction: row;
-}
-
-.btn {
-  padding: var(--size-button-padding);
-  border: none;
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  border-radius: var(--size-button-radius);
-}
-
-.clear-btn {
-  border: 1px solid;
-}
-
-textarea {
-  resize: none;
-}
-
-@media (max-width: 600px) {
-  .btn-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn {
+    font-size: calc(15px + var(--font-size-title));
+    padding: var(--size-header-padding);
+    margin: 10px auto calc(var(--size-navigation-gap) - 20px);
+    text-align: center;
     width: 100%;
-    margin: 5px 0;
-  }
+    color: var(--color-text-C);
+    font-weight: var(--font-weight-bold);
+}
 
-  #imageUpload {
+/* Form Container */
+.signup-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--form-section-gap);
+    padding: 0 20px;
     width: 100%;
     max-width: 100%;
-  }
+}
 
-  .image-preview {
-    width: 100px;
-    height: 100px;
-  }
-
-  .container {
+/* Form Sections - Barangay Style */
+.form-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    margin-bottom: var(--form-section-gap);
+    transition: var(--effect-transition-default);
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0 15px;
-  }
+}
 
-  .section {
-    min-width: 100%;
-    margin: 0 0 10px;
-    padding: 15px;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: unset !important;
-  }
+.form-section:hover {
+    box-shadow: var(--effect-box-shadow-default);
+}
 
-  .pageTitleHeader {
-    padding: 15px 10px;
+.form-section h3 {
     font-size: 1.5rem;
-  }
+    color: var(--color-text-C);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-accent-A);
+}
 
-  .group,
-  .radio-group {
-    margin-bottom: 15px;
-  }
-
-  .group > select {
-    width: 100%;
-    margin: 5px 0;
-  }
-
-  .image-preview {
-    width: 120px;
-    height: 120px;
-  }
-
-  input,
-  select,
-  textarea {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .btn-container {
+/* Form Groups - Barangay Style */
+.form-group {
+    display: flex;
     flex-direction: column;
-  }
-
-  .btn {
+    gap: 8px;
+    margin-bottom: 15px; /* Reduced from 20px */
     width: 100%;
-    margin: 5px 0;
-  }
+}
 
-  .radio-group {
-    flex-wrap: nowrap;
-  }
-
-  .radio-group label {
-    width: 100%;
+.form-group label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text-C);
     margin-bottom: 5px;
-    font-size: 16px;
-  }
 }
 
-
-.section {
-  background-color: var(--color-background-B);
-  border-color: var(--color-border-A);
-  transition: var(--effect-transition-default);
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    font-size: var(--font-size-base);
+    padding: 0 15px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--color-text-A);
+    transition: var(--effect-transition-default);
 }
 
-.section:hover {
-  box-shadow: var(--effect-box-shadow-default);
+/* Address textarea - fixed initial size, auto-expands */
+.form-group textarea#address {
+    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
+    padding: 15px;
+    resize: none;
+    overflow-y: hidden;
+    line-height: 1.5;
+    transition: height 0.2s ease;
 }
 
-.image-preview {
-  border-color: var(--color-border-A);
+.form-group textarea#address.expanding {
+    height: auto;
+    min-height: 100px;
+    overflow-y: auto;
 }
 
-input,
-select,
-textarea {
-  background-color: #ffffff;
-  border-color: var(--color-border-A);
-  color: var(--color-text-A);
-  transition: var(--effect-transition-default);
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+    box-shadow: var(--effect-glow-B);
+    outline: none;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--color-accent-A);
-  box-shadow: var(--effect-glow-B);
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #e74c3c;
+    box-shadow: var(--effect-glow-error);
+}
+
+.form-group.error label {
+    color: #e74c3c;
+}
+
+/* Error Messages */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Button Container - Always Stacked */
+.btn-container {
+    display: flex;
+    flex-direction: column; /* always vertical */
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 100%;
 }
 
 .btn {
-  background-color: var(--color-accent-A);
-  color: var(--color-text-B);
-  transition: var(--effect-transition-default);
+    padding: var(--size-button-padding);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    border-radius: var(--size-button-radius);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    width: 100%; /* Full width when stacked */
+    min-width: unset; /* Remove min-width constraint */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
 }
 
-.btn:hover {
-  background-color: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
 }
 
-.clear-btn {
-  background-color: var(--color-background-C);
-  border-color: var(--color-border-A);
-  color: var(--color-text-B);
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-hover-A);
+    box-shadow: var(--effect-glow-B);
 }
 
-.clear-btn:hover {
-  background-color: var(--color-background-A);
-  border-color: var(--color-hover-A);
-  color: var(--color-text-A);
-  box-shadow: var(--effect-glow-A);
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* Notifier Modal */
+.btn-secondary {
+    background-color: var(--color-background-C);
+    border: 1px solid;
+    border-color: var(--color-border-A);
+    color: var(--color-text-B);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-background-A);
+    border-color: var(--color-hover-A);
+    color: var(--color-text-A);
+    box-shadow: var(--effect-glow-A);
+}
+
+/* Remove extra spacing from button wrapper */
+.form-section .form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+/* Links Group - Better Spacing */
+.links-group {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-border-A);
+    width: 100%;
+}
+
+.login-link,
+.seller-link {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-text-C);
+}
+
+.login-link a,
+.seller-link a {
+    text-decoration: none;
+    color: var(--color-accent-A);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.login-link a:hover,
+.seller-link a:hover {
+    color: var(--color-hover-A);
+    background-color: rgba(255, 130, 70, 0.1);
+}
+
+/* Notifier Modal - Barangay Style */
 .notifier {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
 .notifier.hidden {
-  display: none;
+    display: none;
 }
 
 .notifier-content {
-  background-color: var(--color-background-B);
-  color: var(--color-text-A);
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: var(--effect-box-shadow-default);
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  animation: fadeScale 0.3s ease-in-out;
+    background-color: var(--color-background-B);
+    color: var(--color-text-A);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: var(--effect-box-shadow-default);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeScale 0.3s ease-in-out;
 }
 
 .notifier-content p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  word-wrap: break-word;
+    font-size: 18px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
 }
 
 @keyframes fadeScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
- .image-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+/* Last Form Section (Contact & Registration) Layout Fix */
+.form-section:last-child {
+    padding-bottom: 25px;
 }
 
-.image-upload img {
-  max-width: 150px;
-  margin-bottom: 10px;
+/* Form submitted state - Barangay Style */
+.signup-container.submitted .form-group:has(input:invalid),
+.signup-container.submitted .form-group:has(select:invalid),
+.signup-container.submitted .form-group:has(textarea:invalid) {
+    animation: pulseWarning 0.5s ease-in-out;
 }
 
-.image-upload label {
-  margin-bottom: 5px;
-  text-align: center;
-  width: 100%;
-  display: block;
-  align-self: center;
+@keyframes pulseWarning {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
-form.submitted input:invalid,
-form.submitted select:invalid {
-  border-color: #ff9999 !important;
-  box-shadow: var(--effect-box-shadow-default);
-  transition: box-shadow 0.3s ease;
+/* Barangay-style color themes for form sections */
+.form-section {
+    background-color: var(--color-background-B);
+    border-color: var(--color-border-A);
 }
 
-@keyframes glowPulse {
-  0% {
-    box-shadow: var(--effect-box-shadow-default);
-  }
-  50% {
-    box-shadow: 0 0 8px rgba(255, 0, 0, 0.6); /* stronger red pulse */
-  }
-  100% {
-    box-shadow: var(--effect-box-shadow-default);
-  }
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border-color: var(--color-border-A);
 }
 
-.sign-in-link-container {
-  text-align: center;
-  margin-top: -30px;
-  margin-bottom: 25px;
-  font-size: 18px;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
 }
 
-
-.sign-in-link {
-  display: inline-block;
-  font-size: var(--font-size-base);
-  color: var(--color-text-A);
-  background-color: var(--color-background-B);
-  border: 1px solid var(--color-border-A);
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  transition: var(--effect-transition-default);
-  box-shadow: var(--effect-box-shadow-default);
+/* Responsive Design - Barangay Style Adjustments */
+@media (max-width: 1024px) {
+    .signup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 600px;
+    }
 }
 
-.sign-in-link:hover {
-  background-color: var(--color-hover-A);
-  color: var(--color-text-B);
-  border-color: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 1.5rem;
+        padding: 15px 10px;
+        margin: 10px auto 30px;
+    }
+    
+    .form-section {
+        padding: 20px;
+        min-width: 100%;
+        margin: 0 0 10px;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-container {
+        margin-top: 15px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        height: 45px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group textarea#address {
+        height: 90px;
+        min-height: 90px;
+    }
+    
+    .links-group {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.9rem;
+        margin: 5px 0;
+    }
+    
+    .signup-container {
+        padding: 0 15px;
+    }
 }
 
-.log-in-colored-link{
-  text-decoration: none;
-  color: var(--color-accent-A);
+@media (max-width: 480px) {
+    .form-section {
+        padding: 18px 15px;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 18px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-container {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .links-group {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.85rem;
+        margin: 4px 0;
+    }
 }
-
-@media (max-width: 599px) {
-  .sign-in-link-container {
-    margin-top: 0;
-  }
-}
-
-
-

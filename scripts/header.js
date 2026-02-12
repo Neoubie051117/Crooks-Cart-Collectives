@@ -1,3 +1,4 @@
+// Update scripts/header.js
 document.addEventListener("DOMContentLoaded", () => {
     // Content fade in effect
     const content = document.querySelector('.content');
@@ -12,31 +13,26 @@ document.addEventListener("DOMContentLoaded", () => {
     function initializeHeader() {
         const menuButton = document.getElementById('menuButton');
         const mobileNav = document.getElementById('mobileNav');
-        const navLinks = document.querySelectorAll(".nav-link, .sign-up");
         const logo = document.getElementById('logo');
         
-        // Handle logo click for consistent navigation
+        // Handle logo load
         if (logo) {
-            logo.style.transition = "opacity 0.5s ease-in-out, visibility 0s linear 0.5s";
-            logo.style.cursor = "pointer";
+            // Set initial state
+            logo.style.opacity = "1";
+            logo.style.visibility = "visible";
             
-            // Remove existing click handlers to prevent conflicts with the HTML anchor
-            const newLogo = logo.cloneNode(true);
-            logo.parentNode.replaceChild(newLogo, logo);
-            
-            // Fade in logo after load
-            const fadeInLogo = () => {
-                setTimeout(() => {
-                    newLogo.style.visibility = "visible";
-                    newLogo.style.opacity = 1;
-                }, 1000);
+            // If logo fails to load, show fallback
+            logo.onerror = function() {
+                this.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNGRjgyNDYiLz48dGV4dCB4PSIyMCIgeT0iMjAiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5DQ0M8L3RleHQ+PC9zdmc+";
             };
-
-            if (newLogo.complete && newLogo.naturalHeight !== 0) {
-                fadeInLogo();
-            } else {
-                newLogo.addEventListener("load", fadeInLogo);
-            }
+            
+            // Load with timeout
+            setTimeout(() => {
+                if (logo.naturalWidth === 0) {
+                    logo.style.opacity = "1";
+                    logo.style.visibility = "visible";
+                }
+            }, 1000);
         }
 
         // Mobile menu functionality
@@ -65,8 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             backdrop.addEventListener('click', closeMenu);
+            
+            // Close menu when clicking outside
             document.addEventListener('click', (e) => {
-                if (!mobileNav.contains(e.target) && !menuButton.contains(e.target)) {
+                if (mobileNav.classList.contains('open') && 
+                    !mobileNav.contains(e.target) && 
+                    !menuButton.contains(e.target)) {
                     closeMenu();
                 }
             });
@@ -75,23 +75,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (e.key === 'Escape') closeMenu();
             });
 
+            // Close menu when clicking a link
             mobileNav.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') closeMenu();
+                if (e.target.tagName === 'A') {
+                    setTimeout(closeMenu, 300); // Small delay for UX
+                }
             });
         }
 
         // Highlight active navigation link
-        highlightActiveLink(navLinks);
-        
-        // Add page transition effects to navigation links
-        addPageTransition(navLinks);
+        highlightActiveLink();
         
         // Adjust content margin based on header
         adjustContentMargin();
         window.addEventListener('resize', adjustContentMargin);
     }
 
-    function highlightActiveLink(navLinks) {
+    function highlightActiveLink() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        if (!navLinks.length) return;
+        
         let currentPage = window.location.pathname.split('/').pop();
         if (currentPage === '' || currentPage === '/') {
             currentPage = 'index.php';
@@ -106,88 +109,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function addPageTransition(navLinks) {
-    navLinks.forEach(link => {
-        // Check if this is a navigation link from the header/menu
-        const isHeaderLink = link.classList.contains('nav-link') || 
-                             link.classList.contains('sign-in') || 
-                             link.classList.contains('social-button');
-        
-        link.addEventListener("click", (e) => {
-            const href = link.getAttribute("href");
-            
-            // Only apply transition to navigation links (not form buttons or regular links in content)
-            if (href && isHeaderLink && !href.startsWith("#") && !href.includes("mailto:") && !href.startsWith("http")) {
-                e.preventDefault();
-                fadeOutAndNavigate(href);
-            }
-            // Let regular links (like "Log In" in sign-up.php) work normally
-        });
-    });
-}
-
-    function fadeOutAndNavigate(url) {
-        const content = document.querySelector('.content');
-        if (content) {
-            content.style.opacity = 0;
-            setTimeout(() => {
-                window.location.href = url;
-            }, 500);
-        } else {
-            window.location.href = url;
-        }
-    }
-
     function adjustContentMargin() {
         const header = document.querySelector('.header-bar');
         const content = document.querySelector('.content');
         if (header && content) {
-            const currentPage = window.location.pathname.split('/').pop();
-            const marginRules = {
-                "container-activities.html": "0px",
-                "sign-up.php": "0px",
-                "sign-in.php": "0px"
-            };
-            content.style.marginTop = marginRules[currentPage] || "0";
-        }
-    }
-
-    function addFavicon() {
-        if (!document.querySelector("link[rel='icon']")) {
-            const favicon = document.createElement("link");
-            favicon.rel = "icon";
-            favicon.type = "image/png";
-            
-            // Determine correct path for favicon
-            const currentPath = window.location.pathname;
-            let faviconPath = "assets/Logo.png";
-            if (currentPath.includes('/pages/')) {
-                faviconPath = "../assets/Logo.png";
-            }
-            
-            favicon.href = faviconPath;
-            document.head.appendChild(favicon);
+            const headerHeight = header.offsetHeight;
+            content.style.marginTop = headerHeight + 'px';
         }
     }
 
     // Initialize header functionality
     initializeHeader();
-    addFavicon();
 
     // Remove no-transition classes after delay for smooth animations
-    const header = document.querySelector('.header-bar');
-    const mobileNav = document.getElementById('mobileNav');
-
-    if (header) {
-        header.classList.add('header-delay');
-    }
-
-    if (mobileNav) {
-        mobileNav.classList.add('header-delay');
-    }
-
     setTimeout(() => {
-        if (header) header.classList.remove('header-delay');
-        if (mobileNav) mobileNav.classList.remove('header-delay');
+        const header = document.querySelector('.header-bar');
+        const mobileNav = document.getElementById('mobileNav');
+
+        if (header) header.classList.remove('no-transition');
+        if (mobileNav) mobileNav.classList.remove('no-transition');
     }, 500);
 });

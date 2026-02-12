@@ -1,40 +1,43 @@
-# Preset Configuration for Mint-OS-Configuration Project
-# File paths must be relative to the project root (/Mint-OS-Configuration/)
+# Preset Configuration for Crooks-Cart-Collectives Project
+# File paths must be relative to the project root (/Crooks-Cart-Collectives/)
 
 filesToCheck = [
-    # Root directory files
+    # Root directory
     "index.php",
-    
-    # Pages directory
-    "pages/complaint.php",
+
+    # Pages directory (PHP)
     "pages/footer.php",
     "pages/header.php",
-    "pages/home.php",
     "pages/sign-in.php",
-    "pages/sign-up.php",
+    "pages/customer-sign-up.php",      # fixed name
+    "pages/customer-dashboard.php",
+    "pages/customer-profile.php",
+    "pages/seller-dashboard.php",
+    "pages/seller-registration.php",
+    "pages/products.php",              # added
 
-    # Scripts directory
+    # Scripts directory (JS)
     "scripts/central-link-navigation.js",
-    "scripts/complaint-form.js",
     "scripts/error-handler.js",
     "scripts/header.js",
-    "scripts/home.js",
+    "scripts/home.js",                 # added
     "scripts/index.js",
     "scripts/sign-in.js",
     "scripts/sign-up.js",
-    
-    "database/database-connect.php",
-    "database/sign-in-handler.php",   
-    "database/sign-out-handler.php",
-    "database/sign-up-handler.php",
-    
 
-    # Styles directory (commented out as in original)
-    # "styles/complaint-page.css",
+    # Database directory (PHP)
+    "database/database-connect.php",
+    "database/auth-handler.php",
+    "database/profile-handler.php",
+    "database/sign-out-handler.php",
+
+    # # Styles directory (CSS)
     # "styles/footer.css",
     # "styles/header.css",
     # "styles/home.css",
     # "styles/index.css",
+    # "styles/products.css",             # added
+    # "styles/seller-registration.css",  # added
     # "styles/sign-in.css",
     # "styles/sign-up.css",
 ]
