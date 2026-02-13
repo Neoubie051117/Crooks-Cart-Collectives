@@ -49,11 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Confirm logout
+    // Confirm logout - FIXED REDIRECT PATH
     confirmBtn.addEventListener('click', async () => {
         try {
-            // Try auth-handler.php first
-            let response = await fetch('../database/auth-handler.php', {
+            // Determine correct base path
+            const currentPath = window.location.pathname;
+            let logoutUrl = '';
+            let redirectUrl = '';
+            
+            if (currentPath.includes('/pages/')) {
+                logoutUrl = '../database/auth-handler.php';
+                redirectUrl = '../index.php'; // CRITICAL FIX: Always go to index.php
+            } else {
+                logoutUrl = 'database/auth-handler.php';
+                redirectUrl = 'index.php'; // CRITICAL FIX: Always go to index.php
+            }
+
+            const response = await fetch(logoutUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -67,23 +79,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 data = await response.json();
             } catch (e) {
                 // If auth-handler fails, try sign-out-handler.php
-                response = await fetch('../database/sign-out-handler.php', {
+                const fallbackUrl = currentPath.includes('/pages/') 
+                    ? '../database/sign-out-handler.php' 
+                    : 'database/sign-out-handler.php';
+                
+                const fallbackResponse = await fetch(fallbackUrl, {
                     method: 'POST',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
-                data = await response.json();
+                data = await fallbackResponse.json();
             }
 
-            if (data.status === 'success') {
-                window.location.href = data.redirect || '../index.php';
-            } else {
-                window.location.href = '../index.php';
-            }
+            // ALWAYS redirect to index.php, never to dashboard
+            window.location.href = redirectUrl;
+            
         } catch (error) {
             console.error('Logout error:', error);
-            window.location.href = '../index.php';
+            // On error, still redirect to index.php
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/pages/')) {
+                window.location.href = '../index.php';
+            } else {
+                window.location.href = 'index.php';
+            }
         }
     });
 });

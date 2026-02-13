@@ -1,6 +1,3 @@
-# Preset Configuration for Crooks-Cart-Collectives Project
-# File paths must be relative to the project root (/Crooks-Cart-Collectives/)
-
 filesToCheck = [
     # Root directory
     "index.php",
@@ -31,25 +28,27 @@ filesToCheck = [
     "scripts/error-handler.js",
     "scripts/showcase-slider.js",
     "scripts/complaint-form.js",
+    "scripts/logout-handler.js",
 
-    # Database directory (PHP)
-    "database/database-connect.php",
+    # Database directory (Including subfolders)
     "database/auth-handler.php",
-    "database/sign-in-handler.php",
-    "database/sign-up-handler.php",
-    "database/sign-out-handler.php",
-    "database/profile-handler.php",
     "database/complaint-handler.php",
+    "database/database-connect.php",
+    "database/profile-handler.php",
+    "database/sign-in-handler.php",
+    "database/sign-out-handler.php",
+    "database/sign-up-handler.php",
 
     # Styles directory (CSS)
-    # "styles/index.css",
-    # "styles/header.css",
+    # "styles/complaint-page.css",
     # "styles/footer.css",
+    # "styles/header.css",
     # "styles/home.css",
-    # "styles/sign-in.css",
-    # "styles/sign-up.css",
+    # "styles/index.css",
+    # "styles/logout-modal.css",
     # "styles/products.css",
     # "styles/profile.css",
     # "styles/seller-registration.css",
-    # "styles/complaint-page.css",
+    # "styles/sign-in.css",
+    # "styles/sign-up.css",
 ]

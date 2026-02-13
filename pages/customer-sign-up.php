@@ -104,8 +104,8 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="form-group">
                     <label for="address">Address</label>
-                    <textarea id="address" name="address" rows="3" required placeholder="Enter your full address"
-                        autocomplete="street-address"></textarea>
+                    <textarea id="address" name="address" rows="3" required
+                        placeholder="House/street no. Baranggay and City" autocomplete="street-address"></textarea>
                 </div>
 
                 <!-- Registration Buttons -->

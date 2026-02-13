@@ -4,10 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $isLoggedIn = isset($_SESSION['user_id']);
-$isCustomer = isset($_SESSION['is_customer']);
-$isSeller = isset($_SESSION['is_seller']);
-$isVerifiedSeller = isset($_SESSION['seller_verified']) && $_SESSION['seller_verified'];
-$isAdmin = isset($_SESSION['is_admin']);
 
 $current_page = basename($_SERVER['PHP_SELF']);
 $is_root = ($current_page == 'index.php');
@@ -19,10 +15,9 @@ $pathPrefix = $is_root ? '' : '../';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/logout-modal.css">
-    <!-- JavaScript -->
+
     <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
     <script defer src="<?php echo $pathPrefix; ?>scripts/logout-handler.js"></script>
 </head>
@@ -33,7 +28,7 @@ $pathPrefix = $is_root ? '' : '../';
             <a href="<?php echo $pathPrefix; ?>index.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <img id="logo" src="<?php echo $pathPrefix; ?>assets/Logo.png" alt="Logo"
-                    style="height: 40px; width: auto; opacity: 1; visibility: visible;">
+                    style="height: 40px; width: auto;">
                 <div class="title"><span>Crook's</span> Cart <span>Collectives</span></div>
             </a>
         </div>
@@ -48,21 +43,10 @@ $pathPrefix = $is_root ? '' : '../';
                 <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
 
                 <?php if ($isLoggedIn): ?>
-                <?php if ($isSeller && $isVerifiedSeller): ?>
-                <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link">SELLER DASHBOARD</a>
-                <?php endif; ?>
-
-                <?php if ($isCustomer): ?>
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
-                <?php endif; ?>
-
                 <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
-
-                <?php if ($isAdmin): ?>
-                <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">ADMIN</a>
-                <?php endif; ?>
                 <?php endif; ?>
 
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
@@ -82,21 +66,10 @@ $pathPrefix = $is_root ? '' : '../';
         <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
 
         <?php if ($isLoggedIn): ?>
-        <?php if ($isSeller && $isVerifiedSeller): ?>
-        <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link">SELLER DASHBOARD</a>
-        <?php endif; ?>
-
-        <?php if ($isCustomer): ?>
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
-        <?php endif; ?>
-
         <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
-
-        <?php if ($isAdmin): ?>
-        <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">ADMIN</a>
-        <?php endif; ?>
         <?php endif; ?>
 
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
@@ -109,7 +82,6 @@ $pathPrefix = $is_root ? '' : '../';
         <?php endif; ?>
     </nav>
 
-    <!-- Logout Confirmation Modal - ONLY RENDER WHEN LOGGED IN -->
     <?php if ($isLoggedIn): ?>
     <div id="logoutModal" class="logout-modal" style="display: none;">
         <div class="logout-modal-content">
@@ -144,15 +116,16 @@ $pathPrefix = $is_root ? '' : '../';
 
             menuButton.addEventListener('click', toggleMenu);
 
-            document.addEventListener('click', (e) => {
-                if (!menuButton.contains(e.target) && !mobileNav.contains(e.target) && mobileNav
-                    .classList.contains('open')) {
+            document.addEventListener('click', function(event) {
+                if (!menuButton.contains(event.target) &&
+                    !mobileNav.contains(event.target) &&
+                    mobileNav.classList.contains('open')) {
                     toggleMenu();
                 }
             });
 
-            mobileNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
+            mobileNav.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
                     if (mobileNav.classList.contains('open')) {
                         toggleMenu();
                     }

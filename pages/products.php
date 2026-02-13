@@ -32,6 +32,21 @@ try {
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // FIX: Process image paths for all products
+    foreach ($products as &$product) {
+        if (!empty($product['image_path'])) {
+            // Check if it's a relative path from assets folder
+            if (strpos($product['image_path'], 'assets/') === 0) {
+                $product['display_image'] = '../' . $product['image_path'];
+            } else {
+                $product['display_image'] = $product['image_path'];
+            }
+        } else {
+            $product['display_image'] = 'https://via.placeholder.com/250x200/FF8246/ffffff?text=' . urlencode(substr($product['name'], 0, 20));
+        }
+    }
+    
 } catch (PDOException $e) {
     error_log("Error fetching products: " . $e->getMessage());
 }
@@ -46,136 +61,8 @@ try {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/products.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 30px 0;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
 
-    .pagination a,
-    .pagination span {
-        display: inline-block;
-        padding: 8px 12px;
-        background: #f0f0f0;
-        border-radius: 4px;
-        text-decoration: none;
-        color: #333;
-        transition: background 0.3s, color 0.3s;
-        font-size: 14px;
-        min-width: 40px;
-        text-align: center;
-    }
-
-    .pagination a:hover {
-        background: #FF8246;
-        color: white;
-    }
-
-    .pagination .current {
-        background: #FF8246;
-        color: white;
-        font-weight: bold;
-    }
-
-    .pagination .disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .pagination .ellipsis {
-        padding: 8px 5px;
-        background: transparent;
-    }
-
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 25px;
-        padding: 20px 0;
-    }
-
-    .product-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
-        background: white;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .product-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        display: block;
-    }
-
-    .product-info {
-        padding: 15px;
-    }
-
-    .product-title {
-        font-size: 16px;
-        margin: 0 0 10px 0;
-        color: #333;
-        line-height: 1.3;
-        height: 2.6em;
-        overflow: hidden;
-    }
-
-    .product-price {
-        font-size: 18px;
-        font-weight: bold;
-        color: #FF8246;
-        margin: 0 0 5px 0;
-    }
-
-    .product-seller {
-        font-size: 14px;
-        color: #666;
-        margin: 0 0 10px 0;
-    }
-
-    .view-product-btn {
-        display: inline-block;
-        padding: 8px 16px;
-        background: #FF8246;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: background 0.3s;
-        border: none;
-        cursor: pointer;
-    }
-
-    .view-product-btn:hover {
-        background: #e66a2e;
-    }
-
-    .no-products {
-        text-align: center;
-        padding: 50px 20px;
-        color: #666;
-    }
-
-    .no-products a {
-        color: #FF8246;
-        text-decoration: none;
-    }
-
-    .no-products a:hover {
-        text-decoration: underline;
-    }
-    </style>
+    <!-- FIX: Remove inline styles and use external CSS properly -->
 </head>
 
 <body>
@@ -190,66 +77,114 @@ try {
             <p>Check back soon or <a href="seller-registration.php">become a seller</a> to add products!</p>
         </div>
         <?php else: ?>
+
+        <!-- FIX: Add filter/sort controls (optional enhancement)
+        <div class="products-controls">
+            <div class="products-count">
+                Showing <?php echo ($offset + 1); ?> - <?php echo min($offset + $items_per_page, $total_products); ?> of
+                <?php echo $total_products; ?> products
+            </div>
+            <div class="products-sort">
+                <label for="sort">Sort by:</label>
+                <select id="sort" name="sort">
+                    <option value="newest">Newest</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+        </div> -->
+
         <div class="products-grid">
             <?php foreach ($products as $product): ?>
             <div class="product-card">
-                <img src="<?php echo htmlspecialchars($product['image_path'] ?: 'https://via.placeholder.com/250x200/FF8246/ffffff?text=' . urlencode(substr($product['name'], 0, 20))); ?>"
-                    alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
+                <!-- FIX: Use pre-processed display_image path -->
+                <img src="<?php echo htmlspecialchars($product['display_image']); ?>"
+                    alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image" loading="lazy"
                     onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200/FF8246/ffffff?text=<?php echo urlencode(substr($product['name'], 0, 20)); ?>';">
+
                 <div class="product-info">
                     <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
                     <p class="product-price">₱<?php echo number_format($product['price'], 2); ?></p>
-                    <p class="product-seller">Seller: <?php echo htmlspecialchars($product['business_name']); ?></p>
-                    <a href="product-details.php?id=<?php echo $product['product_id']; ?>" class="view-product-btn">View
-                        Details</a>
+                    <p class="product-seller">
+                        Seller: <?php echo htmlspecialchars($product['business_name']); ?>
+                    </p>
+                    <a href="product-details.php?id=<?php echo $product['product_id']; ?>" class="view-product-btn">
+                        View Details
+                    </a>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
 
         <?php if ($total_pages > 1): ?>
-        <div class="pagination">
-            <?php if ($page > 1): ?>
-            <a href="?page=<?php echo $page - 1; ?>">&laquo; Previous</a>
-            <?php else: ?>
-            <span class="disabled">&laquo; Previous</span>
-            <?php endif; ?>
+        <!-- FIX: Improved pagination with better styling -->
+        <div class="pagination-container">
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>" class="pagination-item prev">&laquo; Previous</a>
+                <?php else: ?>
+                <span class="pagination-item disabled">&laquo; Previous</span>
+                <?php endif; ?>
 
-            <?php
-                // Show page numbers
+                <?php
+                // Show page numbers with intelligent range
                 $start_page = max(1, $page - 2);
                 $end_page = min($total_pages, $page + 2);
                 
                 if ($start_page > 1) {
-                    echo '<a href="?page=1">1</a>';
-                    if ($start_page > 2) echo '<span class="ellipsis">...</span>';
+                    echo '<a href="?page=1" class="pagination-item">1</a>';
+                    if ($start_page > 2) echo '<span class="pagination-ellipsis">...</span>';
                 }
                 
                 for ($i = $start_page; $i <= $end_page; $i++): 
                     if ($i == $page): ?>
-            <span class="current"><?php echo $i; ?></span>
-            <?php else: ?>
-            <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-            <?php endif; 
+                <span class="pagination-item active"><?php echo $i; ?></span>
+                <?php else: ?>
+                <a href="?page=<?php echo $i; ?>" class="pagination-item"><?php echo $i; ?></a>
+                <?php endif; 
                 endfor;
 
                 if ($end_page < $total_pages) {
-                    if ($end_page < $total_pages - 1) echo '<span class="ellipsis">...</span>';
-                    echo '<a href="?page=' . $total_pages . '">' . $total_pages . '</a>';
+                    if ($end_page < $total_pages - 1) echo '<span class="pagination-ellipsis">...</span>';
+                    echo '<a href="?page=' . $total_pages . '" class="pagination-item">' . $total_pages . '</a>';
                 }
-            ?>
+                ?>
 
-            <?php if ($page < $total_pages): ?>
-            <a href="?page=<?php echo $page + 1; ?>">Next &raquo;</a>
-            <?php else: ?>
-            <span class="disabled">Next &raquo;</span>
-            <?php endif; ?>
+                <?php if ($page < $total_pages): ?>
+                <a href="?page=<?php echo $page + 1; ?>" class="pagination-item next">Next &raquo;</a>
+                <?php else: ?>
+                <span class="pagination-item disabled">Next &raquo;</span>
+                <?php endif; ?>
+            </div>
         </div>
         <?php endif; ?>
         <?php endif; ?>
     </div>
 
     <?php include_once('footer.php'); ?>
+
+    <!-- FIX: Add JavaScript for sorting functionality -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortSelect = document.getElementById('sort');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                const url = new URL(window.location.href);
+                url.searchParams.set('sort', this.value);
+                url.searchParams.set('page', '1'); // Reset to first page
+                window.location.href = url.toString();
+            });
+
+            // Preserve selected sort option
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortParam = urlParams.get('sort');
+            if (sortParam) {
+                sortSelect.value = sortParam;
+            }
+        }
+    });
+    </script>
 </body>
 
 </html>
