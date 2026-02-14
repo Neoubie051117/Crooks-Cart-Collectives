@@ -33,17 +33,26 @@ try {
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // FIX: Process image paths for all products
+    // FIX: Process image paths for all products based on your schema
     foreach ($products as &$product) {
         if (!empty($product['image_path'])) {
-            // Check if it's a relative path from assets folder
+            // Schema stores as 'assets/PlaceholderAssetProduct.png'
             if (strpos($product['image_path'], 'assets/') === 0) {
+                // It's already a path from root, just add '../' since we're in pages folder
                 $product['display_image'] = '../' . $product['image_path'];
-            } else {
+            } elseif (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
+                // It's a full URL
                 $product['display_image'] = $product['image_path'];
+            } elseif (strpos($product['image_path'], '/') === false) {
+                // It's just a filename, assume it's in assets/image/icons/
+                $product['display_image'] = '../assets/image/icons/' . $product['image_path'];
+            } else {
+                // Some other relative path
+                $product['display_image'] = '../' . $product['image_path'];
             }
         } else {
-            $product['display_image'] = 'https://via.placeholder.com/250x200/FF8246/ffffff?text=' . urlencode(substr($product['name'], 0, 20));
+            // No image, use placeholder
+            $product['display_image'] = '../assets/image/icons/PlaceholderAssetProduct.png';
         }
     }
     
@@ -98,10 +107,9 @@ try {
         <div class="products-grid">
             <?php foreach ($products as $product): ?>
             <div class="product-card">
-                <!-- FIX: Use pre-processed display_image path -->
                 <img src="<?php echo htmlspecialchars($product['display_image']); ?>"
                     alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image" loading="lazy"
-                    onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200/FF8246/ffffff?text=<?php echo urlencode(substr($product['name'], 0, 20)); ?>';">
+                    onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
 
                 <div class="product-info">
                     <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
@@ -116,9 +124,9 @@ try {
             </div>
             <?php endforeach; ?>
         </div>
-
         <?php if ($total_pages > 1): ?>
         <!-- FIX: Improved pagination with better styling -->
+
         <div class="pagination-container">
             <div class="pagination">
                 <?php if ($page > 1): ?>

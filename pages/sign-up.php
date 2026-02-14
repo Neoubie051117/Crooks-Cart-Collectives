@@ -1,6 +1,8 @@
 <?php
-// Start session and define path prefix
-$pathPrefix = '../';
+if (isset($_SESSION['user_id'])) {
+    header('Location: customer-dashboard.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,221 +10,133 @@ $pathPrefix = '../';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-
-    <!-- Database and Header -->
+    <title>Sign Up - Crooks Cart Collectives</title>
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/sign-up.css">
+    <link rel="stylesheet" href="../styles/footer.css">
     <?php include_once('header.php'); ?>
-
-    <?php 
-    // Try to include database connection
-    $dbConnected = false;
-    if (file_exists(__DIR__ . '/../database/database-connect.php')) {
-        require_once(__DIR__ . '/../database/database-connect.php');
-        $dbConnected = ($connection !== null);
-    }
-    ?>
-
-    <!-- Header-related CSS and PHP -->
-    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
-    <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
-    <script defer src="<?php echo $pathPrefix; ?>scripts/central-link-navigation.js"></script>
-
-    <!-- Sign Up (current page) CSS and JS -->
-    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-up.css">
-    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-up.js"></script>
-
-    <!-- Footer-related CSS and PHP -->
-    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/footer.css">
-
 </head>
 
 <body>
-
     <div class="content">
-        <div class="pageTitleHeader">Registration</div>
+        <div class="pageTitleHeader">Account Registration</div>
 
-        <form id="signupForm" class="container" method="POST" enctype="multipart/form-data" autocomplete="on">
+        <form id="signupForm" class="signup-container" method="POST" autocomplete="on">
+            <input type="hidden" name="action" value="signup">
 
-            <!-- Upload Proof of Residency -->
-            <div class="section">
-                <div class="section-title">Proof of Residency</div>
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h3>Personal Information</h3>
 
-                <div class="group image-upload">
-                    <img id="imageFormalPicturePreview" class="image-preview"
-                        src="<?php echo $pathPrefix; ?>assets/Formal-Picture.png" alt="Upload Formal Picture Preview">
-                    <label for="imageFormalPictureUpload">Upload Formal Picture</label>
-                    <input type="file" id="imageFormalPictureUpload" name="imageFormalPictureUpload" accept="image/*"
-                        required autocomplete="off">
-                </div>
-
-                <div class="group image-upload">
-                    <img id="imageResidencyProofPreview" class="image-preview"
-                        src="<?php echo $pathPrefix; ?>assets/Valid-id-icon.png" alt="Valid ID Preview">
-                    <label for="imageResidencyProofUpload">Upload Proof of Residency</label>
-                    <input type="file" id="imageResidencyProofUpload" name="imageResidencyProofUpload" accept="image/*"
-                        required autocomplete="off">
-                </div>
-            </div>
-
-            <!-- Personal Information -->
-            <div class="section">
-                <div class="section-title">Personal Information</div>
-
-                <div class="group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" required placeholder="Juan"
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name"
                         autocomplete="given-name">
                 </div>
 
-                <div class="group">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" id="middleName" name="middleName" placeholder="Santos (Optional)"
+                <div class="form-group">
+                    <label for="middle_name">Middle Name (Optional)</label>
+                    <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name"
                         autocomplete="additional-name">
                 </div>
 
-                <div class="group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" required placeholder="Dela Cruz"
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name"
                         autocomplete="family-name">
                 </div>
 
-                <div class="group">
+                <div class="form-group">
                     <label for="birthdate">Birthdate</label>
                     <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
                 </div>
 
-                <div class="group">
+                <div class="form-group">
                     <label for="gender">Gender</label>
                     <select id="gender" name="gender" required autocomplete="sex">
-                        <option value="" disabled selected>Select Gender</option>
+                        <option value="">Select Gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Contact and Account Details -->
-            <div class="section">
-                <div class="section-title">Contact and Account Details</div>
+            <!-- Account Information Section -->
+            <div class="form-section">
+                <h3>Account Information</h3>
 
-                <div class="group">
-                    <label for="contact">Contact Number</label>
-                    <input type="text" id="contact" name="contact" required placeholder="0912 345 6789"
-                        autocomplete="tel">
-                </div>
-
-                <div class="group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="example@mail.com"
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="example@email.com"
                         autocomplete="email">
                 </div>
 
-                <div class="group">
+                <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Do not use real name"
+                    <input type="text" id="username" name="username" required placeholder="Choose a username"
                         autocomplete="username">
                 </div>
 
-                <div class="group">
+                <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                    <input type="password" id="password" name="password" required placeholder="Create a strong password"
+                        autocomplete="new-password" maxlength="16">
                 </div>
 
-                <div class="group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required
-                        autocomplete="new-password">
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required
+                        placeholder="Confirm your password" autocomplete="new-password" maxlength="16">
                 </div>
             </div>
 
-            <!-- Address and Demographics -->
-            <div class="section" id="bottom-section">
-                <div class="section-title">Address and Demographics</div>
+            <!-- Contact & Registration Section -->
+            <div class="form-section">
+                <h3>Contact & Registration</h3>
 
-                <div class="group">
-                    <label for="houseStreet">House/Lot No. & Street</label>
-                    <input type="text" id="houseStreet" name="houseStreet" required placeholder="Sesame Street"
-                        autocomplete="street-address">
+                <div class="form-group">
+                    <label for="contact_number">Phone Number</label>
+                    <input type="tel" id="contact_number" name="contact_number" required placeholder="09XX XXX XXXX"
+                        autocomplete="tel">
                 </div>
 
-                <div class="group">
-                    <label for="barangay">Barangay</label>
-                    <select id="barangay" name="barangay" required autocomplete="off">
-                        <option value="" disabled selected>Select Barangay</option>
-                        <option value="San Andres">San Andres</option>
-                        <option value="Santo Domingo">Santo Domingo</option>
-                        <option value="San Isidro">San Isidro</option>
-                        <option value="San Juan">San Juan</option>
-                        <option value="San Roque">San Roque</option>
-                        <option value="Santa Rosa">Santa Rosa</option>
-                        <option value="Santo Niño">Santo Niño</option>
-                    </select>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" required
+                        placeholder="House/street no., Barangay, City" autocomplete="street-address"></textarea>
                 </div>
 
-                <div class="group">
-                    <label for="residentType">Resident Type</label>
-                    <select id="residentType" name="residentType" required autocomplete="off">
-                        <option value="" disabled selected>Select Type</option>
-                        <option value="Owner">Owner</option>
-                        <option value="Tenant">Tenant</option>
-                    </select>
+                <div class="form-group">
+                    <div class="btn-container">
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                        <button type="reset" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                    </div>
                 </div>
 
-                <div class="group">
-                    <label for="civilStatus">Civil Status</label>
-                    <select id="civilStatus" name="civilStatus" required autocomplete="off">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Widowed">Widowed</option>
-                    </select>
-                </div>
-
-                <div class="group">
-                    <label for="nationality">Nationality</label>
-                    <select id="nationality" name="nationality" required autocomplete="country-name">
-                        <option value="" disabled selected>Select Nationality</option>
-                        <option value="Filipino">Filipino</option>
-                        <option value="Foreigner">Foreigner</option>
-                    </select>
-                </div>
-
-                <!-- Buttons -->
-                <div class="btn-container">
-                    <button type="submit" class="btn submit-btn">Submit</button>
-                    <button type="reset" class="btn clear-btn" id="clearForm">Reset</button>
+                <div class="form-group links-group">
+                    <p class="login-link">
+                        Already have an account? <a href="sign-in.php">Sign In</a>
+                    </p>
+                    <p class="seller-link">
+                        Want to sell products? <a href="seller-fill-form.php">Become a Seller</a>
+                    </p>
                 </div>
             </div>
         </form>
-        <!-- END OF FORM -->
+    </div>
 
-        <!-- Sign In Link - MOVED OUTSIDE THE FORM -->
-        <div class="sign-in-link-container">
-            <p style="text-align:center; margin-top: 20px;">
-                Already have account?
-                <a href="./sign-in.php" class="log-in-colored-link" onclick="return navigateToSignIn(event)">Log In</a>
-            </p>
-        </div>
-
-        <script>
-        function navigateToSignIn(e) {
-            e.preventDefault();
-            window.location.href = "./sign-in.php";
-            return false;
-        }
-        </script>
-
-        <!-- Notifier Modal -->
-        <div id="notifierModal" class="notifier hidden">
-            <div class="notifier-content">
-                <p id="notifierMessage"></p>
-                <button id="notifierCloseBtn" class="btn">OK</button>
-            </div>
+    <!-- Notifier Modal -->
+    <div id="notifierModal" class="notifier hidden">
+        <div class="notifier-content">
+            <p id="notifierMessage"></p>
+            <button id="notifierCloseBtn" class="btn btn-primary">OK</button>
         </div>
     </div>
 
     <?php include_once('footer.php'); ?>
 
+    <script src="../scripts/sign-up.js"></script>
 </body>
 
 </html>

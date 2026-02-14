@@ -1,4 +1,3 @@
-// Showcase Slider Functionality (formerly Hero Slider)
 class ShowcaseSlider {
     constructor() {
         this.slides = document.querySelectorAll('.showcase-slide');
@@ -15,11 +14,8 @@ class ShowcaseSlider {
         if (this.slides.length === 0) return;
         
         this.showSlide(this.currentSlide);
-        
-        // Auto slide
         this.startAutoSlide();
         
-        // Event listeners
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', () => {
                 this.prevSlide();
@@ -34,30 +30,19 @@ class ShowcaseSlider {
             });
         }
         
-        // Pause on hover
         const slider = document.querySelector('.showcase-slider');
         if (slider) {
             slider.addEventListener('mouseenter', () => this.stopAutoSlide());
             slider.addEventListener('mouseleave', () => this.startAutoSlide());
         }
         
-        // Touch/swipe support for mobile
         this.initTouchEvents();
-        
-        // Keyboard navigation
         this.initKeyboardEvents();
     }
     
     showSlide(index) {
         this.slides.forEach(slide => slide.classList.remove('active'));
         this.slides[index].classList.add('active');
-        
-        // Update aria-live for screen readers
-        const activeSlide = this.slides[index];
-        const slideContent = activeSlide.querySelector('.showcase-content');
-        if (slideContent) {
-            slideContent.setAttribute('aria-live', 'polite');
-        }
     }
     
     nextSlide() {
@@ -96,13 +81,13 @@ class ShowcaseSlider {
         
         slider.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
-            this.stopAutoSlide(); // Pause auto-slide during touch
+            this.stopAutoSlide();
         });
         
         slider.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
-            this.resetAutoSlide(); // Resume auto-slide after touch
+            this.resetAutoSlide();
         });
     }
     
@@ -129,28 +114,9 @@ class ShowcaseSlider {
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new ShowcaseSlider();
     
-    // Add smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-    
-    // Adjust content margin for header
     function adjustContentMargin() {
         const header = document.querySelector('.header-bar');
         const content = document.querySelector('.content');
@@ -158,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const headerHeight = header.offsetHeight;
             content.style.marginTop = headerHeight + 'px';
             
-            // Also adjust showcase section height
             const showcaseSection = document.querySelector('.showcase-section');
             if (showcaseSection) {
                 const viewportHeight = window.innerHeight;
@@ -167,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Adjust on load and resize
     adjustContentMargin();
     window.addEventListener('resize', adjustContentMargin);
     window.addEventListener('orientationchange', adjustContentMargin);

@@ -2,6 +2,9 @@
 # File paths must be relative to the project root (/Crooks-Cart-Collectives/)
 
 filesToCheck = [
+    #File Structure
+    "logs/summary fetch content/Project-Structure.txt"
+
     # Root directory
     "index.php",
 
@@ -18,8 +21,6 @@ filesToCheck = [
     "pages/seller-registration.php",
     "pages/products.php",
     "pages/product-details.php",
-    "pages/complaint.php",
-    "pages/admin-dashboard.php",
 
     # Scripts directory (JS)
     "scripts/index.js",
@@ -30,18 +31,18 @@ filesToCheck = [
     "scripts/central-link-navigation.js",
     "scripts/error-handler.js",
     "scripts/showcase-slider.js",
-    "scripts/complaint-form.js",
+    "scripts/report-seller.js",
     "scripts/logout-handler.js",
 
     # Database directory (PHP/TXT)
+    "database/schema/dbCreation.sql",
     "database/database-connect.php",
     "database/auth-handler.php",
     "database/sign-in-handler.php",
     "database/sign-up-handler.php",
     "database/sign-out-handler.php",
     "database/profile-handler.php",
-    "database/complaint-handler.php",
-    "database/error_log.txt",
+    "database/report-seller.php",
 
     # # Styles directory (CSS)
     # "styles/index.css",

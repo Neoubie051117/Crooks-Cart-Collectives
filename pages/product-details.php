@@ -24,10 +24,27 @@ if (!$product) {
     exit;
 }
 
-// Fix image path
-$imagePath = $product['image_path'] ?? '';
-if (!empty($imagePath) && !filter_var($imagePath, FILTER_VALIDATE_URL) && strpos($imagePath, 'assets/') === 0) {
-    $imagePath = '../' . $imagePath;
+
+if (!empty($product['image_path'])) {
+    // Schema stores as 'assets/PlaceholderAssetProduct.png'
+    if (strpos($product['image_path'], 'assets/') === 0) {
+        // It's a path from root, add '../' since we're in pages folder
+        $imagePath = '../' . $product['image_path'];
+    } elseif (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
+        // It's a full URL
+        $imagePath = $product['image_path'];
+    } elseif (strpos($product['image_path'], '/') === false) {
+        // It's just a filename, assume it's in assets/image/icons/
+        $imagePath = '../assets/image/icons/' . $product['image_path'];
+    } else {
+        // Some other relative path
+        $imagePath = '../' . $product['image_path'];
+    }
+}
+
+// If still empty, use placeholder
+if (empty($imagePath)) {
+    $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
 }
 ?>
 <!DOCTYPE html>
@@ -58,9 +75,9 @@ if (!empty($imagePath) && !filter_var($imagePath, FILTER_VALIDATE_URL) && strpos
                 <!-- Product Image Column -->
                 <div class="product-image-column">
                     <div class="main-image-container">
-                        <img src="<?php echo htmlspecialchars($imagePath ?: 'https://via.placeholder.com/500x400/FF8246/ffffff?text=No+Image'); ?>"
+                        <img src="<?php echo htmlspecialchars($imagePath); ?>"
                             alt="<?php echo htmlspecialchars($product['name']); ?>" class="main-product-image"
-                            onerror="this.onerror=null; this.src='https://via.placeholder.com/500x400/FF8246/ffffff?text=<?php echo urlencode(substr($product['name'], 0, 20)); ?>';">
+                            onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';"><?php echo urlencode(substr($product['name'], 0, 20)); ?>';">
                     </div>
                 </div>
 

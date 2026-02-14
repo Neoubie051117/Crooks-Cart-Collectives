@@ -5,21 +5,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $isLoggedIn = isset($_SESSION['user_id']);
 
-// FIXED: Proper path prefix detection for all pages
+// Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_dir = dirname($_SERVER['PHP_SELF']);
 
-// Determine if we're in root or pages directory
 $is_root = ($current_dir == '/' || $current_dir == '\\' || $current_dir == '.');
 $is_pages = strpos($current_dir, '/pages') !== false || strpos($current_dir, '\pages') !== false;
 
-// Set path prefix based on location
 if ($is_root) {
     $pathPrefix = '';
 } elseif ($is_pages) {
     $pathPrefix = '../';
 } else {
-    // Count directories to determine depth
     $depth = substr_count($current_dir, '/') - 1;
     $pathPrefix = str_repeat('../', $depth);
 }
@@ -31,10 +28,10 @@ if ($is_root) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
-    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/logout-modal.css">
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-out.css"> <!-- RENAMED -->
 
     <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
-    <script defer src="<?php echo $pathPrefix; ?>scripts/logout-handler.js"></script>
+    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-out.js"></script> <!-- RENAMED -->
 </head>
 
 <body>
@@ -42,14 +39,15 @@ if ($is_root) {
         <div class="header-logo">
             <a href="<?php echo $pathPrefix; ?>index.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                <img id="logo" src="<?php echo $pathPrefix; ?>assets/Logo.png" alt="Logo"
+                <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
                     style="height: 40px; width: auto;">
                 <div class="title"><span>Crook's</span> Cart <span>Collectives</span></div>
             </a>
         </div>
 
         <button class="hamburger-menu" id="menuButton" aria-label="Toggle menu">
-            <img src="<?php echo $pathPrefix; ?>assets/hamburger-menu.svg" alt="Menu icon" class="hamburger-icon">
+            <img src="<?php echo $pathPrefix; ?>assets/image/icons/hamburger-menu.svg" alt="Menu icon"
+                class="hamburger-icon">
         </button>
 
         <div class="nav-container">
@@ -59,8 +57,6 @@ if ($is_root) {
 
                 <?php if ($isLoggedIn): ?>
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
-                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
                 <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
                 <?php endif; ?>
 
@@ -82,8 +78,6 @@ if ($is_root) {
 
         <?php if ($isLoggedIn): ?>
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
-        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
         <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
         <?php endif; ?>
 
@@ -127,35 +121,23 @@ if ($is_root) {
             const toggleMenu = () => {
                 mobileNav.classList.toggle('open');
                 menuButton.classList.toggle('active');
-
-                // FIXED: Toggle body scroll
-                if (mobileNav.classList.contains('open')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
-                }
+                document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
             };
 
-            // FIXED: Remove old listeners and add fresh ones
-            menuButton.replaceWith(menuButton.cloneNode(true));
-            const newMenuButton = document.getElementById('menuButton');
-
-            newMenuButton.addEventListener('click', function(e) {
+            menuButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleMenu();
             });
 
-            // Close when clicking outside
             document.addEventListener('click', function(event) {
                 if (mobileNav.classList.contains('open') &&
                     !mobileNav.contains(event.target) &&
-                    !newMenuButton.contains(event.target)) {
+                    !menuButton.contains(event.target)) {
                     toggleMenu();
                 }
             });
 
-            // Close when clicking links
             mobileNav.querySelectorAll('a').forEach(function(link) {
                 link.addEventListener('click', function() {
                     if (mobileNav.classList.contains('open')) {
@@ -164,7 +146,6 @@ if ($is_root) {
                 });
             });
 
-            // FIXED: Close on escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
                     toggleMenu();
@@ -172,7 +153,7 @@ if ($is_root) {
             });
         }
 
-        // FIXED: Highlight active link
+        // Highlight active link
         const currentPage = '<?php echo $current_page; ?>';
         const navLinks = document.querySelectorAll('.nav-link');
 

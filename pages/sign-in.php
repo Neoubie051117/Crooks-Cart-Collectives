@@ -54,7 +54,7 @@ $redirect = $_GET['redirect'] ?? '';
             <button type="submit" class="btn btn-primary">Sign In</button>
 
             <p class="signup-link">
-                Don't have an account? <a href="customer-sign-up.php">Sign Up</a>
+                Don't have an account? <a href="sign-up.php">Sign Up</a>
             </p>
 
             <p class="forgot-password-link">

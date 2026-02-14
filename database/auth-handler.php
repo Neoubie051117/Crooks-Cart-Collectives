@@ -29,7 +29,6 @@ switch ($action) {
 function normalizePhoneNumber($phone) {
     $phone = preg_replace('/[^0-9+]/', '', $phone);
     
-    // Convert to +639 format for consistent storage
     if (preg_match('/^09(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
     } elseif (preg_match('/^639(\d{9})$/', $phone, $matches)) {
@@ -67,6 +66,7 @@ function handleSignup() {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     
+    // SIMPLE PASSWORD VALIDATION - just check length
     if (strlen($password) < 8) {
         echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
         exit;
@@ -77,16 +77,14 @@ function handleSignup() {
         exit;
     }
     
-    if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password)) {
-        echo json_encode(['status' => 'error', 'message' => 'password-requirements']);
-        exit;
-    }
-    
+    // REMOVED the complex password requirements (uppercase, lowercase, numbers)
+    // Just check if passwords match
     if ($password !== $confirm_password) {
         echo json_encode(['status' => 'error', 'message' => 'passwords-mismatch']);
         exit;
     }
     
+    // Check duplicates
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $emailExists = $stmt->fetchColumn() > 0;
@@ -99,12 +97,8 @@ function handleSignup() {
     $contact_number = trim($_POST['contact_number']);
     $normalized_contact = normalizePhoneNumber($contact_number);
     
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE contact_number = ? OR contact_number = ? OR contact_number = ?");
-    $stmt->execute([
-        $normalized_contact,
-        normalizePhoneNumber('0' . substr($normalized_contact, 3)),
-        normalizePhoneNumber('+63' . substr($normalized_contact, 2))
-    ]);
+    $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE contact_number = ?");
+    $stmt->execute([$normalized_contact]);
     $contactExists = $stmt->fetchColumn() > 0;
     
     if ($emailExists && $usernameExists) {
@@ -121,14 +115,16 @@ function handleSignup() {
         exit;
     }
     
+    // SIMPLE PHONE VALIDATION - just check if it's a PH number format
     $cleaned_contact = preg_replace('/[^0-9+]/', '', $contact_number);
-    if (!preg_match('/^(09|\+639|639)\d{9}$/', $cleaned_contact)) {
+    if (!preg_match('/^(09|\+639|639)\d{9}$/', $cleaned_contact) && 
+        !preg_match('/^0\d{10}$/', $cleaned_contact)) {
         echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
         exit;
     }
 
-    // TEMPORARY: Store plain text password for testing
-    $plain_password = $password; // No hashing during testing phase
+    // Store plain text password for now (as per your original code)
+    $plain_password = $password;
     
     $user_data = [
         'first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
@@ -144,6 +140,7 @@ function handleSignup() {
         'address' => htmlspecialchars(trim($_POST['address']), ENT_QUOTES, 'UTF-8')
     ];
     
+    // Age validation
     $birthdate = new DateTime($_POST['birthdate']);
     $today = new DateTime();
     $age = $birthdate->diff($today)->y;
@@ -169,37 +166,22 @@ function handleSignup() {
         $stmt->execute($user_data);
         $userID = $connection->lastInsertId();
         
-        $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
+        // Create customer record
+        $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
         $stmt->execute([$userID]);
-        $customer = $stmt->fetch();
+        $customer_id = $connection->lastInsertId();
         
-        if (!$customer) {
-            $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
-            $stmt->execute([$userID]);
-            $customer_id = $connection->lastInsertId();
-        } else {
-            $customer_id = $customer['customer_id'];
-        }
-        
+        // Create shopping cart
         $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
         $stmt->execute([$customer_id]);
         
-        // AUTO-LOGIN COMPLETELY REMOVED - User must sign in manually
-        
         $connection->commit();
-        
-        // ============================================================
-        // SUCCESS RESPONSE WITH 5-SECOND DELAY BEFORE REDIRECT
-        // ============================================================
-        // The frontend JavaScript will show "Account created successfully! 
-        // Please sign in." message for 5 seconds, then redirect to sign-in page
-        // ============================================================
         
         echo json_encode([
             'status' => 'success',
             'message' => 'Account created successfully! Please sign in.',
             'redirect' => '../pages/sign-in.php',
-            'delay' => 5000 // 5 seconds delay (in milliseconds)
+            'delay' => 5000
         ]);
         
     } catch (PDOException $e) {
@@ -235,7 +217,7 @@ function handleSignin() {
     
     $identifier = trim($identifier);
     
-    // FIRST: Check if it's an admin login
+    // Check for admin
     $stmt = $connection->prepare("
         SELECT admin_id, username, email, password 
         FROM administrators 
@@ -245,13 +227,11 @@ function handleSignin() {
     $admin = $stmt->fetch();
     
     if ($admin) {
-        // Check admin password - admins use hashed passwords
         if (!password_verify($password, $admin['password'])) {
             echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
             exit;
         }
         
-        // Set admin session
         $_SESSION['admin_id'] = $admin['admin_id'];
         $_SESSION['username'] = $admin['username'];
         $_SESSION['email'] = $admin['email'];
@@ -267,7 +247,7 @@ function handleSignin() {
         exit;
     }
     
-    // If not admin, check regular user
+    // Check regular user
     $stmt = $connection->prepare("
         SELECT user_id, username, email, password 
         FROM users 
@@ -281,13 +261,13 @@ function handleSignin() {
         exit;
     }
     
-    // Check password - plain text comparison for testing
+    // Plain text password comparison (as per your original code)
     if ($password !== $user['password']) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
         exit;
     }
     
-    // Get customer information
+    // Get customer info
     $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     $customer = $stmt->fetch();
@@ -303,12 +283,11 @@ function handleSignin() {
         $customer_id = $customer['customer_id'];
     }
     
-    // Check if user is a seller
+    // Check if seller
     $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     $seller = $stmt->fetch();
     
-    // Set session variables
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['customer_id'] = $customer_id;
     $_SESSION['username'] = $user['username'];
@@ -325,11 +304,9 @@ function handleSignin() {
         $_SESSION['seller_verified'] = false;
     }
     
-    // Update last login timestamp
     $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
     $stmt->execute([$user['user_id']]);
     
-    // Determine redirect path
     if ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
         $redirect = '../pages/seller-dashboard.php';
     } else {
@@ -344,7 +321,6 @@ function handleSignin() {
 }
 
 function handleSignout() {
-    // Check if actually logged in
     if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
         echo json_encode([
             'status' => 'success',

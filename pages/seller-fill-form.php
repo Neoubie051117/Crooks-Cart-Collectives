@@ -30,7 +30,7 @@ if ($stmt->fetch()) {
 
 <body>
     <div class="content">
-        <div class="pageTitleHeader">Seller Registration</div>
+        <div class="pageTitleHeader">Seller Application Form</div>
 
         <form id="sellerForm" class="seller-container" enctype="multipart/form-data">
             <div class="form-section">
@@ -70,7 +70,7 @@ if ($stmt->fetch()) {
             </div>
 
             <div class="btn-container">
-                <button type="submit" class="btn btn-primary">Apply as Seller</button>
+                <button type="submit" class="btn btn-primary">Submit Application</button>
                 <a href="customer-dashboard.php" class="btn btn-secondary">Cancel</a>
             </div>
 
@@ -84,19 +84,30 @@ if ($stmt->fetch()) {
     document.getElementById('sellerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        if (!document.getElementById('agree_terms').checked) {
+            alert('Please agree to the Terms and Conditions');
+            return;
+        }
+
         const formData = new FormData(e.target);
-        const response = await fetch('../database/profile-handler.php', {
-            method: 'POST',
-            body: formData
-        });
 
-        const result = await response.json();
+        try {
+            const response = await fetch('../database/customer-profile-handler.php', {
+                method: 'POST',
+                body: formData
+            });
 
-        if (result.status === 'success') {
-            alert(result.message);
-            window.location.href = 'seller-dashboard.php';
-        } else {
-            alert('Error: ' + result.message);
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert(result.message);
+                window.location.href = 'seller-dashboard.php';
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
         }
     });
     </script>

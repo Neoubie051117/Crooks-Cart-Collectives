@@ -1,10 +1,8 @@
 <?php
-session_start(); // Important for session-based checks
-
-// Add at the top of index.php
+session_start();
 require_once('database/database-connect.php');
 
-// Fetch featured products (5 random active products)
+// Fetch featured products
 $featured_products = [];
 try {
     $stmt = $connection->prepare("
@@ -17,9 +15,6 @@ try {
     ");
     $stmt->execute();
     $featured_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Debug: Check what we're getting
-    error_log("Fetched " . count($featured_products) . " featured products");
 } catch (PDOException $e) {
     error_log("Error fetching featured products: " . $e->getMessage());
 }
@@ -34,10 +29,10 @@ try {
     <meta name="description" content="Crook's Cart Collectives - Community Marketplace">
     <title>Crook's Cart Collectives - Community Marketplace</title>
 
-    <!-- Preload assets for faster loading -->
-    <link rel="preload" href="assets/Logo.png" as="image">
-    <link rel="preload" href="assets/Showcase1.png" as="image">
-    <link rel="preload" href="assets/Showcase2.png" as="image">
+    <!-- Preload assets with updated paths -->
+    <link rel="preload" href="assets/image/brand/Logo.png" as="image">
+    <link rel="preload" href="assets/image/icons/Showcase1.png" as="image">
+    <link rel="preload" href="assets/image/icons/Showcase2.png" as="image">
 
     <link rel="stylesheet" href="styles/header.css">
     <link rel="stylesheet" href="styles/index.css">
@@ -45,28 +40,28 @@ try {
 
     <script defer src="scripts/header.js"></script>
     <script defer src="scripts/showcase-slider.js"></script>
-    <script defer src="scripts/image-fallback.js"></script>
+    <script defer src="scripts/index.js"></script>
 </head>
 
 <body>
     <?php include_once('pages/header.php'); ?>
 
     <div class="content">
-        <!-- Showcase Section (formerly Hero Section) -->
+        <!-- Showcase Section -->
         <section class="showcase-section">
             <div class="showcase-slider" id="showcaseSlider">
-                <div class="showcase-slide active" style="background-image: url('assets/Showcase1.png');">
+                <div class="showcase-slide active" style="background-image: url('assets/image/icons/Showcase1.png');">
                     <div class="showcase-content">
                         <h1>Community Marketplace</h1>
                         <p>Buy and sell within your community</p>
                         <a href="pages/products.php" class="showcase-button">Shop Now</a>
                     </div>
                 </div>
-                <div class="showcase-slide" style="background-image: url('assets/Showcase2.png');">
+                <div class="showcase-slide" style="background-image: url('assets/image/icons/Showcase2.png');">
                     <div class="showcase-content">
                         <h1>Become a Seller</h1>
                         <p>Start your own business today</p>
-                        <a href="pages/seller-registration.php" class="showcase-button">Join as Seller</a>
+                        <a href="pages/seller-fill-form.php" class="showcase-button">Join as Seller</a>
                     </div>
                 </div>
             </div>
@@ -115,14 +110,36 @@ try {
                     <div class="product-card">
                         <div class="product-image-container">
                             <?php 
-                    // Simple image handling - no fallback logic
-                    $display_image = !empty($product['image_path']) 
-                        ? htmlspecialchars($product['image_path']) 
-                        : 'https://via.placeholder.com/250x200/FF8246/ffffff?text=' . urlencode(substr($product['name'], 0, 20));
+                    // FIX: Properly handle the image path from database
+                    $imagePath = '';
+                    if (!empty($product['image_path'])) {
+                        // Check if it's already a full URL
+                        if (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
+                            $imagePath = $product['image_path'];
+                        } 
+                        // Check if it's a relative path starting with assets/
+                        elseif (strpos($product['image_path'], 'assets/') === 0) {
+                            $imagePath = $product['image_path']; // Direct path from root
+                        }
+                        // Check if it's just a filename
+                        elseif (strpos($product['image_path'], '/') === false) {
+                            $imagePath = 'assets/image/icons/' . $product['image_path'];
+                        }
+                        // Any other relative path
+                        else {
+                            $imagePath = $product['image_path'];
+                        }
+                    }
+                    
+                    // If still empty, use placeholder
+                    if (empty($imagePath)) {
+                        $imagePath = 'assets/image/icons/PlaceholderAssetProduct.png';
+                    }
                     ?>
-                            <img src="<?php echo $display_image; ?>"
+                            <img src="<?php echo htmlspecialchars($imagePath); ?>"
                                 alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
-                                loading="lazy">
+                                loading="lazy"
+                                onerror="this.onerror=null; this.src='assets/image/icons/PlaceholderAssetProduct.png';">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
@@ -130,7 +147,10 @@ try {
                             <p class="product-seller">
                                 Seller: <?php echo htmlspecialchars($product['business_name']); ?>
                             </p>
-                            <!-- REMOVED View Details buttons -->
+                            <a href="pages/product-details.php?id=<?php echo $product['product_id']; ?>"
+                                class="view-product-btn">
+                                View Details
+                            </a>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -138,7 +158,7 @@ try {
                     <div class="no-products-message">
                         <p>No featured products available at the moment.</p>
                         <p>
-                            <a href="pages/seller-registration.php" class="become-seller-link">Become a seller</a> to
+                            <a href="pages/seller-fill-form.php" class="become-seller-link">Become a seller</a> to
                             add products!
                         </p>
                     </div>

@@ -111,7 +111,7 @@ try {
             <div class="dashboard-card">
                 <h3>Become a Seller</h3>
                 <p>Start selling your products</p>
-                <a href="seller-registration.php" class="btn-primary">Apply Now</a>
+                <a href="seller-fill-form.php" class="btn-primary">Apply Now</a>
             </div>
         </div>
     </div>

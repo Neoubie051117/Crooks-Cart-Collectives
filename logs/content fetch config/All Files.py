@@ -1,4 +1,8 @@
 filesToCheck = [
+    #File Structure
+    "logs/summary fetch content/Project_Structure.txt",
+    "database/schema/dbCreation.sql",
+    
     # Root directory
     "index.php",
 
@@ -8,15 +12,13 @@ filesToCheck = [
     "pages/footer.php",
     "pages/sign-in.php",
     "pages/sign-up.php",
-    "pages/customer-sign-up.php",
     "pages/customer-dashboard.php",
     "pages/customer-profile.php",
     "pages/seller-dashboard.php",
-    "pages/seller-registration.php",
+    "pages/seller-fill-form.php",
     "pages/products.php",
     "pages/product-details.php",
-    "pages/complaint.php",
-    "pages/admin-dashboard.php",
+    "pages/report-seller.php",
 
     # Scripts directory (JS)
     "scripts/index.js",
@@ -27,14 +29,15 @@ filesToCheck = [
     "scripts/central-link-navigation.js",
     "scripts/error-handler.js",
     "scripts/showcase-slider.js",
-    "scripts/complaint-form.js",
     "scripts/logout-handler.js",
+    "scripts/product-details.js",
+    "scripts/report-seller.js",
 
-    # Database directory (Including subfolders)
+    # Database directory
     "database/auth-handler.php",
-    "database/complaint-handler.php",
+    "database/customer-profile-handler.php",
+    "database/report-seller-handler.php",
     "database/database-connect.php",
-    "database/profile-handler.php",
     "database/sign-in-handler.php",
     "database/sign-out-handler.php",
     "database/sign-up-handler.php",
