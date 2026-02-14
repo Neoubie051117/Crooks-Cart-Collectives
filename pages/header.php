@@ -5,9 +5,24 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $isLoggedIn = isset($_SESSION['user_id']);
 
+// FIXED: Proper path prefix detection for all pages
 $current_page = basename($_SERVER['PHP_SELF']);
-$is_root = ($current_page == 'index.php');
-$pathPrefix = $is_root ? '' : '../';
+$current_dir = dirname($_SERVER['PHP_SELF']);
+
+// Determine if we're in root or pages directory
+$is_root = ($current_dir == '/' || $current_dir == '\\' || $current_dir == '.');
+$is_pages = strpos($current_dir, '/pages') !== false || strpos($current_dir, '\pages') !== false;
+
+// Set path prefix based on location
+if ($is_root) {
+    $pathPrefix = '';
+} elseif ($is_pages) {
+    $pathPrefix = '../';
+} else {
+    // Count directories to determine depth
+    $depth = substr_count($current_dir, '/') - 1;
+    $pathPrefix = str_repeat('../', $depth);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -112,18 +127,35 @@ $pathPrefix = $is_root ? '' : '../';
             const toggleMenu = () => {
                 mobileNav.classList.toggle('open');
                 menuButton.classList.toggle('active');
+
+                // FIXED: Toggle body scroll
+                if (mobileNav.classList.contains('open')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
             };
 
-            menuButton.addEventListener('click', toggleMenu);
+            // FIXED: Remove old listeners and add fresh ones
+            menuButton.replaceWith(menuButton.cloneNode(true));
+            const newMenuButton = document.getElementById('menuButton');
 
+            newMenuButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            // Close when clicking outside
             document.addEventListener('click', function(event) {
-                if (!menuButton.contains(event.target) &&
+                if (mobileNav.classList.contains('open') &&
                     !mobileNav.contains(event.target) &&
-                    mobileNav.classList.contains('open')) {
+                    !newMenuButton.contains(event.target)) {
                     toggleMenu();
                 }
             });
 
+            // Close when clicking links
             mobileNav.querySelectorAll('a').forEach(function(link) {
                 link.addEventListener('click', function() {
                     if (mobileNav.classList.contains('open')) {
@@ -131,7 +163,29 @@ $pathPrefix = $is_root ? '' : '../';
                     }
                 });
             });
+
+            // FIXED: Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+                    toggleMenu();
+                }
+            });
         }
+
+        // FIXED: Highlight active link
+        const currentPage = '<?php echo $current_page; ?>';
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href) {
+                const filename = href.split('/').pop();
+                if (filename === currentPage ||
+                    (currentPage === 'index.php' && filename === 'index.php')) {
+                    link.classList.add('active');
+                }
+            }
+        });
     });
     </script>
 </body>

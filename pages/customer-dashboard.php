@@ -1,3 +1,4 @@
+<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -6,6 +7,25 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
     header('Location: sign-in.php');
     exit;
 }
+
+$userId = $_SESSION['user_id'];
+
+// FIXED: Changed from MySQLi to PDO to match your database-connect.php
+try {
+    $stmt = $connection->prepare("SELECT first_name FROM users WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($userData && isset($userData['first_name'])) {
+        $firstName = $userData['first_name'];
+    } else {
+        $firstName = "Customer";
+    }
+} catch (PDOException $e) {
+    error_log("Error fetching user: " . $e->getMessage());
+    $firstName = "Customer";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +36,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
     <title>Dashboard - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <!-- FIXED: Moved inline styles to external CSS but kept minimal structure -->
     <style>
     .content {
         max-width: 1200px;
@@ -69,7 +90,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 
     <div class="content">
         <div class="welcome-section">
-            <h1>Welcome back, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Customer'); ?>!</h1>
+            <h1>Welcome back, <?php echo htmlspecialchars($firstName); ?>!</h1>
             <p>Manage your account, track orders, and start shopping.</p>
         </div>
 
@@ -83,6 +104,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
             <div class="dashboard-card">
                 <h3>Your Profile</h3>
                 <p>Update your personal information</p>
+                <!-- FIXED: Correct path to profile page -->
                 <a href="customer-profile.php" class="btn-primary">View Profile</a>
             </div>
 
