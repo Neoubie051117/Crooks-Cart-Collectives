@@ -1,4 +1,8 @@
-/* Privacy Policy Page - Minimalist & Professional */
+/* ============================================
+   PRIVACY POLICY PAGE STYLES
+   Class naming convention: BEM (Block Element Modifier)
+   Block: privacy-policy-page, policy-hero, policy-intro, policy-section
+============================================ */
 
 * {
     margin: 0;
@@ -12,14 +16,15 @@ body {
     color: #333;
 }
 
-.content {
+.privacy-policy-page {
     max-width: 1000px;
     margin: 100px auto 40px;
     padding: 0 20px;
 }
 
-/* Hero Section */
+/* ===== HERO SECTION ===== */
 .policy-hero {
+    margin-top: 100px;
     width: 100%;
     padding: 60px 20px;
     text-align: center;
@@ -29,49 +34,54 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.hero-content h1 {
+.policy-hero__container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.policy-hero__title {
     font-size: clamp(2.5rem, 8vw, 3.5rem);
     color: #333;
     margin-bottom: 15px;
     font-weight: 600;
 }
 
-.hero-content h1 span {
+.policy-hero__highlight {
     color: #ff8246;
 }
 
-.hero-content p {
+.policy-hero__subtitle {
     font-size: clamp(1rem, 3vw, 1.3rem);
     color: #666;
 }
 
-/* Intro Section */
+/* ===== INTRO SECTION ===== */
 .policy-intro {
     margin-bottom: 40px;
 }
 
-.intro-card {
+.policy-intro__card {
     background: white;
     border-radius: 10px;
     padding: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.intro-card p {
+.policy-intro__text {
     font-size: 1.1rem;
     line-height: 1.7;
     color: #555;
     margin-bottom: 15px;
 }
 
-.last-updated {
+.policy-intro__last-updated {
     font-size: 0.95rem;
     color: #ff8246;
     font-weight: 500;
     margin-bottom: 0;
 }
 
-/* Policy Sections */
+/* ===== POLICY SECTIONS ===== */
 .policy-sections {
     width: 100%;
 }
@@ -84,13 +94,13 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.section-header {
+.policy-section__header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.vertical-line {
+.policy-section__accent {
     width: 4px;
     height: 30px;
     background-color: #ff8246;
@@ -98,31 +108,31 @@ body {
     border-radius: 2px;
 }
 
-.section-header h2 {
+.policy-section__title {
     font-size: 1.5rem;
     color: #333;
     margin: 0;
     font-weight: 600;
 }
 
-.section-body {
-    padding-left: 19px; /* 15px + 4px for alignment */
+.policy-section__body {
+    padding-left: 19px; /* Aligns with accent line */
 }
 
-.section-body p {
+.policy-section__body p {
     font-size: 1rem;
     line-height: 1.6;
     color: #555;
     margin-bottom: 15px;
 }
 
-.section-body ul {
+.policy-section__list {
     list-style: none;
     padding: 0;
     margin-bottom: 15px;
 }
 
-.section-body li {
+.policy-section__list-item {
     position: relative;
     padding-left: 20px;
     margin-bottom: 10px;
@@ -131,7 +141,7 @@ body {
     color: #555;
 }
 
-.section-body li::before {
+.policy-section__list-item::before {
     content: "•";
     color: #ff8246;
     font-weight: bold;
@@ -139,7 +149,7 @@ body {
     left: 0;
 }
 
-.note {
+.policy-section__note {
     background-color: #fff3e0;
     padding: 15px;
     border-radius: 6px;
@@ -148,21 +158,34 @@ body {
     color: #666;
 }
 
+.policy-section__important {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #ff8246;
+    margin-bottom: 15px;
+}
+
 /* Contact Details */
-.contact-details {
+.policy-contact {
     background-color: #f8f9fa;
     padding: 20px;
     border-radius: 8px;
     margin: 15px 0;
+    font-style: normal;
 }
 
-.contact-details p {
+.policy-contact__item {
     margin-bottom: 8px;
 }
 
-/* Responsive Design */
+.policy-contact__item:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-    .content {
+    .privacy-policy-page {
         margin-top: 80px;
     }
     
@@ -170,7 +193,7 @@ body {
         padding: 40px 20px;
     }
     
-    .section-header h2 {
+    .policy-section__title {
         font-size: 1.3rem;
     }
     
@@ -178,7 +201,7 @@ body {
         padding: 25px 20px;
     }
     
-    .section-body {
+    .policy-section__body {
         padding-left: 14px;
     }
 }
@@ -188,23 +211,23 @@ body {
         padding: 30px 15px;
     }
     
-    .hero-content h1 {
+    .policy-hero__title {
         font-size: 2rem;
     }
     
-    .intro-card {
+    .policy-intro__card {
         padding: 20px;
     }
     
-    .intro-card p {
+    .policy-intro__text {
         font-size: 1rem;
     }
     
-    .section-header h2 {
+    .policy-section__title {
         font-size: 1.2rem;
     }
     
-    .vertical-line {
+    .policy-section__accent {
         height: 25px;
     }
     
@@ -212,16 +235,16 @@ body {
         padding: 20px 15px;
     }
     
-    .section-body {
+    .policy-section__body {
         padding-left: 9px;
     }
     
-    .section-body p,
-    .section-body li {
+    .policy-section__body p,
+    .policy-section__list-item {
         font-size: 0.95rem;
     }
     
-    .contact-details {
+    .policy-contact {
         padding: 15px;
     }
 }

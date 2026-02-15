@@ -1,3 +1,0 @@
-[15-Feb-2026 16:35:55 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
-[15-Feb-2026 16:35:55 Europe/Berlin] Redirecting to requested page: ../pages/product-details.php?id=4
-[15-Feb-2026 16:35:55 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/product-details.php?id=4

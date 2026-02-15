@@ -1,100 +1,132 @@
-// Contact Form Handling
+/* ============================================
+   CONTACT PAGE JAVASCRIPT
+   Handles form validation, submission, and UI interactions
+============================================ */
+
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('contactForm');
-    const modal = document.getElementById('notifierModal');
-    const modalMessage = document.getElementById('notifierMessage');
-    const modalClose = document.getElementById('notifierCloseBtn');
+    'use strict';
+
+    // DOM Elements
+    const contactForm = document.getElementById('contactForm');
+    const modal = document.getElementById('notificationModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const successMessage = document.getElementById('formSuccessMessage');
     
+    // Form Fields
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('emailAddress');
+    const studentIdInput = document.getElementById('studentId');
+    const subjectSelect = document.getElementById('inquirySubject');
+    const messageInput = document.getElementById('inquiryMessage');
+
+    // State
     let isSubmitting = false;
 
-    // Phone number formatting
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            if (value.length > 0) {
-                if (value.startsWith('63') && value.length === 12) {
-                    e.target.value = '+63' + value.substring(2, 5) + ' ' +
-                        value.substring(5, 8) + ' ' +
-                        value.substring(8, 12);
-                } else if (value.startsWith('09') && value.length === 11) {
-                    e.target.value = value.substring(0, 4) + ' ' +
-                        value.substring(4, 7) + ' ' +
-                        value.substring(7, 11);
-                }
-            }
-        });
+    // ===== HELPER FUNCTIONS =====
+
+    /**
+     * Shows a notification modal with the given message
+     * @param {string} message - The message to display
+     */
+    function showNotification(message) {
+        if (!modal || !modalMessage) return;
+        
+        modalMessage.textContent = message;
+        modal.classList.remove('modal--hidden');
     }
 
-    // Validation functions
-    function validateEmail(email) {
+    /**
+     * Closes the notification modal
+     */
+    function closeNotification() {
+        if (modal) {
+            modal.classList.add('modal--hidden');
+        }
+    }
+
+    /**
+     * Validates email format
+     * @param {string} email - The email to validate
+     * @returns {boolean} - True if email is valid
+     */
+    function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    function validatePhone(phone) {
-        if (!phone) return true; // Phone is optional
+    /**
+     * Validates phone number (optional field)
+     * @param {string} phone - The phone number to validate
+     * @returns {boolean} - True if phone is valid or empty
+     */
+    function isValidPhone(phone) {
+        if (!phone) return true;
         const cleaned = phone.replace(/\D/g, '');
         return cleaned.length === 11 && cleaned.startsWith('09') ||
                cleaned.length === 12 && cleaned.startsWith('63') ||
                cleaned.length === 13 && cleaned.startsWith('+63');
     }
 
+    /**
+     * Shows error message for a specific field
+     * @param {string} fieldId - The ID of the field
+     * @param {string} message - The error message
+     */
     function showFieldError(fieldId, message) {
         const field = document.getElementById(fieldId);
-        const errorEl = document.getElementById(fieldId + 'Error');
+        const errorElement = document.getElementById(fieldId + 'Error');
         
-        if (field && errorEl) {
+        if (field && errorElement) {
             field.classList.add('error');
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
+            errorElement.textContent = message;
+            errorElement.setAttribute('aria-live', 'polite');
         }
     }
 
+    /**
+     * Clears error for a specific field
+     * @param {string} fieldId - The ID of the field
+     */
     function clearFieldError(fieldId) {
         const field = document.getElementById(fieldId);
-        const errorEl = document.getElementById(fieldId + 'Error');
+        const errorElement = document.getElementById(fieldId + 'Error');
         
-        if (field && errorEl) {
+        if (field && errorElement) {
             field.classList.remove('error');
-            errorEl.textContent = '';
-            errorEl.classList.remove('show');
+            errorElement.textContent = '';
         }
     }
 
+    /**
+     * Clears all field errors
+     */
     function clearAllErrors() {
-        ['name', 'email', 'phone', 'subject', 'message', 'privacy'].forEach(field => {
-            clearFieldError(field);
+        ['fullName', 'emailAddress', 'inquirySubject', 'inquiryMessage'].forEach(fieldId => {
+            clearFieldError(fieldId);
         });
     }
 
-    function showNotifier(message) {
-        modalMessage.textContent = message;
-        modal.classList.remove('hidden');
+    // ===== EVENT LISTENERS =====
+
+    // Modal close button
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeNotification);
     }
 
-    function closeNotifier() {
-        modal.classList.add('hidden');
+    // Close modal when clicking outside
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeNotification();
+        });
     }
-
-    modalClose.addEventListener('click', closeNotifier);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeNotifier();
-    });
 
     // Real-time validation on blur
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const subjectSelect = document.getElementById('subject');
-    const messageInput = document.getElementById('message');
-    const privacyCheck = document.querySelector('input[name="privacy"]');
-
-    if (nameInput) {
-        nameInput.addEventListener('blur', function() {
+    if (fullNameInput) {
+        fullNameInput.addEventListener('blur', function() {
             if (!this.value.trim()) {
-                showFieldError('name', 'Name is required');
+                showFieldError('fullName', 'Name is required');
             } else {
-                clearFieldError('name');
+                clearFieldError('fullName');
             }
         });
     }
@@ -102,21 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (emailInput) {
         emailInput.addEventListener('blur', function() {
             if (!this.value.trim()) {
-                showFieldError('email', 'Email is required');
-            } else if (!validateEmail(this.value)) {
-                showFieldError('email', 'Please enter a valid email address');
+                showFieldError('emailAddress', 'Email is required');
+            } else if (!isValidEmail(this.value)) {
+                showFieldError('emailAddress', 'Please enter a valid email address');
             } else {
-                clearFieldError('email');
-            }
-        });
-    }
-
-    if (phoneInput) {
-        phoneInput.addEventListener('blur', function() {
-            if (this.value.trim() && !validatePhone(this.value)) {
-                showFieldError('phone', 'Please enter a valid Philippine number');
-            } else {
-                clearFieldError('phone');
+                clearFieldError('emailAddress');
             }
         });
     }
@@ -124,9 +146,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (subjectSelect) {
         subjectSelect.addEventListener('blur', function() {
             if (!this.value) {
-                showFieldError('subject', 'Please select a subject');
+                showFieldError('inquirySubject', 'Please select a subject');
             } else {
-                clearFieldError('subject');
+                clearFieldError('inquirySubject');
             }
         });
     }
@@ -134,18 +156,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (messageInput) {
         messageInput.addEventListener('blur', function() {
             if (!this.value.trim()) {
-                showFieldError('message', 'Message is required');
+                showFieldError('inquiryMessage', 'Message is required');
             } else if (this.value.trim().length < 10) {
-                showFieldError('message', 'Message must be at least 10 characters');
+                showFieldError('inquiryMessage', 'Message must be at least 10 characters');
             } else {
-                clearFieldError('message');
+                clearFieldError('inquiryMessage');
             }
         });
     }
 
-    // Form submission
-    if (form) {
-        form.addEventListener('submit', async function(e) {
+    // Auto-expand textarea
+    if (messageInput) {
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+            
+            // Clear error on input
+            if (this.value.trim().length >= 10) {
+                clearFieldError('inquiryMessage');
+            }
+        });
+    }
+
+    // ===== FORM SUBMISSION =====
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             if (isSubmitting) return;
@@ -156,91 +191,75 @@ document.addEventListener('DOMContentLoaded', function() {
             let isValid = true;
             
             // Name validation
-            if (!nameInput.value.trim()) {
-                showFieldError('name', 'Name is required');
+            if (!fullNameInput.value.trim()) {
+                showFieldError('fullName', 'Name is required');
                 isValid = false;
             }
             
             // Email validation
             if (!emailInput.value.trim()) {
-                showFieldError('email', 'Email is required');
+                showFieldError('emailAddress', 'Email is required');
                 isValid = false;
-            } else if (!validateEmail(emailInput.value)) {
-                showFieldError('email', 'Please enter a valid email address');
-                isValid = false;
-            }
-            
-            // Phone validation (optional)
-            if (phoneInput.value.trim() && !validatePhone(phoneInput.value)) {
-                showFieldError('phone', 'Please enter a valid Philippine number');
+            } else if (!isValidEmail(emailInput.value)) {
+                showFieldError('emailAddress', 'Please enter a valid email address');
                 isValid = false;
             }
             
             // Subject validation
             if (!subjectSelect.value) {
-                showFieldError('subject', 'Please select a subject');
+                showFieldError('inquirySubject', 'Please select a subject');
                 isValid = false;
             }
             
             // Message validation
             if (!messageInput.value.trim()) {
-                showFieldError('message', 'Message is required');
+                showFieldError('inquiryMessage', 'Message is required');
                 isValid = false;
             } else if (messageInput.value.trim().length < 10) {
-                showFieldError('message', 'Message must be at least 10 characters');
-                isValid = false;
-            }
-            
-            // Privacy checkbox validation
-            if (!privacyCheck.checked) {
-                showFieldError('privacy', 'You must agree to the Privacy Policy');
+                showFieldError('inquiryMessage', 'Message must be at least 10 characters');
                 isValid = false;
             }
             
             if (!isValid) {
-                showNotifier('Please fix the errors in the form');
+                showNotification('Please fix the errors in the form');
                 return;
             }
             
             // Show loading state
             isSubmitting = true;
-            const submitBtn = form.querySelector('.btn-primary');
+            const submitBtn = contactForm.querySelector('.contact-form__submit-btn');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
             
             try {
                 // Simulate form submission (replace with actual API endpoint)
-                // In a real implementation, you would send this to a contact-handler.php
-                
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
                 // Show success message
-                document.getElementById('successMessage').style.display = 'block';
-                form.reset();
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                }
+                
+                // Reset form
+                contactForm.reset();
                 
                 // Hide success message after 5 seconds
                 setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
+                    if (successMessage) {
+                        successMessage.style.display = 'none';
+                    }
                 }, 5000);
                 
             } catch (error) {
                 console.error('Contact form error:', error);
-                showNotifier('Network error. Please try again later.');
+                showNotification('Network error. Please try again later.');
             } finally {
                 // Reset button
                 isSubmitting = false;
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
-        });
-    }
-
-    // Auto-expand textarea
-    if (messageInput) {
-        messageInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
         });
     }
 });

@@ -1,4 +1,3 @@
-<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 
 $userId = $_SESSION['user_id'];
 
-// FIXED: Changed from MySQLi to PDO to match your database-connect.php
 try {
     $stmt = $connection->prepare("SELECT first_name FROM users WHERE user_id = ?");
     $stmt->execute([$userId]);
@@ -33,56 +31,10 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Crooks Cart Collectives</title>
+    <title>Customer Dashboard - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/customer-dashboard.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <!-- FIXED: Moved inline styles to external CSS but kept minimal structure -->
-    <style>
-    .content {
-        max-width: 1200px;
-        margin: 80px auto 20px;
-        padding: 20px;
-    }
-
-    .welcome-section {
-        background: #f8f9fa;
-        padding: 40px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 30px;
-    }
-
-    .dashboard-card {
-        background: white;
-        border-radius: 8px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-
-    .btn-primary {
-        display: inline-block;
-        background: #FF8246;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        margin-top: 20px;
-        transition: background 0.3s;
-    }
-
-    .btn-primary:hover {
-        background: #e66a2e;
-    }
-    </style>
 </head>
 
 <body>
@@ -90,40 +42,51 @@ try {
 
     <div class="content">
         <div class="welcome-section">
-            <h1>Welcome back, <?php echo htmlspecialchars($firstName); ?>!</h1>
-            <p>Manage your account, track orders, and start shopping.</p>
+            <h1>Welcome back, <span><?php echo htmlspecialchars($firstName); ?></span>!</h1>
+            <p>Manage your account, track orders, and discover amazing products from our community.</p>
         </div>
 
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <h3>Start Shopping</h3>
-                <p>Browse our collection of products</p>
+                <p>Browse our curated collection of products from verified sellers</p>
                 <a href="products.php" class="btn-primary">Shop Now</a>
             </div>
 
             <div class="dashboard-card">
                 <h3>Your Profile</h3>
-                <p>Update your personal information</p>
-                <!-- FIXED: Correct path to profile page -->
+                <p>Keep your personal information and contact details up to date</p>
                 <a href="customer-profile.php" class="btn-primary">View Profile</a>
             </div>
 
             <div class="dashboard-card">
                 <h3>Become a Seller</h3>
-                <p>Start selling your products</p>
+                <p>Start your entrepreneurial journey with our community</p>
                 <a href="seller-fill-form.php" class="btn-primary">Apply Now</a>
             </div>
 
             <div class="dashboard-card">
                 <h3>Shopping Cart</h3>
-                <p>View and manage your cart</p>
+                <p>Review and manage items ready for purchase</p>
                 <a href="cart.php" class="btn-primary">Go to Cart</a>
             </div>
 
             <div class="dashboard-card">
                 <h3>My Orders</h3>
-                <p>Track your purchases</p>
+                <p>Track your order history and delivery status</p>
                 <a href="orders.php" class="btn-primary">View Orders</a>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>About Us</h3>
+                <p>Learn about our project, mission, and the development team</p>
+                <a href="about.php" class="btn-primary">About Page</a>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Contact Us</h3>
+                <p>Get in touch with our team for questions or feedback</p>
+                <a href="contact.php" class="btn-primary">Contact Page</a>
             </div>
         </div>
     </div>

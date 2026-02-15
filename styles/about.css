@@ -19,6 +19,7 @@
     text-align: center;
     background: white;
     border-radius: 12px;
+    margin-top: 100px; /*negative value to pull from header, positive to push towards header*/
     margin-bottom: 50px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }

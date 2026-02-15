@@ -116,14 +116,77 @@ try {
 
     <script>
     (function() {
-        // Helper function to show temporary messages
+        // ============= NOTIFICATION MODAL FUNCTIONS =============
+        // Create modal if it doesn't exist
+        function ensureModalExists() {
+            let modal = document.getElementById('cartNotifierModal');
+
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'cartNotifierModal';
+                modal.className = 'cart-notifier-modal';
+                modal.innerHTML = `
+                <div class="cart-notifier-content">
+                    <div class="cart-notifier-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                    </div>
+                    <h3 id="cartNotifierTitle">Item Removed</h3>
+                    <p id="cartNotifierMessage">The item has been removed from your cart.</p>
+                    <div class="cart-notifier-actions">
+                        <button id="cartNotifierContinue" class="cart-notifier-btn continue-btn">Continue</button>
+                        <button id="cartNotifierViewCart" class="cart-notifier-btn view-cart-btn">View Cart</button>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(modal);
+
+                // Add event listeners
+                document.getElementById('cartNotifierContinue').addEventListener('click', closeModal);
+                document.getElementById('cartNotifierViewCart').addEventListener('click', function() {
+                    window.location.href = 'cart.php';
+                });
+
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            return modal;
+        }
+
+        function showModal(title, message) {
+            const modal = ensureModalExists();
+            document.getElementById('cartNotifierTitle').textContent = title;
+            document.getElementById('cartNotifierMessage').textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('cartNotifierModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        // Helper function to show temporary messages (fallback)
         function showMessage(message, type = 'error') {
+            // Try to use modal first for remove operations
+            if (type === 'success' && message.includes('removed')) {
+                showModal('Item Removed', message);
+                return;
+            }
+
+            // Fallback to temporary message for other cases
             const msgDiv = document.createElement('div');
             msgDiv.className = `cart-message ${type}`;
             msgDiv.textContent = message;
             document.body.appendChild(msgDiv);
             setTimeout(() => msgDiv.remove(), 3000);
         }
+
+        // ============= CART FUNCTIONALITY =============
 
         // Update quantity via AJAX
         document.querySelectorAll('.quantity-input').forEach(input => {
@@ -190,10 +253,55 @@ try {
             });
         });
 
-        // Remove item with confirmation
+        // Remove item with MODAL confirmation instead of alert
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', async function() {
-                if (!confirm('Remove this item from your cart?')) return;
+                // Create and show confirmation modal
+                const confirmModal = document.createElement('div');
+                confirmModal.className = 'cart-notifier-modal';
+                confirmModal.id = 'confirmRemoveModal';
+                confirmModal.innerHTML = `
+                <div class="cart-notifier-content">
+                    <div class="cart-notifier-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </div>
+                    <h3>Confirm Removal</h3>
+                    <p>Are you sure you want to remove this item from your cart?</p>
+                    <div class="cart-notifier-actions">
+                        <button id="cancelRemove" class="cart-notifier-btn continue-btn">Cancel</button>
+                        <button id="confirmRemove" class="cart-notifier-btn view-cart-btn">Remove</button>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(confirmModal);
+                confirmModal.classList.add('active');
+
+                // Handle confirmation
+                const confirmed = await new Promise(resolve => {
+                    document.getElementById('cancelRemove').addEventListener('click',
+                    () => {
+                            confirmModal.remove();
+                            resolve(false);
+                        });
+
+                    document.getElementById('confirmRemove').addEventListener('click',
+                    () => {
+                        confirmModal.remove();
+                        resolve(true);
+                    });
+
+                    confirmModal.addEventListener('click', (e) => {
+                        if (e.target === confirmModal) {
+                            confirmModal.remove();
+                            resolve(false);
+                        }
+                    });
+                });
+
+                if (!confirmed) return;
 
                 const itemId = this.dataset.id;
                 const cartItem = this.closest('.cart-item');
@@ -225,12 +333,20 @@ try {
                             newTotal += parseFloat(span.textContent.replace(
                                 /[^0-9.-]+/g, ''));
                         });
-                        document.getElementById('cartTotal').textContent = '₱' + newTotal
-                            .toFixed(2);
 
-                        // If cart is now empty, show empty state
+                        const totalElement = document.getElementById('cartTotal');
+                        if (totalElement) {
+                            totalElement.textContent = '₱' + newTotal.toFixed(2);
+                        }
+
+                        // Show success modal
+                        showModal('Item Removed', 'The item has been removed from your cart.');
+
+                        // If cart is now empty, reload after a delay
                         if (document.querySelectorAll('.cart-item').length === 0) {
-                            location.reload(); // simplest way to show empty cart
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2000);
                         }
                     } else {
                         showMessage('Error removing item', 'error');
@@ -244,6 +360,16 @@ try {
                     this.textContent = 'Remove';
                 }
             });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('cartNotifierModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            }
         });
     })();
     </script>

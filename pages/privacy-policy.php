@@ -20,113 +20,129 @@ $current_page = 'privacy-policy';
 <body>
     <?php include_once('header.php'); ?>
 
-    <div class="content">
-        <main class="privacy-policy">
-            <section class="policy-hero">
-                <div class="hero-content">
-                    <h1>Privacy <span>Policy</span></h1>
-                    <p>Academic Project - For Educational Purposes Only</p>
-                </div>
-            </section>
+    <main class="privacy-policy-page">
+        <!-- Hero Section -->
+        <section class="policy-hero">
+            <div class="policy-hero__container">
+                <h1 class="policy-hero__title">Privacy <span class="policy-hero__highlight">Policy</span></h1>
+                <p class="policy-hero__subtitle">Academic Project - For Educational Purposes Only</p>
+            </div>
+        </section>
 
-            <section class="policy-intro">
-                <div class="intro-card">
-                    <p>This privacy policy applies to Crooks Cart Collectives, a student project developed for academic
-                        requirements at the School of Computer Studies, Arellano University - Bonifacio Campus. This
-                        website and its data handling are for educational purposes only.</p>
-                    <p class="last-updated">Last Updated: February 15, 2026 | Academic Project</p>
-                </div>
-            </section>
+        <!-- Introduction -->
+        <section class="policy-intro">
+            <div class="policy-intro__card">
+                <p class="policy-intro__text">
+                    This privacy policy applies to Crooks Cart Collectives, a student project developed for academic
+                    requirements at the School of Computer Studies, Arellano University - Bonifacio Campus. This
+                    website and its data handling are for educational purposes only.
+                </p>
+                <p class="policy-intro__last-updated">Last Updated: February 15, 2026 | Academic Project</p>
+            </div>
+        </section>
 
-            <section class="policy-content">
-                <div class="content-grid">
-                    <div class="policy-sections">
-                        <div id="information" class="policy-section">
-                            <div class="section-header">
-                                <div class="vertical-line"></div>
-                                <h2>1. Information We Collect</h2>
-                            </div>
-                            <div class="section-body">
-                                <p>As part of this school project, we collect:</p>
-                                <ul>
-                                    <li><strong>Registration Data:</strong> Name, email, username, password (for login
-                                        simulation)</li>
-                                    <li><strong>Contact Details:</strong> Phone number, address (for order simulation)
-                                    </li>
-                                    <li><strong>Seller Information:</strong> Business name (optional), valid ID (for
-                                        verification simulation)</li>
-                                </ul>
-                                <p class="note"><strong>Note:</strong> This is a school project. All data is stored
-                                    locally in our project database and is used only for demonstrating functionality.
-                                </p>
-                            </div>
-                        </div>
+        <!-- Policy Content -->
+        <section class="policy-content">
+            <div class="policy-sections">
 
-                        <div id="usage" class="policy-section">
-                            <div class="section-header">
-                                <div class="vertical-line"></div>
-                                <h2>2. How We Use Your Information</h2>
-                            </div>
-                            <div class="section-body">
-                                <ul>
-                                    <li>To demonstrate user authentication and profile management</li>
-                                    <li>To simulate e-commerce functionality (cart, orders, products)</li>
-                                    <li>For project evaluation by our instructors</li>
-                                    <li>To showcase our web development skills</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div id="sharing" class="policy-section">
-                            <div class="section-header">
-                                <div class="vertical-line"></div>
-                                <h2>3. Information Sharing</h2>
-                            </div>
-                            <div class="section-body">
-                                <p>Since this is an academic project:</p>
-                                <ul>
-                                    <li>Data is only accessible within this project environment</li>
-                                    <li>No information is sold or shared with third parties</li>
-                                    <li>Instructors may access the project for grading purposes</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div id="disclaimer" class="policy-section">
-                            <div class="section-header">
-                                <div class="vertical-line"></div>
-                                <h2>4. Academic Disclaimer</h2>
-                            </div>
-                            <div class="section-body">
-                                <p><strong>IMPORTANT:</strong> This website is a student project created for educational
-                                    purposes as part of the curriculum at the School of Computer Studies, Arellano
-                                    University - Bonifacio Campus. It is not a commercial platform. Any resemblance to
-                                    real e-commerce sites is for educational demonstration only.</p>
-                                <p>If you have concerns about this project, please contact the School of Computer
-                                    Studies directly.</p>
-                            </div>
-                        </div>
-
-                        <div id="contact" class="policy-section">
-                            <div class="section-header">
-                                <div class="vertical-line"></div>
-                                <h2>5. Contact Us</h2>
-                            </div>
-                            <div class="section-body">
-                                <p>For questions about this academic project:</p>
-                                <div class="contact-details">
-                                    <p><strong>School:</strong> School of Computer Studies</p>
-                                    <p><strong>Campus:</strong> Arellano University - Andres Bonifacio Campus</p>
-                                    <p><strong>Address:</strong> Pasig City, Philippines</p>
-                                    <p><strong>Course:</strong> Web Development Project</p>
-                                </div>
-                            </div>
-                        </div>
+                <article id="information-collection" class="policy-section">
+                    <header class="policy-section__header">
+                        <div class="policy-section__accent"></div>
+                        <h2 class="policy-section__title">1. Information We Collect</h2>
+                    </header>
+                    <div class="policy-section__body">
+                        <p>As part of this school project, we collect:</p>
+                        <ul class="policy-section__list">
+                            <li class="policy-section__list-item">
+                                <strong>Registration Data:</strong> Name, email, username, password (for login
+                                simulation)
+                            </li>
+                            <li class="policy-section__list-item">
+                                <strong>Contact Details:</strong> Phone number, address (for order simulation)
+                            </li>
+                            <li class="policy-section__list-item">
+                                <strong>Seller Information:</strong> Business name (optional), valid ID (for
+                                verification simulation)
+                            </li>
+                        </ul>
+                        <p class="policy-section__note">
+                            <strong>Note:</strong> This is a school project. All data is stored locally in our project
+                            database and is used only for demonstrating functionality.
+                        </p>
                     </div>
-                </div>
-            </section>
-        </main>
-    </div>
+                </article>
+
+                <article id="information-usage" class="policy-section">
+                    <header class="policy-section__header">
+                        <div class="policy-section__accent"></div>
+                        <h2 class="policy-section__title">2. How We Use Your Information</h2>
+                    </header>
+                    <div class="policy-section__body">
+                        <ul class="policy-section__list">
+                            <li class="policy-section__list-item">To demonstrate user authentication and profile
+                                management</li>
+                            <li class="policy-section__list-item">To simulate e-commerce functionality (cart, orders,
+                                products)</li>
+                            <li class="policy-section__list-item">For project evaluation by our instructors</li>
+                            <li class="policy-section__list-item">To showcase our web development skills</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article id="information-sharing" class="policy-section">
+                    <header class="policy-section__header">
+                        <div class="policy-section__accent"></div>
+                        <h2 class="policy-section__title">3. Information Sharing</h2>
+                    </header>
+                    <div class="policy-section__body">
+                        <p>Since this is an academic project:</p>
+                        <ul class="policy-section__list">
+                            <li class="policy-section__list-item">Data is only accessible within this project
+                                environment</li>
+                            <li class="policy-section__list-item">No information is sold or shared with third parties
+                            </li>
+                            <li class="policy-section__list-item">Instructors may access the project for grading
+                                purposes</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article id="academic-disclaimer" class="policy-section">
+                    <header class="policy-section__header">
+                        <div class="policy-section__accent"></div>
+                        <h2 class="policy-section__title">4. Academic Disclaimer</h2>
+                    </header>
+                    <div class="policy-section__body">
+                        <p class="policy-section__important">
+                            <strong>IMPORTANT:</strong> This website is a student project created for educational
+                            purposes as part of the curriculum at the School of Computer Studies, Arellano
+                            University - Bonifacio Campus. It is not a commercial platform. Any resemblance to
+                            real e-commerce sites is for educational demonstration only.
+                        </p>
+                        <p>If you have concerns about this project, please contact the School of Computer Studies
+                            directly.</p>
+                    </div>
+                </article>
+
+                <article id="contact-information" class="policy-section">
+                    <header class="policy-section__header">
+                        <div class="policy-section__accent"></div>
+                        <h2 class="policy-section__title">5. Contact Us</h2>
+                    </header>
+                    <div class="policy-section__body">
+                        <p>For questions about this academic project:</p>
+                        <address class="policy-contact">
+                            <p class="policy-contact__item"><strong>School:</strong> School of Computer Studies</p>
+                            <p class="policy-contact__item"><strong>Campus:</strong> Arellano University - Andres
+                                Bonifacio Campus</p>
+                            <p class="policy-contact__item"><strong>Address:</strong> Pasig City, Philippines</p>
+                            <p class="policy-contact__item"><strong>Course:</strong> Web Development Project</p>
+                        </address>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
 
     <?php include_once('footer.php'); ?>
 </body>

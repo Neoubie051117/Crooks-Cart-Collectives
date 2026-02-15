@@ -1,10 +1,10 @@
 @echo off
 
-python "D:\Application Program\Xampp\htdocs\Crooks-Cart-Collectives\logs\tree-mapper.py"
+python "D:\Repository\Crooks-Cart-Collectives\logs\tree-mapper.py"
 
 timeout /t 0 /nobreak >nul
 
-python "D:\Application Program\Xampp\htdocs\Crooks-Cart-Collectives\logs\content-fetcher.py"
+python "D:\Repository\Crooks-Cart-Collectives\logs\content-fetcher.py"
 
 timeout /t 0 /nobreak >nul
 

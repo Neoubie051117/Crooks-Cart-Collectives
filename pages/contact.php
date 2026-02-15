@@ -13,7 +13,6 @@ $current_page = 'contact';
 
     <script src="../scripts/header.js" defer></script>
     <link rel="stylesheet" href="../styles/header.css">
-    <script src="../scripts/footer.js" defer></script>
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/contact.css">
 </head>
@@ -21,111 +20,145 @@ $current_page = 'contact';
 <body>
     <?php include_once('header.php'); ?>
 
-    <div class="content">
+    <main class="contact-page">
         <!-- Hero Section -->
         <section class="contact-hero">
-            <div class="hero-content">
-                <h1>Get in <span>Touch</span></h1>
-                <p>School Project Contact Information</p>
+            <div class="contact-hero__container">
+                <h1 class="contact-hero__title">Get in <span class="contact-hero__highlight">Touch</span></h1>
+                <p class="contact-hero__subtitle">School Project Contact Information</p>
             </div>
         </section>
 
         <!-- Contact Info Grid -->
-        <section class="contact-info-grid">
-            <div class="info-card">
-                <div class="info-icon">📍</div>
-                <h3>Our Campus</h3>
-                <p>Arellano University<br>Andres Bonifacio Campus<br>Pasig City, Philippines</p>
-            </div>
+        <section class="contact-info">
+            <div class="contact-info__grid">
+                <article class="contact-card">
+                    <div class="contact-card__icon">📍</div>
+                    <h3 class="contact-card__title">Our Campus</h3>
+                    <address class="contact-card__details">
+                        Arellano University<br>
+                        Andres Bonifacio Campus<br>
+                        Pasig City, Philippines
+                    </address>
+                </article>
 
-            <div class="info-card">
-                <div class="info-icon">📧</div>
-                <h3>Project Email</h3>
-                <p>scs.bonifacio@arellano.edu.ph<br>ccs.project@arellano.edu.ph</p>
-            </div>
+                <article class="contact-card">
+                    <div class="contact-card__icon">📧</div>
+                    <h3 class="contact-card__title">Project Email</h3>
+                    <p class="contact-card__details">
+                        scs.bonifacio@arellano.edu.ph<br>
+                        ccs.project@arellano.edu.ph
+                    </p>
+                </article>
 
-            <div class="info-card">
-                <div class="info-icon">📞</div>
-                <h3>School Contact</h3>
-                <p>+63 (2) 8123 4567<br>School of Computer Studies</p>
-            </div>
+                <article class="contact-card">
+                    <div class="contact-card__icon">📞</div>
+                    <h3 class="contact-card__title">School Contact</h3>
+                    <p class="contact-card__details">
+                        +63 (2) 8123 4567<br>
+                        School of Computer Studies
+                    </p>
+                </article>
 
-            <div class="info-card">
-                <div class="info-icon">⏰</div>
-                <h3>School Hours</h3>
-                <p>Monday - Friday: 8:00 - 17:00<br>Saturday: 8:00 - 12:00</p>
+                <article class="contact-card">
+                    <div class="contact-card__icon">⏰</div>
+                    <h3 class="contact-card__title">School Hours</h3>
+                    <p class="contact-card__details">
+                        Monday - Friday: 8:00 - 17:00<br>
+                        Saturday: 8:00 - 12:00
+                    </p>
+                </article>
             </div>
         </section>
 
-        <!-- Contact Form & Map -->
-        <section class="contact-form-section">
-            <div class="form-container">
-                <h2>Send us a <span>Message</span></h2>
-                <p class="form-subtitle">For project inquiries or feedback</p>
+        <!-- Contact Form & Map Section -->
+        <section class="contact-interaction">
+            <div class="contact-form-container">
+                <header class="contact-form__header">
+                    <h2 class="contact-form__title">Send us a <span class="contact-form__highlight">Message</span></h2>
+                    <p class="contact-form__subtitle">For project inquiries or feedback</p>
+                </header>
 
-                <form id="contactForm" class="contact-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Your Name *</label>
-                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                <form id="contactForm" class="contact-form" novalidate>
+                    <div class="contact-form__row">
+                        <div class="contact-form__group">
+                            <label for="fullName" class="contact-form__label">Your Name *</label>
+                            <input type="text" id="fullName" name="fullName" class="contact-form__input" required
+                                placeholder="Enter your full name" aria-required="true">
+                            <div class="contact-form__error" id="fullNameError" role="alert"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        <div class="contact-form__group">
+                            <label for="emailAddress" class="contact-form__label">Email Address *</label>
+                            <input type="email" id="emailAddress" name="emailAddress" class="contact-form__input"
+                                required placeholder="your@email.com" aria-required="true">
+                            <div class="contact-form__error" id="emailError" role="alert"></div>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="student_id">Student ID</label>
-                            <input type="text" id="student_id" name="student_id" placeholder="If you're a student">
+                    <div class="contact-form__row">
+                        <div class="contact-form__group">
+                            <label for="studentId" class="contact-form__label">Student ID</label>
+                            <input type="text" id="studentId" name="studentId" class="contact-form__input"
+                                placeholder="If you're a student">
                         </div>
 
-                        <div class="form-group">
-                            <label for="subject">Subject *</label>
-                            <select id="subject" name="subject" required>
+                        <div class="contact-form__group">
+                            <label for="inquirySubject" class="contact-form__label">Subject *</label>
+                            <select id="inquirySubject" name="inquirySubject" class="contact-form__select" required
+                                aria-required="true">
                                 <option value="">Select a subject</option>
                                 <option value="general">General Inquiry</option>
                                 <option value="project">Project Question</option>
                                 <option value="feedback">Feedback</option>
                                 <option value="report">Report Issue</option>
                             </select>
+                            <div class="contact-form__error" id="subjectError" role="alert"></div>
                         </div>
                     </div>
 
-                    <div class="form-group full-width">
-                        <label for="message">Your Message *</label>
-                        <textarea id="message" name="message" rows="6" required
-                            placeholder="How can we help you?"></textarea>
+                    <div class="contact-form__group contact-form__group--full">
+                        <label for="inquiryMessage" class="contact-form__label">Your Message *</label>
+                        <textarea id="inquiryMessage" name="inquiryMessage" class="contact-form__textarea" rows="6"
+                            required placeholder="How can we help you?" aria-required="true"></textarea>
+                        <div class="contact-form__error" id="messageError" role="alert"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <div class="contact-form__actions">
+                        <button type="submit" class="contact-form__submit-btn">
+                            Send Message
+                        </button>
+                    </div>
                 </form>
 
-                <div id="successMessage" class="success-message" style="display: none;">
+                <div id="formSuccessMessage" class="contact-form__success" style="display: none;" role="status">
                     <p>Thank you for your message! (This is a demo - no actual email will be sent)</p>
                 </div>
             </div>
 
             <div class="map-container">
-                <h2>Find us on <span>Map</span></h2>
-                <div class="map-wrapper">
+                <header class="map-container__header">
+                    <h2 class="map-container__title">Find us on <span class="map-container__highlight">Map</span></h2>
+                </header>
+                <div class="map-container__embed">
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.775403455372!2d121.05254331529254!3d14.562667289822337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c979a7e7c1b7%3A0x1e3e1a3b4b4c4d4e!2sArellano%20University%20Andres%20Bonifacio%20Campus!5e0!3m2!1sen!2sph!4v1620000000000!5m2!1sen!2sph"
-                        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+                        title="Map showing Arellano University Andres Bonifacio Campus" allowfullscreen=""
+                        loading="lazy">
                     </iframe>
                 </div>
             </div>
         </section>
-    </div>
+    </main>
 
     <?php include_once('footer.php'); ?>
 
-    <div id="notifierModal" class="notifier hidden">
-        <div class="notifier-content">
-            <p id="notifierMessage"></p>
-            <button id="notifierCloseBtn" class="btn btn-primary">OK</button>
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal modal--hidden" role="dialog" aria-modal="true"
+        aria-labelledby="modalMessage">
+        <div class="modal__content">
+            <p id="modalMessage" class="modal__message"></p>
+            <button id="modalCloseBtn" class="modal__close-btn">OK</button>
         </div>
     </div>
 
