@@ -26,7 +26,7 @@ $current_page = 'contact';
         <section class="contact-hero">
             <div class="hero-content">
                 <h1>Get in <span>Touch</span></h1>
-                <p>We'd love to hear from you</p>
+                <p>School Project Contact Information</p>
             </div>
         </section>
 
@@ -34,26 +34,26 @@ $current_page = 'contact';
         <section class="contact-info-grid">
             <div class="info-card">
                 <div class="info-icon">📍</div>
-                <h3>Visit Us</h3>
+                <h3>Our Campus</h3>
                 <p>Arellano University<br>Andres Bonifacio Campus<br>Pasig City, Philippines</p>
             </div>
 
             <div class="info-card">
                 <div class="info-icon">📧</div>
-                <h3>Email Us</h3>
-                <p>support@crookscart.com<br>inquiries@crookscart.com<br>help@crookscart.com</p>
+                <h3>Project Email</h3>
+                <p>scs.bonifacio@arellano.edu.ph<br>ccs.project@arellano.edu.ph</p>
             </div>
 
             <div class="info-card">
                 <div class="info-icon">📞</div>
-                <h3>Call Us</h3>
-                <p>+63 (2) 8123 4567<br>+63 912 345 6789<br>Mon-Fri, 9am-6pm</p>
+                <h3>School Contact</h3>
+                <p>+63 (2) 8123 4567<br>School of Computer Studies</p>
             </div>
 
             <div class="info-card">
                 <div class="info-icon">⏰</div>
-                <h3>Business Hours</h3>
-                <p>Monday - Friday: 9:00 - 18:00<br>Saturday: 10:00 - 15:00<br>Sunday: Closed</p>
+                <h3>School Hours</h3>
+                <p>Monday - Friday: 8:00 - 17:00<br>Saturday: 8:00 - 12:00</p>
             </div>
         </section>
 
@@ -61,28 +61,25 @@ $current_page = 'contact';
         <section class="contact-form-section">
             <div class="form-container">
                 <h2>Send us a <span>Message</span></h2>
-                <p class="form-subtitle">We'll get back to you within 24 hours</p>
+                <p class="form-subtitle">For project inquiries or feedback</p>
 
                 <form id="contactForm" class="contact-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Your Name *</label>
                             <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                            <div class="error-message" id="nameError"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" name="email" required placeholder="your@email.com">
-                            <div class="error-message" id="emailError"></div>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" placeholder="09XX XXX XXXX">
-                            <div class="error-message" id="phoneError"></div>
+                            <label for="student_id">Student ID</label>
+                            <input type="text" id="student_id" name="student_id" placeholder="If you're a student">
                         </div>
 
                         <div class="form-group">
@@ -90,13 +87,10 @@ $current_page = 'contact';
                             <select id="subject" name="subject" required>
                                 <option value="">Select a subject</option>
                                 <option value="general">General Inquiry</option>
-                                <option value="support">Technical Support</option>
-                                <option value="billing">Billing Question</option>
-                                <option value="seller">Seller Application</option>
-                                <option value="report">Report a Problem</option>
+                                <option value="project">Project Question</option>
                                 <option value="feedback">Feedback</option>
+                                <option value="report">Report Issue</option>
                             </select>
-                            <div class="error-message" id="subjectError"></div>
                         </div>
                     </div>
 
@@ -104,23 +98,13 @@ $current_page = 'contact';
                         <label for="message">Your Message *</label>
                         <textarea id="message" name="message" rows="6" required
                             placeholder="How can we help you?"></textarea>
-                        <div class="error-message" id="messageError"></div>
-                    </div>
-
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="privacy" required>
-                            <span>I agree to the <a href="privacy-policy.php">Privacy Policy</a> and consent to being
-                                contacted *</span>
-                        </label>
-                        <div class="error-message" id="privacyError"></div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Send Message</button>
                 </form>
 
                 <div id="successMessage" class="success-message" style="display: none;">
-                    <p>Thank you for your message! We'll get back to you soon.</p>
+                    <p>Thank you for your message! (This is a demo - no actual email will be sent)</p>
                 </div>
             </div>
 
@@ -133,31 +117,6 @@ $current_page = 'contact';
                     </iframe>
                 </div>
             </div>
-        </section>
-
-        <!-- FAQ Preview -->
-        <section class="faq-preview">
-            <h2>Frequently Asked <span>Questions</span></h2>
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3>How do I become a seller?</h3>
-                    <p>Simply go to your dashboard and click "Become a Seller". Upload a valid ID and wait for
-                        verification.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>What payment methods do you accept?</h3>
-                    <p>We accept cash on delivery, GCash, and bank transfers for verified sellers.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>How long does shipping take?</h3>
-                    <p>Shipping typically takes 2-5 business days depending on your location.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Is my information secure?</h3>
-                    <p>Yes, we use industry-standard encryption to protect your data.</p>
-                </div>
-            </div>
-            <a href="faq.php" class="btn btn-secondary">View All FAQs</a>
         </section>
     </div>
 

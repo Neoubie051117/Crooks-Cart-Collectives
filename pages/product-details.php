@@ -1,3 +1,4 @@
+<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -24,28 +25,32 @@ if (!$product) {
     exit;
 }
 
-
-if (!empty($product['image_path'])) {
-    // Schema stores as 'assets/PlaceholderAssetProduct.png'
-    if (strpos($product['image_path'], 'assets/') === 0) {
-        // It's a path from root, add '../' since we're in pages folder
-        $imagePath = '../' . $product['image_path'];
-    } elseif (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
-        // It's a full URL
-        $imagePath = $product['image_path'];
-    } elseif (strpos($product['image_path'], '/') === false) {
-        // It's just a filename, assume it's in assets/image/icons/
-        $imagePath = '../assets/image/icons/' . $product['image_path'];
-    } else {
-        // Some other relative path
-        $imagePath = '../' . $product['image_path'];
+// Improved image path handling
+function getProductImagePath($image_path) {
+    if (empty($image_path)) {
+        return '../assets/image/icons/PlaceholderAssetProduct.png';
     }
+    
+    // If it's already a full URL
+    if (filter_var($image_path, FILTER_VALIDATE_URL)) {
+        return $image_path;
+    }
+    
+    // If it's stored as 'assets/...' from root
+    if (strpos($image_path, 'assets/') === 0) {
+        return '../' . $image_path;
+    }
+    
+    // If it's just a filename
+    if (strpos($image_path, '/') === false) {
+        return '../assets/image/icons/' . $image_path;
+    }
+    
+    // Some other relative path
+    return '../' . $image_path;
 }
 
-// If still empty, use placeholder
-if (empty($imagePath)) {
-    $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
-}
+$imagePath = getProductImagePath($product['image_path'] ?? '');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +60,7 @@ if (empty($imagePath)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($product['name']); ?> - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/product-details.css"> <!-- MOVE STYLES TO EXTERNAL CSS -->
+    <link rel="stylesheet" href="../styles/product-details.css">
     <link rel="stylesheet" href="../styles/footer.css">
 </head>
 
@@ -63,21 +68,35 @@ if (empty($imagePath)) {
     <?php include_once('header.php'); ?>
 
     <div class="content">
-        <div class="product-details-container">
+        <div class="product-details-wrapper">
             <!-- Breadcrumb navigation -->
-            <div class="breadcrumb">
-                <a href="../index.php">Home</a> &gt;
-                <a href="products.php">Products</a> &gt;
-                <span><?php echo htmlspecialchars($product['name']); ?></span>
-            </div>
+            <nav class="breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
+                    <li class="breadcrumb-item"><a href="products.php">Products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <?php echo htmlspecialchars($product['name']); ?></li>
+                </ol>
+            </nav>
 
             <div class="product-details-grid">
                 <!-- Product Image Column -->
                 <div class="product-image-column">
-                    <div class="main-image-container">
-                        <img src="<?php echo htmlspecialchars($imagePath); ?>"
-                            alt="<?php echo htmlspecialchars($product['name']); ?>" class="main-product-image"
-                            onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';"><?php echo urlencode(substr($product['name'], 0, 20)); ?>';">
+                    <div class="product-image-container">
+                        <div class="main-image-wrapper">
+                            <img src="<?php echo htmlspecialchars($imagePath); ?>"
+                                alt="<?php echo htmlspecialchars($product['name']); ?>" class="main-product-image"
+                                loading="lazy"
+                                onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail gallery (can be extended for multiple images) -->
+                    <div class="product-thumbnails">
+                        <button class="thumbnail active" aria-label="Main image">
+                            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Thumbnail"
+                                onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                        </button>
                     </div>
                 </div>
 
@@ -90,47 +109,74 @@ if (empty($imagePath)) {
                         <span class="product-seller">
                             Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
                             <?php if ($product['is_verified']): ?>
-                            <span class="verified-badge">✓ Verified</span>
+                            <span class="verified-badge">✓ Verified Seller</span>
                             <?php endif; ?>
                         </span>
                     </div>
 
-                    <div class="product-price-container">
-                        <span class="product-price-label">Price:</span>
+                    <div class="product-price-wrapper">
+                        <span class="price-label">Price:</span>
                         <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
                     </div>
 
-                    <div
-                        class="product-stock <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
-                        <?php if ($product['stock_quantity'] > 0): ?>
-                        <span class="stock-indicator">✓ In Stock</span>
-                        <span class="stock-count">(<?php echo $product['stock_quantity']; ?> available)</span>
-                        <?php else: ?>
-                        <span class="stock-indicator">✗ Out of Stock</span>
-                        <?php endif; ?>
+                    <div class="product-availability">
+                        <div
+                            class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
+                            <span class="status-indicator"></span>
+                            <span class="status-text">
+                                <?php if ($product['stock_quantity'] > 0): ?>
+                                In Stock (<?php echo $product['stock_quantity']; ?> available)
+                                <?php else: ?>
+                                Out of Stock
+                                <?php endif; ?>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="product-description">
-                        <h3>Product Description</h3>
-                        <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
+                        <h2>Product Description</h2>
+                        <div class="description-content">
+                            <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                        </div>
                     </div>
 
                     <div class="product-actions">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                        <button class="add-to-cart-btn" data-product-id="<?php echo $product['product_id']; ?>"
+                        <button class="btn btn-primary add-to-cart-btn"
+                            data-product-id="<?php echo $product['product_id']; ?>"
                             <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            Add to Cart
+                            <span class="btn-icon">🛒</span>
+                            <span class="btn-text">Add to Cart</span>
                         </button>
-                        <button class="buy-now-btn" data-product-id="<?php echo $product['product_id']; ?>"
+                        <button class="btn btn-secondary buy-now-btn"
+                            data-product-id="<?php echo $product['product_id']; ?>"
                             <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            Buy Now
+                            <span class="btn-icon">⚡</span>
+                            <span class="btn-text">Buy Now</span>
                         </button>
                         <?php else: ?>
                         <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
-                            class="login-to-purchase-btn">
-                            Login to Purchase
+                            class="btn btn-primary login-to-purchase-btn">
+                            <span class="btn-icon">🔐</span>
+                            <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>
+                    </div>
+
+                    <!-- Product highlights/specs (optional) -->
+                    <div class="product-highlights">
+                        <div class="highlight-item">
+                            <span class="highlight-icon">📦</span>
+                            <span class="highlight-text">Free Shipping on orders over ₱1000</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-icon">🔄</span>
+                            <span class="highlight-text">30-day returns</span>
+                        </div>
+                        <div class="highlight-item">
+                            <span class="highlight-icon">🛡️</span>
+                            <span class="highlight-text">Secure transaction</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,7 +184,6 @@ if (empty($imagePath)) {
     </div>
 
     <?php include_once('footer.php'); ?>
-    <!-- MOVED TO CORRECT LOCATION -->
 
     <script src="../scripts/product-details.js"></script>
 </body>
