@@ -119,6 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const formData = new FormData(form);
 
+            // Add the current redirect parameter from URL to form data
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectParam = urlParams.get('redirect');
+            if (redirectParam) {
+                formData.append('redirect', redirectParam);
+            }
+
             const response = await fetch('../database/sign-in-handler.php', {
                 method: 'POST',
                 body: formData,
@@ -139,15 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.status === 'success') {
                 showNotifier('Login successful! Redirecting...');
                 
-                // Handle redirect
-                const urlParams = new URLSearchParams(window.location.search);
-                const redirectParam = urlParams.get('redirect');
-                
+                // Use the redirect URL from the server response
                 let redirectUrl = result.redirect;
-                if (redirectParam && result.redirect.includes('customer-dashboard')) {
-                    // Use redirect param if it exists and we're going to dashboard
-                    redirectUrl = redirectParam.startsWith('../') ? redirectParam : '../' + redirectParam;
-                }
+                
+                // Log the redirect for debugging
+                console.log('Redirecting to:', redirectUrl);
 
                 setTimeout(() => {
                     window.location.href = redirectUrl;

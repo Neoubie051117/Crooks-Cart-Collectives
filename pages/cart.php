@@ -39,189 +39,213 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/cart.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    .cart-container {
-        max-width: 1000px;
-        margin: 30px auto;
-        padding: 20px;
-    }
-
-    .cart-item {
-        display: flex;
-        gap: 20px;
-        border-bottom: 1px solid #ddd;
-        padding: 20px 0;
-    }
-
-    .cart-item-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-    }
-
-    .cart-item-details {
-        flex: 1;
-    }
-
-    .cart-item-title {
-        font-size: 1.2em;
-        margin: 0 0 5px;
-    }
-
-    .cart-item-price {
-        color: #FF8246;
-        font-weight: bold;
-    }
-
-    .cart-item-quantity {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 10px 0;
-    }
-
-    .quantity-input {
-        width: 60px;
-        text-align: center;
-    }
-
-    .remove-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .cart-summary {
-        margin-top: 30px;
-        text-align: right;
-        font-size: 1.5em;
-    }
-
-    .checkout-btn {
-        background: #FF8246;
-        color: white;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1.2em;
-        cursor: pointer;
-    }
-
-    .empty-cart {
-        text-align: center;
-        padding: 50px;
-    }
-    </style>
 </head>
 
 <body>
     <?php include_once('header.php'); ?>
 
-    <div class="content">
+    <main class="content">
         <div class="cart-container">
-            <h1>Shopping Cart</h1>
+            <h1 class="cart-title">Shopping Cart</h1>
 
             <?php if (empty($cartItems)): ?>
             <div class="empty-cart">
-                <p>Your cart is empty.</p>
-                <a href="products.php" class="btn-primary">Continue Shopping</a>
+                <p class="empty-cart-message">Your cart is empty.</p>
+                <a href="products.php" class="btn btn-primary">Continue Shopping</a>
             </div>
             <?php else: ?>
 
-            <div id="cartItems">
+            <div class="cart-items" id="cartItems">
                 <?php foreach ($cartItems as $item): 
-                    $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
-                    if (!empty($item['image_path'])) {
-                        if (strpos($item['image_path'], 'assets/') === 0) {
-                            $imagePath = '../' . $item['image_path'];
-                        } else {
-                            $imagePath = '../' . $item['image_path'];
+                        $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
+                        if (!empty($item['image_path'])) {
+                            if (strpos($item['image_path'], 'assets/') === 0) {
+                                $imagePath = '../' . $item['image_path'];
+                            } else {
+                                $imagePath = '../' . $item['image_path'];
+                            }
                         }
-                    }
-                ?>
+                        $subtotal = $item['price'] * $item['quantity'];
+                    ?>
                 <div class="cart-item" data-id="<?= $item['cart_item_id'] ?>">
-                    <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                        class="cart-item-image" onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png'">
+                    <div class="cart-item-image">
+                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
+                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png'">
+                    </div>
                     <div class="cart-item-details">
                         <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
-                        <p>Seller: <?= htmlspecialchars($item['business_name']) ?></p>
+                        <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
                         <p class="cart-item-price">₱<?= number_format($item['price'], 2) ?></p>
-                        <div class="cart-item-quantity">
-                            <label>Quantity:</label>
-                            <input type="number" class="quantity-input" value="<?= $item['quantity'] ?>" min="1"
-                                max="<?= $item['stock_quantity'] ?>" data-id="<?= $item['cart_item_id'] ?>">
-                            <button class="remove-btn" data-id="<?= $item['cart_item_id'] ?>">Remove</button>
+
+                        <div class="cart-item-controls">
+                            <div class="cart-item-quantity">
+                                <label for="quantity-<?= $item['cart_item_id'] ?>" class="sr-only">Quantity</label>
+                                <input type="number" id="quantity-<?= $item['cart_item_id'] ?>" class="quantity-input"
+                                    value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
+                                    data-id="<?= $item['cart_item_id'] ?>">
+                                <button class="remove-btn btn btn-secondary" data-id="<?= $item['cart_item_id'] ?>">
+                                    Remove
+                                </button>
+                            </div>
+                            <p class="item-subtotal">
+                                Subtotal: <span class="subtotal-amount">₱<?= number_format($subtotal, 2) ?></span>
+                            </p>
                         </div>
-                        <p class="item-subtotal">Subtotal: ₱<?= number_format($item['price'] * $item['quantity'], 2) ?>
-                        </p>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
 
             <div class="cart-summary">
-                <p>Total: ₱<span id="cartTotal"><?= number_format($total, 2) ?></span></p>
-                <a href="checkout.php" class="checkout-btn">Proceed to Checkout</a>
+                <div class="cart-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount" id="cartTotal">₱<?= number_format($total, 2) ?></span>
+                </div>
+                <div class="cart-actions">
+                    <a href="products.php" class="btn btn-secondary">Continue Shopping</a>
+                    <a href="checkout.php" class="btn btn-primary checkout-btn">Proceed to Checkout</a>
+                </div>
             </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
 
     <?php include_once('footer.php'); ?>
 
     <script>
-    // Update quantity
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', async function() {
-            const itemId = this.dataset.id;
-            const quantity = this.value;
-            const response = await fetch('../database/cart-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    action: 'update',
-                    cart_item_id: itemId,
-                    quantity: quantity
-                })
-            });
-            const result = await response.json();
-            if (result.status === 'success') {
-                location.reload(); // simple refresh to update totals
-            } else {
-                alert('Error updating quantity');
-            }
-        });
-    });
+    (function() {
+        // Helper function to show temporary messages
+        function showMessage(message, type = 'error') {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `cart-message ${type}`;
+            msgDiv.textContent = message;
+            document.body.appendChild(msgDiv);
+            setTimeout(() => msgDiv.remove(), 3000);
+        }
 
-    // Remove item
-    document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', async function() {
-            if (!confirm('Remove this item from cart?')) return;
-            const itemId = this.dataset.id;
-            const response = await fetch('../database/cart-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    action: 'remove',
-                    cart_item_id: itemId
-                })
+        // Update quantity via AJAX
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', async function() {
+                const itemId = this.dataset.id;
+                const quantity = this.value;
+                const originalValue = this.defaultValue;
+
+                // Basic validation
+                if (quantity < 1 || quantity > this.max) {
+                    this.value = originalValue;
+                    showMessage(`Quantity must be between 1 and ${this.max}`, 'error');
+                    return;
+                }
+
+                // Disable input while saving
+                this.disabled = true;
+
+                try {
+                    const response = await fetch('../database/cart-handler.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            action: 'update',
+                            cart_item_id: itemId,
+                            quantity: quantity
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        // Update subtotal and total without reload
+                        const priceText = this.closest('.cart-item-details').querySelector(
+                            '.cart-item-price').textContent;
+                        const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ''));
+                        const newSubtotal = price * quantity;
+                        const subtotalSpan = this.closest('.cart-item-controls').querySelector(
+                            '.subtotal-amount');
+                        subtotalSpan.textContent = '₱' + newSubtotal.toFixed(2);
+
+                        // Update total
+                        let newTotal = 0;
+                        document.querySelectorAll('.subtotal-amount').forEach(span => {
+                            newTotal += parseFloat(span.textContent.replace(
+                                /[^0-9.-]+/g, ''));
+                        });
+                        document.getElementById('cartTotal').textContent = '₱' + newTotal
+                            .toFixed(2);
+
+                        this.defaultValue = quantity; // update default for future checks
+                    } else {
+                        this.value = originalValue;
+                        showMessage('Error updating quantity', 'error');
+                    }
+                } catch (error) {
+                    console.error('Update error:', error);
+                    this.value = originalValue;
+                    showMessage('Network error. Please try again.', 'error');
+                } finally {
+                    this.disabled = false;
+                }
             });
-            const result = await response.json();
-            if (result.status === 'success') {
-                location.reload();
-            } else {
-                alert('Error removing item');
-            }
         });
-    });
+
+        // Remove item with confirmation
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                if (!confirm('Remove this item from your cart?')) return;
+
+                const itemId = this.dataset.id;
+                const cartItem = this.closest('.cart-item');
+
+                // Disable button while processing
+                this.disabled = true;
+                this.textContent = 'Removing...';
+
+                try {
+                    const response = await fetch('../database/cart-handler.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            action: 'remove',
+                            cart_item_id: itemId
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        // Remove item from DOM
+                        cartItem.remove();
+
+                        // Update total
+                        let newTotal = 0;
+                        document.querySelectorAll('.subtotal-amount').forEach(span => {
+                            newTotal += parseFloat(span.textContent.replace(
+                                /[^0-9.-]+/g, ''));
+                        });
+                        document.getElementById('cartTotal').textContent = '₱' + newTotal
+                            .toFixed(2);
+
+                        // If cart is now empty, show empty state
+                        if (document.querySelectorAll('.cart-item').length === 0) {
+                            location.reload(); // simplest way to show empty cart
+                        }
+                    } else {
+                        showMessage('Error removing item', 'error');
+                        this.disabled = false;
+                        this.textContent = 'Remove';
+                    }
+                } catch (error) {
+                    console.error('Remove error:', error);
+                    showMessage('Network error. Please try again.', 'error');
+                    this.disabled = false;
+                    this.textContent = 'Remove';
+                }
+            });
+        });
+    })();
     </script>
 </body>
 

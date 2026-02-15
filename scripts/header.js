@@ -10,15 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 100);
     }
     
-    initializeHeader();
-    
-    setTimeout(() => {
-        const header = document.querySelector('.header-bar');
-        const mobileNav = document.getElementById('mobileNav');
+    // Initialize header after a short delay to ensure DOM is ready
+    // Use a flag to prevent double initialization
+    if (!window.headerInitialized) {
+        setTimeout(() => {
+            initializeHeader();
+        }, 50);
         
-        if (header) header.classList.remove('no-transition');
-        if (mobileNav) mobileNav.classList.remove('no-transition');
-    }, 300);
+        setTimeout(() => {
+            const header = document.querySelector('.header-bar');
+            const mobileNav = document.getElementById('mobileNav');
+            
+            if (header) header.classList.remove('no-transition');
+            if (mobileNav) mobileNav.classList.remove('no-transition');
+        }, 300);
+        
+        window.headerInitialized = true;
+    }
 });
 
 function initializeHeader() {
@@ -53,9 +61,10 @@ function initializeHeader() {
         backdrop.className = 'menu-backdrop';
         document.body.appendChild(backdrop);
         
-        // Ensure mobile nav is hidden by default (using transform, not display)
+        // Ensure mobile nav is hidden by default
         mobileNav.classList.remove('open');
         
+        // Function to toggle menu
         function toggleMenu() {
             const isOpen = mobileNav.classList.contains('open');
             console.log('Toggling menu, currently open:', isOpen); // Debug log
@@ -66,10 +75,6 @@ function initializeHeader() {
                 backdrop.classList.add('active');
                 document.body.style.overflow = 'hidden';
                 menuButton.classList.add('active');
-                
-                // Debug - check if class was added
-                console.log('Mobile nav classes after open:', mobileNav.className);
-                console.log('Mobile nav transform style:', window.getComputedStyle(mobileNav).transform);
             } else {
                 // Close menu
                 mobileNav.classList.remove('open');
@@ -77,14 +82,25 @@ function initializeHeader() {
                 document.body.style.overflow = '';
                 menuButton.classList.remove('active');
             }
+            
+            // Force remove any inline transform that might linger
+            mobileNav.style.transform = '';
+            
+            // Force a reflow to ensure CSS transition picks up the change
+            void mobileNav.offsetHeight;
+            
+            // Debug - log final computed transform
+            console.log('After toggle, computed transform:', window.getComputedStyle(mobileNav).transform);
         }
         
+        // Function to close menu
         function closeMenu() {
             if (mobileNav.classList.contains('open')) {
                 mobileNav.classList.remove('open');
                 backdrop.classList.remove('active');
                 document.body.style.overflow = '';
                 menuButton.classList.remove('active');
+                mobileNav.style.transform = ''; // clear any inline
             }
         }
         
@@ -126,57 +142,24 @@ function initializeHeader() {
         // Debug - log initial state
         console.log('Mobile nav initial classes:', mobileNav.className);
         console.log('Mobile nav initial transform:', window.getComputedStyle(mobileNav).transform);
+        
+        // Mark as initialized
+        window.menuInitialized = true;
+        
     } else {
-        console.error('Menu elements not found:', {
+        console.error('Menu elements not found on first attempt:', {
             menuButton: !!menuButton,
             mobileNav: !!mobileNav
         });
         
         // Try again after a short delay (in case elements are loaded dynamically)
-        setTimeout(() => {
-            const retryMenuButton = document.getElementById('menuButton');
-            const retryMobileNav = document.getElementById('mobileNav');
-            
-            if (retryMenuButton && retryMobileNav && !window.menuInitialized) {
-                window.menuInitialized = true;
+        if (!window.menuRetryAttempted) {
+            window.menuRetryAttempted = true;
+            setTimeout(() => {
                 console.log('Retrying menu initialization...');
-                
-                // Re-run initialization
-                const retryBackdrop = document.querySelector('.menu-backdrop');
-                if (retryBackdrop) retryBackdrop.remove();
-                
-                // Recreate backdrop
-                const newBackdrop = document.createElement('div');
-                newBackdrop.className = 'menu-backdrop';
-                document.body.appendChild(newBackdrop);
-                
-                retryMobileNav.classList.remove('open');
-                
-                retryMenuButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    if (retryMobileNav.classList.contains('open')) {
-                        retryMobileNav.classList.remove('open');
-                        newBackdrop.classList.remove('active');
-                        document.body.style.overflow = '';
-                        retryMenuButton.classList.remove('active');
-                    } else {
-                        retryMobileNav.classList.add('open');
-                        newBackdrop.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                        retryMenuButton.classList.add('active');
-                    }
-                });
-                
-                newBackdrop.addEventListener('click', function() {
-                    retryMobileNav.classList.remove('open');
-                    newBackdrop.classList.remove('active');
-                    document.body.style.overflow = '';
-                    retryMenuButton.classList.remove('active');
-                });
-            }
-        }, 500);
+                initializeHeader(); // Recursive call to try again
+            }, 500);
+        }
     }
     
     highlightActiveLink();
@@ -279,7 +262,9 @@ window.testMenu = function() {
         } else {
             mobileNav.classList.add('open');
         }
+        mobileNav.style.transform = ''; // clear any inline
         console.log('Mobile nav classes after manual toggle:', mobileNav.className);
+        console.log('Mobile nav computed transform after toggle:', window.getComputedStyle(mobileNav).transform);
     } else {
         console.log('Menu elements not found for test');
     }

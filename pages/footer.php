@@ -32,8 +32,8 @@ $pathPrefix = $is_root ? '' : '../';
             <span>@crooks-cart-inquiry.com</span>
         </div>
         <div class="policy-links">
-            <a href="<?php echo $pathPrefix; ?>privacy-policy.html">Privacy Policy</a>
-            <a href="<?php echo $pathPrefix; ?>terms-and-conditions.html">Terms & Conditions</a>
+            <a href="<?php echo $pathPrefix; ?>pages/privacy-policy.php">Privacy Policy</a>
+            <a href="<?php echo $pathPrefix; ?>pages/terms-and-conditions.php">Terms & Conditions</a>
         </div>
     </div>
 </footer>

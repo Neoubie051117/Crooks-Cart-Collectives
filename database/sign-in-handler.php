@@ -35,6 +35,7 @@ function handleSignin() {
     
     $identifier = $_POST['identifier'] ?? '';
     $password = $_POST['password'] ?? '';
+    $redirectParam = $_POST['redirect'] ?? '';
     
     if (empty($identifier) || empty($password)) {
         error_log("Missing fields in signin attempt");
@@ -154,14 +155,43 @@ function handleSignin() {
         $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
         $stmt->execute([$user['user_id']]);
         
-        // Determine redirect based on user type
-        if ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
+        // Determine redirect based on user type and redirect parameter
+        $redirect = '';
+        
+        // First priority: Check if there's a redirect parameter from the form
+        if (!empty($redirectParam)) {
+            // Clean the redirect parameter - remove any leading '../' or '/'
+            $cleanRedirect = ltrim($redirectParam, './');
+            
+            // If it's just a filename (no path), add the pages directory
+            if (strpos($cleanRedirect, '/') === false && strpos($cleanRedirect, 'pages/') !== 0) {
+                $redirect = '../pages/' . $cleanRedirect;
+            } 
+            // If it already has pages/ in the path but no leading ../
+            elseif (strpos($cleanRedirect, 'pages/') === 0) {
+                $redirect = '../' . $cleanRedirect;
+            }
+            // If it already has the correct format (starts with ../)
+            elseif (strpos($cleanRedirect, '../') === 0) {
+                $redirect = $cleanRedirect;
+            }
+            // Otherwise, assume it needs the pages prefix
+            else {
+                $redirect = '../pages/' . $cleanRedirect;
+            }
+            
+            error_log("Redirecting to requested page: " . $redirect);
+        } 
+        // Second priority: If user is a verified seller, go to seller dashboard
+        elseif ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
             $redirect = '../pages/seller-dashboard.php';
-        } else {
+        } 
+        // Default: Go to customer dashboard
+        else {
             $redirect = '../pages/customer-dashboard.php';
         }
         
-        error_log("User login successful: " . $user['username'] . " (ID: " . $user['user_id'] . ")");
+        error_log("User login successful: " . $user['username'] . " (ID: " . $user['user_id'] . ") - Redirecting to: " . $redirect);
         
         echo json_encode([
             'status' => 'success',

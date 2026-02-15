@@ -126,7 +126,7 @@ if (empty($imagePath)) {
                             Buy Now
                         </button>
                         <?php else: ?>
-                        <a href="sign-in.php?redirect=product-details.php?id=<?php echo $product['product_id']; ?>"
+                        <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
                             class="login-to-purchase-btn">
                             Login to Purchase
                         </a>
