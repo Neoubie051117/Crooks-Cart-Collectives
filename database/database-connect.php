@@ -24,11 +24,45 @@ try {
         ]
     );
 } catch (PDOException $error) {
+    // Log the detailed error
     error_log("Database connection failed: " . $error->getMessage());
-    // For production, show user-friendly message
-    die(json_encode([
-        'status' => 'error', 
-        'message' => 'Service temporarily unavailable. Please try again later.'
-    ]));
+    error_log("Connection details - Host: $host, Database: $dbName, Username: $username");
+    
+    // Check for specific connection errors
+    if ($error->getCode() == 2002) {
+        error_log("MySQL server is not running or cannot be reached. Please start MySQL service.");
+    }
+    
+    // For API requests, return JSON error
+    if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+        header('Content-Type: application/json');
+        die(json_encode([
+            'status' => 'error', 
+            'message' => 'Service temporarily unavailable. Please try again later.'
+        ]));
+    }
+    
+    // For regular page loads, show user-friendly message
+    die("
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Service Temporarily Unavailable</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                .error-container { max-width: 600px; margin: 0 auto; }
+                h1 { color: #FF8246; }
+                p { color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='error-container'>
+                <h1>Oops! Something went wrong.</h1>
+                <p>We're experiencing technical difficulties. Please try again later.</p>
+                <p><a href='../index.php'>Return to Homepage</a></p>
+            </div>
+        </body>
+        </html>
+    ");
 }
 ?>

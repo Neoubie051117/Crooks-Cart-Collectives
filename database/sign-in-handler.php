@@ -2,13 +2,12 @@
 session_start();
 header('Content-Type: application/json');
 
-// Enable error reporting for debugging
+// Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/auth_errors.log');
+ini_set('error_log', __DIR__ . '/error_log.txt');
 
-// Connect to database
 require_once(__DIR__ . '/database-connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -17,69 +16,162 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (empty($_POST['usernameOrEmail']) || empty($_POST['loginPassword'])) {
+$action = $_POST['action'] ?? '';
+
+if ($action !== 'signin') {
     http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
     exit;
 }
 
-$identifier = trim($_POST['usernameOrEmail']);
-$password = $_POST['loginPassword'];
+handleSignin();
 
-try {
-    // Check if identifier is email or username
-    $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL);
+function handleSignin() {
+    global $connection;
     
-    // Query for user in new users table
-    $query = "SELECT userID, username, email, passwordHash, accountType
-              FROM users 
-              WHERE " . ($isEmail ? "email = :identifier" : "username = :identifier");
+    // Log the attempt (without password)
+    $identifier = $_POST['identifier'] ?? '';
+    error_log("Signin attempt for identifier: " . $identifier);
     
-    $stmt = $connection->prepare($query);
-    $stmt->bindValue(':identifier', $identifier, PDO::PARAM_STR);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user || !password_verify($password, $user['passwordHash'])) {
-        http_response_code(401);
-        echo json_encode(['status' => 'error', 'message' => 'Invalid username/email or password']);
+    $identifier = $_POST['identifier'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    if (empty($identifier) || empty($password)) {
+        error_log("Missing fields in signin attempt");
+        echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
-
-    // Set session data
-    $_SESSION['user_id'] = $user['userID'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['email'] = $user['email'];
-    $_SESSION['account_type'] = $user['accountType'];
     
-    // Check if user is also a customer
-    $customerStmt = $connection->prepare("SELECT customerID FROM customers WHERE userID = :userID");
-    $customerStmt->execute([':userID' => $user['userID']]);
-    $_SESSION['is_customer'] = $customerStmt->fetch() !== false;
+    $identifier = trim($identifier);
     
-    // Check if user is also a seller
-    $sellerStmt = $connection->prepare("SELECT sellerID, isVerified FROM sellers WHERE userID = :userID");
-    $sellerStmt->execute([':userID' => $user['userID']]);
-    $seller = $sellerStmt->fetch();
-    $_SESSION['is_seller'] = $seller !== false;
-    $_SESSION['seller_verified'] = $seller ? $seller['isVerified'] : false;
-
-    // Determine redirect path based on account type
-    $redirectPath = '../pages/home.php'; // Default for normal users
-    
-    if ($user['accountType'] === 'Admin') {
-        $redirectPath = '../pages/admin-dashboard.php';
+    // Check for admin first
+    try {
+        $stmt = $connection->prepare("
+            SELECT admin_id, username, email, password 
+            FROM administrators 
+            WHERE email = ? OR username = ?
+        ");
+        $stmt->execute([$identifier, $identifier]);
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($admin) {
+            // Admin uses password_verify (they have hashed passwords)
+            if (!password_verify($password, $admin['password'])) {
+                error_log("Admin password mismatch for: " . $identifier);
+                // Return generic error message for user
+                echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
+                exit;
+            }
+            
+            // Admin login successful
+            $_SESSION['admin_id'] = $admin['admin_id'];
+            $_SESSION['username'] = $admin['username'];
+            $_SESSION['email'] = $admin['email'];
+            $_SESSION['is_admin'] = true;
+            $_SESSION['is_customer'] = false;
+            $_SESSION['is_seller'] = false;
+            
+            error_log("Admin login successful: " . $admin['username']);
+            
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login successful',
+                'redirect' => '../pages/admin-dashboard.php'
+            ]);
+            exit;
+        }
+    } catch (PDOException $e) {
+        error_log("Admin check error: " . $e->getMessage());
+        // Continue to user check
     }
-
-    echo json_encode([
-        'status' => 'success',
-        'redirectPath' => $redirectPath,
-        'accountType' => $user['accountType']
-    ]);
     
-} catch (Exception $error) {
-    error_log("Authentication error: " . $error->getMessage());
-    http_response_code(500);
-    echo json_encode(['status' => 'error', 'message' => 'Authentication service unavailable']);
+    // Check regular user
+    try {
+        $stmt = $connection->prepare("
+            SELECT user_id, username, email, password 
+            FROM users 
+            WHERE email = ? OR username = ?
+        ");
+        $stmt->execute([$identifier, $identifier]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            error_log("User not found: " . $identifier);
+            // Generic error - don't specify if username/email doesn't exist
+            echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
+            exit;
+        }
+        
+        // Plain text password comparison (as per your original code)
+        if ($password !== $user['password']) {
+            error_log("Password mismatch for user: " . $identifier . " - Expected: " . $user['password'] . ", Got: " . $password);
+            // Generic error - don't specify which field is wrong
+            echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
+            exit;
+        }
+        
+        // Get customer info
+        $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
+        $stmt->execute([$user['user_id']]);
+        $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$customer) {
+            // Create customer record if missing
+            $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
+            $stmt->execute([$user['user_id']]);
+            $customer_id = $connection->lastInsertId();
+            
+            // Create shopping cart
+            $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
+            $stmt->execute([$customer_id]);
+        } else {
+            $customer_id = $customer['customer_id'];
+        }
+        
+        // Check if seller
+        $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
+        $stmt->execute([$user['user_id']]);
+        $seller = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Set session variables
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['customer_id'] = $customer_id;
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['is_customer'] = true;
+        $_SESSION['is_admin'] = false;
+        
+        if ($seller) {
+            $_SESSION['seller_id'] = $seller['seller_id'];
+            $_SESSION['is_seller'] = true;
+            $_SESSION['seller_verified'] = (bool)$seller['is_verified'];
+        } else {
+            $_SESSION['is_seller'] = false;
+            $_SESSION['seller_verified'] = false;
+        }
+        
+        // Update last login timestamp
+        $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
+        $stmt->execute([$user['user_id']]);
+        
+        // Determine redirect based on user type
+        if ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
+            $redirect = '../pages/seller-dashboard.php';
+        } else {
+            $redirect = '../pages/customer-dashboard.php';
+        }
+        
+        error_log("User login successful: " . $user['username'] . " (ID: " . $user['user_id'] . ")");
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Login successful',
+            'redirect' => $redirect
+        ]);
+        
+    } catch (PDOException $e) {
+        error_log("Signin database error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Login service unavailable']);
+    }
 }
 ?>

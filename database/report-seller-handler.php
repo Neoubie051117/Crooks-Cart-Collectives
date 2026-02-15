@@ -2,10 +2,11 @@
 session_start();
 header('Content-Type: application/json');
 
+// Use the main error log
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/report_errors.log');
+ini_set('error_log', __DIR__ . '/error_log.txt');
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(["status" => "error", "message" => "Not logged in."]);
@@ -28,12 +29,12 @@ $details = trim($data['details']);
 $reporter_id = $_SESSION['user_id'];
 
 try {
-    // Check if seller exists
-    $checkSeller = $connection->prepare("SELECT seller_id FROM sellers WHERE seller_id = ?");
+    // Check if seller exists and is verified
+    $checkSeller = $connection->prepare("SELECT seller_id FROM sellers WHERE seller_id = ? AND is_verified = 1");
     $checkSeller->execute([$seller_id]);
     
     if (!$checkSeller->fetch()) {
-        echo json_encode(["status" => "error", "message" => "Seller not found."]);
+        echo json_encode(["status" => "error", "message" => "Seller not found or not verified."]);
         exit;
     }
     

@@ -1,1 +1,12 @@
-[14-Feb-2026 13:02:56 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[14-Feb-2026 15:47:31 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Tester","middle_name":"","last_name":"Tester","birthdate":"2006-11-11","gender":"Female","email":"LNM136743110147172005@gmail.com","username":"Tester","password":"Tester1234","confirm_password":"Tester1234","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[14-Feb-2026 15:47:31 Europe/Berlin] Duplicate email: LNM136743110147172005@gmail.com
+[14-Feb-2026 15:47:39 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Tester","middle_name":"","last_name":"Tester","birthdate":"2006-11-11","gender":"Female","email":"tester@newmail.com","username":"Tester","password":"Tester1234","confirm_password":"Tester1234","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[14-Feb-2026 15:47:39 Europe/Berlin] Duplicate contact: +639942822928
+[14-Feb-2026 15:47:45 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Tester","middle_name":"","last_name":"Tester","birthdate":"2006-11-11","gender":"Female","email":"tester@newmail.com","username":"Tester","password":"Tester1234","confirm_password":"Tester1234","contact_number":"0978 326 4211","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[14-Feb-2026 15:47:45 Europe/Berlin] User inserted with ID: 11
+[14-Feb-2026 15:47:45 Europe/Berlin] Customer record already exists for user: 11
+[14-Feb-2026 15:47:45 Europe/Berlin] User registered successfully: Tester (ID: 11)
+[14-Feb-2026 15:52:09 Europe/Berlin] Signin attempt for identifier: tester
+[14-Feb-2026 15:52:09 Europe/Berlin] Password mismatch for user: tester - Expected: Tester1234, Got: tester
+[14-Feb-2026 15:52:29 Europe/Berlin] Signin attempt for identifier: tester
+[14-Feb-2026 15:52:29 Europe/Berlin] User login successful: tester (ID: 11)

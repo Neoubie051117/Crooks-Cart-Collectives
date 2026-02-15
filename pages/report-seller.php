@@ -1,154 +1,132 @@
 <?php
-include_once('header.php');
+session_start();
 require_once('../database/database-connect.php');
 
-// Fetch resident ID from session using username
-$residentID = null;
-
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-    $query = $connection->prepare("SELECT residentID FROM residents WHERE username = :username");
-    $query->execute([':username' => $username]);
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        $residentID = (int)$result['residentID'];
-    }
+if (!isset($_SESSION['user_id'])) {
+    header('Location: sign-in.php');
+    exit;
 }
 
-// Get resident's full name using resident ID
-function getResidentName($connection, $residentID) {
-    $query = $connection->prepare("SELECT firstName, middleName, lastName FROM residents WHERE residentID = :residentID");
-    $query->execute([':residentID' => $residentID]);
-    $resident = $query->fetch(PDO::FETCH_ASSOC);
+$userId = $_SESSION['user_id'];
 
-    if ($resident) {
-        $name = htmlspecialchars($resident['firstName']);
-        if (!empty($resident['middleName'])) {
-            $name .= ' ' . htmlspecialchars($resident['middleName']);
-        }
-        $name .= ' ' . htmlspecialchars($resident['lastName']);
-        return $name;
-    }
-    return 'Unknown Resident';
+// Fetch all verified sellers for dropdown (excluding self if user is a seller)
+$sellers = [];
+try {
+    $stmt = $connection->prepare("
+        SELECT s.seller_id, u.username, s.business_name 
+        FROM sellers s
+        JOIN users u ON s.user_id = u.user_id
+        WHERE s.is_verified = 1 AND u.user_id != ?
+    ");
+    $stmt->execute([$userId]);
+    $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching sellers: " . $e->getMessage());
 }
 
-// Load complaints from JSON files
-$complaints = [];
-$baseDir = realpath(__DIR__ . '/../database/user-data');
-
-if ($baseDir && is_dir($baseDir)) {
-    $residentDirs = array_diff(scandir($baseDir), ['.', '..']);
-    foreach ($residentDirs as $residentFolderID) {
-        $complaintDir = $baseDir . '/' . $residentFolderID . '/complaint';
-        if (is_dir($complaintDir)) {
-            $complaintFiles = array_diff(scandir($complaintDir), ['.', '..']);
-            foreach ($complaintFiles as $file) {
-                if (pathinfo($file, PATHINFO_EXTENSION) === 'json') {
-                    $filePath = $complaintDir . '/' . $file;
-                    $jsonData = file_get_contents($filePath);
-                    $complaint = json_decode($jsonData, true);
-                    if ($complaint) {
-                        $complaint['fileName'] = $file;
-                        $complaint['filePath'] = $filePath;
-                        $complaints[] = $complaint;
-                    }
-                }
-            }
-        }
-    }
-
-    // Sort complaints by submittedAt (latest first)
-    usort($complaints, function($a, $b) {
-        return strtotime($b['submittedAt']) - strtotime($a['submittedAt']);
-    });
+// Fetch user's own reports
+$reports = [];
+try {
+    $stmt = $connection->prepare("
+        SELECT r.*, s.business_name, u.username as seller_username
+        FROM seller_reports r
+        JOIN sellers s ON r.seller_id = s.seller_id
+        JOIN users u ON s.user_id = u.user_id
+        WHERE r.reporter_id = ?
+        ORDER BY r.created_at DESC
+    ");
+    $stmt->execute([$userId]);
+    $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching reports: " . $e->getMessage());
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Complaints</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Styles -->
+    <title>Report a Seller - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/complaint-page.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <script defer src="../scripts/central-link-navigation.js"></script>
-
-    <!-- Scripts -->
-    <script defer src="../scripts/header.js"></script>
-
 </head>
 
-<script>
-const residentID = <?= isset($_SESSION['residentID']) ? json_encode($_SESSION['residentID']) : 'null' ?>;
-</script>
-
 <body>
-    <div class="content">
-        <h1 class="page-title">Community Complaints</h1>
+    <?php include_once('header.php'); ?>
 
-        <div class="complaints-container">
-            <?php if (empty($complaints)): ?>
-            <div class="no-complaints">No complaints have been submitted yet.</div>
-            <?php else: ?>
-            <?php foreach ($complaints as $complaint): ?>
-            <?php
-                        $authorName = getResidentName($connection, $complaint['residentID']);
-                        $submittedDate = date('F j, Y, g:i a', strtotime($complaint['submittedAt']));
-                    ?>
-            <div class="complaint-card">
-                <div class="complaint-header">
-                    <h3 class="complaint-about"><?= htmlspecialchars($complaint['about']) ?></h3>
-                    <div class="complaint-author">Submitted by: <?= $authorName ?></div>
-                    <div class="complaint-date"><?= $submittedDate ?></div>
+    <div class="content">
+        <h1 class="page-title">Report a Seller</h1>
+
+        <!-- Report Form -->
+        <div class="report-form-container">
+            <form id="reportForm" class="report-form">
+                <div class="form-group">
+                    <label for="seller_id">Select Seller *</label>
+                    <select id="seller_id" name="seller_id" required>
+                        <option value="">-- Choose a seller --</option>
+                        <?php foreach ($sellers as $seller): ?>
+                        <option value="<?= $seller['seller_id'] ?>">
+                            <?= htmlspecialchars($seller['business_name'] ?: $seller['username']) ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-                <div class="complaint-body">
-                    <p><?= nl2br(htmlspecialchars($complaint['message'])) ?></p>
+
+                <div class="form-group">
+                    <label for="reason">Reason *</label>
+                    <input type="text" id="reason" name="reason" required
+                        placeholder="e.g., Fake product, Scam, Harassment">
+                </div>
+
+                <div class="form-group">
+                    <label for="details">Details *</label>
+                    <textarea id="details" name="details" rows="5" required
+                        placeholder="Describe the incident in detail..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Report</button>
+            </form>
+        </div>
+
+        <!-- User's Previous Reports -->
+        <?php if (!empty($reports)): ?>
+        <h2 class="section-title">Your Previous Reports</h2>
+        <div class="reports-list">
+            <?php foreach ($reports as $report): ?>
+            <div class="report-card">
+                <div class="report-header">
+                    <strong>Seller:</strong>
+                    <?= htmlspecialchars($report['business_name'] ?: $report['seller_username']) ?>
+                    <span class="report-status status-<?= $report['status'] ?>"><?= $report['status'] ?></span>
+                </div>
+                <div class="report-body">
+                    <p><strong>Reason:</strong> <?= htmlspecialchars($report['reason']) ?></p>
+                    <p><strong>Details:</strong> <?= nl2br(htmlspecialchars($report['details'])) ?></p>
+                    <p class="report-date">Submitted: <?= date('F j, Y, g:i a', strtotime($report['created_at'])) ?></p>
+                    <?php if (!empty($report['admin_notes'])): ?>
+                    <p class="admin-notes"><strong>Admin notes:</strong>
+                        <?= nl2br(htmlspecialchars($report['admin_notes'])) ?></p>
+                    <?php endif; ?>
                 </div>
             </div>
             <?php endforeach; ?>
-            <?php endif; ?>
         </div>
+        <?php endif; ?>
     </div>
 
-    <!-- Floating Button -->
-    <button id="openComplaintButton" class="floating-complaint-button">
-        <img src="../assets/complaint-icon.png" alt="Complaint"> File a Complaint
-    </button>
-
-    <!-- Complaint Modal Overlay -->
-    <div id="complaintOverlay" class="complaint-overlay">
-        <div class="complaint-modal">
-            <form id="complaintForm" class="complaint-form">
-                <h2>File a Complaint</h2>
-                <button type="button" id="closeComplaint" class="close-button">×</button>
-
-                <div class="form-group">
-                    <label for="complaint-about">About:</label>
-                    <input type="text" id="complaint-about" name="complaintAbout" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="complaint-text">Complaint:</label>
-                    <textarea id="complaint-text" name="complaintText" rows="6" required></textarea>
-                </div>
-
-                <div class="form-buttons">
-                    <button type="button" id="cancelComplaint" class="cancel-button">Cancel</button>
-                    <button type="submit" class="submit-button">Submit Complaint</button>
-                </div>
-            </form>
+    <!-- Notifier Modal (reused) -->
+    <div id="notifierModal" class="notifier hidden">
+        <div class="notifier-content">
+            <p id="notifierMessage"></p>
+            <button id="notifierCloseBtn" class="btn btn-primary">OK</button>
         </div>
     </div>
-
-    <script src="../scripts/complaint-form.js"></script>
 
     <?php include_once('footer.php'); ?>
+
+    <script src="../scripts/report-seller.js"></script>
 </body>
 
 </html>

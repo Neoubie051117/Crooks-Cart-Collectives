@@ -3,9 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$isLoggedIn = isset($_SESSION['user_id']);
+// Force check if session is valid
+$isLoggedIn = isset($_SESSION['user_id']) || isset($_SESSION['admin_id']);
 
-// Path detection
+// Path detection (keep your existing path detection code)
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_dir = dirname($_SERVER['PHP_SELF']);
 
@@ -28,10 +29,10 @@ if ($is_root) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/header.css">
-    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-out.css"> <!-- RENAMED -->
+    <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/sign-out.css">
 
     <script defer src="<?php echo $pathPrefix; ?>scripts/header.js"></script>
-    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-out.js"></script> <!-- RENAMED -->
+    <script defer src="<?php echo $pathPrefix; ?>scripts/sign-out.js"></script>
 </head>
 
 <body>
@@ -65,7 +66,7 @@ if ($is_root) {
             </nav>
 
             <?php if ($isLoggedIn): ?>
-            <a href="#" class="social-button logout-trigger">LOGOUT</a>
+            <a href="#" class="social-button logout-trigger">LOG OUT</a>
             <?php else: ?>
             <a href="<?php echo $pathPrefix; ?>pages/sign-in.php" class="social-button">SIGN IN</a>
             <?php endif; ?>
@@ -85,9 +86,19 @@ if ($is_root) {
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
 
         <?php if ($isLoggedIn): ?>
-        <a href="#" class="social-button logout-trigger">LOGOUT</a>
+        <a href="#" class="social-button logout-trigger">LOG OUT</a>
         <?php else: ?>
         <a href="<?php echo $pathPrefix; ?>pages/sign-in.php" class="social-button">SIGN IN</a>
+        <?php endif; ?>
+
+        <?php if ($isLoggedIn): ?>
+        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="cart-icon-link"
+            style="position: relative; margin-right: 15px;">
+            <img src="<?php echo $pathPrefix; ?>assets/image/icons/cart-icon.svg" alt="Cart"
+                style="height: 24px; width: auto;">
+            <span id="cartCount" class="cart-count"
+                style="position: absolute; top: -8px; right: -8px; background: #FF8246; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
+        </a>
         <?php endif; ?>
     </nav>
 
@@ -168,6 +179,29 @@ if ($is_root) {
             }
         });
     });
+
+    // Function to update cart count
+    async function updateCartCount() {
+        if (!document.getElementById('cartCount')) return;
+        try {
+            const response = await fetch('../database/cart-handler.php?action=get_count');
+            const data = await response.json();
+            const countEl = document.getElementById('cartCount');
+            if (data.count > 0) {
+                countEl.textContent = data.count;
+                countEl.style.display = 'inline';
+            } else {
+                countEl.style.display = 'none';
+            }
+        } catch (e) {
+            console.error('Failed to fetch cart count', e);
+        }
+    }
+
+    // Call on page load if user is logged in
+    <?php if ($isLoggedIn): ?>
+    updateCartCount();
+    <?php endif; ?>
     </script>
 </body>
 

@@ -1,96 +1,77 @@
+// Crooks-Cart-Collectives/scripts/sign-out.js
 document.addEventListener('DOMContentLoaded', () => {
     const logoutTriggers = document.querySelectorAll('.logout-trigger');
-    const modal = document.getElementById('logoutModal');
-    const confirmBtn = document.getElementById('confirmLogout');
-    const cancelBtn = document.getElementById('cancelLogout');
+    const logoutModal = document.getElementById('logoutModal');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const confirmLogout = document.getElementById('confirmLogout');
+    
+    let isProcessing = false;
 
-    if (logoutTriggers.length === 0) {
-        return;
-    }
+    if (!logoutTriggers.length || !logoutModal) return;
 
-    if (!modal || !confirmBtn || !cancelBtn) {
-        console.error('Logout modal elements not found');
-        return;
-    }
-
+    // Show modal when logout is clicked
     logoutTriggers.forEach(trigger => {
         trigger.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            logoutModal.style.display = 'flex';
         });
     });
 
-    function closeModal() {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+    // Hide modal on cancel
+    if (cancelLogout) {
+        cancelLogout.addEventListener('click', () => {
+            logoutModal.style.display = 'none';
+        });
     }
 
-    cancelBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === logoutModal) {
+            logoutModal.style.display = 'none';
         }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            closeModal();
-        }
-    });
-
-    confirmBtn.addEventListener('click', async () => {
-        try {
-            const currentPath = window.location.pathname;
-            let logoutUrl = '';
-            let redirectUrl = '';
+    // Handle confirm logout
+    if (confirmLogout) {
+        confirmLogout.addEventListener('click', async () => {
+            if (isProcessing) return;
             
-            if (currentPath.includes('/pages/')) {
-                logoutUrl = '../database/auth-handler.php';
-                redirectUrl = '../index.php';
-            } else {
-                logoutUrl = 'database/auth-handler.php';
-                redirectUrl = 'index.php';
-            }
+            isProcessing = true;
+            const originalText = confirmLogout.textContent;
+            confirmLogout.textContent = 'Logging out...';
+            confirmLogout.disabled = true;
 
-            const response = await fetch(logoutUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: 'action=signout'
-            });
-
-            let data;
             try {
-                data = await response.json();
-            } catch (e) {
-                const fallbackUrl = currentPath.includes('/pages/') 
-                    ? '../database/sign-out-handler.php' 
-                    : 'database/sign-out-handler.php';
-                
-                const fallbackResponse = await fetch(fallbackUrl, {
+                const response = await fetch('../database/sign-out-handler.php', {
                     method: 'POST',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    },
+                    credentials: 'same-origin'
                 });
-                data = await fallbackResponse.json();
-            }
 
-            window.location.href = redirectUrl;
-            
-        } catch (error) {
-            console.error('Logout error:', error);
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('/pages/')) {
-                window.location.href = '../index.php';
-            } else {
-                window.location.href = 'index.php';
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // FORCE a complete page reload from the server, not from cache
+                    // Using window.location.replace() with cache-busting parameter
+                    window.location.replace(result.redirect + '?t=' + Date.now());
+                } else {
+                    console.error('Logout error:', result.message);
+                    window.location.replace('../index.php?t=' + Date.now());
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Force reload to index.php with cache busting
+                window.location.replace('/Crooks-Cart-Collectives/index.php?t=' + Date.now());
             }
+        });
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
+            logoutModal.style.display = 'none';
         }
     });
 });

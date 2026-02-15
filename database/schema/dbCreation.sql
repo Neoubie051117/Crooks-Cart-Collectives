@@ -1,4 +1,4 @@
---This is the schema used for creating db
+-- This is the schema used for creating db
 
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;

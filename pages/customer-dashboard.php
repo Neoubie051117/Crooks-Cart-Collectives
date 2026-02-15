@@ -113,6 +113,18 @@ try {
                 <p>Start selling your products</p>
                 <a href="seller-fill-form.php" class="btn-primary">Apply Now</a>
             </div>
+
+            <div class="dashboard-card">
+                <h3>Shopping Cart</h3>
+                <p>View and manage your cart</p>
+                <a href="cart.php" class="btn-primary">Go to Cart</a>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>My Orders</h3>
+                <p>Track your purchases</p>
+                <a href="orders.php" class="btn-primary">View Orders</a>
+            </div>
         </div>
     </div>
 

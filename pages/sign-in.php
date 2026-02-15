@@ -1,3 +1,4 @@
+<?php // PHP File Content ?>
 <?php
 session_start();
 
@@ -24,6 +25,45 @@ $redirect = $_GET['redirect'] ?? '';
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <style>
+    /* Password toggle styles */
+    .password-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .password-wrapper input {
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .password-toggle img {
+        width: 20px;
+        height: 20px;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+    }
+
+    .password-toggle:hover img {
+        opacity: 1;
+    }
+    </style>
 </head>
 
 <body>
@@ -47,7 +87,13 @@ $redirect = $_GET['redirect'] ?? '';
 
             <div class="form-group">
                 <label for="password">Password*</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password">
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <button type="button" class="password-toggle" id="togglePassword" tabindex="-1"
+                        aria-label="Toggle password visibility">
+                        <img src="../assets/image/icons/password-hide.svg" alt="Hide password" id="passwordIcon">
+                    </button>
+                </div>
                 <div class="error-message" id="passwordError"></div>
             </div>
 
@@ -72,166 +118,7 @@ $redirect = $_GET['redirect'] ?? '';
 
     <?php include_once('footer.php'); ?>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('signinForm');
-        const modal = document.getElementById('notifierModal');
-        const modalMessage = document.getElementById('notifierMessage');
-        const modalClose = document.getElementById('notifierCloseBtn');
-        const identifierInput = document.getElementById('identifier');
-        const passwordInput = document.getElementById('password');
-        const identifierError = document.getElementById('identifierError');
-        const passwordError = document.getElementById('passwordError');
-
-        let isModalOpen = false;
-        let isSubmitting = false;
-
-        function showNotifier(message) {
-            if (isModalOpen) return;
-            modalMessage.textContent = message;
-            modal.classList.remove('hidden');
-            isModalOpen = true;
-        }
-
-        function closeNotifier() {
-            modal.classList.add('hidden');
-            isModalOpen = false;
-        }
-
-        function clearErrors() {
-            identifierError.textContent = '';
-            passwordError.textContent = '';
-            identifierInput.classList.remove('error');
-            passwordInput.classList.remove('error');
-        }
-
-        function showFieldError(field, message) {
-            const errorElement = field === 'identifier' ? identifierError : passwordError;
-            const inputElement = field === 'identifier' ? identifierInput : passwordInput;
-
-            errorElement.textContent = message;
-            inputElement.classList.add('error');
-        }
-
-        modalClose.addEventListener('click', closeNotifier);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeNotifier();
-        });
-
-        identifierInput.addEventListener('blur', () => {
-            if (!identifierInput.value.trim()) {
-                showFieldError('identifier', 'Email or username is required');
-            } else {
-                identifierError.textContent = '';
-                identifierInput.classList.remove('error');
-            }
-        });
-
-        passwordInput.addEventListener('blur', () => {
-            if (!passwordInput.value) {
-                showFieldError('password', 'Password is required');
-            } else {
-                passwordError.textContent = '';
-                passwordInput.classList.remove('error');
-            }
-        });
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            if (isSubmitting) return;
-
-            clearErrors();
-
-            let isValid = true;
-            if (!identifierInput.value.trim()) {
-                showFieldError('identifier', 'Email or username is required');
-                isValid = false;
-            }
-
-            if (!passwordInput.value) {
-                showFieldError('password', 'Password is required');
-                isValid = false;
-            }
-
-            if (!isValid) {
-                showNotifier('Please fix the errors above');
-                return;
-            }
-
-            isSubmitting = true;
-            const submitBtn = form.querySelector('.btn-primary');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Signing In...';
-            submitBtn.disabled = true;
-
-            try {
-                const formData = new FormData(form);
-
-                const response = await fetch('../database/auth-handler.php', {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'same-origin'
-                });
-
-                const responseText = await response.text();
-                let result;
-
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    console.error('JSON Parse Error:', responseText);
-                    showNotifier('Server returned invalid response. Please try again.');
-                    return;
-                }
-
-                if (result.status === 'success') {
-                    showNotifier('Login successful! Redirecting...');
-
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const redirectParam = urlParams.get('redirect');
-
-                    let redirectUrl = result.redirect;
-                    if (redirectParam) {
-                        redirectUrl = redirectParam.startsWith('../') ? redirectParam.substring(2) :
-                            redirectParam;
-                    }
-
-                    setTimeout(() => {
-                        window.location.href = redirectUrl;
-                    }, 1500);
-                } else {
-                    const errorMessages = {
-                        'Invalid username or email': 'The email or username you entered is not registered.',
-                        'Invalid password': 'The password you entered is incorrect.',
-                        'All fields are required': 'Please fill in all required fields.'
-                    };
-
-                    const message = errorMessages[result.message] || result.message ||
-                        'Login failed. Please try again.';
-                    showNotifier(message);
-
-                    if (result.message === 'Invalid username or email') {
-                        showFieldError('identifier', 'Email or username not found');
-                    } else if (result.message === 'Invalid password') {
-                        showFieldError('password', 'Incorrect password');
-                    }
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                showNotifier('Network error. Please check your connection and try again.');
-            } finally {
-                isSubmitting = false;
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-
-        setTimeout(() => {
-            identifierInput.focus();
-        }, 100);
-    });
-    </script>
+    <script src="../scripts/sign-in.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 filesToCheck = [
-    #File Structure
+    # File Structure
     "logs/summary fetch content/Project_Structure.txt",
     "database/schema/dbCreation.sql",
     
@@ -20,6 +20,11 @@ filesToCheck = [
     "pages/product-details.php",
     "pages/report-seller.php",
 
+    # Missing Pages (now added)
+    "pages/cart.php",
+    "pages/seller-add-product.php",
+    "pages/seller-products.php",
+
     # Scripts directory (JS)
     "scripts/index.js",
     "scripts/header.js",
@@ -29,12 +34,13 @@ filesToCheck = [
     "scripts/central-link-navigation.js",
     "scripts/error-handler.js",
     "scripts/showcase-slider.js",
-    "scripts/logout-handler.js",
     "scripts/product-details.js",
     "scripts/report-seller.js",
 
+    # Missing Script (now added)
+    "scripts/sign-out.js",
+
     # Database directory
-    "database/auth-handler.php",
     "database/customer-profile-handler.php",
     "database/report-seller-handler.php",
     "database/database-connect.php",
@@ -42,16 +48,22 @@ filesToCheck = [
     "database/sign-out-handler.php",
     "database/sign-up-handler.php",
 
-    # Styles directory (CSS)
-    # "styles/complaint-page.css",
+    # Missing Database files (now added)
+    "database/cart-handler.php",
+    "database/product-handler.php",
+    "database/validation.php",
+
+    # # Styles directory (CSS)
+    # "styles/report-seller.css",
     # "styles/footer.css",
     # "styles/header.css",
     # "styles/home.css",
     # "styles/index.css",
-    # "styles/logout-modal.css",
+    # "styles/product-details.css",
     # "styles/products.css",
     # "styles/profile.css",
     # "styles/seller-registration.css",
     # "styles/sign-in.css",
+    # "styles/sign-out.css",
     # "styles/sign-up.css",
 ]
