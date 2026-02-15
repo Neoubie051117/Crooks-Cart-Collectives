@@ -1,3 +1,4 @@
+<?php // PHP File Content ?>
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -6,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Force check if session is valid
 $isLoggedIn = isset($_SESSION['user_id']) || isset($_SESSION['admin_id']);
 
-// Path detection (keep your existing path detection code)
+// Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_dir = dirname($_SERVER['PHP_SELF']);
 
@@ -58,11 +59,13 @@ if ($is_root) {
 
                 <?php if ($isLoggedIn): ?>
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-                <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
-                <?php endif; ?>
-
+                <!-- Cart and Orders for logged in users -->
+                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <?php else: ?>
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
+                <?php endif; ?>
             </nav>
 
             <?php if ($isLoggedIn): ?>
@@ -79,26 +82,18 @@ if ($is_root) {
 
         <?php if ($isLoggedIn): ?>
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-        <a href="<?php echo $pathPrefix; ?>pages/customer-profile.php" class="nav-link">PROFILE</a>
-        <?php endif; ?>
-
+        <!-- Cart and Orders in mobile nav for logged in users -->
+        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <?php else: ?>
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
+        <?php endif; ?>
 
         <?php if ($isLoggedIn): ?>
         <a href="#" class="social-button logout-trigger">LOG OUT</a>
         <?php else: ?>
         <a href="<?php echo $pathPrefix; ?>pages/sign-in.php" class="social-button">SIGN IN</a>
-        <?php endif; ?>
-
-        <?php if ($isLoggedIn): ?>
-        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="cart-icon-link"
-            style="position: relative; margin-right: 15px;">
-            <img src="<?php echo $pathPrefix; ?>assets/image/icons/cart-icon.svg" alt="Cart"
-                style="height: 24px; width: auto;">
-            <span id="cartCount" class="cart-count"
-                style="position: absolute; top: -8px; right: -8px; background: #FF8246; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
-        </a>
         <?php endif; ?>
     </nav>
 
@@ -123,86 +118,10 @@ if ($is_root) {
     </div>
     <?php endif; ?>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const menuButton = document.getElementById('menuButton');
-        const mobileNav = document.getElementById('mobileNav');
-
-        if (menuButton && mobileNav) {
-            const toggleMenu = () => {
-                mobileNav.classList.toggle('open');
-                menuButton.classList.toggle('active');
-                document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-            };
-
-            menuButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMenu();
-            });
-
-            document.addEventListener('click', function(event) {
-                if (mobileNav.classList.contains('open') &&
-                    !mobileNav.contains(event.target) &&
-                    !menuButton.contains(event.target)) {
-                    toggleMenu();
-                }
-            });
-
-            mobileNav.querySelectorAll('a').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    if (mobileNav.classList.contains('open')) {
-                        toggleMenu();
-                    }
-                });
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
-                    toggleMenu();
-                }
-            });
-        }
-
-        // Highlight active link
-        const currentPage = '<?php echo $current_page; ?>';
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href) {
-                const filename = href.split('/').pop();
-                if (filename === currentPage ||
-                    (currentPage === 'index.php' && filename === 'index.php')) {
-                    link.classList.add('active');
-                }
-            }
-        });
-    });
-
-    // Function to update cart count
-    async function updateCartCount() {
-        if (!document.getElementById('cartCount')) return;
-        try {
-            const response = await fetch('../database/cart-handler.php?action=get_count');
-            const data = await response.json();
-            const countEl = document.getElementById('cartCount');
-            if (data.count > 0) {
-                countEl.textContent = data.count;
-                countEl.style.display = 'inline';
-            } else {
-                countEl.style.display = 'none';
-            }
-        } catch (e) {
-            console.error('Failed to fetch cart count', e);
-        }
-    }
-
-    // Call on page load if user is logged in
+    <!-- Cart count display (optional - uncomment if you want cart count badge)
     <?php if ($isLoggedIn): ?>
-    updateCartCount();
-    <?php endif; ?>
-    </script>
+    <span id="cartCount" class="cart-count" style="display: none;">0</span>
+    <?php endif; ?> -->
 </body>
 
 </html>

@@ -7,7 +7,6 @@ filesToCheck = [
     "index.php",
 
     # Pages directory (PHP)
-    "pages/home.php",
     "pages/header.php",
     "pages/footer.php",
     "pages/sign-in.php",
@@ -28,7 +27,6 @@ filesToCheck = [
     # Scripts directory (JS)
     "scripts/index.js",
     "scripts/header.js",
-    "scripts/home.js",
     "scripts/sign-in.js",
     "scripts/sign-up.js",
     "scripts/central-link-navigation.js",
@@ -56,9 +54,8 @@ filesToCheck = [
     # # Styles directory (CSS)
     # "styles/report-seller.css",
     # "styles/footer.css",
-    # "styles/header.css",
-    # "styles/home.css",
-    # "styles/index.css",
+    "styles/header.css",
+    "styles/index.css",
     # "styles/product-details.css",
     # "styles/products.css",
     # "styles/profile.css",
