@@ -18,8 +18,12 @@ filesToCheck = [
     "database/customer-profile-handler.php",
     "database/product-handler.php",
     "database/cart-handler.php",
+    "database/checkout-handler.php",
+    "database/order-handler.php",
+    "database/review-handler.php",
     "database/report-seller-handler.php",
     "database/validation.php",
+    "database/error_log.txt",
 
     # =========================
     # PAGES
@@ -33,15 +37,18 @@ filesToCheck = [
     "pages/sign-in.php",
     "pages/sign-up.php",
     "pages/cart.php",
+    "pages/checkout.php",
     "pages/products.php",
     "pages/product-details.php",
     "pages/report-seller.php",
+    "pages/orders.php",
     "pages/customer-dashboard.php",
     "pages/customer-profile.php",
     "pages/seller-dashboard.php",
     "pages/seller-fill-form.php",
     "pages/seller-add-product.php",
     "pages/seller-products.php",
+    "pages/seller-orders.php",
 
     # =========================
     # SCRIPTS
@@ -57,21 +64,28 @@ filesToCheck = [
     "scripts/showcase-slider.js",
     "scripts/product-details.js",
     "scripts/report-seller.js",
+    "scripts/checkout.js",
+    "scripts/orders.js",
+    "scripts/seller-orders.js",
 
     # =========================
     # STYLES
     # =========================
     "styles/about.css",
     "styles/cart.css",
+    "styles/checkout.css",
     "styles/contact.css",
+    "styles/customer-dashboard.css",
     "styles/footer.css",
     "styles/header.css",
     "styles/index.css",
+    "styles/orders.css",
     "styles/privacy-policy.css",
     "styles/product-details.css",
     "styles/products.css",
     "styles/profile.css",
     "styles/report-seller.css",
+    "styles/seller-orders.css",
     "styles/seller-registration.css",
     "styles/sign-in.css",
     "styles/sign-out.css",

@@ -7,7 +7,7 @@ USE crooks_cart_collectives;
 INSERT INTO users 
 (first_name, last_name, email, username, password)
 VALUES 
-('Alex', 'Reyes', 'alex@test.com', 'alexseller', 'hash1');
+('Alex', 'Reyes', 'alex@test.com', 'alex', 'alex');
 
 INSERT INTO sellers 
 (user_id, business_name, is_verified, verification_date)
@@ -19,8 +19,8 @@ SET @seller1 = LAST_INSERT_ID();
 INSERT INTO products
 (seller_id, name, description, price, category, stock_quantity, image_path, is_active)
 VALUES
-(@seller1,'Wireless Mouse','Bluetooth mouse',899.00,'Electronics',30,'assets/PlaceholderAssetProduct.png',TRUE),
-(@seller1,'Keyboard RGB','Mechanical keyboard',2799.00,'Electronics',15,'assets/PlaceholderAssetProduct.png',TRUE);
+(@seller1,'Wireless Mouse','Bluetooth mouse',899.00,'Electronics',30,'assets/image/icons/seller-product-placeholder.png',TRUE),
+(@seller1,'Keyboard RGB','Mechanical keyboard',2799.00,'Electronics',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
 
 
 /* ===============================
@@ -30,7 +30,7 @@ VALUES
 INSERT INTO users 
 (first_name, last_name, email, username, password)
 VALUES 
-('Brian', 'Lopez', 'brian@test.com', 'brianseller', 'hash2');
+('Brian', 'Lopez', 'brian@test.com', 'brian', 'brian');
 
 INSERT INTO sellers 
 (user_id, business_name, is_verified, verification_date)
@@ -42,8 +42,8 @@ SET @seller2 = LAST_INSERT_ID();
 INSERT INTO products
 (seller_id, name, description, price, category, stock_quantity, image_path, is_active)
 VALUES
-(@seller2,'GTX Graphics Card','Gaming GPU',12999.00,'Components',5,'assets/PlaceholderAssetProduct.png',TRUE),
-(@seller2,'RAM 16GB','DDR4 RAM kit',3499.00,'Components',15,'assets/PlaceholderAssetProduct.png',TRUE);
+(@seller2,'GTX Graphics Card','Gaming GPU',12999.00,'Components',5,'assets/image/icons/seller-product-placeholder.png',TRUE),
+(@seller2,'RAM 16GB','DDR4 RAM kit',3499.00,'Components',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
 
 
 /* ===============================
@@ -53,7 +53,7 @@ VALUES
 INSERT INTO users 
 (first_name, last_name, email, username, password)
 VALUES 
-('Carlo', 'Mendez', 'carlo@test.com', 'carloseller', 'hash3');
+('Carlo', 'Mendez', 'carlo@test.com', 'carlo', 'carlo');
 
 INSERT INTO sellers 
 (user_id, business_name, is_verified, verification_date)
@@ -65,8 +65,8 @@ SET @seller3 = LAST_INSERT_ID();
 INSERT INTO products
 (seller_id, name, description, price, category, stock_quantity, image_path, is_active)
 VALUES
-(@seller3,'Android Phone','6GB RAM phone',8999.00,'Mobile',20,'assets/PlaceholderAssetProduct.png',TRUE),
-(@seller3,'Bluetooth Earbuds','TWS earbuds',1999.00,'Audio',18,'assets/PlaceholderAssetProduct.png',TRUE);
+(@seller3,'Android Phone','6GB RAM phone',8999.00,'Mobile',20,'assets/image/icons/seller-product-placeholder.png',TRUE),
+(@seller3,'Bluetooth Earbuds','TWS earbuds',1999.00,'Audio',18,'assets/image/icons/seller-product-placeholder.png',TRUE);
 
 
 /* ===============================
@@ -76,7 +76,7 @@ VALUES
 INSERT INTO users 
 (first_name, last_name, email, username, password)
 VALUES 
-('Derek', 'Cruz', 'derek@test.com', 'derekseller', 'hash4');
+('Derek', 'Cruz', 'derek@test.com', 'derek', 'derek');
 
 INSERT INTO sellers 
 (user_id, business_name, is_verified, verification_date)
@@ -88,8 +88,8 @@ SET @seller4 = LAST_INSERT_ID();
 INSERT INTO products
 (seller_id, name, description, price, category, stock_quantity, image_path, is_active)
 VALUES
-(@seller4,'Smart TV 43 inch','Android TV',17999.00,'Home',6,'assets/PlaceholderAssetProduct.png',TRUE),
-(@seller4,'Robot Vacuum','Auto cleaner',15999.00,'Home',4,'assets/PlaceholderAssetProduct.png',TRUE);
+(@seller4,'Smart TV 43 inch','Android TV',17999.00,'Home',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
+(@seller4,'Robot Vacuum','Auto cleaner',15999.00,'Home',4,'assets/image/icons/seller-product-placeholder.png',TRUE);
 
 
 /* ===============================
@@ -99,7 +99,7 @@ VALUES
 INSERT INTO users 
 (first_name, last_name, email, username, password)
 VALUES 
-('Evan', 'Torres', 'evan@test.com', 'evanseller', 'hash5');
+('Evan', 'Torres', 'evan@test.com', 'evan', 'evan');
 
 INSERT INTO sellers 
 (user_id, business_name, is_verified, verification_date)
@@ -111,5 +111,5 @@ SET @seller5 = LAST_INSERT_ID();
 INSERT INTO products
 (seller_id, name, description, price, category, stock_quantity, image_path, is_active)
 VALUES
-(@seller5,'Gaming Chair','Ergonomic chair',8999.00,'Gaming',6,'assets/PlaceholderAssetProduct.png',TRUE),
-(@seller5,'VR Headset','Virtual reality',15999.00,'Gaming',3,'assets/PlaceholderAssetProduct.png',TRUE);
+(@seller5,'Gaming Chair','Ergonomic chair',8999.00,'Gaming',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
+(@seller5,'VR Headset','Virtual reality',15999.00,'Gaming',3,'assets/image/icons/seller-product-placeholder.png',TRUE);

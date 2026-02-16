@@ -12,15 +12,15 @@ $pathPrefix = $is_root ? '' : '../';
         </div>
         <div class="socials">
             <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
-                <img src="<?php echo $pathPrefix; ?>assets/image/icons/icons8-facebook.svg" alt="Facebook"
+                <img src="<?php echo $pathPrefix; ?>assets/image/icons/facebook.svg" alt="Facebook"
                     onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/facebook.svg';">
             </a>
             <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-                <img src="<?php echo $pathPrefix; ?>assets/image/icons/icons8-instagram.svg" alt="Instagram"
+                <img src="<?php echo $pathPrefix; ?>assets/image/icons/instagram.svg" alt="Instagram"
                     onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
             </a>
             <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer">
-                <img src="<?php echo $pathPrefix; ?>assets/image/icons/icons8-youtube.svg" alt="YouTube"
+                <img src="<?php echo $pathPrefix; ?>assets/image/icons/youtube.svg" alt="YouTube"
                     onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
             </a>
         </div>
