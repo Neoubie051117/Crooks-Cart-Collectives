@@ -1,1 +1,10 @@
-[16-Feb-2026 09:23:45 Europe/Berlin] Checkout error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'field list'
+[16-Feb-2026 10:05:37 Europe/Berlin] Signin attempt for identifier: lance
+[16-Feb-2026 10:05:37 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
+[16-Feb-2026 11:07:24 Europe/Berlin] Signin attempt for identifier: brian
+[16-Feb-2026 11:07:24 Europe/Berlin] User login successful: brian (ID: 3) - Redirecting to: ../pages/seller-dashboard.php
+[16-Feb-2026 11:07:26 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[16-Feb-2026 11:07:34 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[16-Feb-2026 11:10:11 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
+[16-Feb-2026 11:10:11 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
+[16-Feb-2026 12:34:52 Europe/Berlin] Signin attempt for identifier: lance
+[16-Feb-2026 12:34:52 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php

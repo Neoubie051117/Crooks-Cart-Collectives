@@ -26,9 +26,9 @@ $shipping_address = $user['address'];
 try {
     $connection->beginTransaction();
 
-    // Get cart items
+    // Get cart items with seller info
     $stmt = $connection->prepare("
-        SELECT ci.*, p.price, p.seller_id
+        SELECT ci.*, p.price, p.seller_id, p.name, p.stock_quantity
         FROM cart_items ci
         JOIN products p ON ci.product_id = p.product_id
         WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
@@ -41,30 +41,72 @@ try {
         exit;
     }
 
-    // Calculate total
+    // Calculate total and validate stock
     $total_amount = 0;
     foreach ($cartItems as $item) {
         $total_amount += $item['price'] * $item['quantity'];
+        
+        // Check stock
+        if ($item['quantity'] > $item['stock_quantity']) {
+            throw new Exception("Insufficient stock for {$item['name']}");
+        }
     }
 
-    // Insert into customer_orders
+    // 1. Insert into customer_orders (NO status column - removed from INSERT)
     $stmt = $connection->prepare("
-        INSERT INTO customer_orders (customer_id, total_amount, shipping_address, payment_method, order_date, status)
-        VALUES (?, ?, ?, 'Cash on Delivery', NOW(), 'pending')
+        INSERT INTO customer_orders (customer_id, total_amount, shipping_address, payment_method, order_date)
+        VALUES (?, ?, ?, 'Cash on Delivery', NOW())
     ");
     $stmt->execute([$customer_id, $total_amount, $shipping_address]);
     $order_id = $connection->lastInsertId();
 
-    // Insert each item into purchase_items
-    $insertItem = $connection->prepare("
-        INSERT INTO purchase_items (order_id, product_id, quantity, price_at_time, seller_status)
-        VALUES (?, ?, ?, ?, 'pending')
-    ");
+    // 2. Group items by seller
+    $sellerGroups = [];
     foreach ($cartItems as $item) {
-        $insertItem->execute([$order_id, $item['product_id'], $item['quantity'], $item['price']]);
+        $sellerGroups[$item['seller_id']][] = $item;
     }
 
-    // Clear the cart
+    // 3. Create seller_orders for each seller
+    $sellerOrderMap = []; // Maps seller_id to seller_order_id
+    foreach ($sellerGroups as $seller_id => $items) {
+        $seller_total = 0;
+        foreach ($items as $item) {
+            $seller_total += $item['price'] * $item['quantity'];
+        }
+        
+        $stmt = $connection->prepare("
+            INSERT INTO seller_orders (order_id, seller_id, seller_total, seller_status)
+            VALUES (?, ?, ?, 'pending')
+        ");
+        $stmt->execute([$order_id, $seller_id, $seller_total]);
+        $sellerOrderMap[$seller_id] = $connection->lastInsertId();
+    }
+
+    // 4. Insert into purchase_items (this is where status belongs)
+    $insertItem = $connection->prepare("
+        INSERT INTO purchase_items (seller_order_id, product_id, quantity, price_at_time, status)
+        VALUES (?, ?, ?, ?, 'pending')
+    ");
+    
+    foreach ($cartItems as $item) {
+        $seller_order_id = $sellerOrderMap[$item['seller_id']];
+        $insertItem->execute([
+            $seller_order_id,
+            $item['product_id'],
+            $item['quantity'],
+            $item['price']
+        ]);
+        
+        // Update product stock
+        $updateStock = $connection->prepare("
+            UPDATE products 
+            SET stock_quantity = stock_quantity - ? 
+            WHERE product_id = ?
+        ");
+        $updateStock->execute([$item['quantity'], $item['product_id']]);
+    }
+
+    // 5. Clear the cart
     $stmt = $connection->prepare("
         DELETE FROM cart_items
         WHERE cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
@@ -83,6 +125,6 @@ try {
 } catch (Exception $e) {
     $connection->rollBack();
     error_log("Checkout error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Failed to place order. Please try again.']);
+    echo json_encode(['status' => 'error', 'message' => 'Failed to place order: ' . $e->getMessage()]);
 }
 ?>

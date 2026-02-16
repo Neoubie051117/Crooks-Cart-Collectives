@@ -1,3 +1,4 @@
+/* JavaScript File Content */
 document.addEventListener('DOMContentLoaded', () => {
     const ordersList = document.getElementById('sellerOrdersList');
 
@@ -38,14 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
             order.items.forEach(item => {
                 const image = item.image_path ? '../' + item.image_path : '../assets/image/icons/PlaceholderAssetProduct.png';
                 html += `
-                    <div class="order-item" data-item-id="${item.order_item_id}">
-                        <img src="${image}" alt="${item.name}" class="order-item-image">
-                        <div class="order-item-details">
+                    <div class="order-container" data-item-id="${item.order_item_id}">
+                        <img src="${image}" alt="${item.name}" class="order-container-image">
+                        <div class="order-container-details">
                             <h4>${item.name}</h4>
                             <p class="item-price">₱${Number(item.price_at_time).toFixed(2)} x ${item.quantity}</p>
                         </div>
                         <div class="item-status ${item.seller_status}">${item.seller_status}</div>
-                        <div class="item-actions">
+                        <div class="order-container-actions">
                             ${item.seller_status === 'pending' ? `<button class="status-btn ship" data-item="${item.order_item_id}" data-status="shipped">Mark Shipped</button>` : ''}
                             ${item.seller_status === 'shipped' ? `<button class="status-btn deliver" data-item="${item.order_item_id}" data-status="delivered">Mark Delivered</button>` : ''}
                         </div>
@@ -65,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         ordersList.innerHTML = html;
 
-        // Attach status update events
         document.querySelectorAll('.status-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const itemId = btn.dataset.item;

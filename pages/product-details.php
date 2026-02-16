@@ -145,13 +145,11 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <button class="btn btn-primary add-to-cart-btn"
                             data-product-id="<?php echo $product['product_id']; ?>"
                             <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            <span class="btn-icon">🛒</span>
                             <span class="btn-text">Add to Cart</span>
                         </button>
                         <button class="btn btn-secondary buy-now-btn"
                             data-product-id="<?php echo $product['product_id']; ?>"
                             <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            <span class="btn-icon">⚡</span>
                             <span class="btn-text">Buy Now</span>
                         </button>
                         <?php else: ?>
@@ -161,22 +159,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                             <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>
-                    </div>
-
-                    <!-- Product highlights/specs (optional) -->
-                    <div class="product-highlights">
-                        <div class="highlight-item">
-                            <span class="highlight-icon">📦</span>
-                            <span class="highlight-text">Free Shipping on orders over ₱1000</span>
-                        </div>
-                        <div class="highlight-item">
-                            <span class="highlight-icon">🔄</span>
-                            <span class="highlight-text">30-day returns</span>
-                        </div>
-                        <div class="highlight-item">
-                            <span class="highlight-icon">🛡️</span>
-                            <span class="highlight-text">Secure transaction</span>
-                        </div>
                     </div>
                 </div>
             </div>

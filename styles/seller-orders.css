@@ -1,4 +1,6 @@
+/* CSS File Content */
 /* Seller Orders Page */
+
 .seller-orders-list {
     display: flex;
     flex-direction: column;
@@ -48,18 +50,18 @@
     margin-bottom: 20px;
 }
 
-.order-item {
+.order-container {
     display: flex;
     gap: 15px;
     padding: 15px 0;
     border-bottom: 1px solid #f0f0f0;
     align-items: center;
 }
-.order-item:last-child {
+.order-container:last-child {
     border-bottom: none;
 }
 
-.order-item-image {
+.order-container-image {
     width: 60px;
     height: 60px;
     object-fit: cover;
@@ -67,11 +69,11 @@
     border: 1px solid #ddd;
 }
 
-.order-item-details {
+.order-container-details {
     flex: 1;
 }
 
-.order-item-details h4 {
+.order-container-details h4 {
     margin: 0 0 5px 0;
     color: #333;
 }
@@ -93,7 +95,7 @@
 .item-status.shipped { background: #cce5ff; color: #004085; }
 .item-status.delivered { background: #d4edda; color: #155724; }
 
-.item-actions {
+.order-container-actions {
     margin-left: auto;
     display: flex;
     gap: 10px;
@@ -147,10 +149,10 @@
         flex-direction: column;
         align-items: flex-start;
     }
-    .order-item {
+    .order-container {
         flex-wrap: wrap;
     }
-    .item-actions {
+    .order-container-actions {
         margin-left: 0;
         width: 100%;
         justify-content: flex-start;
