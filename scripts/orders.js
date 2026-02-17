@@ -1,4 +1,6 @@
-/* Crooks-Cart-Collectives/scripts/orders.js */
+/* Crooks-Cart-Collectives/scripts/orders.js - REVISED */
+/* Seller name moved into item details, product link removed */
+
 document.addEventListener('DOMContentLoaded', () => {
     const ordersList = document.getElementById('ordersList');
     const reviewModal = document.getElementById('reviewModal');
@@ -11,62 +13,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelCancel = document.getElementById('cancelCancel');
     const confirmCancel = document.getElementById('confirmCancel');
     
-    const notifierModal = document.getElementById('notifierModal');
-    const notifierMessage = document.getElementById('notifierMessage');
-    const notifierClose = document.getElementById('notifierClose');
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const notificationClose = document.getElementById('notificationClose');
     
     let currentRating = 0;
     let currentCancelItemId = null;
 
-    function showModal(modal) { modal.style.display = 'flex'; }
-    function hideModal(modal) { modal.style.display = 'none'; }
+    // ===== MODAL FUNCTIONS =====
+    function showModal(modal) { 
+        if (modal) modal.style.display = 'flex'; 
+    }
+    
+    function hideModal(modal) { 
+        if (modal) modal.style.display = 'none'; 
+    }
 
     function hideAllModals() {
         hideModal(reviewModal);
         hideModal(cancelModal);
-        hideModal(notifierModal);
+        hideModal(notificationModal);
         resetReviewForm();
         currentCancelItemId = null;
     }
 
-    function showNotifier(message) {
-        notifierMessage.textContent = message;
-        showModal(notifierModal);
+    function showNotification(message) {
+        if (notificationMessage) notificationMessage.textContent = message;
+        showModal(notificationModal);
     }
 
-    // Star rating (unchanged)
-    stars.forEach(star => {
-        star.addEventListener('mouseover', () => {
-            const val = parseInt(star.dataset.value);
-            stars.forEach((s, i) => {
-                if (i < val) s.classList.add('hover');
-                else s.classList.remove('hover');
+    // ===== STAR RATING =====
+    if (stars.length > 0) {
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                const val = parseInt(star.dataset.value);
+                stars.forEach((s, i) => {
+                    if (i < val) s.classList.add('hover');
+                    else s.classList.remove('hover');
+                });
+            });
+            
+            star.addEventListener('mouseout', () => {
+                stars.forEach(s => s.classList.remove('hover'));
+            });
+            
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.value);
+                if (ratingInput) ratingInput.value = currentRating;
+                
+                stars.forEach((s, i) => {
+                    if (i < currentRating) {
+                        s.classList.add('active');
+                        s.textContent = '★';
+                    } else {
+                        s.classList.remove('active');
+                        s.textContent = '☆';
+                    }
+                });
             });
         });
-        star.addEventListener('mouseout', () => {
-            stars.forEach(s => s.classList.remove('hover'));
-        });
-        star.addEventListener('click', () => {
-            currentRating = parseInt(star.dataset.value);
-            ratingInput.value = currentRating;
-            stars.forEach((s, i) => {
-                if (i < currentRating) {
-                    s.classList.add('active');
-                    s.textContent = '★';
-                } else {
-                    s.classList.remove('active');
-                    s.textContent = '☆';
-                }
-            });
-        });
-    });
+    }
 
-    // Load orders
+    // ===== LOAD ORDERS =====
     async function loadOrders() {
+        if (!ordersList) return;
+        
         try {
             const response = await fetch('../database/order-handler.php?action=get_customer_orders');
             const result = await response.json();
-            console.log('Orders response:', result); // Debug: see what the server returns
+            
             if (result.status === 'success') {
                 renderOrders(result.data);
             } else {
@@ -78,139 +93,208 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render orders with fallback values
+    // ===== RENDER ORDERS - SELLER NAME IN ITEM DETAILS =====
     function renderOrders(orders) {
-    if (!orders || orders.length === 0) {
-        ordersList.innerHTML = `
-            <div class="empty-orders">
-                <p>You haven't placed any orders yet.</p>
-                <a href="products.php" class="btn">Start Shopping</a>
-            </div>
-        `;
-        return;
-    }
-
-    let html = '';
-
-    orders.forEach(order => {
-        const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
-        const orderStatus = order.order_status || 'pending';
-        const total = Number(order.total_amount).toFixed(2);
-        const shippingAddress = escapeHtml(order.shipping_address || 'Address not available');
-
-        html += `
-            <div class="order-container">
-                <div class="order-header">
-                    <div class="order-header-left">
-                        <span class="order-id">Order #${order.order_id}</span>
-                        <span class="order-date">${orderDate}</span>
-                    </div>
-                    <div class="order-header-right">
-                        <span class="order-total">₱${total}</span>
-                        <span class="order-status-badge ${orderStatus}">${orderStatus}</span>
-                    </div>
+        if (!orders || orders.length === 0) {
+            ordersList.innerHTML = `
+                <div class="empty-orders">
+                    <p>You haven't placed any orders yet.</p>
+                    <a href="products.php" class="btn">Start Shopping</a>
                 </div>
+            `;
+            return;
+        }
 
-                <div class="order-body">
-                    <div class="order-items-column">
-                        <div class="order-items">
-        `;
+        let html = '';
 
-        order.items.forEach(item => {
-            const imagePath = getImagePath(item.image_path);
-            const itemStatus = item.status || 'pending';
-            const canCancel = ['pending', 'confirmed'].includes(itemStatus);
-            const reviewed = item.reviewed > 0;
-            const productName = escapeHtml(item.name || 'Product');
-            const sellerName = escapeHtml(item.business_name || 'Unknown Seller');
-            const priceAtTime = Number(item.price_at_time).toFixed(2);
-            const quantity = item.quantity;
-            const subtotal = Number(item.subtotal || (item.price_at_time * item.quantity)).toFixed(2);
+        orders.forEach(order => {
+            const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
+            const orderStatus = order.order_status || 'pending';
+            const total = Number(order.total_amount).toFixed(2);
+            const shippingAddress = escapeHtml(order.shipping_address || 'Address not available');
 
             html += `
-                <div class="order-item" data-status="${itemStatus}">
-                    <img src="${imagePath}" alt="${productName}" class="order-item-image"
-                         onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                    
-                    <div class="order-item-details">
-                        <div class="order-item-title">
-                            <a href="product-details.php?id=${item.product_id}" class="product-link">
-                                ${productName}
-                            </a>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-header-left">
+                            <span class="order-id">Order #${order.order_id}</span>
+                            <span class="order-date">${orderDate}</span>
                         </div>
-                        
-                        <div class="order-item-seller">${sellerName}</div>
-                        
-                        <div class="order-item-pricing">
-                            <span class="order-item-price">₱${priceAtTime}</span>
-                            <span class="order-item-quantity">× ${quantity}</span>
-                            <span class="order-item-subtotal">₱${subtotal}</span>
+                        <div class="order-header-right">
+                            <span class="order-status-badge ${orderStatus}">${orderStatus}</span>
                         </div>
-                        
-                        <div class="order-item-status-badge ${itemStatus}">${itemStatus}</div>
-                        
-                        <div class="order-item-actions">
+                    </div>
+
+                    <div class="order-body">
+                        <!-- Column 1: Order Items -->
+                        <div class="order-items-column">
+                            <div class="order-items">
             `;
 
-            if (itemStatus === 'delivered' && !reviewed) {
-                html += `<button class="action-btn review" data-item="${item.order_item_id}" data-product="${item.product_id}">Write Review</button>`;
-            } else if (reviewed) {
-                html += `<span class="reviewed-badge">✓ Reviewed</span>`;
-            }
-            
-            if (canCancel) {
-                html += `<button class="action-btn cancel" data-item="${item.order_item_id}">Cancel Item</button>`;
-            }
+            // Group items by seller
+            const itemsBySeller = {};
+            order.items.forEach(item => {
+                const sellerName = item.business_name || 'Unknown Seller';
+                if (!itemsBySeller[sellerName]) {
+                    itemsBySeller[sellerName] = {
+                        sellerName: sellerName,
+                        items: [],
+                        totalQuantity: 0
+                    };
+                }
+                itemsBySeller[sellerName].items.push(item);
+                itemsBySeller[sellerName].totalQuantity += item.quantity;
+            });
 
-            html += `<a href="product-details.php?id=${item.product_id}" class="action-btn view">View Product</a>`;
+            // Render items - seller name inside item details
+            for (const [sellerName, sellerData] of Object.entries(itemsBySeller)) {
+                sellerData.items.forEach(item => {
+                    const imagePath = getImagePath(item.image_path);
+                    const productName = escapeHtml(item.name || 'Product');
+
+                    html += `
+                        <div class="order-item">
+                            <img src="${imagePath}" alt="${productName}" class="order-item-image"
+                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                            
+                            <div class="order-item-details">
+                                <div class="order-item-seller">${escapeHtml(sellerName)}</div>
+                                <div class="order-item-gap"></div>
+                                <div class="order-item-title">${productName}</div>
+                                <div class="order-item-meta">
+
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
 
             html += `
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Price Summary -->
+                        <div class="order-price-summary">
+                            <div class="price-summary-title">Order Summary</div>
+            `;
+
+            // Calculate subtotal from items
+            let subtotal = 0;
+            order.items.forEach(item => {
+                subtotal += Number(item.subtotal || (item.price_at_time * item.quantity));
+            });
+
+            // Calculate total quantity
+            const totalQuantity = order.items.reduce((sum, item) => sum + item.quantity, 0);
+
+            html += `
+                            <div class="price-row">
+                                <span>Quantity</span>
+                                <span class="price-value">${totalQuantity}</span>
+                            </div>
+                            
+                            <div class="price-divider"></div>
+                            
+                            <div class="price-row">
+                                <span>Subtotal</span>
+                                <span class="price-value">₱${subtotal.toFixed(2)}</span>
+                            </div>
+                            
+                            <div class="price-row">
+                                <span>Shipping Fee</span>
+                                <span class="price-value">Free</span>
+                            </div>
+                            
+                            <div class="price-divider"></div>
+                            
+                            <div class="price-row price-total">
+                                <span>Total</span>
+                                <span class="price-value">₱${total}</span>
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Shipping + Actions -->
+                        <div class="order-shipping-column">
+                            <div class="order-shipping-location">
+                                <div class="shipping-address-title">Shipping Address</div>
+                                <div class="shipping-address-text">${shippingAddress}</div>
+                            </div>
+
+                            <div class="order-item-actions">
+            `;
+
+            // Add action buttons for each item (only View Product and action buttons)
+            order.items.forEach(item => {
+                const itemStatus = item.status || 'pending';
+                const canCancel = ['pending', 'confirmed'].includes(itemStatus);
+                const reviewed = item.reviewed > 0;
+
+                if (itemStatus === 'delivered' && !reviewed) {
+                    html += `
+                        <button class="action-btn action-btn-review" 
+                                data-item="${item.order_item_id}" 
+                                data-product="${item.product_id}">
+                            Write Review
+                        </button>
+                    `;
+                } else if (reviewed) {
+                    html += `<span class="reviewed-badge">✓ Reviewed</span>`;
+                }
+                
+                if (canCancel) {
+                    html += `
+                        <button class="action-btn action-btn-cancel" 
+                                data-item="${item.order_item_id}">
+                            Cancel Order
+                        </button>
+                    `;
+                }
+                
+                // Always show View Product button
+                html += `
+                    <a href="product-details.php?id=${item.product_id}" 
+                       class="action-btn action-btn-view">
+                        View Product
+                    </a>
+                `;
+            });
+
+            html += `
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         });
 
-        // Price summary and shipping columns
-        html += `
-                        </div>
-                    </div>
-                    <div class="order-price-summary">
-                        <div class="price-summary-title">Order Summary</div>
-                        <div class="price-row">
-                            <span>Subtotal</span>
-                            <span class="value">₱${total}</span>
-                        </div>
-                        <div class="price-row">
-                            <span>Shipping</span>
-                            <span class="value">Free</span>
-                        </div>
-                        <div class="price-row total">
-                            <span>Total</span>
-                            <span class="value">₱${total}</span>
-                        </div>
-                    </div>
-                    <div class="order-shipping-location">
-                        <div class="shipping-address">
-                            <strong>Shipping Address</strong>
-                            <p>${shippingAddress}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    ordersList.innerHTML = html;
-    attachEventListeners();
-}
-
-    // Helper functions
-    function formatDate(dateString) {
-        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+        ordersList.innerHTML = html;
+        attachEventListeners();
     }
 
+    // ===== HELPER FUNCTIONS =====
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        
+        // Format date part: February 16, 2026 (full month name)
+        const dateOptions = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        };
+        const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+        
+        // Format time part: 06:11 PM
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        const formattedTime = date.toLocaleTimeString(undefined, timeOptions);
+        
+        return `${formattedDate} - ${formattedTime}`;
+    }
+    
     function getImagePath(path) {
         if (!path) return '../assets/image/icons/package.svg';
         if (path.startsWith('assets/')) return '../' + path;
@@ -225,18 +309,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
+    // ===== ATTACH EVENT LISTENERS =====
     function attachEventListeners() {
-        document.querySelectorAll('.action-btn.review').forEach(btn => {
+        // Review buttons
+        document.querySelectorAll('.action-btn-review').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                document.getElementById('reviewOrderItemId').value = btn.dataset.item;
-                document.getElementById('reviewProductId').value = btn.dataset.product;
+                const orderItemId = document.getElementById('reviewOrderItemId');
+                const productId = document.getElementById('reviewProductId');
+                
+                if (orderItemId) orderItemId.value = btn.dataset.item;
+                if (productId) productId.value = btn.dataset.product;
+                
                 resetReviewForm();
                 showModal(reviewModal);
             });
         });
         
-        document.querySelectorAll('.action-btn.cancel').forEach(btn => {
+        // Cancel buttons
+        document.querySelectorAll('.action-btn-cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 currentCancelItemId = btn.dataset.item;
@@ -245,112 +336,130 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ===== REVIEW FORM RESET =====
     function resetReviewForm() {
-        reviewForm.reset();
+        if (reviewForm) reviewForm.reset();
+        
         stars.forEach(s => {
             s.classList.remove('active', 'hover');
             s.textContent = '☆';
         });
+        
         currentRating = 0;
-        ratingInput.value = '';
+        if (ratingInput) ratingInput.value = '';
     }
 
-    // Review submission
-    reviewForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (!ratingInput.value) {
-            showNotifier('Please select a rating');
-            return;
-        }
-        
-        const formData = new FormData();
-        formData.append('action', 'add_review');
-        formData.append('order_item_id', document.getElementById('reviewOrderItemId').value);
-        formData.append('product_id', document.getElementById('reviewProductId').value);
-        formData.append('rating', ratingInput.value);
-        formData.append('comment', document.getElementById('comment').value);
-        
-        try {
-            const response = await fetch('../database/review-handler.php', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            if (result.status === 'success') {
-                showNotifier('Review submitted successfully!');
-                hideModal(reviewModal);
-                resetReviewForm();
-                loadOrders();
-            } else {
-                showNotifier(result.message || 'Failed to submit review');
+    // ===== REVIEW SUBMISSION =====
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!ratingInput || !ratingInput.value) {
+                showNotification('Please select a rating');
+                return;
             }
-        } catch (error) {
-            console.error('Review error:', error);
-            showNotifier('Network error. Please try again.');
-        }
-    });
+            
+            const formData = new FormData();
+            formData.append('action', 'add_review');
+            formData.append('order_item_id', document.getElementById('reviewOrderItemId')?.value || '');
+            formData.append('product_id', document.getElementById('reviewProductId')?.value || '');
+            formData.append('rating', ratingInput.value);
+            formData.append('comment', document.getElementById('comment')?.value || '');
+            
+            try {
+                const response = await fetch('../database/review-handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification('Review submitted successfully!');
+                    hideModal(reviewModal);
+                    resetReviewForm();
+                    loadOrders();
+                } else {
+                    showNotification(result.message || 'Failed to submit review');
+                }
+            } catch (error) {
+                console.error('Review error:', error);
+                showNotification('Network error. Please try again.');
+            }
+        });
+    }
 
-    // Cancel item
-    confirmCancel.addEventListener('click', async () => {
-        if (!currentCancelItemId) return;
-        
-        confirmCancel.disabled = true;
-        confirmCancel.textContent = 'Processing...';
-        
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'cancel_item');
-            formData.append('item_id', currentCancelItemId);
+    // ===== CANCEL ITEM =====
+    if (confirmCancel) {
+        confirmCancel.addEventListener('click', async () => {
+            if (!currentCancelItemId) return;
             
-            const response = await fetch('../database/order-handler.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData
-            });
+            confirmCancel.disabled = true;
+            confirmCancel.textContent = 'Processing...';
             
-            const result = await response.json();
-            if (result.status === 'success') {
-                showNotifier('Item cancelled successfully');
-                hideModal(cancelModal);
-                loadOrders();
-            } else {
-                showNotifier(result.message || 'Failed to cancel item');
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'cancel_item');
+                formData.append('item_id', currentCancelItemId);
+                
+                const response = await fetch('../database/order-handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification('Item cancelled successfully');
+                    hideModal(cancelModal);
+                    loadOrders();
+                } else {
+                    showNotification(result.message || 'Failed to cancel item');
+                }
+            } catch (error) {
+                console.error('Cancel error:', error);
+                showNotification('Network error. Please try again.');
+            } finally {
+                confirmCancel.disabled = false;
+                confirmCancel.textContent = 'Confirm';
+                currentCancelItemId = null;
             }
-        } catch (error) {
-            console.error('Cancel error:', error);
-            showNotifier('Network error. Please try again.');
-        } finally {
-            confirmCancel.disabled = false;
-            confirmCancel.textContent = 'Yes, Cancel';
+        });
+    }
+
+    // ===== MODAL CLOSE HANDLERS =====
+    if (cancelCancel) {
+        cancelCancel.addEventListener('click', () => {
+            hideModal(cancelModal);
             currentCancelItemId = null;
-        }
-    });
+        });
+    }
 
-    // Modal close handlers
-    cancelCancel.addEventListener('click', () => {
-        hideModal(cancelModal);
-        currentCancelItemId = null;
-    });
+    if (cancelReview) {
+        cancelReview.addEventListener('click', () => {
+            hideModal(reviewModal);
+            resetReviewForm();
+        });
+    }
 
-    cancelReview.addEventListener('click', () => {
-        hideModal(reviewModal);
-        resetReviewForm();
-    });
-
-    notifierClose.addEventListener('click', () => {
-        hideModal(notifierModal);
-    });
+    if (notificationClose) {
+        notificationClose.addEventListener('click', () => {
+            hideModal(notificationModal);
+        });
+    }
 
     // Close modals when clicking outside
-    [cancelModal, reviewModal, notifierModal].forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) hideModal(modal);
-        });
+    [cancelModal, reviewModal, notificationModal].forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) hideModal(modal);
+            });
+        }
     });
 
-    // Escape key
+    // Escape key 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hideAllModals();
     });
