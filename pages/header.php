@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Force check if session is valid
 $isLoggedIn = isset($_SESSION['user_id']) || isset($_SESSION['admin_id']);
+$isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
 
 // Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -54,17 +55,28 @@ if ($is_root) {
 
         <div class="nav-container">
             <nav class="nav-bar">
+                <?php if (!$isLoggedIn): ?>
+                <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
                 <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
                 <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
-
-                <?php if ($isLoggedIn): ?>
-                <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-                <!-- Cart and Orders for logged in users -->
-                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
-                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
-                <?php else: ?>
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
+                <?php else: ?>
+                <!-- LOGGED IN: No Home, About, Contact -->
+                <?php if ($isSeller): ?>
+                <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
+                <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+                <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
+                <?php else: ?>
+                <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
+                <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+                <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <?php endif; ?>
                 <?php endif; ?>
             </nav>
 
@@ -77,17 +89,28 @@ if ($is_root) {
     </header>
 
     <nav class="mobile-nav no-transition" id="mobileNav">
+        <?php if (!$isLoggedIn): ?>
+        <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
         <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
         <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
-
-        <?php if ($isLoggedIn): ?>
-        <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-        <!-- Cart and Orders in mobile nav for logged in users -->
-        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
-        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
-        <?php else: ?>
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
+        <?php else: ?>
+        <!-- LOGGED IN: No Home, About, Contact -->
+        <?php if ($isSeller): ?>
+        <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
+        <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+        <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
+        <?php else: ?>
+        <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
+        <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+        <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($isLoggedIn): ?>
@@ -101,12 +124,10 @@ if ($is_root) {
     <div id="logoutModal" class="logout-modal" style="display: none;">
         <div class="logout-modal-content">
             <div class="logout-modal-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none"
-                    stroke="#FF8246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
+                <!-- REPLACED: Hard-coded SVG with image tag -->
+                <img src="<?php echo $pathPrefix; ?>assets/image/icons/logoutsvg.svg" alt="Logout"
+                    style="width: 60px; height: 60px;"
+                    onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
             </div>
             <h2>Confirm Logout</h2>
             <p>Are you sure you want to logout?</p>
@@ -117,11 +138,6 @@ if ($is_root) {
         </div>
     </div>
     <?php endif; ?>
-
-    <!-- Cart count display (optional - uncomment if you want cart count badge)
-    <?php if ($isLoggedIn): ?>
-    <span id="cartCount" class="cart-count" style="display: none;">0</span>
-    <?php endif; ?> -->
 </body>
 
 </html>

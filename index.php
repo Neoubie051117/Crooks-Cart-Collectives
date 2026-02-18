@@ -1,4 +1,8 @@
 <?php
+// Crooks-Cart-Collectives/index.php
+// FIXED VERSION - Replaced emoji icons with SVG icons
+?>
+<?php
 session_start();
 require_once('database/database-connect.php');
 
@@ -38,6 +42,29 @@ try {
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/footer.css">
 
+    <style>
+    /* Feature icon styling */
+    .feature-icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .feature-icon img {
+        width: 48px;
+        height: 48px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon img {
+        transform: scale(1.1);
+    }
+    </style>
+
     <script defer src="scripts/header.js"></script>
     <script defer src="scripts/showcase-slider.js"></script>
     <script defer src="scripts/index.js"></script>
@@ -71,28 +98,40 @@ try {
             </div>
         </section>
 
-        <!-- Features Section -->
+        <!-- Features Section - FIXED: Replaced emojis with SVG icons -->
         <section class="features-section">
             <div class="features-container">
                 <h2>Why Choose Our Platform?</h2>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">🛒</div>
+                        <div class="feature-icon">
+                            <img src="assets/image/icons/cart-shopping.svg" alt="Shopping cart icon"
+                                onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
+                        </div>
                         <h3>Local Community</h3>
                         <p>Buy and sell within your trusted community members</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-icon">
+                            <img src="assets/image/icons/package.svg" alt="Verified package icon"
+                                onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
+                        </div>
                         <h3>Verified Sellers</h3>
                         <p>All sellers are verified with valid government IDs</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🚚</div>
+                        <div class="feature-icon">
+                            <img src="assets/image/icons/cart-arrow-up.svg" alt="Delivery truck icon"
+                                onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
+                        </div>
                         <h3>Easy Delivery</h3>
                         <p>Local deliveries for faster shipping</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">💬</div>
+                        <div class="feature-icon">
+                            <img src="assets/image/icons/mail.svg" alt="Community support icon"
+                                onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
+                        </div>
                         <h3>Community Support</h3>
                         <p>Get help from your community members</p>
                     </div>

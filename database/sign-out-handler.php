@@ -30,11 +30,11 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
         echo json_encode([
             'status' => 'success',
             'message' => 'Already logged out',
-            'redirect' => $baseUrl . 'index.php'
+            'redirect' => $baseUrl . 'pages/sign-in.php'  // CHANGED: index.php → pages/sign-in.php
         ]);
         exit;
     }
-    header("Location: " . $baseUrl . "index.php");
+    header("Location: " . $baseUrl . "pages/sign-in.php");  // CHANGED: index.php → pages/sign-in.php
     exit;
 }
 
@@ -59,12 +59,12 @@ if ($isAjax) {
     echo json_encode([
         'status' => 'success',
         'message' => 'Logged out successfully',
-        'redirect' => $baseUrl . 'index.php'
+        'redirect' => $baseUrl . 'pages/sign-in.php'  // CHANGED: index.php → pages/sign-in.php
     ]);
     exit;
 }
 
 // Regular request - redirect
-header("Location: " . $baseUrl . "index.php");
+header("Location: " . $baseUrl . "pages/sign-in.php");  // CHANGED: index.php → pages/sign-in.php
 exit;
 ?>

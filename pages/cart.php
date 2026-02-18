@@ -1,3 +1,4 @@
+<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -128,11 +129,11 @@ try {
                 modal.innerHTML = `
                 <div class="cart-notifier-content">
                     <div class="cart-notifier-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
+                        <!-- REPLACED: Hard-coded SVG with image tag -->
+                        <img src="../assets/image/icons/cart-shopping.svg" 
+                             alt="Cart" 
+                             style="width: 60px; height: 60px;"
+                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3 id="cartNotifierTitle">Item Removed</h3>
                     <p id="cartNotifierMessage">The item has been removed from your cart.</p>
@@ -167,7 +168,7 @@ try {
 
         function closeModal() {
             const modal = document.getElementById('cartNotifierModal');
-            if (modal) modal.classList.add('active');
+            if (modal) modal.classList.remove('active');
         }
 
         // Helper function to show temporary messages (fallback)
@@ -253,7 +254,7 @@ try {
             });
         });
 
-        // Remove item with MODAL confirmation instead of alert
+        // Remove item with MODAL confirmation
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', async function() {
                 // Create and show confirmation modal
@@ -263,10 +264,11 @@ try {
                 confirmModal.innerHTML = `
                 <div class="cart-notifier-content">
                     <div class="cart-notifier-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
+                        <!-- REPLACED: Hard-coded SVG with image tag -->
+                        <img src="../assets/image/icons/trash.svg" 
+                             alt="Delete" 
+                             style="width: 60px; height: 60px;"
+                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3>Confirm Removal</h3>
                     <p>Are you sure you want to remove this item from your cart?</p>
@@ -282,16 +284,16 @@ try {
                 // Handle confirmation
                 const confirmed = await new Promise(resolve => {
                     document.getElementById('cancelRemove').addEventListener('click',
-                    () => {
+                        () => {
                             confirmModal.remove();
                             resolve(false);
                         });
 
                     document.getElementById('confirmRemove').addEventListener('click',
-                    () => {
-                        confirmModal.remove();
-                        resolve(true);
-                    });
+                        () => {
+                            confirmModal.remove();
+                            resolve(true);
+                        });
 
                     confirmModal.addEventListener('click', (e) => {
                         if (e.target === confirmModal) {

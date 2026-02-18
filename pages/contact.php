@@ -1,4 +1,8 @@
 <?php
+// Crooks-Cart-Collectives/pages/contact.php
+// FIXED VERSION - Replaced emoji icons with SVG icons
+?>
+<?php
 session_start();
 $current_page = 'contact';
 ?>
@@ -15,6 +19,32 @@ $current_page = 'contact';
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/contact.css">
+
+    <style>
+    /* Contact card icon styling */
+    .contact-card__icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 130, 70, 0.1);
+        border-radius: 50%;
+        padding: 15px;
+    }
+
+    .contact-card__icon img {
+        width: 32px;
+        height: 32px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    }
+
+    .contact-card:hover .contact-card__icon img {
+        transform: scale(1.1);
+        transition: transform 0.3s ease;
+    }
+    </style>
 </head>
 
 <body>
@@ -29,11 +59,14 @@ $current_page = 'contact';
             </div>
         </section>
 
-        <!-- Contact Info Grid -->
+        <!-- Contact Info Grid - FIXED: Replaced emojis with SVG icons -->
         <section class="contact-info">
             <div class="contact-info__grid">
                 <article class="contact-card">
-                    <div class="contact-card__icon">📍</div>
+                    <div class="contact-card__icon">
+                        <img src="../assets/image/icons/order.svg" alt="Location icon"
+                            onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    </div>
                     <h3 class="contact-card__title">Our Campus</h3>
                     <address class="contact-card__details">
                         Arellano University<br>
@@ -43,7 +76,10 @@ $current_page = 'contact';
                 </article>
 
                 <article class="contact-card">
-                    <div class="contact-card__icon">📧</div>
+                    <div class="contact-card__icon">
+                        <img src="../assets/image/icons/mail.svg" alt="Email icon"
+                            onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    </div>
                     <h3 class="contact-card__title">Project Email</h3>
                     <p class="contact-card__details">
                         scs.bonifacio@arellano.edu.ph<br>
@@ -52,7 +88,10 @@ $current_page = 'contact';
                 </article>
 
                 <article class="contact-card">
-                    <div class="contact-card__icon">📞</div>
+                    <div class="contact-card__icon">
+                        <img src="../assets/image/icons/cancel.svg" alt="Phone icon"
+                            onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    </div>
                     <h3 class="contact-card__title">School Contact</h3>
                     <p class="contact-card__details">
                         +63 (2) 8123 4567<br>
@@ -61,7 +100,10 @@ $current_page = 'contact';
                 </article>
 
                 <article class="contact-card">
-                    <div class="contact-card__icon">⏰</div>
+                    <div class="contact-card__icon">
+                        <img src="../assets/image/icons/chart-line-up.svg" alt="Hours icon"
+                            onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    </div>
                     <h3 class="contact-card__title">School Hours</h3>
                     <p class="contact-card__details">
                         Monday - Friday: 8:00 - 17:00<br>

@@ -167,6 +167,10 @@ CREATE TABLE seller_orders (
 -- PURCHASE ITEMS TABLE - STATUS LIVES HERE! ✅
 -- Maximum upgradability for future features
 -- =====================================================
+-- =====================================================
+-- PURCHASE ITEMS TABLE - STATUS LIVES HERE! ✅
+-- Maximum upgradability for future features
+-- =====================================================
 CREATE TABLE purchase_items (
     order_item_id INT AUTO_INCREMENT PRIMARY KEY,
     seller_order_id INT NOT NULL,
@@ -177,36 +181,21 @@ CREATE TABLE purchase_items (
         GENERATED ALWAYS AS (quantity * price_at_time) STORED,
     
     -- ✅ ITEM-LEVEL STATUS - Maximum flexibility!
-    -- Can easily add more status values in the future
     status ENUM(
         'pending',      -- Order placed, awaiting seller action
         'confirmed',    -- Seller confirmed (ready to prepare)
         'processing',   -- Being prepared/packed
         'shipped',      -- Dispatched to customer
-        'delivered',    -- Customer received
+        'delivered',    -- Customer received - can review
         'cancelled',    -- Cancelled before shipping
-        'refunded',     -- Returned and refunded
-        'on_hold'       -- Temporarily on hold (e.g., out of stock)
+        'refunded'      -- Returned and refunded
     ) DEFAULT 'pending',
     
-    -- Timestamps for each stage (optional but useful)
+    -- Timestamps for each stage
     confirmed_at TIMESTAMP NULL,
     shipped_at TIMESTAMP NULL,
     delivered_at TIMESTAMP NULL,
     cancelled_at TIMESTAMP NULL,
-    refunded_at TIMESTAMP NULL,
-    on_hold_at TIMESTAMP NULL,
-    
-    -- Tracking information per item (for future use)
-    tracking_number VARCHAR(100),
-    carrier VARCHAR(50),
-    
-    -- Notes for this specific item
-    notes TEXT,
-    
-    -- For returns/refunds
-    return_reason VARCHAR(255),
-    refund_amount DECIMAL(10, 2),
     
     FOREIGN KEY (seller_order_id)
         REFERENCES seller_orders(seller_order_id)
@@ -216,30 +205,22 @@ CREATE TABLE purchase_items (
 );
 
 -- =====================================================
--- PRODUCT REVIEWS TABLE
+-- PRODUCT REVIEWS TABLE (Fixed: uses order_item_id)
 -- =====================================================
 CREATE TABLE product_reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     user_id INT NOT NULL,
-    order_item_id INT NOT NULL,  -- Link to specific purchase item
-    rating TINYINT NOT NULL
-        CHECK (rating >= 1 AND rating <= 5),
+    order_item_id INT NOT NULL UNIQUE,  -- One review per purchased item
+    rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     title VARCHAR(100),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_edited BOOLEAN DEFAULT FALSE,
     last_edited TIMESTAMP NULL,
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (user_id)
-        REFERENCES users(user_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (order_item_id)
-        REFERENCES purchase_items(order_item_id)
-        ON DELETE CASCADE,
-    UNIQUE KEY unique_order_item_review (order_item_id)  -- One review per purchased item
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (order_item_id) REFERENCES purchase_items(order_item_id) ON DELETE CASCADE
 );
 
 -- =====================================================

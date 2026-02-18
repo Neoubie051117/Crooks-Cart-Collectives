@@ -8,3 +8,211 @@
 [16-Feb-2026 11:10:11 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
 [16-Feb-2026 12:34:52 Europe/Berlin] Signin attempt for identifier: lance
 [16-Feb-2026 12:34:52 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
+[17-Feb-2026 07:43:48 Europe/Berlin] Signin attempt for identifier: lance
+[17-Feb-2026 07:43:48 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
+[17-Feb-2026 07:50:55 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:07 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:09 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:27 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:51:46 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 07:52:01 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
+Stack trace:
+#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
+#1 {main}
+  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
+[17-Feb-2026 13:50:48 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:50:48 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:50:48 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:50:56 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:50:56 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:50:56 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:51:00 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:51:00 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:51:00 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:51:04 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:51:04 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:51:04 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:51:08 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:51:08 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:51:08 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:51:12 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[17-Feb-2026 13:51:12 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:51:12 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[17-Feb-2026 13:51:58 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2006] MySQL server has gone away
+[17-Feb-2026 13:51:58 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:52:37 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[17-Feb-2026 13:52:37 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:52:45 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[17-Feb-2026 13:52:45 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:52:47 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[17-Feb-2026 13:52:47 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[17-Feb-2026 13:53:04 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[17-Feb-2026 13:53:04 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[18-Feb-2026 15:52:11 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 15:52:11 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 15:52:12 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 15:52:37 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:00:55 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2005-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lance051117","confirm_password":"Lance051117","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[18-Feb-2026 16:00:55 Europe/Berlin] User inserted with ID: 6
+[18-Feb-2026 16:00:55 Europe/Berlin] Customer record already exists for user: 6
+[18-Feb-2026 16:00:55 Europe/Berlin] User registered successfully: lance (ID: 6)
+[18-Feb-2026 16:01:04 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:01:04 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
+[18-Feb-2026 16:01:10 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:01:10 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
+[18-Feb-2026 16:01:16 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:01:16 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:02:30 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:02:30 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:02:32 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:02:43 Europe/Berlin] PHP Warning:  Undefined array key "seller_order_id" in D:\Repository\Crooks-Cart-Collectives\database\order-handler.php on line 260
+[18-Feb-2026 16:03:03 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:03:27 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:03:27 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
+[18-Feb-2026 16:03:31 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:03:31 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:08:26 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:08:26 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:12:57 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:12:57 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:12:58 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:13:25 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:17:04 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:17:04 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:31:42 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:31:42 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:31:44 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:31:52 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:32:37 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:32:37 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: Lance051117]
+[18-Feb-2026 16:32:42 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:32:42 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:33:26 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:33:26 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:33:27 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:35:29 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:35:29 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: Lance05117
+[18-Feb-2026 16:35:32 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 16:35:32 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+[18-Feb-2026 16:42:45 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:42:45 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:42:46 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:43:16 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:45:33 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:45:54 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:46:28 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:54:18 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:55:47 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:57:43 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:58:20 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 16:58:20 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 16:58:21 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
+[18-Feb-2026 16:59:33 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 16:59:33 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 16:59:42 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 16:59:42 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:00:36 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:00:36 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:02:20 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:02:20 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:07:06 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:07:06 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:08:06 Europe/Berlin] Signin attempt for identifier: alex
+[18-Feb-2026 17:08:06 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
+[18-Feb-2026 17:08:08 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
+[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
+[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:08:08 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
+[18-Feb-2026 17:09:24 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:09:24 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:10:00 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:10:00 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:10:36 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:10:36 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:14 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:14 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:21 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:21 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:40 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:40 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:58 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:14:58 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:15:44 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
+[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
+[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
+[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:15:44 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
+[18-Feb-2026 17:17:37 Europe/Berlin] Signin attempt for identifier: lance
+[18-Feb-2026 17:17:37 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php

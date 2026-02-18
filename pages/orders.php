@@ -47,23 +47,26 @@ $customer_id = $_SESSION['customer_id'];
 
                 <div class="form-group">
                     <label class="form-label">Rating *</label>
-                    <div class="star-rating">
-                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <span class="star" data-value="<?= $i ?>">☆</span>
-                        <?php endfor; ?>
+                    <div class="star-rating" id="starRatingContainer">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
                     </div>
                     <input type="hidden" name="rating" id="ratingValue" required>
+                    <div class="rating-error" id="ratingError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="comment" class="form-label">Review</label>
-                    <textarea id="comment" name="comment" class="form-textarea" rows="3"
-                        placeholder="Share your experience..."></textarea>
+                    <label for="comment" class="form-label">Review (Optional)</label>
+                    <textarea id="comment" name="comment" class="form-textarea" rows="4"
+                        placeholder="Share your experience with this product..."></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" id="cancelReview" class="modal-btn modal-btn-cancel">Cancel</button>
-                    <button type="submit" class="modal-btn modal-btn-confirm">Submit</button>
+                    <button type="button" class="modal-btn modal-btn-cancel" id="cancelReview">Cancel</button>
+                    <button type="submit" class="modal-btn modal-btn-confirm" id="submitReview">Submit Review</button>
                 </div>
             </form>
         </div>
@@ -79,11 +82,11 @@ $customer_id = $_SESSION['customer_id'];
                     <line x1="9" y1="9" x2="15" y2="15" />
                 </svg>
             </div>
-            <h2 class="modal-title">Cancel Item</h2>
-            <p class="modal-message">Are you sure you want to cancel this item?</p>
+            <h2 class="modal-title">Cancel Order Item</h2>
+            <p class="modal-message">Are you sure you want to cancel this item? This action cannot be undone.</p>
             <div class="modal-actions">
-                <button id="cancelCancel" class="modal-btn modal-btn-cancel">Keep</button>
-                <button id="confirmCancel" class="modal-btn modal-btn-confirm">Confirm</button>
+                <button class="modal-btn modal-btn-cancel" id="cancelCancel">No, Keep It</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmCancel">Yes, Cancel Item</button>
             </div>
         </div>
     </div>
@@ -100,7 +103,7 @@ $customer_id = $_SESSION['customer_id'];
             </div>
             <p id="notificationMessage" class="modal-message"></p>
             <div class="modal-actions">
-                <button id="notificationClose" class="modal-btn modal-btn-confirm">OK</button>
+                <button class="modal-btn modal-btn-confirm" id="notificationClose">OK</button>
             </div>
         </div>
     </div>

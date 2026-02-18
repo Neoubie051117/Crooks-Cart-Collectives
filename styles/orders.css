@@ -312,12 +312,12 @@
 }
 
 .action-btn-review {
-    background: #FF8246;
+    background: #000000;
     color: white;
 }
 
 .action-btn-review:hover {
-    background: #e66a2e;
+    background: #323232;
 }
 
 .reviewed-badge {
@@ -325,7 +325,7 @@
     width: 100%;
     padding: 10px 12px;
     border-radius: 6px;
-    background: #28a745;
+    background: #000000;
     color: white;
     font-size: 0.9rem;
     font-weight: 600;
@@ -598,4 +598,95 @@
     .star {
         font-size: 1.5rem;
     }
+}
+
+/* Crooks-Cart-Collectives/styles/orders.css */
+/* ADD THIS AT THE BOTTOM of your existing orders.css file */
+
+/* Star Rating Icons - Using SVG icons instead of Unicode */
+.star-rating {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.star {
+    cursor: pointer;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+
+.star img {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.2s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.star .star-empty {
+    display: block;
+}
+
+.star .star-filled {
+    display: none;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.star.active .star-empty {
+    display: none;
+}
+
+.star.active .star-filled {
+    display: block;
+}
+
+.star:hover .star-empty {
+    display: none;
+}
+
+.star:hover .star-filled {
+    display: block;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transform: scale(1.1);
+}
+
+.star.hover .star-empty {
+    display: none;
+}
+
+.star.hover .star-filled {
+    display: block;
+    opacity: 0.8;
+}
+
+/* Review badge icon */
+.reviewed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.reviewed-badge::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-image: url('../assets/image/icons/star-filled.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(98%) saturate(363%) hue-rotate(78deg) brightness(96%) contrast(92%);
+}
+
+/* Package icon fallback for images */
+img[src*="package.svg"] {
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
 }

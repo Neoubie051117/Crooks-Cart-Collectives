@@ -393,3 +393,53 @@
         border: 1px solid #ddd;
     }
 }
+
+/* Crooks-Cart-Collectives/styles/customer-dashboard.css */
+/* ADD THIS AT THE BOTTOM of your existing customer-dashboard.css file */
+
+/* Dashboard card icons - Using SVG icons */
+.dashboard-card {
+    position: relative;
+    padding-top: 60px;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+/* Different icons for different cards using data attributes or nth-child */
+.dashboard-card:nth-child(1)::before {
+    background-image: url('../assets/image/icons/cart-shopping.svg');
+}
+
+.dashboard-card:nth-child(2)::before {
+    background-image: url('../assets/image/icons/order.svg');
+}
+
+.dashboard-card:nth-child(3)::before {
+    background-image: url('../assets/image/icons/package.svg');
+}
+
+.dashboard-card:nth-child(4)::before {
+    background-image: url('../assets/image/icons/cart-arrow-up.svg');
+}
+
+.dashboard-card:nth-child(5)::before {
+    background-image: url('../assets/image/icons/order.svg');
+}
+
+.dashboard-card:nth-child(6)::before {
+    background-image: url('../assets/image/icons/mail.svg');
+}
+
+.dashboard-card:nth-child(7)::before {
+    background-image: url('../assets/image/icons/mail.svg');
+}
