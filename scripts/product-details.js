@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             top: 100px;
             right: 20px;
             padding: 15px 25px;
-            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            background: ${type === 'success' ? '#000000' : '#dc3545'};
             color: white;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 notification.remove();
             }, 300);
-        }, 3000);
+        }, 5000);
     }
     
     // Function to handle cart operations
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Disable button and show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Adding...</span>';
+            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Adding...</span>';
             
             const success = await handleCartAction(productId, 'add');
             
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Disable button and show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Processing...</span>';
+            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Processing...</span>';
             
             const success = await handleCartAction(productId, 'add');
             

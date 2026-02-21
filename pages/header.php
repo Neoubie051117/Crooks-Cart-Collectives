@@ -124,9 +124,8 @@ if ($is_root) {
     <div id="logoutModal" class="logout-modal" style="display: none;">
         <div class="logout-modal-content">
             <div class="logout-modal-icon">
-                <!-- REPLACED: Hard-coded SVG with image tag -->
                 <img src="<?php echo $pathPrefix; ?>assets/image/icons/logoutsvg.svg" alt="Logout"
-                    style="width: 60px; height: 60px;"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);"
                     onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
             </div>
             <h2>Confirm Logout</h2>

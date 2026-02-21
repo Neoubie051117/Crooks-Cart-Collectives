@@ -1,6 +1,3 @@
-/* Crooks-Cart-Collectives/styles/orders.css - REVISED */
-/* Balanced grid columns, seller name in item details with highlighting */
-
 * {
     margin: 0;
     padding: 0;
@@ -92,14 +89,13 @@
 .order-status-badge.completed { background: #ff8246; color: #ffffff; }
 .order-status-badge.cancelled { background: #000000; color: #ffffff; }
 
-/* ===== ORDER BODY - BALANCED GRID ===== */
+/* ===== ORDER BODY ===== */
 .order-body {
     display: grid;
     grid-template-columns: 1.2fr 220px 280px;
     gap: 0;
 }
 
-/* Column 1: Order Items */
 .order-items-column {
     background: #ffffff;
     padding: 16px;
@@ -109,7 +105,6 @@
     flex-direction: column;
 }
 
-/* Column 2: Price Summary */
 .order-price-summary {
     background: #f8fafc;
     padding: 16px;
@@ -119,7 +114,6 @@
     flex-direction: column;
 }
 
-/* Column 3: Shipping + Actions */
 .order-shipping-column {
     background: #f8fafc;
     padding: 16px;
@@ -128,7 +122,6 @@
     flex-direction: column;
 }
 
-/* ===== ORDER ITEMS LIST ===== */
 .order-items {
     display: flex;
     flex-direction: column;
@@ -165,7 +158,6 @@
     justify-content: center;
 }
 
-/* Seller name with highlighting - larger font */
 .order-item-seller {
     font-weight: 700;
     color: #FF8246;
@@ -202,9 +194,6 @@
     color: #FF8246;
 }
 
-/* No product link styling needed - removed */
-
-/* ===== PRICE SUMMARY STYLES ===== */
 .price-summary-title {
     font-size: 1.1rem;
     font-weight: 600;
@@ -245,7 +234,6 @@
     margin: 12px 0;
 }
 
-/* ===== SHIPPING LOCATION STYLES ===== */
 .order-shipping-location {
     background: white;
     border-radius: 8px;
@@ -268,7 +256,6 @@
     word-break: break-word;
 }
 
-/* ===== ACTION BUTTONS ===== */
 .order-item-actions {
     background: white;
     border-radius: 8px;
@@ -290,7 +277,7 @@
     cursor: pointer;
     text-decoration: none;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .action-btn-view {
@@ -317,7 +304,7 @@
 }
 
 .action-btn-review:hover {
-    background: #323232;
+    background: #333333;
 }
 
 .reviewed-badge {
@@ -332,7 +319,6 @@
     text-align: center;
 }
 
-/* ===== EMPTY STATE ===== */
 .empty-orders {
     text-align: center;
     padding: 40px 20px;
@@ -355,14 +341,13 @@
     text-decoration: none;
     border-radius: 30px;
     font-weight: 600;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
 }
 
 .empty-orders .btn:hover {
     background: #e66a2e;
 }
 
-/* ===== LOADING STATE ===== */
 .loading {
     text-align: center;
     padding: 30px;
@@ -415,6 +400,7 @@
 .modal-icon svg {
     width: 50px;
     height: 50px;
+    stroke: #FF8246;
 }
 
 .modal-title {
@@ -444,7 +430,7 @@
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
     flex: 1;
     max-width: 120px;
 }
@@ -497,23 +483,69 @@
     box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
 }
 
+/* ===== STAR RATING ===== */
 .star-rating {
     display: flex;
     gap: 5px;
     justify-content: center;
-    margin-bottom: 10px;
+    margin: 15px 0;
 }
 
 .star {
-    font-size: 1.8rem;
     cursor: pointer;
-    color: #dee2e6;
-    transition: color 0.2s;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
 }
 
-.star.hover,
-.star.active {
-    color: #FF8246;
+.star img {
+    width: 32px;
+    height: 32px;
+    transition: filter 0.2s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.star .star-empty {
+    display: block;
+}
+
+.star .star-filled {
+    display: none;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.star.active .star-empty {
+    display: none;
+}
+
+.star.active .star-filled {
+    display: block;
+}
+
+.star:hover .star-empty {
+    display: none;
+}
+
+.star:hover .star-filled {
+    display: block;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
+.star.hover .star-empty {
+    display: none;
+}
+
+.star.hover .star-filled {
+    display: block;
+    opacity: 0.8;
+}
+
+/* ===== PACKAGE ICON ===== */
+img[src*="package.svg"] {
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -594,99 +626,38 @@
     .modal-btn {
         max-width: 100%;
     }
-    
-    .star {
-        font-size: 1.5rem;
-    }
 }
 
-/* Crooks-Cart-Collectives/styles/orders.css */
-/* ADD THIS AT THE BOTTOM of your existing orders.css file */
-
-/* Star Rating Icons - Using SVG icons instead of Unicode */
-.star-rating {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    margin: 15px 0;
-}
-
-.star {
+.empty-orders .btn-primary {
+    display: inline-block;
+    padding: 10px 30px;
+    background: #FF8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    border: none;
     cursor: pointer;
-    position: relative;
-    width: 32px;
-    height: 32px;
+}
+
+.empty-orders .btn-primary:hover {
+    background: #e66a2e;
+}
+
+.btn-primary {
+    background: #FF8246;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
     display: inline-block;
 }
 
-.star img {
-    width: 32px;
-    height: 32px;
-    transition: transform 0.2s ease;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.star .star-empty {
-    display: block;
-}
-
-.star .star-filled {
-    display: none;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.star.active .star-empty {
-    display: none;
-}
-
-.star.active .star-filled {
-    display: block;
-}
-
-.star:hover .star-empty {
-    display: none;
-}
-
-.star:hover .star-filled {
-    display: block;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transform: scale(1.1);
-}
-
-.star.hover .star-empty {
-    display: none;
-}
-
-.star.hover .star-filled {
-    display: block;
-    opacity: 0.8;
-}
-
-/* Review badge icon */
-.reviewed-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    background: #e8f5e9;
-    color: #2e7d32;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-
-.reviewed-badge::before {
-    content: '';
-    width: 16px;
-    height: 16px;
-    background-image: url('../assets/image/icons/star-filled.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    filter: brightness(0) saturate(100%) invert(33%) sepia(98%) saturate(363%) hue-rotate(78deg) brightness(96%) contrast(92%);
-}
-
-/* Package icon fallback for images */
-img[src*="package.svg"] {
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+.btn-primary:hover {
+    background: #e66a2e;
 }

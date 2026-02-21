@@ -32,8 +32,7 @@ $business_name = $seller['business_name'] ?? 'Your Store';
 
     <main class="content">
         <div class="seller-header">
-            <h1 class="page-title">Manage Orders</h1>
-            <a href="seller-dashboard.php" class="back-link">← Back to Dashboard</a>
+            <h1 class="page-title">Seller Order Management</h1>
         </div>
 
         <!-- Filter Tabs - Reusing the same pattern as customer orders -->

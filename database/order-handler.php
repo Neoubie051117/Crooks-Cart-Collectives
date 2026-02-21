@@ -1,4 +1,3 @@
-<?php // PHP File Content ?>
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -43,7 +42,6 @@ function getCustomerOrders($connection) {
     $customer_id = $_SESSION['customer_id'];
     
     try {
-        // Get all orders with proper joins - FIXED to get seller business_name
         $stmt = $connection->prepare("
             SELECT 
                 co.order_id,
@@ -117,11 +115,9 @@ function getCustomerOrders($connection) {
             if ($cancelled === $total_items) {
                 $order['order_status'] = 'cancelled';
             } elseif ($delivered === $total_items) {
-                $order['order_status'] = 'completed';
-            } elseif (in_array('pending', $statuses)) {
-                $order['order_status'] = 'pending';
+                $order['order_status'] = 'delivered';
             } else {
-                $order['order_status'] = 'processing';
+                $order['order_status'] = 'pending';
             }
         }
         
@@ -165,7 +161,7 @@ function cancelOrderItem($connection) {
         }
         
         if ($item['status'] !== 'pending') {
-            echo json_encode(['status' => 'error', 'message' => 'Item cannot be cancelled at this stage']);
+            echo json_encode(['status' => 'error', 'message' => 'Item can only be cancelled when pending']);
             exit;
         }
         
@@ -174,7 +170,7 @@ function cancelOrderItem($connection) {
         // Cancel the item
         $update = $connection->prepare("
             UPDATE purchase_items
-            SET status = 'cancelled', cancelled_at = NOW()
+            SET status = 'cancelled'
             WHERE order_item_id = ?
         ");
         $update->execute([$item_id]);
@@ -288,7 +284,8 @@ function updateItemStatus($connection) {
     $item_id = $_POST['item_id'] ?? 0;
     $status = $_POST['status'] ?? '';
     
-    $allowed_statuses = ['confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+    // Simplified allowed statuses
+    $allowed_statuses = ['delivered', 'cancelled'];
     if (!$item_id || !in_array($status, $allowed_statuses)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid parameters']);
         exit;
@@ -297,7 +294,7 @@ function updateItemStatus($connection) {
     try {
         // Verify item belongs to seller
         $stmt = $connection->prepare("
-            SELECT pi.order_item_id, so.seller_order_id
+            SELECT pi.order_item_id, so.seller_order_id, pi.quantity, pi.product_id
             FROM purchase_items pi
             JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
             WHERE pi.order_item_id = ? AND so.seller_id = ?
@@ -312,14 +309,23 @@ function updateItemStatus($connection) {
         
         $connection->beginTransaction();
         
-        // Update status and corresponding timestamp
-        $timestamp_field = $status . '_at';
+        // Update status
         $update = $connection->prepare("
             UPDATE purchase_items
-            SET status = ?, $timestamp_field = NOW()
+            SET status = ?
             WHERE order_item_id = ?
         ");
         $update->execute([$status, $item_id]);
+        
+        // If cancelled, restore stock
+        if ($status === 'cancelled') {
+            $restoreStock = $connection->prepare("
+                UPDATE products 
+                SET stock_quantity = stock_quantity + ? 
+                WHERE product_id = ?
+            ");
+            $restoreStock->execute([$item['quantity'], $item['product_id']]);
+        }
         
         // Update seller_order status
         updateSellerOrderStatus($connection, $item['seller_order_id']);
@@ -340,8 +346,7 @@ function updateSellerOrderStatus($connection, $seller_order_id) {
         SELECT 
             COUNT(*) as total,
             SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
-            SUM(CASE WHEN status IN ('delivered', 'refunded') THEN 1 ELSE 0 END) as completed,
-            SUM(CASE WHEN status IN ('confirmed', 'processing', 'shipped') THEN 1 ELSE 0 END) as processing
+            SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered
         FROM purchase_items
         WHERE seller_order_id = ?
     ");
@@ -351,10 +356,8 @@ function updateSellerOrderStatus($connection, $seller_order_id) {
     $new_status = 'pending';
     if ($counts['cancelled'] == $counts['total']) {
         $new_status = 'cancelled';
-    } elseif ($counts['completed'] == $counts['total']) {
-        $new_status = 'completed';
-    } elseif ($counts['processing'] > 0) {
-        $new_status = 'processing';
+    } elseif ($counts['delivered'] == $counts['total']) {
+        $new_status = 'delivered';
     }
     
     $update = $connection->prepare("

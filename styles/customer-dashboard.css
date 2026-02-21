@@ -1,6 +1,3 @@
-/* Crooks-Cart-Collectives/styles/customer-dashboard.css */
-/* Using header.css variables for consistency */
-
 /* ===== DASHBOARD LAYOUT ===== */
 .content {
     max-width: 1200px;
@@ -13,13 +10,13 @@
 
 /* ===== WELCOME SECTION ===== */
 .welcome-section {
-    background: linear-gradient(135deg, var(--color-background-B, #f2f4f6) 0%, #ffffff 100%);
+    background: linear-gradient(135deg, #f2f4f6 0%, #ffffff 100%);
     padding: 50px 40px;
     border-radius: 12px;
     margin-bottom: 40px;
     text-align: center;
-    box-shadow: var(--effect-box-shadow-default, 0 2px 6px rgba(0,0,0,0.15));
-    border: 1px solid var(--color-border-A, #363940);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    border: 1px solid #363940;
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -33,24 +30,24 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--color-accent-A, #ff8246), var(--color-hover-A, #e8693d));
+    background: linear-gradient(90deg, #ff8246, #e8693d);
 }
 
 .welcome-section h1 {
     font-size: 2.2rem;
-    color: var(--color-text-C, #1e2e2f);
+    color: #1e2e2f;
     margin-bottom: 15px;
-    font-weight: var(--font-weight-bold, 400);
+    font-weight: 400;
     position: relative;
 }
 
 .welcome-section h1 span {
-    color: var(--color-accent-A, #ff8246);
+    color: #ff8246;
 }
 
 .welcome-section p {
     font-size: 1.1rem;
-    color: var(--color-text-A, #000000);
+    color: #000000;
     opacity: 0.8;
     max-width: 600px;
     margin: 0 auto;
@@ -69,13 +66,13 @@
 
 /* ===== DASHBOARD CARDS ===== */
 .dashboard-card {
-    background: var(--color-background-B, #f2f4f6);
+    background: #f2f4f6;
     border-radius: 12px;
     padding: 30px 25px;
-    box-shadow: var(--effect-box-shadow-default, 0 2px 6px rgba(0,0,0,0.15));
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     text-align: center;
-    transition: var(--effect-transition-default, all 0.3s ease-in-out);
-    border: 1px solid var(--color-border-A, #363940);
+    transition: box-shadow 0.3s ease-in-out;
+    border: 1px solid #363940;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -86,9 +83,8 @@
 }
 
 .dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--effect-glow-A, 0 0 10px rgba(0,0,0,0.2));
-    border-color: var(--color-accent-A, #ff8246);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    border-color: #ff8246;
 }
 
 .dashboard-card::after {
@@ -98,7 +94,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, transparent, var(--color-accent-A, #ff8246), transparent);
+    background: linear-gradient(90deg, transparent, #ff8246, transparent);
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -109,9 +105,9 @@
 
 .dashboard-card h3 {
     font-size: 1.4rem;
-    color: var(--color-text-C, #1e2e2f);
+    color: #1e2e2f;
     margin-bottom: 15px;
-    font-weight: var(--font-weight-bold, 400);
+    font-weight: 400;
     position: relative;
     padding-bottom: 10px;
 }
@@ -124,7 +120,7 @@
     transform: translateX(-50%);
     width: 50px;
     height: 2px;
-    background: var(--color-accent-A, #ff8246);
+    background: #ff8246;
     transition: width 0.3s ease;
 }
 
@@ -134,24 +130,47 @@
 
 .dashboard-card p {
     font-size: 1rem;
-    color: var(--color-text-A, #000000);
+    color: #000000;
     margin-bottom: 25px;
     line-height: 1.6;
     flex-grow: 1;
     opacity: 0.8;
 }
 
+.card-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 130, 70, 0.1);
+    border-radius: 50%;
+    padding: 12px;
+}
+
+.card-icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
 /* ===== BUTTON STYLES ===== */
 .btn-primary {
     display: inline-block;
-    background: var(--color-accent-A, #ff8246);
-    color: var(--color-text-B, #ffffff);
+    background: #ff8246;
+    color: #ffffff;
     padding: 12px 30px;
-    border-radius: var(--size-button-radius, 5px);
+    border-radius: 5px;
     text-decoration: none;
-    font-weight: var(--font-weight-bold, 400);
+    font-weight: 400;
     font-size: 1rem;
-    transition: var(--effect-transition-default, all 0.3s ease-in-out);
+    transition: background-color 0.3s ease-in-out;
     border: 2px solid transparent;
     cursor: pointer;
     text-transform: uppercase;
@@ -163,10 +182,7 @@
 }
 
 .btn-primary:hover {
-    background: var(--color-hover-A, #e8693d);
-    transform: translateY(-2px);
-    box-shadow: var(--effect-glow-B, 0 0 10px rgba(211,94,53,0.7));
-    color: var(--color-text-B, #ffffff);
+    background: #e8693d;
 }
 
 .btn-primary:active {
@@ -174,8 +190,6 @@
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
-
-/* Desktop Large */
 @media (min-width: 1200px) {
     .content {
         margin-top: 100px;
@@ -190,14 +204,12 @@
     }
 }
 
-/* Desktop Medium */
 @media (min-width: 992px) and (max-width: 1199px) {
     .dashboard-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Tablet Landscape */
 @media (min-width: 768px) and (max-width: 991px) {
     .content {
         margin-top: 70px;
@@ -226,7 +238,6 @@
     }
 }
 
-/* Tablet Portrait and Mobile */
 @media (max-width: 767px) {
     body {
         overflow-x: hidden;
@@ -275,7 +286,6 @@
     }
 }
 
-/* Mobile Large */
 @media (max-width: 576px) {
     .content {
         margin-top: 55px;
@@ -315,7 +325,6 @@
     }
 }
 
-/* Mobile Small */
 @media (max-width: 375px) {
     .content {
         margin-top: 50px;
@@ -341,7 +350,6 @@
     }
 }
 
-/* Landscape Mode for Mobile */
 @media (max-height: 500px) and (orientation: landscape) {
     .content {
         margin-top: 50px;
@@ -356,7 +364,6 @@
     }
 }
 
-/* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -381,7 +388,6 @@
 .dashboard-card:nth-child(6) { animation-delay: 0.6s; }
 .dashboard-card:nth-child(7) { animation-delay: 0.7s; }
 
-/* ===== PRINT STYLES ===== */
 @media print {
     .btn-primary {
         display: none;
@@ -392,54 +398,4 @@
         box-shadow: none;
         border: 1px solid #ddd;
     }
-}
-
-/* Crooks-Cart-Collectives/styles/customer-dashboard.css */
-/* ADD THIS AT THE BOTTOM of your existing customer-dashboard.css file */
-
-/* Dashboard card icons - Using SVG icons */
-.dashboard-card {
-    position: relative;
-    padding-top: 60px;
-}
-
-.dashboard-card::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 32px;
-    height: 32px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-/* Different icons for different cards using data attributes or nth-child */
-.dashboard-card:nth-child(1)::before {
-    background-image: url('../assets/image/icons/cart-shopping.svg');
-}
-
-.dashboard-card:nth-child(2)::before {
-    background-image: url('../assets/image/icons/order.svg');
-}
-
-.dashboard-card:nth-child(3)::before {
-    background-image: url('../assets/image/icons/package.svg');
-}
-
-.dashboard-card:nth-child(4)::before {
-    background-image: url('../assets/image/icons/cart-arrow-up.svg');
-}
-
-.dashboard-card:nth-child(5)::before {
-    background-image: url('../assets/image/icons/order.svg');
-}
-
-.dashboard-card:nth-child(6)::before {
-    background-image: url('../assets/image/icons/mail.svg');
-}
-
-.dashboard-card:nth-child(7)::before {
-    background-image: url('../assets/image/icons/mail.svg');
 }

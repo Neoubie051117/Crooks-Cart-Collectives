@@ -1,13 +1,16 @@
 filesToCheck = [
     # File Structure
+    
     "logs/summary fetch content/Project_Structure.txt",
 
     # Root
+    
     "index.php",
 
     # =========================
     # DATABASE
     # =========================
+    
     "database/schema/dbCreation.sql",
     "database/schema/dummyAdmin.sql",
     "database/schema/dummySeller.sql",
@@ -28,6 +31,7 @@ filesToCheck = [
     # =========================
     # PAGES
     # =========================
+    
     "pages/header.php",
     "pages/footer.php",
     "pages/about.php",
@@ -53,6 +57,7 @@ filesToCheck = [
     # =========================
     # SCRIPTS
     # =========================
+    
     "scripts/index.js",
     "scripts/header.js",
     "scripts/contact.js",
@@ -71,24 +76,25 @@ filesToCheck = [
     # =========================
     # STYLES
     # =========================
-    "styles/about.css",
-    "styles/cart.css",
-    "styles/checkout.css",
-    "styles/contact.css",
-    "styles/customer-dashboard.css",
-    "styles/footer.css",
-    "styles/header.css",
-    "styles/index.css",
-    "styles/orders.css",
-    "styles/privacy-policy.css",
-    "styles/product-details.css",
-    "styles/products.css",
-    "styles/profile.css",
-    "styles/report-seller.css",
-    "styles/seller-orders.css",
-    "styles/seller-registration.css",
-    "styles/sign-in.css",
-    "styles/sign-out.css",
-    "styles/sign-up.css",
-    "styles/terms-and-conditions.css",
+    
+    # "styles/about.css",
+    # "styles/cart.css",
+    # "styles/checkout.css",
+    # "styles/contact.css",
+    # "styles/customer-dashboard.css",
+    # "styles/footer.css",
+    # "styles/header.css",
+    # "styles/index.css",
+    # "styles/orders.css",
+    # "styles/privacy-policy.css",
+    # "styles/product-details.css",
+    # "styles/products.css",
+    # "styles/profile.css",
+    # "styles/report-seller.css",
+    # "styles/seller-orders.css",
+    # "styles/seller-registration.css",
+    # "styles/sign-in.css",
+    # "styles/sign-out.css",
+    # "styles/sign-up.css",
+    # "styles/terms-and-conditions.css",
 ]

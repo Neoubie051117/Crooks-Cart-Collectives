@@ -1,7 +1,5 @@
 /* ============================================
    CONTACT PAGE STYLES
-   Class naming convention: BEM (Block Element Modifier)
-   Block: contact-page, contact-hero, contact-info, contact-form, map-container
 ============================================ */
 
 * {
@@ -10,7 +8,6 @@
     box-sizing: border-box;
 }
 
-/* Main Contact Page Container */
 .contact-page {
     max-width: 1200px;
     margin: 100px auto 40px;
@@ -19,7 +16,7 @@
 
 /* ===== HERO SECTION ===== */
 .contact-hero {
-    margin-top: 100px; /* Negative offset for header */
+    margin-top: 100px;
     position: relative;
     width: 100%;
     height: 35vh;
@@ -72,17 +69,34 @@
     padding: 30px 20px;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
 .contact-card:hover {
-    transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .contact-card__icon {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 130, 70, 0.1);
+    border-radius: 50%;
+    padding: 15px;
+}
+
+.contact-card__icon img {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+.contact-card:hover .contact-card__icon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
 }
 
 .contact-card__title {
@@ -107,7 +121,6 @@
     margin-bottom: 60px;
 }
 
-/* Contact Form Container */
 .contact-form-container {
     flex: 1.2;
     min-width: 350px;
@@ -137,7 +150,6 @@
     color: #666;
 }
 
-/* Form Elements */
 .contact-form {
     width: 100%;
 }
@@ -214,7 +226,7 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
     text-decoration: none;
     text-align: center;
     background-color: #ff8246;
@@ -225,14 +237,11 @@
 
 .contact-form__submit-btn:hover {
     background-color: #e66a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
 }
 
 .contact-form__submit-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
 }
 
 .contact-form__success {
@@ -244,7 +253,6 @@
     border-left: 3px solid #2e7d32;
 }
 
-/* Map Container */
 .map-container {
     flex: 0.8;
     min-width: 300px;
@@ -281,7 +289,6 @@
     border: 0;
 }
 
-/* ===== MODAL STYLES ===== */
 .modal {
     position: fixed;
     inset: 0;
@@ -321,7 +328,7 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
     background-color: #ff8246;
     color: white;
 }
@@ -341,7 +348,6 @@
     }
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .contact-page {
         margin-top: 80px;

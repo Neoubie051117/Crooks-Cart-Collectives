@@ -207,188 +207,191 @@ function initStarRating() {
     }
 
     // ============= RENDER ORDERS =============
-    function renderOrders(orders) {
-        if (!orders || orders.length === 0) {
-            ordersList.innerHTML = `
-                <div class="empty-orders">
-                    <p>You haven't placed any orders yet.</p>
-                    <a href="products.php" class="btn-primary">Start Shopping</a>
+    // In orders.js, update the renderOrders function's action buttons section (around line 250-280)
+
+// ============= RENDER ORDERS =============
+function renderOrders(orders) {
+    if (!orders || orders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="empty-orders">
+                <p>You haven't placed any orders yet.</p>
+                <a href="products.php" class="btn-primary">Start Shopping</a>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+
+    orders.forEach(order => {
+        const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
+        const orderStatus = order.order_status || 'pending';
+        const total = Number(order.total_amount).toFixed(2);
+        const shippingAddress = escapeHtml(order.shipping_address || 'Address not available');
+
+        html += `
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-header-left">
+                        <span class="order-id">Order #${order.order_id}</span>
+                        <span class="order-date">${orderDate}</span>
+                    </div>
+                    <div class="order-header-right">
+                        <span class="order-status-badge ${orderStatus}">${orderStatus}</span>
+                    </div>
                 </div>
-            `;
-            return;
-        }
 
-        let html = '';
+                <div class="order-body">
+                    <!-- Column 1: Order Items -->
+                    <div class="order-items-column">
+                        <div class="order-items">
+        `;
 
-        orders.forEach(order => {
-            const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
-            const orderStatus = order.order_status || 'pending';
-            const total = Number(order.total_amount).toFixed(2);
-            const shippingAddress = escapeHtml(order.shipping_address || 'Address not available');
+        // Group items by seller
+        const itemsBySeller = {};
+        order.items.forEach(item => {
+            const sellerName = item.business_name || 'Unknown Seller';
+            if (!itemsBySeller[sellerName]) {
+                itemsBySeller[sellerName] = {
+                    sellerName: sellerName,
+                    items: []
+                };
+            }
+            itemsBySeller[sellerName].items.push(item);
+        });
 
-            html += `
-                <div class="order-card">
-                    <div class="order-header">
-                        <div class="order-header-left">
-                            <span class="order-id">Order #${order.order_id}</span>
-                            <span class="order-date">${orderDate}</span>
-                        </div>
-                        <div class="order-header-right">
-                            <span class="order-status-badge ${orderStatus}">${orderStatus}</span>
+        // Render items
+        for (const [sellerName, sellerData] of Object.entries(itemsBySeller)) {
+            sellerData.items.forEach(item => {
+                const imagePath = getImagePath(item.image_path);
+                const productName = escapeHtml(item.product_name || 'Product');
+                const itemStatus = item.status || 'pending';
+                const statusClass = itemStatus.toLowerCase();
+
+                html += `
+                    <div class="order-item" data-item-id="${item.order_item_id}">
+                        <img src="${imagePath}" alt="${productName}" class="order-item-image"
+                             onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                        
+                        <div class="order-item-details">
+                            <div class="order-item-seller">${escapeHtml(sellerName)}</div>
+                            <div class="order-item-title">${productName}</div>
+                            <div class="order-item-meta">
+                                <span class="item-quantity">Qty: ${item.quantity}</span>
+                                <span class="item-price">₱${Number(item.price_at_time).toFixed(2)}</span>
+                            </div>
+                            <div class="order-item-status">
+                                <span class="status-badge ${statusClass}">${itemStatus}</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="order-body">
-                        <!-- Column 1: Order Items -->
-                        <div class="order-items-column">
-                            <div class="order-items">
-            `;
-
-            // Group items by seller
-            const itemsBySeller = {};
-            order.items.forEach(item => {
-                const sellerName = item.business_name || 'Unknown Seller';
-                if (!itemsBySeller[sellerName]) {
-                    itemsBySeller[sellerName] = {
-                        sellerName: sellerName,
-                        items: []
-                    };
-                }
-                itemsBySeller[sellerName].items.push(item);
-            });
-
-            // Render items
-            for (const [sellerName, sellerData] of Object.entries(itemsBySeller)) {
-                sellerData.items.forEach(item => {
-                    const imagePath = getImagePath(item.image_path);
-                    const productName = escapeHtml(item.product_name || 'Product');
-                    const itemStatus = item.status || 'pending';
-                    const statusClass = itemStatus.toLowerCase();
-
-                    html += `
-                        <div class="order-item" data-item-id="${item.order_item_id}">
-                            <img src="${imagePath}" alt="${productName}" class="order-item-image"
-                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                            
-                            <div class="order-item-details">
-                                <div class="order-item-seller">${escapeHtml(sellerName)}</div>
-                                <div class="order-item-title">${productName}</div>
-                                <div class="order-item-meta">
-                                    <span class="item-quantity">Qty: ${item.quantity}</span>
-                                    <span class="item-price">₱${Number(item.price_at_time).toFixed(2)}</span>
-                                </div>
-                                <div class="order-item-status">
-                                    <span class="status-badge ${statusClass}">${itemStatus}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            html += `
-                            </div>
-                        </div>
-
-                        <!-- Column 2: Price Summary -->
-                        <div class="order-price-summary">
-                            <div class="price-summary-title">Order Summary</div>
-            `;
-
-            // Calculate totals
-            let subtotal = 0;
-            let totalQuantity = 0;
-            order.items.forEach(item => {
-                subtotal += Number(item.subtotal || (item.price_at_time * item.quantity));
-                totalQuantity += item.quantity;
-            });
-
-            html += `
-                            <div class="price-row">
-                                <span>Total Items</span>
-                                <span class="price-value">${totalQuantity}</span>
-                            </div>
-                            
-                            <div class="price-divider"></div>
-                            
-                            <div class="price-row">
-                                <span>Subtotal</span>
-                                <span class="price-value">₱${subtotal.toFixed(2)}</span>
-                            </div>
-                            
-                            <div class="price-row">
-                                <span>Shipping Fee</span>
-                                <span class="price-value">Free</span>
-                            </div>
-                            
-                            <div class="price-divider"></div>
-                            
-                            <div class="price-row price-total">
-                                <span>Total</span>
-                                <span class="price-value">₱${total}</span>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Shipping + Actions -->
-                        <div class="order-shipping-column">
-                            <div class="order-shipping-location">
-                                <div class="shipping-address-title">Shipping Address</div>
-                                <div class="shipping-address-text">${shippingAddress}</div>
-                            </div>
-
-                            <div class="order-item-actions">
-            `;
-
-            // Add action buttons for each item - REMOVED ALL EMOJIS
-            order.items.forEach(item => {
-                const itemStatus = item.status || 'pending';
-                const canCancel = ['pending', 'confirmed'].includes(itemStatus);
-                const reviewed = item.reviewed || false;
-
-                if (itemStatus === 'delivered' && !reviewed) {
-                    html += `
-                        <button class="action-btn action-btn-review" 
-                                data-item="${item.order_item_id}" 
-                                data-product="${item.product_id}">
-                            Write Review
-                        </button>
-                    `;
-                } else if (reviewed) {
-                    html += `
-                        <span class="reviewed-badge">
-                            Reviewed
-                        </span>
-                    `;
-                }
-                
-                if (canCancel) {
-                    html += `
-                        <button class="action-btn action-btn-cancel" 
-                                data-item="${item.order_item_id}">
-                            Cancel Item
-                        </button>
-                    `;
-                }
-                
-                html += `
-                    <a href="product-details.php?id=${item.product_id}" 
-                       class="action-btn action-btn-view">
-                        View Product
-                    </a>
                 `;
             });
+        }
 
-            html += `
-                            </div>
+        html += `
                         </div>
                     </div>
-                </div>
+
+                    <!-- Column 2: Price Summary -->
+                    <div class="order-price-summary">
+                        <div class="price-summary-title">Order Summary</div>
+        `;
+
+        // Calculate totals
+        let subtotal = 0;
+        let totalQuantity = 0;
+        order.items.forEach(item => {
+            subtotal += Number(item.subtotal || (item.price_at_time * item.quantity));
+            totalQuantity += item.quantity;
+        });
+
+        html += `
+                        <div class="price-row">
+                            <span>Total Items</span>
+                            <span class="price-value">${totalQuantity}</span>
+                        </div>
+                        
+                        <div class="price-divider"></div>
+                        
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span class="price-value">₱${subtotal.toFixed(2)}</span>
+                        </div>
+                        
+                        <div class="price-row">
+                            <span>Shipping Fee</span>
+                            <span class="price-value">Free</span>
+                        </div>
+                        
+                        <div class="price-divider"></div>
+                        
+                        <div class="price-row price-total">
+                            <span>Total</span>
+                            <span class="price-value">₱${total}</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Shipping + Actions -->
+                    <div class="order-shipping-column">
+                        <div class="order-shipping-location">
+                            <div class="shipping-address-title">Shipping Address</div>
+                            <div class="shipping-address-text">${shippingAddress}</div>
+                        </div>
+
+                        <div class="order-item-actions">
+        `;
+
+        // Add action buttons for each item - SIMPLIFIED STATUSES
+        order.items.forEach(item => {
+            const itemStatus = item.status || 'pending';
+            const canCancel = itemStatus === 'pending';
+            const reviewed = item.reviewed || false;
+
+            if (itemStatus === 'delivered' && !reviewed) {
+                html += `
+                    <button class="action-btn action-btn-review" 
+                            data-item="${item.order_item_id}" 
+                            data-product="${item.product_id}">
+                        Write Review
+                    </button>
+                `;
+            } else if (reviewed) {
+                html += `
+                    <span class="reviewed-badge">
+                        Reviewed
+                    </span>
+                `;
+            }
+            
+            if (canCancel) {
+                html += `
+                    <button class="action-btn action-btn-cancel" 
+                            data-item="${item.order_item_id}">
+                        Cancel Item
+                    </button>
+                `;
+            }
+            
+            html += `
+                <a href="product-details.php?id=${item.product_id}" 
+                   class="action-btn action-btn-view">
+                    View Product
+                </a>
             `;
         });
 
-        ordersList.innerHTML = html;
-        attachEventListeners();
-    }
+        html += `
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    ordersList.innerHTML = html;
+    attachEventListeners();
+}
 
     // ============= HELPER FUNCTIONS =============
     function formatDate(dateString) {
