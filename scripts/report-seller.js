@@ -1,3 +1,4 @@
+/* JavaScript File Content */
 document.addEventListener("DOMContentLoaded", () => {
     const openButton = document.getElementById("openReportButton");
     const overlay = document.getElementById("reportOverlay");
@@ -6,35 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeButton = document.getElementById("closeReport");
     const sellerSelect = document.getElementById("seller_id");
 
-    // Load sellers for dropdown
-    async function loadSellers() {
-        if (!sellerSelect) return;
-        
-        try {
-            const currentPath = window.location.pathname;
-            let fetchPath = "../database/sellers-list.php";
-            
-            if (currentPath.includes('/pages/')) {
-                fetchPath = "../database/sellers-list.php";
-            } else {
-                fetchPath = "database/sellers-list.php";
-            }
-            
-            const response = await fetch(fetchPath);
-            const sellers = await response.json();
-            
-            if (sellers.status === 'success' && sellers.data) {
-                sellers.data.forEach(seller => {
-                    const option = document.createElement('option');
-                    option.value = seller.seller_id;
-                    option.textContent = seller.business_name || seller.username;
-                    sellerSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading sellers:', error);
-        }
-    }
+    // REMOVED: loadSellers() function - dropdown is already populated by PHP
 
     const closeForm = () => {
         overlay.style.display = "none";
@@ -44,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     openButton?.addEventListener("click", () => {
         document.body.classList.add("blurred-background");
         overlay.style.display = "flex";
-        loadSellers();
+        // REMOVED: loadSellers() call
     });
 
     overlay?.addEventListener("click", (e) => {

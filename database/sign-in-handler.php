@@ -1,8 +1,6 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-
-// Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -29,23 +27,20 @@ handleSignin();
 function handleSignin() {
     global $connection;
     
-    // Log the attempt (without password)
-    $identifier = $_POST['identifier'] ?? '';
-    error_log("Signin attempt for identifier: " . $identifier);
+    error_log("Signin attempt for identifier: " . ($_POST['identifier'] ?? ''));
     
     $identifier = $_POST['identifier'] ?? '';
     $password = $_POST['password'] ?? '';
     $redirectParam = $_POST['redirect'] ?? '';
     
     if (empty($identifier) || empty($password)) {
-        error_log("Missing fields in signin attempt");
         echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
     
     $identifier = trim($identifier);
     
-    // Check for admin first
+    // Check for admin
     try {
         $stmt = $connection->prepare("
             SELECT admin_id, username, email, password 
@@ -56,23 +51,17 @@ function handleSignin() {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($admin) {
-            // Admin uses password_verify (they have hashed passwords)
             if (!password_verify($password, $admin['password'])) {
-                error_log("Admin password mismatch for: " . $identifier);
-                // Return generic error message for user
                 echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
                 exit;
             }
             
-            // Admin login successful
             $_SESSION['admin_id'] = $admin['admin_id'];
             $_SESSION['username'] = $admin['username'];
             $_SESSION['email'] = $admin['email'];
             $_SESSION['is_admin'] = true;
             $_SESSION['is_customer'] = false;
             $_SESSION['is_seller'] = false;
-            
-            error_log("Admin login successful: " . $admin['username']);
             
             echo json_encode([
                 'status' => 'success',
@@ -83,7 +72,6 @@ function handleSignin() {
         }
     } catch (PDOException $e) {
         error_log("Admin check error: " . $e->getMessage());
-        // Continue to user check
     }
     
     // Check regular user
@@ -97,16 +85,13 @@ function handleSignin() {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$user) {
-            error_log("User not found: " . $identifier);
-            // Generic error - don't specify if username/email doesn't exist
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
         
-        // Plain text password comparison (as per your original code)
+        // Plain text comparison (keep as per project)
         if ($password !== $user['password']) {
-            error_log("Password mismatch for user: " . $identifier . " - Expected: " . $user['password'] . ", Got: " . $password);
-            // Generic error - don't specify which field is wrong
+            error_log("Password mismatch for user: " . $identifier);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
@@ -121,10 +106,6 @@ function handleSignin() {
             $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
             $stmt->execute([$user['user_id']]);
             $customer_id = $connection->lastInsertId();
-            
-            // Create shopping cart
-            $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
-            $stmt->execute([$customer_id]);
         } else {
             $customer_id = $customer['customer_id'];
         }
@@ -155,43 +136,24 @@ function handleSignin() {
         $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
         $stmt->execute([$user['user_id']]);
         
-        // Determine redirect based on user type and redirect parameter
+        // Determine redirect
         $redirect = '';
-        
-        // First priority: Check if there's a redirect parameter from the form
         if (!empty($redirectParam)) {
-            // Clean the redirect parameter - remove any leading '../' or '/'
             $cleanRedirect = ltrim($redirectParam, './');
-            
-            // If it's just a filename (no path), add the pages directory
             if (strpos($cleanRedirect, '/') === false && strpos($cleanRedirect, 'pages/') !== 0) {
                 $redirect = '../pages/' . $cleanRedirect;
-            } 
-            // If it already has pages/ in the path but no leading ../
-            elseif (strpos($cleanRedirect, 'pages/') === 0) {
+            } elseif (strpos($cleanRedirect, 'pages/') === 0) {
                 $redirect = '../' . $cleanRedirect;
-            }
-            // If it already has the correct format (starts with ../)
-            elseif (strpos($cleanRedirect, '../') === 0) {
+            } elseif (strpos($cleanRedirect, '../') === 0) {
                 $redirect = $cleanRedirect;
-            }
-            // Otherwise, assume it needs the pages prefix
-            else {
+            } else {
                 $redirect = '../pages/' . $cleanRedirect;
             }
-            
-            error_log("Redirecting to requested page: " . $redirect);
-        } 
-        // Second priority: If user is a verified seller, go to seller dashboard
-        elseif ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
+        } elseif ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
             $redirect = '../pages/seller-dashboard.php';
-        } 
-        // Default: Go to customer dashboard
-        else {
+        } else {
             $redirect = '../pages/customer-dashboard.php';
         }
-        
-        error_log("User login successful: " . $user['username'] . " (ID: " . $user['user_id'] . ") - Redirecting to: " . $redirect);
         
         echo json_encode([
             'status' => 'success',

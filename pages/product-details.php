@@ -1,11 +1,9 @@
-<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
 
 $product_id = $_GET['id'] ?? 0;
 
-// Fetch product details
 $product = [];
 try {
     $stmt = $connection->prepare("
@@ -25,28 +23,23 @@ if (!$product) {
     exit;
 }
 
-// Improved image path handling
 function getProductImagePath($image_path) {
     if (empty($image_path)) {
         return '../assets/image/icons/PlaceholderAssetProduct.png';
     }
     
-    // If it's already a full URL
     if (filter_var($image_path, FILTER_VALIDATE_URL)) {
         return $image_path;
     }
     
-    // If it's stored as 'assets/...' from root
     if (strpos($image_path, 'assets/') === 0) {
         return '../' . $image_path;
     }
     
-    // If it's just a filename
     if (strpos($image_path, '/') === false) {
         return '../assets/image/icons/' . $image_path;
     }
     
-    // Some other relative path
     return '../' . $image_path;
 }
 
@@ -69,7 +62,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
 
     <div class="content">
         <div class="product-details-wrapper">
-            <!-- Breadcrumb navigation -->
             <nav class="breadcrumb" aria-label="breadcrumb">
                 <ol class="breadcrumb-list">
                     <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
@@ -80,7 +72,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
             </nav>
 
             <div class="product-details-grid">
-                <!-- Product Image Column -->
                 <div class="product-image-column">
                     <div class="product-image-container">
                         <div class="main-image-wrapper">
@@ -91,7 +82,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         </div>
                     </div>
 
-                    <!-- Thumbnail gallery (can be extended for multiple images) -->
                     <div class="product-thumbnails">
                         <button class="thumbnail active" aria-label="Main image">
                             <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Thumbnail"
@@ -100,7 +90,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                     </div>
                 </div>
 
-                <!-- Product Info Column -->
                 <div class="product-info-column">
                     <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
 
@@ -155,7 +144,8 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <?php else: ?>
                         <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
                             class="btn btn-primary login-to-purchase-btn">
-                            <span class="btn-icon">🔐</span>
+                            <img src="../assets/image/icons/cart-shopping.svg" alt="Login to purchase"
+                                style="width: 20px; height: 20px; margin-right: 8px; filter: brightness(0) invert(1);">
                             <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>

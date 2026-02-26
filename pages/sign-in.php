@@ -1,4 +1,3 @@
-<?php // PHP File Content ?>
 <?php
 session_start();
 
@@ -25,45 +24,6 @@ $redirect = $_GET['redirect'] ?? '';
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Password toggle styles */
-    .password-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-wrapper input {
-        width: 100%;
-        padding-right: 40px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-    }
-
-    .password-toggle img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.6;
-        transition: opacity 0.3s;
-    }
-
-    .password-toggle:hover img {
-        opacity: 1;
-    }
-    </style>
 </head>
 
 <body>

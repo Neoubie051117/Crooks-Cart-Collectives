@@ -1,115 +1,102 @@
 USE crooks_cart_collectives;
 
-/* ===============================
-   SELLER 1
-================================ */
+-- =========================
+-- INSERT 5 SELLER USERS
+-- =========================
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Alex', 'Reyes', 'alex@test.com', 'alex', 'alex');
+INSERT INTO users (
+first_name, last_name, email, username, password, address
+) VALUES
+('Mark', 'Santos', 'mark@Sellerdummy.com', 'mark', '123', 'Manila'),
+('Jessa', 'Reyes', 'jessa@Sellerdummy.com', 'jessa', '123', 'Cebu'),
+('Kyle', 'Lopez', 'kyle@Sellerdummy.com', 'kyle', '123', 'Davao'),
+('Anna', 'Cruz', 'anna@Sellerdummy.com', 'anna', '123', 'Baguio'),
+('Leo', 'Garcia', 'leo@Sellerdummy.com', 'leo', '123', 'Iloilo');
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Alex Gadget Store', TRUE, NOW());
+-- =========================
+-- MAKE THEM SELLERS
+-- =========================
 
-SET @seller1 = LAST_INSERT_ID();
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Mark Tech Store', TRUE FROM users WHERE username = 'mark';
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller1,'Wireless Mouse','Bluetooth mouse',899.00,'Electronics',30,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller1,'Keyboard RGB','Mechanical keyboard',2799.00,'Electronics',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Jessa Gaming Hub', TRUE FROM users WHERE username = 'jessa';
 
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Kyle Gadget Zone', TRUE FROM users WHERE username = 'kyle';
 
-/* ===============================
-   SELLER 2
-================================ */
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Anna Digital Shop', TRUE FROM users WHERE username = 'anna';
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Brian', 'Lopez', 'brian@test.com', 'brian', 'brian');
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Leo Tech Corner', TRUE FROM users WHERE username = 'leo';
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Brian PC Parts', TRUE, NOW());
+-- =========================
+-- INSERT 2 PRODUCTS PER SELLER
+-- =========================
 
-SET @seller2 = LAST_INSERT_ID();
+-- MARK
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Wireless Mouse', '2.4G Wireless Mouse', 599.00, 'Accessories', 25,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'mark';
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller2,'GTX Graphics Card','Gaming GPU',12999.00,'Components',5,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller2,'RAM 16GB','DDR4 RAM kit',3499.00,'Components',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Mechanical Keyboard', 'RGB Mechanical Keyboard', 2499.00, 'Accessories', 15,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'mark';
 
+-- JESSA
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Chair Pro', 'Ergonomic Gaming Chair', 8999.00, 'Furniture', 10,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'jessa';
 
-/* ===============================
-   SELLER 3
-================================ */
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Desk', 'Spacious Gaming Desk', 6999.00, 'Furniture', 8,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'jessa';
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Carlo', 'Mendez', 'carlo@test.com', 'carlo', 'carlo');
+-- KYLE
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'USB Hub', '4 Port USB Hub', 499.00, 'Electronics', 30,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'kyle';
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Carlo Mobile Hub', TRUE, NOW());
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'External SSD 1TB', 'High Speed External SSD', 5499.00, 'Electronics', 12,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'kyle';
 
-SET @seller3 = LAST_INSERT_ID();
+-- ANNA
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Smart Watch', 'Fitness Smart Watch', 2999.00, 'Wearables', 18,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'anna';
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller3,'Android Phone','6GB RAM phone',8999.00,'Mobile',20,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller3,'Bluetooth Earbuds','TWS earbuds',1999.00,'Audio',18,'assets/image/icons/seller-product-placeholder.png',TRUE);
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Bluetooth Earbuds', 'Wireless Bluetooth Earbuds', 1999.00, 'Wearables', 22,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'anna';
 
+-- LEO
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'VR Headset', 'Virtual Reality Headset', 15999.00, 'Electronics', 6,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'leo';
 
-/* ===============================
-   SELLER 4
-================================ */
-
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Derek', 'Cruz', 'derek@test.com', 'derek', 'derek');
-
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Derek Home Tech', TRUE, NOW());
-
-SET @seller4 = LAST_INSERT_ID();
-
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller4,'Smart TV 43 inch','Android TV',17999.00,'Home',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller4,'Robot Vacuum','Auto cleaner',15999.00,'Home',4,'assets/image/icons/seller-product-placeholder.png',TRUE);
-
-
-/* ===============================
-   SELLER 5
-================================ */
-
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Evan', 'Torres', 'evan@test.com', 'evan', 'evan');
-
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Evan Gaming Shop', TRUE, NOW());
-
-SET @seller5 = LAST_INSERT_ID();
-
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller5,'Gaming Chair','Ergonomic chair',8999.00,'Gaming',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller5,'VR Headset','Virtual reality',15999.00,'Gaming',3,'assets/image/icons/seller-product-placeholder.png',TRUE);
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Monitor 144Hz', '27 inch 144Hz Monitor', 12999.00, 'Electronics', 9,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'leo';

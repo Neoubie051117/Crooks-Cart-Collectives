@@ -213,7 +213,7 @@ $pathPrefix = $is_root ? '' : '../';
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('profileForm');
-        if (!form) return; // Exit if form doesn't exist (error state)
+        if (!form) return;
 
         const saveBtn = document.getElementById('saveBtn');
         const successMessage = document.getElementById('successMessage');
@@ -222,46 +222,78 @@ $pathPrefix = $is_root ? '' : '../';
 
         // ============= PHONE NUMBER FORMATTING =============
         if (contactInput) {
+            // Store original value for comparison
+            const originalPhone = contactInput.value;
+
             // Format on input
             contactInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
 
                 if (value.length === 0) {
                     e.target.value = '';
-                } else if (value.startsWith('63') && value.length === 12) {
-                    // +639 format
-                    e.target.value = '+63' + value.substring(2, 5) + ' ' +
-                        value.substring(5, 8) + ' ' +
-                        value.substring(8, 12);
-                } else if (value.startsWith('0') && value.length === 11) {
-                    // 09 format
-                    e.target.value = value.substring(0, 4) + ' ' +
-                        value.substring(4, 7) + ' ' +
-                        value.substring(7, 11);
-                } else if (value.startsWith('9') && value.length === 10) {
-                    // 9 format (convert to 09)
-                    e.target.value = '09' + value.substring(0, 3) + ' ' +
-                        value.substring(3, 6) + ' ' +
-                        value.substring(6, 10);
+                    return;
+                }
+
+                // Auto-format as user types
+                if (value.startsWith('63') && value.length <= 12) {
+                    // International format
+                    if (value.length > 2) {
+                        let formatted = '+63';
+                        if (value.length > 5) {
+                            formatted += ' ' + value.substring(2, 5);
+                        } else {
+                            formatted += ' ' + value.substring(2);
+                        }
+                        if (value.length > 8) {
+                            formatted += ' ' + value.substring(5, 8);
+                        }
+                        if (value.length > 11) {
+                            formatted += ' ' + value.substring(8, 12);
+                        }
+                        e.target.value = formatted;
+                    }
+                } else if (value.startsWith('0') && value.length <= 11) {
+                    // Local format
+                    if (value.length > 4) {
+                        e.target.value = value.substring(0, 4) + ' ' + value.substring(4);
+                    } else {
+                        e.target.value = value;
+                    }
                 }
             });
 
-            // Format on blur
+            // Validate on blur
             contactInput.addEventListener('blur', function(e) {
                 const value = e.target.value.trim();
-                if (value) {
-                    const cleaned = value.replace(/\D/g, '');
-                    if (cleaned.length === 11 && cleaned.startsWith('09')) {
-                        // Already in correct format
-                    } else if (cleaned.length === 12 && cleaned.startsWith('63')) {
-                        e.target.value = '+63' + cleaned.substring(2, 5) + ' ' +
-                            cleaned.substring(5, 8) + ' ' +
-                            cleaned.substring(8, 12);
-                    } else if (cleaned.length === 10 && cleaned.startsWith('9')) {
-                        e.target.value = '09' + cleaned.substring(0, 3) + ' ' +
-                            cleaned.substring(3, 6) + ' ' +
-                            cleaned.substring(6, 10);
-                    }
+                if (!value) return;
+
+                const cleaned = value.replace(/\D/g, '');
+                let isValid = false;
+
+                if (cleaned.length === 11 && cleaned.startsWith('09')) {
+                    isValid = true;
+                    // Format nicely
+                    e.target.value = cleaned.substring(0, 4) + ' ' +
+                        cleaned.substring(4, 7) + ' ' +
+                        cleaned.substring(7, 11);
+                } else if (cleaned.length === 12 && cleaned.startsWith('63')) {
+                    isValid = true;
+                    // Format as international
+                    e.target.value = '+63 ' + cleaned.substring(2, 5) + ' ' +
+                        cleaned.substring(5, 8) + ' ' +
+                        cleaned.substring(8, 12);
+                } else if (cleaned.length === 10 && cleaned.startsWith('9')) {
+                    isValid = true;
+                    // Convert to local format
+                    e.target.value = '09' + cleaned.substring(0, 3) + ' ' +
+                        cleaned.substring(3, 6) + ' ' +
+                        cleaned.substring(6, 10);
+                }
+
+                if (!isValid && value !== originalPhone) {
+                    showFieldError('contact_number', 'Please enter a valid Philippine mobile number');
+                } else {
+                    clearFieldError('contact_number');
                 }
             });
         }
@@ -270,12 +302,9 @@ $pathPrefix = $is_root ? '' : '../';
         function validatePhoneNumber(phone) {
             if (!phone) return false;
             const cleaned = phone.replace(/\D/g, '');
-            return cleaned.length === 11 && cleaned.startsWith('09');
-        }
-
-        function validateEmail(email) {
-            if (!email) return false;
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            return (cleaned.length === 11 && cleaned.startsWith('09')) ||
+                (cleaned.length === 12 && cleaned.startsWith('63')) ||
+                (cleaned.length === 10 && cleaned.startsWith('9'));
         }
 
         function validateName(name) {
@@ -336,6 +365,17 @@ $pathPrefix = $is_root ? '' : '../';
             });
         }
 
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.getElementById(fieldId + 'Error');
+
+            if (field && errorEl) {
+                field.classList.remove('error');
+                errorEl.textContent = '';
+                errorEl.classList.remove('show');
+            }
+        }
+
         function showFieldError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const errorEl = document.getElementById(fieldId + 'Error');
@@ -387,7 +427,7 @@ $pathPrefix = $is_root ? '' : '../';
                 isValid = false;
             } else if (!validatePhoneNumber(contactNumber)) {
                 showFieldError('contact_number',
-                    'Please enter a valid Philippine mobile number (e.g., 09123456789)');
+                    'Please enter a valid Philippine mobile number (e.g., 09123456789 or +63 912 345 6789)');
                 isValid = false;
             }
 
@@ -418,99 +458,83 @@ $pathPrefix = $is_root ? '' : '../';
         }
 
         // ============= FORM SUBMISSION =============
-        if (form) {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                if (!validateForm()) {
-                    showError('Please fix the errors in the form');
-                    return;
-                }
+            if (!validateForm()) {
+                showError('Please fix the errors in the form');
+                return;
+            }
 
-                // Disable button and show loading
-                const originalText = saveBtn.textContent;
-                saveBtn.textContent = 'Saving...';
-                saveBtn.disabled = true;
-                saveBtn.classList.add('loading');
+            // Disable button and show loading
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            saveBtn.classList.add('loading');
 
-                try {
-                    const formData = new FormData(form);
+            try {
+                const formData = new FormData(form);
 
-                    // Add timestamp to prevent caching
-                    formData.append('timestamp', Date.now());
-
-                    const response = await fetch('../database/profile-handler.php', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
-
-                    const responseText = await response.text();
-                    let result;
-
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (parseError) {
-                        console.error('Parse error:', responseText);
-                        throw new Error('Server returned invalid response');
-                    }
-
-                    if (result.status === 'success') {
-                        showSuccess('Profile updated successfully!');
-
-                        // Update progress bar without reload
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
-                    } else {
-                        if (result.message && result.message.includes('duplicate')) {
-                            if (result.message.includes('contact')) {
-                                showFieldError('contact_number',
-                                    'This phone number is already registered');
-                            } else {
-                                showError(result.message);
-                            }
-                        } else {
-                            showError(result.message ||
-                                'Failed to update profile. Please try again.');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Update error:', error);
-                    showError('Network error. Please check your connection and try again.');
-                } finally {
-                    // Re-enable button
-                    saveBtn.textContent = originalText;
-                    saveBtn.disabled = false;
-                    saveBtn.classList.remove('loading');
-                }
-            });
-
-            // Real-time validation on blur
-            form.querySelectorAll('input, select, textarea').forEach(field => {
-                field.addEventListener('blur', function() {
-                    if (this.id && !this.readOnly) {
-                        const fieldId = this.id;
-                        const value = this.value.trim();
-
-                        // Simple per-field validation
-                        if (this.required && !value) {
-                            showFieldError(fieldId, this.getAttribute('placeholder') +
-                                ' is required');
-                        } else {
-                            const errorEl = document.getElementById(fieldId + 'Error');
-                            if (errorEl) {
-                                errorEl.textContent = '';
-                                errorEl.classList.remove('show');
-                            }
-                            this.classList.remove('error');
-                        }
+                const response = await fetch('../database/customer-profile-handler.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
+
+                const responseText = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Parse error:', responseText);
+                    throw new Error('Server returned invalid response');
+                }
+
+                if (result.status === 'success') {
+                    showSuccess('Profile updated successfully!');
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    if (result.message.includes('phone number already registered')) {
+                        showFieldError('contact_number', 'This phone number is already registered');
+                    } else {
+                        showError(result.message || 'Failed to update profile. Please try again.');
+                    }
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showError('Network error. Please check your connection and try again.');
+            } finally {
+                // Re-enable button
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('loading');
+            }
+        });
+
+        // Real-time validation on blur
+        form.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (this.id && !this.readOnly) {
+                    const fieldId = this.id;
+                    const value = this.value.trim();
+
+                    // Clear previous error
+                    clearFieldError(fieldId);
+
+                    // Simple per-field validation
+                    if (this.required && !value) {
+                        showFieldError(fieldId, this.getAttribute('placeholder') +
+                            ' is required');
+                    }
+                }
             });
-        }
+        });
     });
     </script>
 </body>

@@ -1,4 +1,3 @@
-<?php // PHP File Content ?>
 <?php
 session_start();
 
@@ -17,45 +16,6 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Password toggle styles */
-    .password-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-wrapper input {
-        width: 100%;
-        padding-right: 40px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-    }
-
-    .password-toggle img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.6;
-        transition: opacity 0.3s;
-    }
-
-    .password-toggle:hover img {
-        opacity: 1;
-    }
-    </style>
 </head>
 
 <body>
@@ -117,14 +77,13 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Choose a username"
+                    <input type="text" id="username" name="username" required placeholder="Do not put your real name"
                         autocomplete="username">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <!-- REMOVED: maxlength="16" to prevent auto-limiting -->
                         <input type="password" id="password" name="password" required
                             placeholder="Create a strong password" autocomplete="new-password">
                         <button type="button" class="password-toggle" id="togglePassword" tabindex="-1"
@@ -137,7 +96,6 @@ if (isset($_SESSION['user_id'])) {
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
                     <div class="password-wrapper">
-                        <!-- REMOVED: maxlength="16" to prevent auto-limiting -->
                         <input type="password" id="confirm_password" name="confirm_password" required
                             placeholder="Confirm your password" autocomplete="new-password">
                         <button type="button" class="password-toggle" id="toggleConfirmPassword" tabindex="-1"

@@ -26,99 +26,54 @@ $shipping_address = $user['address'];
 try {
     $connection->beginTransaction();
 
-    // Get cart items with seller info
+    // Get cart items
     $stmt = $connection->prepare("
-        SELECT ci.*, p.price, p.seller_id, p.name, p.stock_quantity
-        FROM cart_items ci
-        JOIN products p ON ci.product_id = p.product_id
-        WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
+        SELECT c.*, p.price, p.name, p.stock_quantity, p.seller_id
+        FROM carts c
+        JOIN products p ON c.product_id = p.product_id
+        WHERE c.customer_id = ?
     ");
     $stmt->execute([$customer_id]);
-    $cartItems = $stmt->fetchAll();
+    $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($cartItems)) {
         echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
         exit;
     }
 
-    // Calculate total and validate stock
-    $total_amount = 0;
+    // Validate stock and insert orders
     foreach ($cartItems as $item) {
-        $total_amount += $item['price'] * $item['quantity'];
-        
-        // Check stock
+        // Final stock check
         if ($item['quantity'] > $item['stock_quantity']) {
             throw new Exception("Insufficient stock for {$item['name']}");
         }
-    }
-
-    // 1. Insert into customer_orders (NO status column - removed from INSERT)
-    $stmt = $connection->prepare("
-        INSERT INTO customer_orders (customer_id, total_amount, shipping_address, payment_method, order_date)
-        VALUES (?, ?, ?, 'Cash on Delivery', NOW())
-    ");
-    $stmt->execute([$customer_id, $total_amount, $shipping_address]);
-    $order_id = $connection->lastInsertId();
-
-    // 2. Group items by seller
-    $sellerGroups = [];
-    foreach ($cartItems as $item) {
-        $sellerGroups[$item['seller_id']][] = $item;
-    }
-
-    // 3. Create seller_orders for each seller
-    $sellerOrderMap = []; // Maps seller_id to seller_order_id
-    foreach ($sellerGroups as $seller_id => $items) {
-        $seller_total = 0;
-        foreach ($items as $item) {
-            $seller_total += $item['price'] * $item['quantity'];
-        }
         
-        $stmt = $connection->prepare("
-            INSERT INTO seller_orders (order_id, seller_id, seller_total, seller_status)
-            VALUES (?, ?, ?, 'pending')
+        // Insert into orders table
+        $orderStmt = $connection->prepare("
+            INSERT INTO orders (customer_id, seller_id, product_id, quantity, price_at_time, shipping_address, payment_method)
+            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery')
         ");
-        $stmt->execute([$order_id, $seller_id, $seller_total]);
-        $sellerOrderMap[$seller_id] = $connection->lastInsertId();
-    }
-
-    // 4. Insert into purchase_items (this is where status belongs)
-    $insertItem = $connection->prepare("
-        INSERT INTO purchase_items (seller_order_id, product_id, quantity, price_at_time, status)
-        VALUES (?, ?, ?, ?, 'pending')
-    ");
-    
-    foreach ($cartItems as $item) {
-        $seller_order_id = $sellerOrderMap[$item['seller_id']];
-        $insertItem->execute([
-            $seller_order_id,
+        $orderStmt->execute([
+            $customer_id,
+            $item['seller_id'],
             $item['product_id'],
             $item['quantity'],
-            $item['price']
+            $item['price_at_time'],
+            $shipping_address
         ]);
         
-        // Update product stock
-        $updateStock = $connection->prepare("
-            UPDATE products 
-            SET stock_quantity = stock_quantity - ? 
-            WHERE product_id = ?
-        ");
-        $updateStock->execute([$item['quantity'], $item['product_id']]);
+        // Note: Stock is automatically reduced by the BEFORE INSERT trigger on orders table
     }
 
-    // 5. Clear the cart
-    $stmt = $connection->prepare("
-        DELETE FROM cart_items
-        WHERE cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
-    ");
-    $stmt->execute([$customer_id]);
+    // Clear the cart
+    $clearStmt = $connection->prepare("DELETE FROM carts WHERE customer_id = ?");
+    $clearStmt->execute([$customer_id]);
 
     $connection->commit();
 
     echo json_encode([
         'status' => 'success',
         'message' => 'Order placed successfully',
-        'order_id' => $order_id,
         'redirect' => 'orders.php'
     ]);
 

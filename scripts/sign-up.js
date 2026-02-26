@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { valid: false, message: 'Password must contain both uppercase and lowercase letters.' };
         }
         if (!/[0-9]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one number.' };
+            return { valid: false, message: 'Password must contain number.' };
         }
         return { valid: true, message: '' };
     }

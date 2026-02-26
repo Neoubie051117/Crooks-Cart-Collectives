@@ -10,27 +10,25 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 $customer_id = $_SESSION['customer_id'];
 $user_id = $_SESSION['user_id'];
 
-// Fetch cart items for display
 $cartItems = [];
 $total = 0;
 try {
     $stmt = $connection->prepare("
-        SELECT ci.*, p.name, p.price, p.image_path, s.business_name
-        FROM cart_items ci
-        JOIN products p ON ci.product_id = p.product_id
+        SELECT c.*, p.name, p.price, p.image_path, s.business_name
+        FROM carts c
+        JOIN products p ON c.product_id = p.product_id
         JOIN sellers s ON p.seller_id = s.seller_id
-        WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
+        WHERE c.customer_id = ?
     ");
     $stmt->execute([$customer_id]);
     $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($cartItems as $item) {
-        $total += $item['price'] * $item['quantity'];
+        $total += $item['price_at_time'] * $item['quantity'];
     }
 } catch (PDOException $e) {
     error_log("Checkout cart fetch error: " . $e->getMessage());
 }
 
-// Fetch user's shipping address
 $user = [];
 try {
     $stmt = $connection->prepare("SELECT address, first_name, last_name, email, contact_number FROM users WHERE user_id = ?");
@@ -64,7 +62,6 @@ if (empty($cartItems)) {
         <h1 class="checkout-title">Checkout</h1>
 
         <div class="checkout-grid">
-            <!-- Order Summary -->
             <div class="checkout-summary">
                 <h2>Order Summary</h2>
                 <div class="checkout-items">
@@ -76,7 +73,8 @@ if (empty($cartItems)) {
                     ?>
                     <div class="checkout-item">
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                            class="checkout-item-image">
+                            class="checkout-item-image"
+                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
                         <div class="checkout-item-details">
                             <h3><?= htmlspecialchars($item['name']) ?></h3>
                             <p>Seller: <?= htmlspecialchars($item['business_name']) ?></p>
@@ -93,7 +91,6 @@ if (empty($cartItems)) {
                 </div>
             </div>
 
-            <!-- Shipping & Payment -->
             <div class="checkout-info">
                 <h2>Shipping Address</h2>
                 <div class="shipping-details">
@@ -120,6 +117,8 @@ if (empty($cartItems)) {
 
     <div id="checkoutNotifier" class="notifier hidden">
         <div class="notifier-content">
+            <img src="../assets/image/icons/mail.svg" alt="Notification"
+                style="width: 40px; height: 40px; margin-bottom: 15px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             <p id="checkoutMessage"></p>
             <button id="checkoutCloseBtn" class="btn btn-primary">OK</button>
         </div>

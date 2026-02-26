@@ -1,6 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* SIMPLIFIED VERSION - Only pending, delivered, and cancelled statuses */
-/* For school project - No processing/shipping simulation needed */
+/* UPDATED: Uses database statuses: ordered, delivered, cancelled */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State
     let currentAction = null;
-    let currentItemId = null;
+    let currentOrderId = null;
     let currentNewStatus = null;
     let allOrders = []; // Store all orders for filtering
 
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirmModal) confirmModal.style.display = 'none';
         document.body.style.overflow = '';
         currentAction = null;
-        currentItemId = null;
+        currentOrderId = null;
         currentNewStatus = null;
     }
 
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         notificationModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
 
-        // Auto-hide after 3 seconds for success messages
         if (!isError) {
             setTimeout(() => {
                 hideNotificationModal();
@@ -111,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadOrders() {
         if (!ordersList) return;
 
-        // Show loading state
         ordersList.innerHTML = '<div class="loading">Loading orders...</div>';
 
         try {
@@ -131,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= RENDER ORDERS =============
+    // ============= RENDER ORDERS (FLAT LIST) =============
     function renderOrders(orders, filter) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
@@ -146,10 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Filter orders based on selected tab
         let filteredOrders = orders;
         if (filter !== 'all') {
-            filteredOrders = orders.filter(order => {
-                // Check if any item matches the filter
-                return order.items && order.items.some(item => item.status === filter);
-            });
+            filteredOrders = orders.filter(order => order.status === filter);
         }
 
         if (filteredOrders.length === 0) {
@@ -164,10 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const customerName = order.first_name && order.last_name 
                 ? `${escapeHtml(order.first_name)} ${escapeHtml(order.last_name)}`
                 : 'Customer';
-            const sellerStatus = order.seller_status || 'pending';
+            const status = order.status || 'ordered';
+            const statusClass = status.toLowerCase();
+            const imagePath = getImagePath(order.image_path);
 
             html += `
-                <div class="order-card" data-order-id="${order.order_id}" id="order-${order.seller_order_id || order.order_id}">
+                <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
                         <div class="order-header-left">
                             <span class="order-id">Order #${order.order_id}</span>
@@ -175,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="order-header-right">
                             <span class="customer-info">${customerName}</span>
-                            <span class="order-status-badge ${sellerStatus}">${sellerStatus}</span>
+                            <span class="order-status-badge ${statusClass}">${status}</span>
                         </div>
                     </div>
 
@@ -188,70 +184,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p><strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'N/A')}</p>
                         </div>
 
-                        <!-- Order Items -->
-                        <div class="order-items">
+                        <!-- Product Details -->
+                        <div class="product-details">
+                            <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                 class="product-thumbnail"
+                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                            
+                            <div class="product-info">
+                                <h4>${escapeHtml(order.product_name)}</h4>
+                                <p>Quantity: ${order.quantity}</p>
+                                <p>Price: ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                <p class="subtotal">Subtotal: ₱${Number(order.subtotal).toFixed(2)}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="order-actions">
             `;
 
-            let orderSubtotal = 0;
-            order.items.forEach(item => {
-                const imagePath = getImagePath(item.image_path);
-                const productName = escapeHtml(item.product_name || 'Product');
-                const itemStatus = item.status || 'pending';
-                const quantity = item.quantity || 1;
-                const price = parseFloat(item.price_at_time) || 0;
-                const subtotal = parseFloat(item.subtotal) || (price * quantity);
-                orderSubtotal += subtotal;
-
+            // Only show actions for 'ordered' status
+            if (status === 'ordered') {
                 html += `
-                    <div class="order-item" data-item-id="${item.order_item_id}">
-                        <img src="${imagePath}" alt="${productName}" class="order-item-image"
-                             onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                        
-                        <div class="order-item-details">
-                            <h4>${productName}</h4>
-                            <p>Quantity: ${quantity} × ₱${price.toFixed(2)}</p>
-                            <p class="item-subtotal">Subtotal: ₱${subtotal.toFixed(2)}</p>
-                            <span class="badge ${itemStatus}">${itemStatus}</span>
-                        </div>
-                        
-                        <div class="order-item-actions">
+                    <button class="action-btn complete" data-order-id="${order.order_id}" data-status="delivered">
+                        <span class="btn-text">Mark Delivered</span>
+                    </button>
+                    <button class="action-btn cancel" data-order-id="${order.order_id}" data-status="cancelled">
+                        <span class="btn-text">Cancel Order</span>
+                    </button>
                 `;
-
-                // SIMPLIFIED WORKFLOW - Only pending, delivered, cancelled
-                if (itemStatus === 'pending') {
-                    html += `
-                        <button class="action-btn complete" data-item="${item.order_item_id}" data-status="delivered">
-                            <span class="btn-text">CONFIRM ORDER</span>
-                        </button>
-                        <button class="action-btn cancel" data-item="${item.order_item_id}" data-status="cancelled">
-                            <span class="btn-text">CANCEL</span>
-                        </button>
-                    `;
-                } else if (itemStatus === 'delivered') {
-                    html += `
-                        <span class="status-badge delivered">
-                            Delivered
-                        </span>
-                    `;
-                } else if (itemStatus === 'cancelled') {
-                    html += `
-                        <span class="status-badge cancelled">
-                            Cancelled
-                        </span>
-                    `;
-                }
-
+            } else {
                 html += `
-                        </div>
-                    </div>
+                    <span class="status-badge ${statusClass}">
+                        ${status}
+                    </span>
                 `;
-            });
+            }
 
             html += `
-                        </div>
-                        
-                        <div class="order-total">
-                            <strong>Order Total:</strong> ₱${orderSubtotal.toFixed(2)}
                         </div>
                     </div>
                 </div>
@@ -296,33 +265,33 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                const itemId = btn.dataset.item;
+                const orderId = btn.dataset.orderId;
                 const newStatus = btn.dataset.status;
 
-                if (!itemId || !newStatus) return;
+                if (!orderId || !newStatus) return;
 
-                currentItemId = itemId;
+                currentOrderId = orderId;
                 currentNewStatus = newStatus;
 
                 let title = 'Update Order Status';
-                let message = `Are you sure you want to mark this item as ${newStatus}?`;
+                let message = `Are you sure you want to mark this order as ${newStatus}?`;
 
                 if (newStatus === 'cancelled') {
-                    title = 'Cancel Order Item';
-                    message = 'Are you sure you want to cancel this item? This action cannot be undone and will restore product stock.';
+                    title = 'Cancel Order';
+                    message = 'Are you sure you want to cancel this order? This action cannot be undone and will restore product stock.';
                 } else if (newStatus === 'delivered') {
                     title = 'Mark as Delivered';
-                    message = 'Confirm that this item has been delivered to the customer. This will allow the customer to leave a review.';
+                    message = 'Confirm that this order has been delivered to the customer. This will allow the customer to leave a review.';
                 }
 
-                showConfirmModal(title, message, () => handleStatusUpdate(itemId, newStatus));
+                showConfirmModal(title, message, () => handleStatusUpdate(orderId, newStatus));
             });
         });
     }
 
     // ============= HANDLE STATUS UPDATE =============
-    async function handleStatusUpdate(itemId, newStatus) {
-        const btn = document.querySelector(`[data-item="${itemId}"]`);
+    async function handleStatusUpdate(orderId, newStatus) {
+        const btn = document.querySelector(`[data-order-id="${orderId}"]`);
         if (btn) {
             btn.disabled = true;
             btn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Updating...</span>';
@@ -331,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const formData = new URLSearchParams();
             formData.append('action', 'update_item_status');
-            formData.append('item_id', itemId);
+            formData.append('order_id', orderId);
             formData.append('status', newStatus);
 
             const response = await fetch('../database/order-handler.php', {
@@ -345,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                showNotification(`Item marked as ${newStatus} successfully!`);
+                showNotification(`Order marked as ${newStatus} successfully!`);
                 
                 // Reload orders after short delay
                 setTimeout(() => {
@@ -357,8 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = newStatus === 'delivered' 
-                        ? '<span class="btn-icon">✓</span><span class="btn-text">Mark Delivered</span>'
-                        : '<span class="btn-icon">✗</span><span class="btn-text">Cancel</span>';
+                        ? '<span class="btn-text">Mark Delivered</span>'
+                        : '<span class="btn-text">Cancel Order</span>';
                 }
             }
         } catch (error) {
@@ -367,8 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = newStatus === 'delivered' 
-                    ? '<span class="btn-icon">✓</span><span class="btn-text">Mark Delivered</span>'
-                    : '<span class="btn-icon">✗</span><span class="btn-text">Cancel</span>';
+                    ? '<span class="btn-text">Mark Delivered</span>'
+                    : '<span class="btn-text">Cancel Order</span>';
             }
         }
     }
@@ -384,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ============= CHECK FOR URL HASH (for order anchoring) =============
+    // ============= CHECK FOR URL HASH =============
     function checkUrlHash() {
         const hash = window.location.hash;
         if (hash && hash.startsWith('#order-')) {
@@ -404,16 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============= INITIAL LOAD =============
     loadOrders();
     checkUrlHash();
-
-    // Add refresh button functionality (optional)
-    const header = document.querySelector('.seller-header');
-    if (header) {
-        const refreshBtn = document.createElement('button');
-        refreshBtn.className = 'refresh-btn';
-        refreshBtn.innerHTML = 'Refresh';
-        refreshBtn.addEventListener('click', loadOrders);
-        header.appendChild(refreshBtn);
-    }
 });
 
 // Add some CSS for the refresh button and improved UI

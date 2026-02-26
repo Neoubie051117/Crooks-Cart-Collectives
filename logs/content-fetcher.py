@@ -2,7 +2,7 @@
 """
 Web Content Fetcher - Modular file collection for web development
 Python version of Content_Fetcher.sh
-Revised to check file existence BEFORE creating temp file
+Revised to output to /logs/output/ folder and use .md format
 """
 
 import os
@@ -41,8 +41,8 @@ def setup_paths() -> Tuple[Path, Path, Path, str]:
     # Get script directory
     script_dir = Path(__file__).parent.absolute()
     
-    # Configuration directory
-    config_dir = script_dir / "content fetch config"
+    # Configuration directory - using content-fetcher-configuration
+    config_dir = script_dir / "content-fetcher-configuration"
     
     # Parse command line arguments
     if len(sys.argv) > 1:
@@ -54,11 +54,11 @@ def setup_paths() -> Tuple[Path, Path, Path, str]:
     project_root = script_dir.parent.absolute()
     main_folder_name = project_root.name
     
-    # Output folder - defaults to project_root/logs/summary fetch content
+    # Output folder - using /logs/output/
     if len(sys.argv) > 2:
         output_folder = Path(sys.argv[2]).absolute()
     else:
-        output_folder = project_root / "logs" / "summary fetch content"
+        output_folder = project_root / "logs" / "output"
     
     # Ensure output folder exists
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -101,7 +101,7 @@ def show_preset_menu(preset_files: List[Path]) -> None:
         preset_files: List of preset file paths
     """
     if not preset_files:
-        print(color_text(f"No preset configurations found in content fetch config", Colors.RED))
+        print(color_text(f"No preset configurations found in content-fetcher-configuration", Colors.RED))
         return
     
     print(color_text("Available Presets:", Colors.GREEN))
@@ -208,53 +208,51 @@ def get_file_header(file_path: Path) -> str:
     suffix = file_path.suffix.lower()
     
     headers = {
-        '.html': '<!-- HTML File Content -->',
-        '.htm': '<!-- HTML File Content -->',
-        '.php': '<?php // PHP File Content ?>',
-        '.css': '/* CSS File Content */',
-        '.js': '/* JavaScript File Content */',
-        '.jsx': '/* JSX File Content */',
-        '.ts': '/* TypeScript File Content */',
-        '.tsx': '/* TSX File Content */',
-        '.py': '# Python File Content',
-        '.json': '/* JSON File Content */',
-        '.xml': '<!-- XML File Content -->',
-        '.md': '<!-- Markdown File Content -->',
-        '.txt': '# Text File Content',
+        '.html': '```html',
+        '.htm': '```html',
+        '.php': '```php',
+        '.css': '```css',
+        '.js': '```javascript',
+        '.jsx': '```jsx',
+        '.ts': '```typescript',
+        '.tsx': '```tsx',
+        '.py': '```python',
+        '.json': '```json',
+        '.xml': '```xml',
+        '.md': '```markdown',
+        '.txt': '```text',
+        '.sql': '```sql',
     }
     
-    return headers.get(suffix, '')
+    return headers.get(suffix, '```')
+
+def get_file_footer(file_path: Path) -> str:
+    """
+    Get appropriate footer for code blocks.
+    
+    Returns:
+        Closing code block marker
+    """
+    return '```'
 
 def determine_output_file(output_folder: Path, preset_name: str) -> Path:
     """
-    Determine the output file path, handling existing files.
+    Determine the output file path, handling existing files with automatic overwrite.
     
     Args:
         output_folder: Directory for output files
         preset_name: Name of the preset being used
         
     Returns:
-        Path to the output file
+        Path to the output file (always overwrites existing)
     """
-    base_file = output_folder / f"{preset_name}_Summary.txt"
+    output_file = output_folder / f"{preset_name}_Summary.md"
     
-    # Check if file already exists
-    if base_file.exists():
-        print(color_text(f"Existing file detected: {base_file}", Colors.YELLOW))
-        confirm = input(color_text("Overwrite it? (y/N): ", Colors.YELLOW)).strip().lower()
-        
-        if confirm != 'y':
-            index = 1
-            while (output_folder / f"{preset_name}_Summary-{index}.txt").exists():
-                index += 1
-            output_file = output_folder / f"{preset_name}_Summary-{index}.txt"
-            print(color_text(f"Saving as new file: {output_file}", Colors.BLUE))
-            return output_file
-        else:
-            print(color_text("Overwriting existing file...", Colors.BLUE))
-            return base_file
-    else:
-        return base_file
+    # Always overwrite without asking
+    if output_file.exists():
+        print(color_text(f"Overwriting existing file: {output_file}", Colors.YELLOW))
+    
+    return output_file
 
 def process_files(
     project_root: Path,
@@ -276,10 +274,11 @@ def process_files(
     try:
         # Write directly to the output file
         with open(output_file, 'w', encoding='utf-8') as f:
-            # Write header
-            f.write(f"Web Project: {main_folder_name}\n")
-            f.write(f"Preset: {preset_name}\n")
-            f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            # Write header with markdown formatting
+            f.write(f"# Web Project: {main_folder_name}\n\n")
+            f.write(f"**Preset:** {preset_name}\n\n")
+            f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write(f"---\n\n")
             
             # Process each file
             for relative_path in files_to_check:
@@ -288,15 +287,18 @@ def process_files(
                     full_path = Path(relative_path)
                     display_path = relative_path
                 else:
-                    full_path = project_root / relative_path
-                    display_path = f"{main_folder_name}/{relative_path}"
+                    # Remove leading slash if present for proper joining
+                    clean_path = relative_path.lstrip('/')
+                    full_path = project_root / clean_path
+                    display_path = f"{main_folder_name}/{clean_path}"
                 
-                f.write(f"=== File: {display_path} ===\n\n")
+                # Use markdown heading for file names
+                f.write(f"## File: `{display_path}`\n\n")
                 
                 if full_path.exists() and full_path.is_file():
-                    f.write("[FOUND]\n\n")
+                    f.write("**Status:** `FOUND`\n\n")
                     
-                    # Add file type header
+                    # Add file type header with code block
                     header = get_file_header(full_path)
                     if header:
                         f.write(f"{header}\n")
@@ -318,14 +320,20 @@ def process_files(
                                 content = content_file.read()
                                 f.write(content)
                         except:
-                            f.write("[ERROR: Could not read file content]\n")
+                            f.write("*[ERROR: Could not read file content]*\n")
                     except Exception as e:
-                        f.write(f"[ERROR reading file: {e}]\n")
+                        f.write(f"*[ERROR reading file: {e}]*\n")
+                    
+                    # Close code block
+                    footer = get_file_footer(full_path)
+                    if footer:
+                        f.write(f"{footer}\n")
                         
                 else:
-                    f.write("[MISSING]\n")
+                    f.write("**Status:** `MISSING`\n\n")
+                    f.write("*[File not found]*\n")
                 
-                f.write(f"\n{'=' * 46}\n\n")
+                f.write(f"\n---\n\n")
         
         print(color_text(f"Saved as: {output_file}", Colors.GREEN))
         
@@ -349,6 +357,7 @@ def main() -> None:
     print(color_text(f"Project Root: {script_dir.parent}", Colors.GREEN))
     print(color_text(f"Project Name: {main_folder_name}", Colors.GREEN))
     print(color_text(f"Output Folder: {output_folder}", Colors.GREEN))
+    print(color_text(f"Config Folder: {config_dir}", Colors.GREEN))
     print()
     
     # Load presets
@@ -375,7 +384,7 @@ def main() -> None:
         print(color_text("Failed to load files list. Exiting.", Colors.RED))
         sys.exit(1)
     
-    # Determine output file (handles existing file check BEFORE processing)
+    # Determine output file (automatically overwrites without asking)
     output_file = determine_output_file(output_folder, preset_name)
     
     try:

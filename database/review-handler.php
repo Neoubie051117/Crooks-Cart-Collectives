@@ -17,41 +17,39 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 $user_id = $_SESSION['user_id'];
 $customer_id = $_SESSION['customer_id'];
 
-$order_item_id = $_POST['order_item_id'] ?? 0;
+$order_id = $_POST['order_id'] ?? 0;
 $product_id = $_POST['product_id'] ?? 0;
-$rating = $_POST['rating'] ?? 0;
+$rating = (int)($_POST['rating'] ?? 0);
 $comment = trim($_POST['comment'] ?? '');
 
-if (!$order_item_id || !$product_id || !$rating || $rating < 1 || $rating > 5) {
+if (!$order_id || !$product_id || !$rating || $rating < 1 || $rating > 5) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid input']);
     exit;
 }
 
 try {
-    // Verify item belongs to customer and is delivered
+    // Verify order belongs to customer, is delivered, and matches product
     $stmt = $connection->prepare("
-        SELECT pi.order_item_id
-        FROM purchase_items pi
-        JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
-        JOIN customer_orders co ON so.order_id = co.order_id
-        WHERE pi.order_item_id = ? 
-          AND co.customer_id = ?
-          AND pi.product_id = ?
-          AND pi.status = 'delivered'
+        SELECT order_id
+        FROM orders
+        WHERE order_id = ? 
+          AND customer_id = ?
+          AND product_id = ?
+          AND status = 'delivered'
     ");
-    $stmt->execute([$order_item_id, $customer_id, $product_id]);
+    $stmt->execute([$order_id, $customer_id, $product_id]);
     
     if (!$stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'Item not delivered or not found']);
         exit;
     }
 
-    // Check if already reviewed
+    // Check if already reviewed (unique order_id in product_reviews)
     $stmt = $connection->prepare("
         SELECT review_id FROM product_reviews
-        WHERE order_item_id = ?
+        WHERE order_id = ?
     ");
-    $stmt->execute([$order_item_id]);
+    $stmt->execute([$order_id]);
     
     if ($stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'You have already reviewed this product']);
@@ -60,15 +58,15 @@ try {
 
     // Insert review
     $stmt = $connection->prepare("
-        INSERT INTO product_reviews (product_id, user_id, order_item_id, rating, comment, date_posted)
+        INSERT INTO product_reviews (product_id, user_id, order_id, rating, comment, date_posted)
         VALUES (?, ?, ?, ?, ?, NOW())
     ");
-    $stmt->execute([$product_id, $user_id, $order_item_id, $rating, $comment]);
+    $stmt->execute([$product_id, $user_id, $order_id, $rating, $comment]);
 
     echo json_encode(['status' => 'success', 'message' => 'Review submitted']);
 
 } catch (PDOException $e) {
-    if ($e->errorInfo[1] == 1062) { // Duplicate entry
+    if ($e->errorInfo[1] == 1062) {
         echo json_encode(['status' => 'error', 'message' => 'You have already reviewed this product']);
     } else {
         error_log("Review insert error: " . $e->getMessage());

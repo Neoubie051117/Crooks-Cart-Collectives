@@ -1,7 +1,6 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- UPDATED: Simplified order statuses for school project
--- Only pending, delivered, and cancelled
+-- REVISED: Separate carts and orders tables with proper order status handling
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -94,99 +93,66 @@ CREATE TABLE products (
 );
 
 -- =====================================================
--- SHOPPING CARTS TABLE
+-- CARTS TABLE (Separate from orders)
 -- =====================================================
-CREATE TABLE shopping_carts (
+CREATE TABLE carts (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id)
-        ON DELETE CASCADE
-);
-
--- =====================================================
--- CART ITEMS TABLE
--- =====================================================
-CREATE TABLE cart_items (
-    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    seller_id INT NOT NULL,
     product_id INT NOT NULL,
-    quantity INT DEFAULT 1,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    price_at_time DECIMAL(10, 2) NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cart_id)
-        REFERENCES shopping_carts(cart_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
-    UNIQUE KEY unique_cart_product (cart_id, product_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    
+    UNIQUE KEY unique_cart_item (customer_id, product_id),
+    INDEX idx_customer_cart (customer_id, added_at)
 );
 
 -- =====================================================
--- CUSTOMER ORDERS TABLE (Master Order)
+-- ORDERS TABLE (Fixed with proper status handling)
 -- =====================================================
-CREATE TABLE customer_orders (
+CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    total_amount DECIMAL(10, 2) NOT NULL,
-    shipping_address VARCHAR(255) NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id)
-        ON DELETE CASCADE
-);
-
--- =====================================================
--- SELLER ORDERS TABLE (Groups items by seller)
--- =====================================================
-CREATE TABLE seller_orders (
-    seller_order_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
     seller_id INT NOT NULL,
-    seller_total DECIMAL(10, 2) NOT NULL,
-    -- SIMPLIFIED: Only pending, delivered, cancelled
-    seller_status ENUM(
-        'pending',      -- At least one item pending
-        'delivered',    -- All items delivered
-        'cancelled'     -- All items cancelled
-    ) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id)
-        REFERENCES customer_orders(order_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (seller_id)
-        REFERENCES sellers(seller_id)
-        ON DELETE CASCADE,
-    UNIQUE KEY unique_seller_per_order (order_id, seller_id)
-);
-
--- =====================================================
--- PURCHASE ITEMS TABLE - SIMPLIFIED STATUS
--- =====================================================
-CREATE TABLE purchase_items (
-    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    seller_order_id INT NOT NULL,
     product_id INT NOT NULL,
+    
+    -- Order details
     quantity INT NOT NULL,
     price_at_time DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2)
-        GENERATED ALWAYS AS (quantity * price_at_time) STORED,
+    subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price_at_time) STORED,
     
-    -- SIMPLIFIED: Only pending, delivered, cancelled
+    -- Shipping & payment
+    shipping_address VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
+    
+    -- Order tracking
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM(
-        'pending',      -- Order placed, awaiting seller action
-        'delivered',    -- Customer received - can review
-        'cancelled'     -- Cancelled before delivery
+        'pending',      -- Initial state: Order placed, awaiting seller confirmation
+        'delivered',    -- Completed: Seller confirmed the order
+        'cancelled'     -- Cancelled: Either customer cancelled or seller cancelled
     ) DEFAULT 'pending',
     
-    FOREIGN KEY (seller_order_id)
-        REFERENCES seller_orders(seller_order_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id)
+    -- Cancellation tracking
+    cancelled_by ENUM('customer', 'seller') NULL,
+    cancellation_reason VARCHAR(255) NULL,
+    
+    -- Timestamps
+    delivered_at TIMESTAMP NULL,
+    cancelled_at TIMESTAMP NULL,
+    
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    
+    INDEX idx_customer_orders (customer_id, status, order_date),
+    INDEX idx_seller_orders (seller_id, status, order_date)
 );
 
 -- =====================================================
@@ -196,16 +162,19 @@ CREATE TABLE product_reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     user_id INT NOT NULL,
-    order_item_id INT NOT NULL UNIQUE,  -- One review per purchased item
+    order_id INT NOT NULL UNIQUE,
     rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    title VARCHAR(100),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_edited BOOLEAN DEFAULT FALSE,
     last_edited TIMESTAMP NULL,
+    
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (order_item_id) REFERENCES purchase_items(order_item_id) ON DELETE CASCADE
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    
+    INDEX idx_product_reviews (product_id, rating),
+    INDEX idx_user_reviews (user_id)
 );
 
 -- =====================================================
@@ -221,137 +190,99 @@ CREATE TABLE seller_reports (
     admin_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (reporter_id)
-        REFERENCES users(user_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (seller_id)
-        REFERENCES sellers(seller_id)
-        ON DELETE CASCADE
+    
+    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    
+    INDEX idx_reports_seller_status (seller_id, status),
+    INDEX idx_reports_reporter (reporter_id)
 );
 
 -- =====================================================
 -- INDEXES for Performance
 -- =====================================================
-
--- Purchase items indexes
-CREATE INDEX idx_purchase_items_status ON purchase_items(status);
-CREATE INDEX idx_purchase_items_seller_order ON purchase_items(seller_order_id);
-CREATE INDEX idx_purchase_items_product ON purchase_items(product_id);
-
--- Seller orders indexes
-CREATE INDEX idx_seller_orders_order ON seller_orders(order_id);
-CREATE INDEX idx_seller_orders_seller ON seller_orders(seller_id);
-CREATE INDEX idx_seller_orders_status ON seller_orders(seller_status);
-
--- Customer orders indexes
-CREATE INDEX idx_customer_orders_customer_date ON customer_orders(customer_id, order_date);
-
--- Product reviews indexes
-CREATE INDEX idx_product_reviews_product ON product_reviews(product_id, rating, date_posted);
-CREATE INDEX idx_product_reviews_user ON product_reviews(user_id);
-
--- Cart indexes
-CREATE INDEX idx_cart_items_cart_product ON cart_items(cart_id, product_id);
-
--- Seller reports indexes
-CREATE INDEX idx_seller_reports_seller_status ON seller_reports(seller_id, status);
-CREATE INDEX idx_seller_reports_reporter ON seller_reports(reporter_id);
+CREATE INDEX idx_carts_customer ON carts(customer_id);
+CREATE INDEX idx_orders_customer_status ON orders(customer_id, status, order_date);
+CREATE INDEX idx_orders_seller_status ON orders(seller_id, status, order_date);
 
 -- =====================================================
 -- TRIGGERS
 -- =====================================================
 DELIMITER $$
 
--- Auto-create customer and cart after user signup
+-- Auto-create customer after user signup
 CREATE TRIGGER after_user_insert
 AFTER INSERT ON users
 FOR EACH ROW
 BEGIN
-    DECLARE new_customer_id INT;
-    
     INSERT INTO customers (user_id)
     VALUES (NEW.user_id);
-    
-    SET new_customer_id = LAST_INSERT_ID();
-    
-    INSERT INTO shopping_carts (customer_id)
-    VALUES (new_customer_id);
 END$$
 
--- Update seller's total_sales when purchase items are delivered
-CREATE TRIGGER after_purchase_item_delivered
-AFTER UPDATE ON purchase_items
+-- Update seller's total_sales when items are delivered
+CREATE TRIGGER after_order_delivered
+AFTER UPDATE ON orders
 FOR EACH ROW
 BEGIN
-    IF NEW.status = 'delivered' AND (OLD.status != 'delivered' OR OLD.status IS NULL) THEN
+    IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
         UPDATE sellers s
         SET s.total_sales = s.total_sales + NEW.subtotal
-        WHERE s.seller_id = (
-            SELECT so.seller_id 
-            FROM seller_orders so 
-            WHERE so.seller_order_id = NEW.seller_order_id
-        );
-    END IF;
-END$$
-
--- Update customer's total_spent when purchase items are delivered
-CREATE TRIGGER after_purchase_item_delivered_customer
-AFTER UPDATE ON purchase_items
-FOR EACH ROW
-BEGIN
-    IF NEW.status = 'delivered' AND (OLD.status != 'delivered' OR OLD.status IS NULL) THEN
+        WHERE s.seller_id = NEW.seller_id;
+        
         UPDATE customers c
         SET c.total_spent = c.total_spent + NEW.subtotal,
             c.total_orders = c.total_orders + 1
-        WHERE c.customer_id = (
-            SELECT co.customer_id
-            FROM seller_orders so
-            JOIN customer_orders co ON so.order_id = co.order_id
-            WHERE so.seller_order_id = NEW.seller_order_id
-        );
+        WHERE c.customer_id = NEW.customer_id;
     END IF;
 END$$
 
--- Update seller_orders seller_status based on purchase_items (SIMPLIFIED)
-CREATE TRIGGER after_purchase_item_status_update
-AFTER UPDATE ON purchase_items
+-- Update product stock and timestamps when order status changes
+CREATE TRIGGER after_order_status_change
+AFTER UPDATE ON orders
 FOR EACH ROW
 BEGIN
-    DECLARE pending_count INT DEFAULT 0;
-    DECLARE delivered_count INT DEFAULT 0;
-    DECLARE cancelled_count INT DEFAULT 0;
-    DECLARE total_count INT DEFAULT 0;
+    -- If changed to delivered (seller confirmed)
+    IF NEW.status = 'delivered' AND OLD.status = 'pending' THEN
+        UPDATE orders 
+        SET delivered_at = NOW() 
+        WHERE order_id = NEW.order_id;
+    END IF;
     
-    -- Get total count
-    SELECT COUNT(*) INTO total_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id;
+    -- If changed to cancelled (by either customer or seller)
+    IF NEW.status = 'cancelled' AND OLD.status = 'pending' THEN
+        -- Restore stock since order was cancelled before delivery
+        UPDATE products 
+        SET stock_quantity = stock_quantity + NEW.quantity 
+        WHERE product_id = NEW.product_id;
+        
+        UPDATE orders 
+        SET cancelled_at = NOW() 
+        WHERE order_id = NEW.order_id;
+    END IF;
+END$$
+
+-- When order is placed, update stock
+CREATE TRIGGER before_order_insert
+BEFORE INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE current_stock INT;
     
-    -- Get pending count
-    SELECT COUNT(*) INTO pending_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id AND status = 'pending';
+    -- Get current stock
+    SELECT stock_quantity INTO current_stock 
+    FROM products 
+    WHERE product_id = NEW.product_id;
     
-    -- Get delivered count
-    SELECT COUNT(*) INTO delivered_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id AND status = 'delivered';
+    -- Check if sufficient stock
+    IF current_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Insufficient stock for this product';
+    END IF;
     
-    -- Get cancelled count
-    SELECT COUNT(*) INTO cancelled_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id AND status = 'cancelled';
-    
-    -- Update seller_status (SIMPLIFIED)
-    UPDATE seller_orders
-    SET seller_status = 
-        CASE 
-            WHEN cancelled_count = total_count THEN 'cancelled'
-            WHEN delivered_count = total_count THEN 'delivered'
-            ELSE 'pending'
-        END,
-        updated_at = NOW()
-    WHERE seller_order_id = NEW.seller_order_id;
+    -- Reduce stock
+    UPDATE products 
+    SET stock_quantity = stock_quantity - NEW.quantity 
+    WHERE product_id = NEW.product_id;
 END$$
 
 DELIMITER ;
@@ -360,38 +291,50 @@ DELIMITER ;
 -- VIEWS for Easy Data Access
 -- =====================================================
 
--- Customer order summary view
-CREATE VIEW customer_order_summary AS
+-- Customer cart view
+CREATE VIEW customer_cart AS
 SELECT 
-    co.order_id,
-    co.customer_id,
-    co.order_date,
-    co.total_amount,
-    co.shipping_address,
-    co.payment_method,
-    COUNT(DISTINCT so.seller_id) as seller_count,
-    COUNT(pi.order_item_id) as item_count,
-    SUM(CASE WHEN pi.status = 'pending' THEN 1 ELSE 0 END) as pending_items,
-    SUM(CASE WHEN pi.status = 'delivered' THEN 1 ELSE 0 END) as delivered_items,
-    SUM(CASE WHEN pi.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_items
-FROM customer_orders co
-LEFT JOIN seller_orders so ON co.order_id = so.order_id
-LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-GROUP BY co.order_id;
+    c.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    p.stock_quantity AS available_stock,
+    s.business_name AS seller_name
+FROM carts c
+JOIN products p ON c.product_id = p.product_id
+JOIN sellers s ON c.seller_id = s.seller_id
+ORDER BY c.added_at DESC;
 
--- Seller order summary view
-CREATE VIEW seller_order_summary AS
+-- Customer orders view
+CREATE VIEW customer_orders AS
 SELECT 
-    so.seller_order_id,
-    so.seller_id,
-    so.order_id,
-    so.seller_total,
-    so.seller_status,
-    so.created_at,
-    COUNT(pi.order_item_id) as item_count,
-    SUM(CASE WHEN pi.status = 'pending' THEN 1 ELSE 0 END) as pending_items,
-    SUM(CASE WHEN pi.status = 'delivered' THEN 1 ELSE 0 END) as delivered_items,
-    SUM(CASE WHEN pi.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_items
-FROM seller_orders so
-LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-GROUP BY so.seller_order_id;
+    o.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    s.business_name AS seller_name,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.contact_number,
+    (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_id = o.order_id) as has_review
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN sellers s ON o.seller_id = s.seller_id
+JOIN customers cu ON o.customer_id = cu.customer_id
+JOIN users u ON cu.user_id = u.user_id
+ORDER BY o.order_date DESC;
+
+-- Seller orders view
+CREATE VIEW seller_orders_view AS
+SELECT 
+    o.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.contact_number
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN customers cu ON o.customer_id = cu.customer_id
+JOIN users u ON cu.user_id = u.user_id
+ORDER BY o.order_date DESC;

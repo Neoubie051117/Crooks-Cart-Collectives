@@ -2,6 +2,7 @@
 """
 Web Project Tree Mapper - Directory structure visualization for web projects
 Python version
+Revised to output clean tree structure with proper code block formatting
 """
 
 import os
@@ -40,20 +41,6 @@ FILE_TYPES = {
     '.xml': 'XML',
 }
 
-# File type abbreviations for display
-FILE_ABBR = {
-    '.html': '(html)',
-    '.htm': '(html)',
-    '.php': '(php)',
-    '.css': '(css)',
-    '.js': '(js)',
-    '.json': '(json)',
-    '.md': '(md)',
-    '.txt': '(txt)',
-    '.sh': '(sh)',
-    '.py': '(py)',
-}
-
 # Image extensions
 IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.bmp'}
 
@@ -62,17 +49,6 @@ WEB_EXTENSIONS = {'.html', '.htm', '.php', '.css', '.js', '.json', '.md', '.txt'
 
 # Directories to exclude
 EXCLUDED_DIRS = {'.git', 'node_modules', '__pycache__', '.venv', 'venv', 'env'}
-
-def get_file_type(file_path: Path) -> str:
-    """Get file type abbreviation for display."""
-    suffix = file_path.suffix.lower()
-    
-    if suffix in FILE_ABBR:
-        return FILE_ABBR[suffix]
-    elif suffix in IMAGE_EXTENSIONS:
-        return '(img)'
-    else:
-        return ''
 
 def is_hidden_file(file_path: Path) -> bool:
     """Check if file or directory is hidden."""
@@ -105,6 +81,7 @@ def count_files_by_type(project_root: Path) -> Dict[str, int]:
         'json': 0,
         'text': 0,
         'images': 0,
+        'other': 0
     }
     
     for file_path in project_root.rglob('*'):
@@ -136,6 +113,8 @@ def count_files_by_type(project_root: Path) -> Dict[str, int]:
             counts['text'] += 1
         elif suffix in IMAGE_EXTENSIONS:
             counts['images'] += 1
+        else:
+            counts['other'] += 1
     
     return counts
 
@@ -147,7 +126,7 @@ def generate_tree_structure(
     exclude_logs: bool = False
 ) -> None:
     """
-    Recursively generate tree structure.
+    Recursively generate clean tree structure.
     
     Args:
         dir_path: Directory to process
@@ -192,7 +171,6 @@ def generate_tree_structure(
                 continue
             
             is_last = (counter == total)
-            file_type = ''
             
             if entry_type == 'dir':
                 # Handle directories
@@ -208,28 +186,24 @@ def generate_tree_structure(
                     counter += 1
                     continue
                 
-                file_type = get_file_type(entry)
-                
+                # Files
                 if is_last:
-                    if file_type:
-                        output_lines.append(f"{indent}└── {base_name} {file_type}")
-                    else:
-                        output_lines.append(f"{indent}└── {base_name}")
+                    output_lines.append(f"{indent}└── {base_name}")
                 else:
-                    if file_type:
-                        output_lines.append(f"{indent}├── {base_name} {file_type}")
-                    else:
-                        output_lines.append(f"{indent}├── {base_name}")
+                    output_lines.append(f"{indent}├── {base_name}")
             
             counter += 1
     
     except PermissionError:
         # Skip directories we don't have permission to access
         pass
+    except Exception as e:
+        # Log other errors but continue
+        print(color_text(f"Warning: Error processing {dir_path}: {e}", Colors.YELLOW))
 
 def generate_map(project_root: Path, output_file: Path, mode: str) -> None:
     """
-    Generate the project structure map.
+    Generate the project structure map with proper code block formatting.
     
     Args:
         project_root: Root directory of the project
@@ -244,25 +218,26 @@ def generate_map(project_root: Path, output_file: Path, mode: str) -> None:
     output_lines = []
     
     # Header
-    output_lines.append("=" * 64)
-    output_lines.append("                   WEB PROJECT STRUCTURE")
-    output_lines.append("=" * 64)
-    output_lines.append(f"Project: {project_root.name}")
-    output_lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    output_lines.append(f"Mode: {mode}")
-    output_lines.append("=" * 64)
+    output_lines.append("# Web Project Structure")
     output_lines.append("")
-    output_lines.append(f"/{project_root.name}/")
+    output_lines.append(f"**Project:** {project_root.name}")
+    output_lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    output_lines.append(f"**Mode:** {mode}")
+    output_lines.append("")
+    
+    # Start code block for tree structure
+    output_lines.append("```")
+    output_lines.append(f"{project_root.name}/")
     output_lines.append("│")
     
-    # Get root level entries (excluding logs and script file)
+    # Get root level entries
     root_entries = []
     script_name = Path(__file__).name
     
     # Directories first
     for item in sorted(project_root.iterdir()):
         if item.is_dir():
-            if item.name != 'logs' and not should_exclude_directory(item.name) and not is_hidden_file(item):
+            if not should_exclude_directory(item.name) and not is_hidden_file(item):
                 root_entries.append((item, 'dir'))
     
     # Files at root level
@@ -282,97 +257,91 @@ def generate_map(project_root: Path, output_file: Path, mode: str) -> None:
         if entry_type == 'dir':
             if is_last:
                 output_lines.append(f"└── {base_name}/")
-                generate_tree_structure(entry, output_lines, "    ", mode)
+                generate_tree_structure(entry, output_lines, "    ", mode, exclude_logs=False)
             else:
                 output_lines.append(f"├── {base_name}/")
-                generate_tree_structure(entry, output_lines, "│   ", mode)
+                generate_tree_structure(entry, output_lines, "│   ", mode, exclude_logs=False)
         else:
             # Filter files at root level based on mode
             if not should_include_file(base_name, mode):
                 root_counter += 1
                 continue
             
-            file_type = get_file_type(entry)
             if is_last:
-                if file_type:
-                    output_lines.append(f"└── {base_name} {file_type}")
-                else:
-                    output_lines.append(f"└── {base_name}")
+                output_lines.append(f"└── {base_name}")
             else:
-                if file_type:
-                    output_lines.append(f"├── {base_name} {file_type}")
-                else:
-                    output_lines.append(f"├── {base_name}")
+                output_lines.append(f"├── {base_name}")
         
         root_counter += 1
     
-    # Add logs directory at the end
-    logs_path = project_root / 'logs'
-    if logs_path.exists() and logs_path.is_dir():
-        output_lines.append("└── logs/")
-        generate_tree_structure(logs_path, output_lines, "    ", mode, exclude_logs=True)
+    # Close code block
+    output_lines.append("```")
+    output_lines.append("")
     
     # Add summary section
+    output_lines.append("## Summary")
     output_lines.append("")
-    output_lines.append("=" * 64)
-    output_lines.append("                           SUMMARY")
-    output_lines.append("=" * 64)
     
     # Count files by type
     counts = count_files_by_type(project_root)
     
     # Count directories
     dir_count = 0
-    for _ in project_root.rglob('*'):
-        if _.is_dir():
+    for item in project_root.rglob('*'):
+        if item.is_dir():
             # Skip excluded directories
             skip = False
-            for part in _.parts:
+            for part in item.parts:
                 if should_exclude_directory(part):
                     skip = True
                     break
-            if not skip:
+            if not skip and not is_hidden_file(item):
                 dir_count += 1
     
     # Count all files
     file_count = 0
-    for _ in project_root.rglob('*'):
-        if _.is_file():
+    for item in project_root.rglob('*'):
+        if item.is_file():
             # Skip files in excluded directories
             skip = False
-            for part in _.parts:
+            for part in item.parts:
                 if should_exclude_directory(part):
                     skip = True
                     break
-            if not skip:
+            if not skip and not is_hidden_file(item) and should_include_file(item.name, mode):
                 file_count += 1
     
-    output_lines.append(f"HTML Files:        {counts['html']}")
-    output_lines.append(f"PHP Files:         {counts['php']}")
-    output_lines.append(f"CSS Files:         {counts['css']}")
-    output_lines.append(f"JavaScript Files:  {counts['js']}")
-    output_lines.append(f"JSON Files:        {counts['json']}")
-    output_lines.append(f"Text/Markdown:     {counts['text']}")
-    output_lines.append(f"Image Files:       {counts['images']}")
-    output_lines.append(f"Total Directories: {dir_count}")
-    output_lines.append(f"Total Files:       {file_count}")
-    output_lines.append("=" * 64)
+    # Create summary table
+    output_lines.append("| File Type | Count |")
+    output_lines.append("|-----------|-------|")
+    output_lines.append(f"| HTML Files | {counts['html']} |")
+    output_lines.append(f"| PHP Files | {counts['php']} |")
+    output_lines.append(f"| CSS Files | {counts['css']} |")
+    output_lines.append(f"| JavaScript Files | {counts['js']} |")
+    output_lines.append(f"| JSON Files | {counts['json']} |")
+    output_lines.append(f"| Text/Markdown | {counts['text']} |")
+    output_lines.append(f"| Image Files | {counts['images']} |")
+    output_lines.append(f"| Other Files | {counts['other']} |")
     output_lines.append("")
-    output_lines.append("Generated by Web Project Tree Mapper")
-    output_lines.append(f"Script: {Path(__file__).name}")
-    output_lines.append("=" * 64)
+    output_lines.append(f"**Total Directories:** {dir_count}")
+    output_lines.append(f"**Total Files:** {file_count}")
+    output_lines.append("")
+    output_lines.append("---")
+    output_lines.append("")
+    output_lines.append(f"*Generated by Web Project Tree Mapper*")
+    output_lines.append(f"*Script: {Path(__file__).name}*")
     
     # Write to file
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(output_lines))
         
-        print(color_text("\nProject structure mapping complete.", Colors.GREEN))
-        print(color_text(f"File created successfully at: {output_file}", Colors.YELLOW))
+        print(color_text("\n✓ Project structure mapping complete!", Colors.GREEN))
+        print(color_text(f"✓ File created: {output_file}", Colors.YELLOW))
         print()
         
     except IOError as e:
-        print(color_text(f"\nError writing to output file: {e}", Colors.RED))
+        print(color_text(f"\n✗ Error writing to output file: {e}", Colors.RED))
         sys.exit(1)
 
 def show_menu() -> None:
@@ -396,36 +365,28 @@ def main() -> None:
     # Setup paths
     script_dir = Path(__file__).parent.absolute()
     project_root = script_dir.parent.absolute()
+    
+    # Output path: /logs/output/
     logs_path = project_root / 'logs'
-    summary_path = logs_path / 'summary fetch content'
+    output_path = logs_path / 'output'
     
     # Create directories if they don't exist
-    summary_path.mkdir(parents=True, exist_ok=True)
+    output_path.mkdir(parents=True, exist_ok=True)
     
-    output_file = summary_path / 'Project_Structure.txt'
+    # Output file with .md extension
+    output_file = output_path / 'Project_Structure.md'
     
     # Display banner
     print(color_text("\n=== Web Project Tree Mapper ===", Colors.CYAN))
     print()
     print(color_text(f"Project Root: {project_root}", Colors.GREEN))
     print(color_text(f"Project Name: {project_root.name}", Colors.GREEN))
-    print(color_text(f"Logs Folder: {logs_path}", Colors.GREEN))
-    print(color_text(f"Summary Output: {summary_path}", Colors.GREEN))
+    print(color_text(f"Output Folder: {output_path}", Colors.GREEN))
     print()
     
-    # Check if output file exists
+    # Check if output file exists (inform user but always overwrite)
     if output_file.exists():
-        print(color_text(f"Existing file detected: {output_file}", Colors.YELLOW))
-        confirm = input(color_text("Overwrite it? (y/N): ", Colors.YELLOW)).strip().lower()
-        
-        if confirm != 'y':
-            index = 1
-            while (summary_path / f"Project_Structure_{index}.txt").exists():
-                index += 1
-            output_file = summary_path / f"Project_Structure_{index}.txt"
-            print(color_text(f"Saving as new file: {output_file}", Colors.BLUE))
-        else:
-            print(color_text("Overwriting existing file...", Colors.BLUE))
+        print(color_text(f"Overwriting existing file: {output_file}", Colors.YELLOW))
     
     # Show menu and get choice
     show_menu()
@@ -443,6 +404,11 @@ def main() -> None:
     }
     
     mode = mode_map[choice]
+    
+    # Verify project root exists and has content
+    if not project_root.exists():
+        print(color_text(f"Error: Project root does not exist: {project_root}", Colors.RED))
+        sys.exit(1)
     
     # Generate the map
     generate_map(project_root, output_file, mode)

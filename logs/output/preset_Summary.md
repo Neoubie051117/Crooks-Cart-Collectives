@@ -1,185 +1,224 @@
-Web Project: Crooks-Cart-Collectives
-Preset: All Files
-Generated: 2026-02-19 00:52:27
+# Web Project: Crooks-Cart-Collectives
 
-=== File: Crooks-Cart-Collectives/logs/summary fetch content/Project_Structure.txt ===
+**Preset:** preset
 
-[FOUND]
+**Generated:** 2026-02-26 22:41:25
 
-# Text File Content
-================================================================
-                   WEB PROJECT STRUCTURE
-================================================================
-Project: Crooks-Cart-Collectives
-Generated: 2026-02-19 00:52:24
-Mode: all
-================================================================
+---
 
-/Crooks-Cart-Collectives/
+## File: `Crooks-Cart-Collectives/logs/requirement/Instructions.md`
+
+**Status:** `FOUND`
+
+```markdown
+Review everything first before making any changes.
+
+Do not use emojis.
+
+Do not create or hard code vector icons. Use the existing SVG files located in /assets/image/icons.
+
+Follow the website theme colors strictly: white, orange, and black (from root variables).
+
+All SVG files are black by default, except the footer icons for Facebook, Instagram, and YouTube. When using SVGs, apply the orange color using the root CSS variables instead of modifying the SVG file directly.
+
+If you modify any file, clearly state its full path in this format:
+
+/foldername/filename
+
+Rewrite the entire file when making changes. Do not send partial snippets.
+
+All though Password is supposed to hashed I made it use text for demo purposes only, and Im tired copying long hashed when checking front end
+So don't bother wanting to hash it.
+and also if you find files that has cramping all in one file separate it to according files, example if /pages/fileExample.php has all php, html, scripts, css,
+then separate to alocate it and create corresponding file /scripts/fileExample.js and /styles/fileExample.css
+
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/logs/output/Project_Structure.md`
+
+**Status:** `FOUND`
+
+```markdown
+# Web Project Structure
+
+**Project:** Crooks-Cart-Collectives
+**Generated:** 2026-02-26 22:41:24
+**Mode:** all
+
+```
+Crooks-Cart-Collectives/
 │
 ├── assets/
 │   └── image/
 │       ├── brand/
-│       │   └── Logo.png (img)
+│       │   └── Logo.png
 │       ├── icons/
-│       │   ├── cancel.svg (img)
-│       │   ├── cart-arrow-downsvg.svg (img)
-│       │   ├── cart-arrow-up.svg (img)
-│       │   ├── cart-plus.svg (img)
-│       │   ├── cart-shopping-fast.svg (img)
-│       │   ├── cart-shopping.svg (img)
-│       │   ├── chart-line-up.svg (img)
-│       │   ├── complaint-icon.png (img)
-│       │   ├── facebook.svg (img)
-│       │   ├── github.svg (img)
-│       │   ├── hamburger-menu.svg (img)
-│       │   ├── instagram.svg (img)
-│       │   ├── logoutsvg.svg (img)
-│       │   ├── mail.svg (img)
-│       │   ├── order.svg (img)
-│       │   ├── package.svg (img)
-│       │   ├── password-hide.svg (img)
-│       │   ├── password-unhide.svg (img)
-│       │   ├── seller-product-placeholder.png (img)
-│       │   ├── Showcase1.png (img)
-│       │   ├── Showcase2.png (img)
-│       │   ├── star-empty.svg (img)
-│       │   ├── star-filled.svg (img)
-│       │   ├── submit-picture-icon.png (img)
-│       │   ├── submit-valid-id-icon.png (img)
-│       │   ├── trash.svg (img)
-│       │   ├── updatesvg.svg (img)
-│       │   └── youtube.svg (img)
+│       │   ├── cancel.svg
+│       │   ├── cart-arrow-downsvg.svg
+│       │   ├── cart-arrow-up.svg
+│       │   ├── cart-plus.svg
+│       │   ├── cart-shopping-fast.svg
+│       │   ├── cart-shopping.svg
+│       │   ├── chart-line-up.svg
+│       │   ├── complaint-icon.png
+│       │   ├── facebook.svg
+│       │   ├── github.svg
+│       │   ├── hamburger-menu.svg
+│       │   ├── instagram.svg
+│       │   ├── logoutsvg.svg
+│       │   ├── mail.svg
+│       │   ├── order.svg
+│       │   ├── package.svg
+│       │   ├── password-hide.svg
+│       │   ├── password-unhide.svg
+│       │   ├── seller-product-placeholder.png
+│       │   ├── Showcase1.png
+│       │   ├── Showcase2.png
+│       │   ├── star-empty.svg
+│       │   ├── star-filled.svg
+│       │   ├── submit-picture-icon.png
+│       │   ├── submit-valid-id-icon.png
+│       │   ├── trash.svg
+│       │   ├── updatesvg.svg
+│       │   └── youtube.svg
 │       └── team/
-│           ├── charles-canoneo.png (img)
-│           ├── christian-adviento.png (img)
-│           ├── christian-mendoza.png (img)
-│           ├── clark-mallo.png (img)
-│           ├── kishiekel-fernandez.png (img)
-│           ├── lance-madelar.png (img)
-│           ├── rylle-bernardino.png (img)
-│           └── william-aranez.png (img)
+│           ├── charles-canoneo.png
+│           ├── christian-adviento.png
+│           ├── christian-mendoza.png
+│           ├── clark-mallo.png
+│           ├── kishiekel-fernandez.png
+│           ├── lance-madelar.png
+│           ├── rylle-bernardino.png
+│           └── william-aranez.png
 ├── database/
 │   ├── schema/
 │   │   ├── dbCreation.sql
 │   │   ├── dummyAdmin.sql
-│   │   └── dummySeller.sql
-│   ├── cart-handler.php (php)
-│   ├── checkout-handler.php (php)
-│   ├── customer-profile-handler.php (php)
-│   ├── database-connect.php (php)
-│   ├── error_log.txt (txt)
-│   ├── order-handler.php (php)
-│   ├── product-handler.php (php)
-│   ├── report-seller-handler.php (php)
-│   ├── review-handler.php (php)
-│   ├── sign-in-handler.php (php)
-│   ├── sign-out-handler.php (php)
-│   ├── sign-up-handler.php (php)
-│   └── validation.php (php)
+│   │   ├── dummySeller.sql
+│   │   └── dummyUser.sql
+│   ├── cart-handler.php
+│   ├── checkout-handler.php
+│   ├── customer-profile-handler.php
+│   ├── database-connect.php
+│   ├── error_log.txt
+│   ├── order-handler.php
+│   ├── product-handler.php
+│   ├── report-seller-handler.php
+│   ├── review-handler.php
+│   ├── sign-in-handler.php
+│   ├── sign-out-handler.php
+│   ├── sign-up-handler.php
+│   └── validation.php
+├── logs/
+│   ├── content-fetcher-configuration/
+│   │   └── preset.py
+│   ├── output/
+│   │   ├── preset_Summary.md
+│   │   └── Project_Structure.md
+│   ├── requirement/
+│   │   ├── Apply Tree map.md
+│   │   └── Instructions.md
+│   ├── content-fetcher.py
+│   ├── runner.bat
+│   └── tree-mapper.py
 ├── pages/
-│   ├── about.php (php)
-│   ├── cart.php (php)
-│   ├── checkout.php (php)
-│   ├── contact.php (php)
-│   ├── customer-dashboard.php (php)
-│   ├── customer-profile.php (php)
-│   ├── footer.php (php)
-│   ├── header.php (php)
-│   ├── orders.php (php)
-│   ├── privacy-policy.php (php)
-│   ├── product-details.php (php)
-│   ├── products.php (php)
-│   ├── report-seller.php (php)
-│   ├── seller-add-product.php (php)
-│   ├── seller-dashboard.php (php)
-│   ├── seller-fill-form.php (php)
-│   ├── seller-orders.php (php)
-│   ├── seller-products.php (php)
-│   ├── sign-in.php (php)
-│   ├── sign-up.php (php)
-│   └── terms-and-conditions.php (php)
+│   ├── about.php
+│   ├── cart.php
+│   ├── checkout.php
+│   ├── contact.php
+│   ├── customer-dashboard.php
+│   ├── customer-profile.php
+│   ├── footer.php
+│   ├── header.php
+│   ├── orders.php
+│   ├── privacy-policy.php
+│   ├── product-details.php
+│   ├── products.php
+│   ├── report-seller.php
+│   ├── seller-add-product.php
+│   ├── seller-dashboard.php
+│   ├── seller-fill-form.php
+│   ├── seller-orders.php
+│   ├── seller-products.php
+│   ├── sign-in.php
+│   ├── sign-up.php
+│   └── terms-and-conditions.php
 ├── scripts/
-│   ├── central-link-navigation.js (js)
-│   ├── checkout.js (js)
-│   ├── contact.js (js)
-│   ├── error-handler.js (js)
-│   ├── header.js (js)
-│   ├── index.js (js)
-│   ├── orders.js (js)
-│   ├── product-details.js (js)
-│   ├── report-seller.js (js)
-│   ├── seller-orders.js (js)
-│   ├── showcase-slider.js (js)
-│   ├── sign-in.js (js)
-│   ├── sign-out.js (js)
-│   └── sign-up.js (js)
+│   ├── cart.js
+│   ├── central-link-navigation.js
+│   ├── checkout.js
+│   ├── contact.js
+│   ├── error-handler.js
+│   ├── header.js
+│   ├── index.js
+│   ├── orders.js
+│   ├── product-details.js
+│   ├── report-seller.js
+│   ├── seller-dashboard.js
+│   ├── seller-orders.js
+│   ├── showcase-slider.js
+│   ├── sign-in.js
+│   ├── sign-out.js
+│   └── sign-up.js
 ├── styles/
-│   ├── about.css (css)
-│   ├── cart.css (css)
-│   ├── checkout.css (css)
-│   ├── contact.css (css)
-│   ├── customer-dashboard.css (css)
-│   ├── footer.css (css)
-│   ├── header.css (css)
-│   ├── index.css (css)
-│   ├── orders.css (css)
-│   ├── privacy-policy.css (css)
-│   ├── product-details.css (css)
-│   ├── products.css (css)
-│   ├── profile.css (css)
-│   ├── report-seller.css (css)
-│   ├── seller-dashboard.css (css)
-│   ├── seller-orders.css (css)
-│   ├── seller-registration.css (css)
-│   ├── sign-in.css (css)
-│   ├── sign-out.css (css)
-│   ├── sign-up.css (css)
-│   └── terms-and-conditions.css (css)
-├── index.php (php)
+│   ├── about.css
+│   ├── cart.css
+│   ├── checkout.css
+│   ├── contact.css
+│   ├── customer-dashboard.css
+│   ├── footer.css
+│   ├── header.css
+│   ├── index.css
+│   ├── orders.css
+│   ├── privacy-policy.css
+│   ├── product-details.css
+│   ├── products.css
+│   ├── profile.css
+│   ├── report-seller.css
+│   ├── seller-dashboard.css
+│   ├── seller-orders.css
+│   ├── seller-registration.css
+│   ├── sign-in.css
+│   ├── sign-out.css
+│   ├── sign-up.css
+│   └── terms-and-conditions.css
+├── .gitignore
+├── index.php
 ├── LICENSE
-└── README.md (md)
-└── logs/
-    ├── content fetch config/
-    │   ├── All Files.py (py)
-    │   └── All Files.sh (sh)
-    ├── issue/
-    │   └── 1
-    ├── summary fetch content/
-    │   ├── All Files_Summary.txt (txt)
-    │   ├── Project_Structure.txt (txt)
-    │   └── to do.txt (txt)
-    ├── content-fetcher.py (py)
-    ├── content-fetcher.sh (sh)
-    ├── runner.bat
-    ├── tree-mapper.py (py)
-    └── tree-mapper.sh (sh)
+└── README.md
+```
 
-================================================================
-                           SUMMARY
-================================================================
-HTML Files:        0
-PHP Files:         34
-CSS Files:         21
-JavaScript Files:  14
-JSON Files:        0
-Text/Markdown:     5
-Image Files:       37
-Total Directories: 14
-Total Files:       123
-================================================================
+## Summary
 
-Generated by Web Project Tree Mapper
-Script: tree-mapper.py
-================================================================
+| File Type | Count |
+|-----------|-------|
+| HTML Files | 0 |
+| PHP Files | 34 |
+| CSS Files | 21 |
+| JavaScript Files | 16 |
+| JSON Files | 0 |
+| Text/Markdown | 6 |
+| Image Files | 37 |
+| Other Files | 10 |
 
-==============================================
+**Total Directories:** 14
+**Total Files:** 123
 
-=== File: Crooks-Cart-Collectives/index.php ===
+---
 
-[FOUND]
+*Generated by Web Project Tree Mapper*
+*Script: tree-mapper.py*
+```
 
-<?php // PHP File Content ?>
+---
+
+## File: `Crooks-Cart-Collectives/index.php`
+
+**Status:** `FOUND`
+
+```php
 <?php
 // Crooks-Cart-Collectives/index.php
 // FIXED VERSION - Replaced emoji icons with SVG icons
@@ -394,15 +433,18 @@ try {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/schema/dbCreation.sql ===
+## File: `Crooks-Cart-Collectives/database/schema/dbCreation.sql`
 
-[FOUND]
+**Status:** `FOUND`
 
+```sql
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
+-- REVISED: Separate carts and orders tables
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -495,135 +537,84 @@ CREATE TABLE products (
 );
 
 -- =====================================================
--- SHOPPING CARTS TABLE
+-- CARTS TABLE (NEW - Separate from orders)
 -- =====================================================
-CREATE TABLE shopping_carts (
+CREATE TABLE carts (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id)
-        ON DELETE CASCADE
-);
-
--- =====================================================
--- CART ITEMS TABLE
--- =====================================================
-CREATE TABLE cart_items (
-    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    seller_id INT NOT NULL,
     product_id INT NOT NULL,
-    quantity INT DEFAULT 1,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    price_at_time DECIMAL(10, 2) NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cart_id)
-        REFERENCES shopping_carts(cart_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
-    UNIQUE KEY unique_cart_product (cart_id, product_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    
+    UNIQUE KEY unique_cart_item (customer_id, product_id), -- Prevent duplicate products in cart
+    INDEX idx_customer_cart (customer_id, added_at)
 );
 
 -- =====================================================
--- CUSTOMER ORDERS TABLE (Master Order - No Status)
+-- ORDERS TABLE (Renamed from order_history, for completed orders only)
 -- =====================================================
-CREATE TABLE customer_orders (
+CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    total_amount DECIMAL(10, 2) NOT NULL,
-    shipping_address VARCHAR(255) NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    -- Note: No status here - status is tracked at item level
-    FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id)
-        ON DELETE CASCADE
-);
-
--- =====================================================
--- SELLER ORDERS TABLE (Groups items by seller)
--- =====================================================
-CREATE TABLE seller_orders (
-    seller_order_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
     seller_id INT NOT NULL,
-    seller_total DECIMAL(10, 2) NOT NULL,
-    -- Simplified seller_status to match your current workflow
-    seller_status ENUM(
-        'pending',      -- At least one item pending
-        'processing',   -- Some items being processed
-        'completed',    -- All items delivered/refunded
-        'cancelled'     -- All items cancelled
-    ) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id)
-        REFERENCES customer_orders(order_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (seller_id)
-        REFERENCES sellers(seller_id)
-        ON DELETE CASCADE,
-    UNIQUE KEY unique_seller_per_order (order_id, seller_id)
-);
-
--- =====================================================
--- PURCHASE ITEMS TABLE - STATUS LIVES HERE! ✅
--- Maximum upgradability for future features
--- =====================================================
--- =====================================================
--- PURCHASE ITEMS TABLE - STATUS LIVES HERE! ✅
--- Maximum upgradability for future features
--- =====================================================
-CREATE TABLE purchase_items (
-    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    seller_order_id INT NOT NULL,
     product_id INT NOT NULL,
+    
+    -- Order details
     quantity INT NOT NULL,
     price_at_time DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2)
-        GENERATED ALWAYS AS (quantity * price_at_time) STORED,
+    subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price_at_time) STORED,
     
-    -- ✅ ITEM-LEVEL STATUS - Maximum flexibility!
+    -- Shipping & payment
+    shipping_address VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
+    
+    -- Order tracking
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM(
-        'pending',      -- Order placed, awaiting seller action
-        'confirmed',    -- Seller confirmed (ready to prepare)
-        'processing',   -- Being prepared/packed
-        'shipped',      -- Dispatched to customer
-        'delivered',    -- Customer received - can review
-        'cancelled',    -- Cancelled before shipping
-        'refunded'      -- Returned and refunded
-    ) DEFAULT 'pending',
+        'ordered',      -- Order placed, awaiting seller action
+        'delivered',    -- Completed
+        'cancelled'     -- Cancelled by customer or seller
+    ) DEFAULT 'ordered',
     
-    -- Timestamps for each stage
-    confirmed_at TIMESTAMP NULL,
-    shipped_at TIMESTAMP NULL,
+    -- Timestamps
     delivered_at TIMESTAMP NULL,
     cancelled_at TIMESTAMP NULL,
     
-    FOREIGN KEY (seller_order_id)
-        REFERENCES seller_orders(seller_order_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id)
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    
+    INDEX idx_customer_orders (customer_id, status, order_date),
+    INDEX idx_seller_orders (seller_id, status, order_date)
 );
 
 -- =====================================================
--- PRODUCT REVIEWS TABLE (Fixed: uses order_item_id)
+-- PRODUCT REVIEWS TABLE
 -- =====================================================
 CREATE TABLE product_reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     user_id INT NOT NULL,
-    order_item_id INT NOT NULL UNIQUE,  -- One review per purchased item
+    order_id INT NOT NULL UNIQUE,  -- One review per order item
     rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    title VARCHAR(100),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_edited BOOLEAN DEFAULT FALSE,
     last_edited TIMESTAMP NULL,
+    
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (order_item_id) REFERENCES purchase_items(order_item_id) ON DELETE CASCADE
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    
+    INDEX idx_product_reviews (product_id, rating),
+    INDEX idx_user_reviews (user_id)
 );
 
 -- =====================================================
@@ -639,147 +630,99 @@ CREATE TABLE seller_reports (
     admin_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (reporter_id)
-        REFERENCES users(user_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (seller_id)
-        REFERENCES sellers(seller_id)
-        ON DELETE CASCADE
+    
+    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
+    
+    INDEX idx_reports_seller_status (seller_id, status),
+    INDEX idx_reports_reporter (reporter_id)
 );
 
 -- =====================================================
 -- INDEXES for Performance
 -- =====================================================
 
--- Purchase items indexes
-CREATE INDEX idx_purchase_items_status ON purchase_items(status);
-CREATE INDEX idx_purchase_items_seller_order ON purchase_items(seller_order_id);
-CREATE INDEX idx_purchase_items_product ON purchase_items(product_id);
-CREATE INDEX idx_purchase_items_dates ON purchase_items(confirmed_at, shipped_at, delivered_at);
-
--- Seller orders indexes
-CREATE INDEX idx_seller_orders_order ON seller_orders(order_id);
-CREATE INDEX idx_seller_orders_seller ON seller_orders(seller_id);
-CREATE INDEX idx_seller_orders_status ON seller_orders(seller_status);
-
--- Customer orders indexes
-CREATE INDEX idx_customer_orders_customer_date ON customer_orders(customer_id, order_date);
-
--- Product reviews indexes
-CREATE INDEX idx_product_reviews_product ON product_reviews(product_id, rating, date_posted);
-CREATE INDEX idx_product_reviews_user ON product_reviews(user_id);
-
--- Cart indexes
-CREATE INDEX idx_cart_items_cart_product ON cart_items(cart_id, product_id);
-
--- Seller reports indexes
-CREATE INDEX idx_seller_reports_seller_status ON seller_reports(seller_id, status);
-CREATE INDEX idx_seller_reports_reporter ON seller_reports(reporter_id);
+CREATE INDEX idx_carts_customer ON carts(customer_id);
+CREATE INDEX idx_orders_customer_status ON orders(customer_id, status, order_date);
+CREATE INDEX idx_orders_seller_status ON orders(seller_id, status, order_date);
 
 -- =====================================================
 -- TRIGGERS
 -- =====================================================
 DELIMITER $$
 
--- Auto-create customer and cart after user signup
+-- Auto-create customer after user signup
 CREATE TRIGGER after_user_insert
 AFTER INSERT ON users
 FOR EACH ROW
 BEGIN
-    DECLARE new_customer_id INT;
-    
     INSERT INTO customers (user_id)
     VALUES (NEW.user_id);
-    
-    SET new_customer_id = LAST_INSERT_ID();
-    
-    INSERT INTO shopping_carts (customer_id)
-    VALUES (new_customer_id);
 END$$
 
--- Update seller's total_sales when purchase items are delivered
-CREATE TRIGGER after_purchase_item_delivered
-AFTER UPDATE ON purchase_items
+-- Update seller's total_sales when items are delivered
+CREATE TRIGGER after_order_delivered
+AFTER UPDATE ON orders
 FOR EACH ROW
 BEGIN
-    IF NEW.status = 'delivered' AND (OLD.status != 'delivered' OR OLD.status IS NULL) THEN
+    IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
         UPDATE sellers s
         SET s.total_sales = s.total_sales + NEW.subtotal
-        WHERE s.seller_id = (
-            SELECT so.seller_id 
-            FROM seller_orders so 
-            WHERE so.seller_order_id = NEW.seller_order_id
-        );
-    END IF;
-END$$
-
--- Update customer's total_spent when purchase items are delivered
-CREATE TRIGGER after_purchase_item_delivered_customer
-AFTER UPDATE ON purchase_items
-FOR EACH ROW
-BEGIN
-    IF NEW.status = 'delivered' AND (OLD.status != 'delivered' OR OLD.status IS NULL) THEN
+        WHERE s.seller_id = NEW.seller_id;
+        
         UPDATE customers c
         SET c.total_spent = c.total_spent + NEW.subtotal,
             c.total_orders = c.total_orders + 1
-        WHERE c.customer_id = (
-            SELECT co.customer_id
-            FROM seller_orders so
-            JOIN customer_orders co ON so.order_id = co.order_id
-            WHERE so.seller_order_id = NEW.seller_order_id
-        );
+        WHERE c.customer_id = NEW.customer_id;
     END IF;
 END$$
 
--- Update seller_orders seller_status based on purchase_items
-CREATE TRIGGER after_purchase_item_status_update
-AFTER UPDATE ON purchase_items
+-- Update product stock when order is placed or cancelled
+CREATE TRIGGER after_order_status_change
+AFTER UPDATE ON orders
 FOR EACH ROW
 BEGIN
-    DECLARE pending_count INT DEFAULT 0;
-    DECLARE processing_count INT DEFAULT 0;
-    DECLARE completed_count INT DEFAULT 0;
-    DECLARE cancelled_count INT DEFAULT 0;
-    DECLARE total_count INT DEFAULT 0;
+    -- If cancelled, restore stock
+    IF NEW.status = 'cancelled' AND OLD.status != 'cancelled' AND OLD.status = 'ordered' THEN
+        UPDATE products 
+        SET stock_quantity = stock_quantity + NEW.quantity 
+        WHERE product_id = NEW.product_id;
+        
+        UPDATE orders 
+        SET cancelled_at = NOW() 
+        WHERE order_id = NEW.order_id;
+    END IF;
     
-    -- Get total count
-    SELECT COUNT(*) INTO total_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id;
+    -- If delivered, set delivered_at timestamp
+    IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
+        UPDATE orders 
+        SET delivered_at = NOW() 
+        WHERE order_id = NEW.order_id;
+    END IF;
+END$$
+
+-- When order is placed, update stock
+CREATE TRIGGER before_order_insert
+BEFORE INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE current_stock INT;
     
-    -- Get pending count
-    SELECT COUNT(*) INTO pending_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id AND status = 'pending';
+    -- Get current stock
+    SELECT stock_quantity INTO current_stock 
+    FROM products 
+    WHERE product_id = NEW.product_id;
     
-    -- Get processing count (confirmed, processing, shipped, on_hold)
-    SELECT COUNT(*) INTO processing_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id 
-      AND status IN ('confirmed', 'processing', 'shipped', 'on_hold');
+    -- Check if sufficient stock
+    IF current_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Insufficient stock for this product';
+    END IF;
     
-    -- Get completed count (delivered, refunded)
-    SELECT COUNT(*) INTO completed_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id 
-      AND status IN ('delivered', 'refunded');
-    
-    -- Get cancelled count
-    SELECT COUNT(*) INTO cancelled_count
-    FROM purchase_items
-    WHERE seller_order_id = NEW.seller_order_id AND status = 'cancelled';
-    
-    -- Update seller_status
-    UPDATE seller_orders
-    SET seller_status = 
-        CASE 
-            WHEN cancelled_count = total_count THEN 'cancelled'
-            WHEN completed_count = total_count THEN 'completed'
-            WHEN processing_count > 0 THEN 'processing'
-            ELSE 'pending'
-        END,
-        updated_at = NOW()
-    WHERE seller_order_id = NEW.seller_order_id;
+    -- Reduce stock
+    UPDATE products 
+    SET stock_quantity = stock_quantity - NEW.quantity 
+    WHERE product_id = NEW.product_id;
 END$$
 
 DELIMITER ;
@@ -788,193 +731,228 @@ DELIMITER ;
 -- VIEWS for Easy Data Access
 -- =====================================================
 
--- Customer order summary view
--- =====================================================
--- VIEWS for Easy Data Access
--- =====================================================
-
--- Customer order summary view
-CREATE VIEW customer_order_summary AS
+-- Customer cart view
+CREATE VIEW customer_cart AS
 SELECT 
-    co.order_id,
-    co.customer_id,
-    co.order_date,
-    co.total_amount,
-    co.shipping_address,
-    co.payment_method,
-    COUNT(DISTINCT so.seller_id) as seller_count,
-    COUNT(pi.order_item_id) as item_count,
-    SUM(CASE WHEN pi.status = 'pending' THEN 1 ELSE 0 END) as pending_items,
-    SUM(CASE WHEN pi.status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_items,
-    SUM(CASE WHEN pi.status = 'processing' THEN 1 ELSE 0 END) as processing_items,
-    SUM(CASE WHEN pi.status = 'shipped' THEN 1 ELSE 0 END) as shipped_items,
-    SUM(CASE WHEN pi.status = 'delivered' THEN 1 ELSE 0 END) as delivered_items,
-    SUM(CASE WHEN pi.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_items,
-    SUM(CASE WHEN pi.status = 'refunded' THEN 1 ELSE 0 END) as refunded_items,
-    SUM(CASE WHEN pi.status = 'on_hold' THEN 1 ELSE 0 END) as on_hold_items
-FROM customer_orders co
-LEFT JOIN seller_orders so ON co.order_id = so.order_id
-LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-GROUP BY co.order_id;
+    c.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    p.stock_quantity AS available_stock,
+    s.business_name AS seller_name
+FROM carts c
+JOIN products p ON c.product_id = p.product_id
+JOIN sellers s ON c.seller_id = s.seller_id
+ORDER BY c.added_at DESC;
 
--- Seller order summary view
-CREATE VIEW seller_order_summary AS
+-- Customer orders view
+CREATE VIEW customer_orders AS
 SELECT 
-    so.seller_order_id,
-    so.seller_id,
-    so.order_id,
-    so.seller_total,
-    so.seller_status,
-    so.created_at,
-    COUNT(pi.order_item_id) as item_count,
-    SUM(CASE WHEN pi.status = 'pending' THEN 1 ELSE 0 END) as pending_items,
-    SUM(CASE WHEN pi.status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_items,
-    SUM(CASE WHEN pi.status = 'processing' THEN 1 ELSE 0 END) as processing_items,
-    SUM(CASE WHEN pi.status = 'shipped' THEN 1 ELSE 0 END) as shipped_items,
-    SUM(CASE WHEN pi.status = 'delivered' THEN 1 ELSE 0 END) as delivered_items,
-    SUM(CASE WHEN pi.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_items,
-    SUM(CASE WHEN pi.status = 'refunded' THEN 1 ELSE 0 END) as refunded_items,
-    SUM(CASE WHEN pi.status = 'on_hold' THEN 1 ELSE 0 END) as on_hold_items
-FROM seller_orders so
-LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-GROUP BY so.seller_order_id;
+    o.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    s.business_name AS seller_name,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.contact_number,
+    (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_id = o.order_id) as has_review
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN sellers s ON o.seller_id = s.seller_id
+JOIN customers cu ON o.customer_id = cu.customer_id
+JOIN users u ON cu.user_id = u.user_id
+ORDER BY o.order_date DESC;
 
-==============================================
+-- Seller orders view
+CREATE VIEW seller_orders_view AS
+SELECT 
+    o.*,
+    p.name AS product_name,
+    p.image_path AS product_image,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.contact_number
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN customers cu ON o.customer_id = cu.customer_id
+JOIN users u ON cu.user_id = u.user_id
+ORDER BY o.order_date DESC;
+```
 
-=== File: Crooks-Cart-Collectives/database/schema/dummyAdmin.sql ===
+---
 
-[FOUND]
+## File: `Crooks-Cart-Collectives/database/schema/dummyAdmin.sql`
 
+**Status:** `FOUND`
 
-==============================================
-
-=== File: Crooks-Cart-Collectives/database/schema/dummySeller.sql ===
-
-[FOUND]
-
+```sql
 USE crooks_cart_collectives;
 
-/* ===============================
-   SELLER 1
-================================ */
+-- =========================
+-- INSERT ADMIN USERS
+-- =========================
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Alex', 'Reyes', 'alex@test.com', 'alex', 'alex');
+INSERT INTO administrators (
+    first_name, 
+    last_name, 
+    email, 
+    contact_number, 
+    username, 
+    password,
+    date_created
+) VALUES
+(
+    'Admin', 
+    'One', 
+    'admin1@crookscart.com', 
+    '+639123456789', 
+    'admin1', 
+    '$2y$10$YourHashedPasswordHere1234567890', -- Replace with actual hashed password
+    NOW()
+),
+(
+    'Admin', 
+    'Two', 
+    'admin2@crookscart.com', 
+    '+639987654321', 
+    'admin2', 
+    '$2y$10$YourHashedPasswordHere0987654321', -- Replace with actual hashed password
+    NOW()
+);
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Alex Gadget Store', TRUE, NOW());
+-- Note: For demo purposes with plain text passwords (as per project requirements),
+-- you can use these simpler inserts:
+/*
+INSERT INTO administrators (first_name, last_name, email, contact_number, username, password) VALUES
+('Super', 'Admin', 'admin@crookscart.com', '+639123456789', 'admin', 'admin123'),
+('System', 'Administrator', 'sysadmin@crookscart.com', '+639987654321', 'sysadmin', 'admin456');
+*/
 
-SET @seller1 = LAST_INSERT_ID();
+-- =========================
+-- VERIFY ADMIN INSERTION
+-- =========================
+-- SELECT * FROM administrators;
+```
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller1,'Wireless Mouse','Bluetooth mouse',899.00,'Electronics',30,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller1,'Keyboard RGB','Mechanical keyboard',2799.00,'Electronics',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
+---
 
+## File: `Crooks-Cart-Collectives/database/schema/dummySeller.sql`
 
-/* ===============================
-   SELLER 2
-================================ */
+**Status:** `FOUND`
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Brian', 'Lopez', 'brian@test.com', 'brian', 'brian');
+```sql
+USE crooks_cart_collectives;
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Brian PC Parts', TRUE, NOW());
+-- =========================
+-- INSERT 5 SELLER USERS
+-- =========================
 
-SET @seller2 = LAST_INSERT_ID();
+INSERT INTO users (
+first_name, last_name, email, username, password, address
+) VALUES
+('Mark', 'Santos', 'mark@Sellerdummy.com', 'mark', '123', 'Manila'),
+('Jessa', 'Reyes', 'jessa@Sellerdummy.com', 'jessa', '123', 'Cebu'),
+('Kyle', 'Lopez', 'kyle@Sellerdummy.com', 'kyle', '123', 'Davao'),
+('Anna', 'Cruz', 'anna@Sellerdummy.com', 'anna', '123', 'Baguio'),
+('Leo', 'Garcia', 'leo@Sellerdummy.com', 'leo', '123', 'Iloilo');
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller2,'GTX Graphics Card','Gaming GPU',12999.00,'Components',5,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller2,'RAM 16GB','DDR4 RAM kit',3499.00,'Components',15,'assets/image/icons/seller-product-placeholder.png',TRUE);
+-- =========================
+-- MAKE THEM SELLERS
+-- =========================
 
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Mark Tech Store', TRUE FROM users WHERE username = 'mark';
 
-/* ===============================
-   SELLER 3
-================================ */
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Jessa Gaming Hub', TRUE FROM users WHERE username = 'jessa';
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Carlo', 'Mendez', 'carlo@test.com', 'carlo', 'carlo');
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Kyle Gadget Zone', TRUE FROM users WHERE username = 'kyle';
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Carlo Mobile Hub', TRUE, NOW());
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Anna Digital Shop', TRUE FROM users WHERE username = 'anna';
 
-SET @seller3 = LAST_INSERT_ID();
+INSERT INTO sellers (user_id, business_name, is_verified)
+SELECT user_id, 'Leo Tech Corner', TRUE FROM users WHERE username = 'leo';
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller3,'Android Phone','6GB RAM phone',8999.00,'Mobile',20,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller3,'Bluetooth Earbuds','TWS earbuds',1999.00,'Audio',18,'assets/image/icons/seller-product-placeholder.png',TRUE);
+-- =========================
+-- INSERT 2 PRODUCTS PER SELLER
+-- =========================
 
+-- MARK
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Wireless Mouse', '2.4G Wireless Mouse', 599.00, 'Accessories', 25,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'mark';
 
-/* ===============================
-   SELLER 4
-================================ */
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Mechanical Keyboard', 'RGB Mechanical Keyboard', 2499.00, 'Accessories', 15,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'mark';
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Derek', 'Cruz', 'derek@test.com', 'derek', 'derek');
+-- JESSA
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Chair Pro', 'Ergonomic Gaming Chair', 8999.00, 'Furniture', 10,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'jessa';
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Derek Home Tech', TRUE, NOW());
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Desk', 'Spacious Gaming Desk', 6999.00, 'Furniture', 8,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'jessa';
 
-SET @seller4 = LAST_INSERT_ID();
+-- KYLE
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'USB Hub', '4 Port USB Hub', 499.00, 'Electronics', 30,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'kyle';
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller4,'Smart TV 43 inch','Android TV',17999.00,'Home',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller4,'Robot Vacuum','Auto cleaner',15999.00,'Home',4,'assets/image/icons/seller-product-placeholder.png',TRUE);
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'External SSD 1TB', 'High Speed External SSD', 5499.00, 'Electronics', 12,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'kyle';
 
+-- ANNA
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Smart Watch', 'Fitness Smart Watch', 2999.00, 'Wearables', 18,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'anna';
 
-/* ===============================
-   SELLER 5
-================================ */
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Bluetooth Earbuds', 'Wireless Bluetooth Earbuds', 1999.00, 'Wearables', 22,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'anna';
 
-INSERT INTO users 
-(first_name, last_name, email, username, password)
-VALUES 
-('Evan', 'Torres', 'evan@test.com', 'evan', 'evan');
+-- LEO
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'VR Headset', 'Virtual Reality Headset', 15999.00, 'Electronics', 6,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'leo';
 
-INSERT INTO sellers 
-(user_id, business_name, is_verified, verification_date)
-VALUES 
-(LAST_INSERT_ID(), 'Evan Gaming Shop', TRUE, NOW());
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Gaming Monitor 144Hz', '27 inch 144Hz Monitor', 12999.00, 'Electronics', 9,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'leo';
+```
 
-SET @seller5 = LAST_INSERT_ID();
+---
 
-INSERT INTO products
-(seller_id, name, description, price, category, stock_quantity, image_path, is_active)
-VALUES
-(@seller5,'Gaming Chair','Ergonomic chair',8999.00,'Gaming',6,'assets/image/icons/seller-product-placeholder.png',TRUE),
-(@seller5,'VR Headset','Virtual reality',15999.00,'Gaming',3,'assets/image/icons/seller-product-placeholder.png',TRUE);
+## File: `Crooks-Cart-Collectives/database/database-connect.php`
 
-==============================================
+**Status:** `FOUND`
 
-=== File: Crooks-Cart-Collectives/database/database-connect.php ===
-
-[FOUND]
-
-<?php // PHP File Content ?>
+```php
 <?php
 // Add these lines at the beginning
 error_reporting(E_ALL);
@@ -1043,19 +1021,18 @@ try {
     ");
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/sign-in-handler.php ===
+## File: `Crooks-Cart-Collectives/database/sign-in-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
-
-// Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -1082,23 +1059,20 @@ handleSignin();
 function handleSignin() {
     global $connection;
     
-    // Log the attempt (without password)
-    $identifier = $_POST['identifier'] ?? '';
-    error_log("Signin attempt for identifier: " . $identifier);
+    error_log("Signin attempt for identifier: " . ($_POST['identifier'] ?? ''));
     
     $identifier = $_POST['identifier'] ?? '';
     $password = $_POST['password'] ?? '';
     $redirectParam = $_POST['redirect'] ?? '';
     
     if (empty($identifier) || empty($password)) {
-        error_log("Missing fields in signin attempt");
         echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
     
     $identifier = trim($identifier);
     
-    // Check for admin first
+    // Check for admin
     try {
         $stmt = $connection->prepare("
             SELECT admin_id, username, email, password 
@@ -1109,23 +1083,17 @@ function handleSignin() {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($admin) {
-            // Admin uses password_verify (they have hashed passwords)
             if (!password_verify($password, $admin['password'])) {
-                error_log("Admin password mismatch for: " . $identifier);
-                // Return generic error message for user
                 echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
                 exit;
             }
             
-            // Admin login successful
             $_SESSION['admin_id'] = $admin['admin_id'];
             $_SESSION['username'] = $admin['username'];
             $_SESSION['email'] = $admin['email'];
             $_SESSION['is_admin'] = true;
             $_SESSION['is_customer'] = false;
             $_SESSION['is_seller'] = false;
-            
-            error_log("Admin login successful: " . $admin['username']);
             
             echo json_encode([
                 'status' => 'success',
@@ -1136,7 +1104,6 @@ function handleSignin() {
         }
     } catch (PDOException $e) {
         error_log("Admin check error: " . $e->getMessage());
-        // Continue to user check
     }
     
     // Check regular user
@@ -1150,16 +1117,13 @@ function handleSignin() {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$user) {
-            error_log("User not found: " . $identifier);
-            // Generic error - don't specify if username/email doesn't exist
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
         
-        // Plain text password comparison (as per your original code)
+        // Plain text comparison (keep as per project)
         if ($password !== $user['password']) {
-            error_log("Password mismatch for user: " . $identifier . " - Expected: " . $user['password'] . ", Got: " . $password);
-            // Generic error - don't specify which field is wrong
+            error_log("Password mismatch for user: " . $identifier);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
@@ -1174,10 +1138,6 @@ function handleSignin() {
             $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
             $stmt->execute([$user['user_id']]);
             $customer_id = $connection->lastInsertId();
-            
-            // Create shopping cart
-            $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
-            $stmt->execute([$customer_id]);
         } else {
             $customer_id = $customer['customer_id'];
         }
@@ -1208,43 +1168,24 @@ function handleSignin() {
         $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
         $stmt->execute([$user['user_id']]);
         
-        // Determine redirect based on user type and redirect parameter
+        // Determine redirect
         $redirect = '';
-        
-        // First priority: Check if there's a redirect parameter from the form
         if (!empty($redirectParam)) {
-            // Clean the redirect parameter - remove any leading '../' or '/'
             $cleanRedirect = ltrim($redirectParam, './');
-            
-            // If it's just a filename (no path), add the pages directory
             if (strpos($cleanRedirect, '/') === false && strpos($cleanRedirect, 'pages/') !== 0) {
                 $redirect = '../pages/' . $cleanRedirect;
-            } 
-            // If it already has pages/ in the path but no leading ../
-            elseif (strpos($cleanRedirect, 'pages/') === 0) {
+            } elseif (strpos($cleanRedirect, 'pages/') === 0) {
                 $redirect = '../' . $cleanRedirect;
-            }
-            // If it already has the correct format (starts with ../)
-            elseif (strpos($cleanRedirect, '../') === 0) {
+            } elseif (strpos($cleanRedirect, '../') === 0) {
                 $redirect = $cleanRedirect;
-            }
-            // Otherwise, assume it needs the pages prefix
-            else {
+            } else {
                 $redirect = '../pages/' . $cleanRedirect;
             }
-            
-            error_log("Redirecting to requested page: " . $redirect);
-        } 
-        // Second priority: If user is a verified seller, go to seller dashboard
-        elseif ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
+        } elseif ($_SESSION['is_seller'] && $_SESSION['seller_verified']) {
             $redirect = '../pages/seller-dashboard.php';
-        } 
-        // Default: Go to customer dashboard
-        else {
+        } else {
             $redirect = '../pages/customer-dashboard.php';
         }
-        
-        error_log("User login successful: " . $user['username'] . " (ID: " . $user['user_id'] . ") - Redirecting to: " . $redirect);
         
         echo json_encode([
             'status' => 'success',
@@ -1258,14 +1199,15 @@ function handleSignin() {
     }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/sign-out-handler.php ===
+## File: `Crooks-Cart-Collectives/database/sign-out-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 // Crooks-Cart-Collectives/database/sign-out-handler.php
 // Function to get the base URL
@@ -1336,19 +1278,19 @@ if ($isAjax) {
 header("Location: " . $baseUrl . "pages/sign-in.php");  // CHANGED: index.php → pages/sign-in.php
 exit;
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/sign-up-handler.php ===
+## File: `Crooks-Cart-Collectives/database/sign-up-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
 
-// Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -1374,7 +1316,6 @@ handleSignup();
 
 function normalizePhoneNumber($phone) {
     $phone = preg_replace('/[^0-9+]/', '', $phone);
-    
     if (preg_match('/^09(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
     } elseif (preg_match('/^639(\d{9})$/', $phone, $matches)) {
@@ -1382,36 +1323,26 @@ function normalizePhoneNumber($phone) {
     } elseif (preg_match('/^\+63(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
     }
-    
     return $phone;
 }
 
 function handleSignup() {
     global $connection;
     
-    // Log the request for debugging
     error_log("Signup attempt: " . json_encode($_POST));
     
-    // Check required fields
     $required = ['first_name', 'last_name', 'email', 'username', 'password', 
                  'confirm_password', 'birthdate', 'gender', 'contact_number', 'address'];
     
     foreach ($required as $field) {
         if (empty(trim($_POST[$field] ?? ''))) {
-            error_log("Missing field: $field");
-            echo json_encode([
-                'status' => 'error', 
-                'message' => 'missing-field',
-                'field' => $field
-            ]);
+            echo json_encode(['status' => 'error', 'message' => 'missing-field', 'field' => $field]);
             exit;
         }
     }
     
-    // Validate email
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        error_log("Invalid email: $email");
         echo json_encode(['status' => 'error', 'message' => 'invalid-email']);
         exit;
     }
@@ -1419,128 +1350,90 @@ function handleSignup() {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     
-    // Password validation
     if (strlen($password) < 8) {
-        error_log("Password too short");
         echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
         exit;
     }
-
     if (strlen($password) > 16) {
-        error_log("Password too long");
         echo json_encode(['status' => 'error', 'message' => 'password-too-long']);
         exit;
     }
-    
-    // Check if password has at least one uppercase and one lowercase letter
     if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)) {
-        error_log("Password must contain both uppercase and lowercase letters");
         echo json_encode(['status' => 'error', 'message' => 'password-needs-mixed-case']);
         exit;
     }
-    
-    // Check if password has at least one number
     if (!preg_match('/[0-9]/', $password)) {
-        error_log("Password must contain at least one number");
         echo json_encode(['status' => 'error', 'message' => 'password-needs-number']);
         exit;
     }
-    
     if ($password !== $confirm_password) {
-        error_log("Passwords do not match");
         echo json_encode(['status' => 'error', 'message' => 'passwords-mismatch']);
         exit;
     }
     
-    // Username validation
     $username = trim($_POST['username']);
-    
     if (strlen($username) < 2) {
-        error_log("Username too short: $username");
         echo json_encode(['status' => 'error', 'message' => 'username-too-short']);
         exit;
     }
-    
     if (strlen($username) > 15) {
-        error_log("Username too long: $username");
         echo json_encode(['status' => 'error', 'message' => 'username-too-long']);
         exit;
     }
     
-    // Check if username already exists
+    // Check username
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
     $stmt->execute([$username]);
-    $usernameExists = $stmt->fetchColumn() > 0;
-    
-    if ($usernameExists) {
-        error_log("Username already exists: $username");
+    if ($stmt->fetchColumn() > 0) {
         echo json_encode(['status' => 'error', 'message' => 'username-unavailable']);
         exit;
     }
     
-    // Check email duplicates
-    $email = trim($_POST['email']);
+    // Check email
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
     $stmt->execute([$email]);
-    $emailExists = $stmt->fetchColumn() > 0;
-    
-    if ($emailExists) {
-        error_log("Duplicate email: $email");
+    if ($stmt->fetchColumn() > 0) {
         echo json_encode(['status' => 'error', 'message' => 'duplicate-email']);
         exit;
     }
     
-    // Check contact duplicates
     $contact_number = trim($_POST['contact_number']);
     $normalized_contact = normalizePhoneNumber($contact_number);
     
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE contact_number = ?");
     $stmt->execute([$normalized_contact]);
-    $contactExists = $stmt->fetchColumn() > 0;
-    
-    if ($contactExists) {
-        error_log("Duplicate contact: $normalized_contact");
+    if ($stmt->fetchColumn() > 0) {
         echo json_encode(['status' => 'error', 'message' => 'duplicate-contact']);
         exit;
     }
     
-    // Validate phone number format
     $cleaned_contact = preg_replace('/[^0-9+]/', '', $contact_number);
     if (!preg_match('/^(09|\+639|639)\d{9}$/', $cleaned_contact) && 
         !preg_match('/^0\d{10}$/', $cleaned_contact)) {
-        error_log("Invalid contact format: $contact_number");
         echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
         exit;
     }
     
-    // Age validation
     try {
         $birthdate = new DateTime($_POST['birthdate']);
         $today = new DateTime();
         $age = $birthdate->diff($today)->y;
-        
         if ($age < 13) {
-            error_log("Underage: $age years old");
             echo json_encode(['status' => 'error', 'message' => 'underage']);
             exit;
         }
-        
         if ($age > 120) {
-            error_log("Invalid age: $age");
             echo json_encode(['status' => 'error', 'message' => 'invalid-age']);
             exit;
         }
     } catch (Exception $e) {
-        error_log("Invalid birthdate format: " . $_POST['birthdate']);
         echo json_encode(['status' => 'error', 'message' => 'invalid-age']);
         exit;
     }
     
-    // Prepare user data
     $user_data = [
         ':first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
-        ':middle_name' => !empty($_POST['middle_name']) ? 
-            htmlspecialchars(trim($_POST['middle_name']), ENT_QUOTES, 'UTF-8') : null,
+        ':middle_name' => !empty($_POST['middle_name']) ? htmlspecialchars(trim($_POST['middle_name']), ENT_QUOTES, 'UTF-8') : null,
         ':last_name' => htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8'),
         ':email' => $email,
         ':username' => htmlspecialchars($username, ENT_QUOTES, 'UTF-8'),
@@ -1552,10 +1445,8 @@ function handleSignup() {
     ];
     
     try {
-        // Start transaction
         $connection->beginTransaction();
         
-        // Insert into users table
         $sql = "INSERT INTO users (
                     first_name, middle_name, last_name, email, username, 
                     password, birthdate, gender, contact_number, address
@@ -1563,59 +1454,20 @@ function handleSignup() {
                     :first_name, :middle_name, :last_name, :email, :username,
                     :password, :birthdate, :gender, :contact_number, :address
                 )";
-        
         $stmt = $connection->prepare($sql);
-        $result = $stmt->execute($user_data);
-        
-        if (!$result) {
-            throw new Exception("Failed to insert user");
-        }
+        $stmt->execute($user_data);
         
         $userID = $connection->lastInsertId();
         
-        if (!$userID || $userID == 0) {
-            throw new Exception("Failed to get valid user ID after insert");
-        }
-        
-        error_log("User inserted with ID: $userID");
-        
-        // DISABLE TRIGGER TEMPORARILY - Insert customers manually
-        // First, check if customer record already exists (shouldn't, but just in case)
+        // Check if customer record already exists (shouldn't, but just in case)
         $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
         $stmt->execute([$userID]);
-        $existingCustomer = $stmt->fetch();
-        
-        if (!$existingCustomer) {
-            // Insert into customers - DON'T specify customer_id, let auto_increment handle it
+        if (!$stmt->fetch()) {
             $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
             $stmt->execute([$userID]);
-            $customerId = $connection->lastInsertId();
-            
-            if (!$customerId) {
-                throw new Exception("Failed to create customer record");
-            }
-            
-            error_log("Customer inserted with ID: $customerId for user: $userID");
-            
-            // Insert into shopping_carts - DON'T specify cart_id, let auto_increment handle it
-            $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
-            $stmt->execute([$customerId]);
-            $cartId = $connection->lastInsertId();
-            
-            if (!$cartId) {
-                throw new Exception("Failed to create shopping cart");
-            }
-            
-            error_log("Shopping cart inserted with ID: $cartId for customer: $customerId");
-        } else {
-            error_log("Customer record already exists for user: $userID");
-            $customerId = $existingCustomer['customer_id'];
         }
         
         $connection->commit();
-        
-        // Log successful registration
-        error_log("User registered successfully: $username (ID: $userID)");
         
         echo json_encode([
             'status' => 'success',
@@ -1626,14 +1478,8 @@ function handleSignup() {
         
     } catch (PDOException $e) {
         $connection->rollBack();
-        
-        // Log the full error details
         error_log("Signup database error: " . $e->getMessage());
-        error_log("Error code: " . $e->getCode());
-        error_log("Error info: " . print_r($e->errorInfo, true));
-        
         echo json_encode(['status' => 'error', 'message' => 'Oops! There was a problem creating your account. Please try again.']);
-        
     } catch (Exception $e) {
         $connection->rollBack();
         error_log("General error in signup: " . $e->getMessage());
@@ -1641,14 +1487,15 @@ function handleSignup() {
     }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/customer-profile-handler.php ===
+## File: `Crooks-Cart-Collectives/database/customer-profile-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -1675,16 +1522,22 @@ switch ($action) {
 
 function normalizePhoneNumber($phone) {
     $phone = preg_replace('/[^0-9+]/', '', $phone);
-    
     if (preg_match('/^09(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
     } elseif (preg_match('/^639(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
     } elseif (preg_match('/^\+63(\d{9})$/', $phone, $matches)) {
         return '+63' . $matches[1];
+    } elseif (preg_match('/^0(\d{10})$/', $phone, $matches)) {
+        return '+63' . substr($matches[1], 1);
     }
-    
     return $phone;
+}
+
+function validatePhoneNumber($phone) {
+    $cleaned = preg_replace('/[^0-9+]/', '', $phone);
+    return preg_match('/^(09|\+639|639)\d{9}$/', $cleaned) || 
+           preg_match('/^0\d{10}$/', $cleaned);
 }
 
 function updateProfile($userID) {
@@ -1692,62 +1545,108 @@ function updateProfile($userID) {
     
     $required = ['first_name', 'last_name', 'contact_number', 'address'];
     foreach ($required as $field) {
-        if (empty($_POST[$field])) {
+        if (empty(trim($_POST[$field] ?? ''))) {
             echo json_encode(['status' => 'error', 'message' => "$field is required"]);
             exit;
         }
     }
     
-    // Validate phone number
-    $normalized_contact = normalizePhoneNumber($_POST['contact_number']);
-    $cleaned = preg_replace('/[^0-9+]/', '', $_POST['contact_number']);
-    if (!preg_match('/^(09|\+639|639)\d{9}$/', $cleaned)) {
+    $contact_number = trim($_POST['contact_number']);
+    if (!validatePhoneNumber($contact_number)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid phone number format']);
         exit;
     }
     
+    $normalized_contact = normalizePhoneNumber($contact_number);
+    
     // Check if phone number is already used by another user
-    $checkStmt = $connection->prepare("SELECT user_id FROM users WHERE contact_number = ? AND user_id != ?");
+    $checkStmt = $connection->prepare("
+        SELECT user_id FROM users 
+        WHERE contact_number = ? AND user_id != ?
+    ");
     $checkStmt->execute([$normalized_contact, $userID]);
     if ($checkStmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'Phone number already registered']);
         exit;
     }
     
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $middle_name = !empty($_POST['middle_name']) ? trim($_POST['middle_name']) : null;
+    
+    if (!preg_match('/^[a-zA-Z\s\-\']+$/', $first_name)) {
+        echo json_encode(['status' => 'error', 'message' => 'First name contains invalid characters']);
+        exit;
+    }
+    if (!preg_match('/^[a-zA-Z\s\-\']+$/', $last_name)) {
+        echo json_encode(['status' => 'error', 'message' => 'Last name contains invalid characters']);
+        exit;
+    }
+    if ($middle_name && !preg_match('/^[a-zA-Z\s\-\']+$/', $middle_name)) {
+        echo json_encode(['status' => 'error', 'message' => 'Middle name contains invalid characters']);
+        exit;
+    }
+    
+    $address = trim($_POST['address']);
+    if (strlen($address) < 10) {
+        echo json_encode(['status' => 'error', 'message' => 'Address must be at least 10 characters']);
+        exit;
+    }
+    
+    $birthdate = !empty($_POST['birthdate']) ? $_POST['birthdate'] : null;
+    if ($birthdate) {
+        $birthDateObj = new DateTime($birthdate);
+        $today = new DateTime();
+        $age = $birthDateObj->diff($today)->y;
+        if ($age < 13) {
+            echo json_encode(['status' => 'error', 'message' => 'You must be at least 13 years old']);
+            exit;
+        }
+        if ($age > 120) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid birthdate']);
+            exit;
+        }
+    }
+    
     $fields = [
-        'first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
-        'middle_name' => !empty($_POST['middle_name']) ? htmlspecialchars(trim($_POST['middle_name']), ENT_QUOTES, 'UTF-8') : null,
-        'last_name' => htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8'),
-        'birthdate' => !empty($_POST['birthdate']) ? $_POST['birthdate'] : null,
+        'first_name' => htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'),
+        'middle_name' => $middle_name ? htmlspecialchars($middle_name, ENT_QUOTES, 'UTF-8') : null,
+        'last_name' => htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8'),
+        'birthdate' => $birthdate,
         'gender' => $_POST['gender'] ?? null,
         'contact_number' => $normalized_contact,
-        'address' => htmlspecialchars(trim($_POST['address']), ENT_QUOTES, 'UTF-8')
+        'address' => htmlspecialchars($address, ENT_QUOTES, 'UTF-8')
     ];
     
     $setClause = [];
     $params = [];
-    
     foreach ($fields as $key => $value) {
         $setClause[] = "$key = ?";
         $params[] = $value;
     }
-    
     $params[] = $userID;
     
-    $query = "UPDATE users SET " . implode(', ', $setClause) . ", last_updated = NOW() WHERE user_id = ?";
-    $stmt = $connection->prepare($query);
-    
-    if ($stmt->execute($params)) {
+    try {
+        $connection->beginTransaction();
+        
+        $query = "UPDATE users SET " . implode(', ', $setClause) . ", last_updated = NOW() WHERE user_id = ?";
+        $stmt = $connection->prepare($query);
+        $stmt->execute($params);
+        
+        $connection->commit();
+        
         echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Update failed']);
+        
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("Profile update error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Update failed: ' . $e->getMessage()]);
     }
 }
 
 function becomeSeller($userID) {
     global $connection;
     
-    // Check if already a seller
     $stmt = $connection->prepare("SELECT seller_id FROM sellers WHERE user_id = ?");
     $stmt->execute([$userID]);
     if ($stmt->fetch()) {
@@ -1755,54 +1654,68 @@ function becomeSeller($userID) {
         exit;
     }
     
-    // Handle file upload for valid ID
     $validIDPath = null;
     if (isset($_FILES['valid_id']) && $_FILES['valid_id']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = __DIR__ . '/uploads/valid_ids/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
         
-        $extension = pathinfo($_FILES['valid_id']['name'], PATHINFO_EXTENSION);
+        $extension = strtolower(pathinfo($_FILES['valid_id']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'pdf'];
+        if (!in_array($extension, $allowed)) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Allowed: JPG, PNG, GIF, PDF']);
+            exit;
+        }
+        
         $fileName = time() . '_' . $userID . '.' . $extension;
         $targetPath = $uploadDir . $fileName;
         
         if (move_uploaded_file($_FILES['valid_id']['tmp_name'], $targetPath)) {
             $validIDPath = 'database/uploads/valid_ids/' . $fileName;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to upload file']);
+            exit;
         }
-    }
-    
-    if (!$validIDPath) {
+    } else {
         echo json_encode(['status' => 'error', 'message' => 'Valid ID is required']);
         exit;
     }
     
-    // Insert seller application
-    $stmt = $connection->prepare("
-        INSERT INTO sellers (user_id, business_name, valid_id_path, date_applied, is_verified) 
-        VALUES (?, ?, ?, NOW(), 0)
-    ");
-    
-    if ($stmt->execute([$userID, $_POST['business_name'] ?? null, $validIDPath])) {
-        $_SESSION['is_seller'] = true;
-        $_SESSION['seller_id'] = $connection->lastInsertId();
-        $_SESSION['seller_verified'] = false;
+    try {
+        $stmt = $connection->prepare("
+            INSERT INTO sellers (user_id, business_name, valid_id_path, date_applied, is_verified) 
+            VALUES (?, ?, ?, NOW(), 0)
+        ");
+        $business_name = !empty($_POST['business_name']) ? trim($_POST['business_name']) : null;
         
-        echo json_encode([
-            'status' => 'success', 
-            'message' => 'Seller application submitted successfully! Waiting for verification.'
-        ]);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Application failed']);
+        if ($stmt->execute([$userID, $business_name, $validIDPath])) {
+            $_SESSION['is_seller'] = true;
+            $_SESSION['seller_id'] = $connection->lastInsertId();
+            $_SESSION['seller_verified'] = false;
+            
+            echo json_encode([
+                'status' => 'success', 
+                'message' => 'Seller application submitted successfully! Waiting for verification.'
+            ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Application failed']);
+        }
+    } catch (PDOException $e) {
+        error_log("Become seller error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
     }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/product-handler.php ===
+## File: `Crooks-Cart-Collectives/database/product-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -1957,14 +1870,15 @@ function deleteProduct($sellerId) {
     }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/cart-handler.php ===
+## File: `Crooks-Cart-Collectives/database/cart-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -1981,12 +1895,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$customerId = $_SESSION['customer_id'];
+$customer_id = $_SESSION['customer_id'];
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 switch ($action) {
     case 'add_to_cart':
-        addToCart($customerId);
+        addToCart($customer_id);
         break;
     case 'update':
         updateCartItem();
@@ -1995,7 +1909,7 @@ switch ($action) {
         removeCartItem();
         break;
     case 'get_count':
-        getCartCount($customerId);
+        getCartCount($customer_id);
         break;
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
@@ -2003,99 +1917,183 @@ switch ($action) {
 
 function addToCart($customerId) {
     global $connection;
+    
     $productId = $_POST['product_id'] ?? 0;
-    $quantity = $_POST['quantity'] ?? 1;
+    $quantity = (int)($_POST['quantity'] ?? 1);
 
-    if (!$productId) {
-        echo json_encode(['status' => 'error', 'message' => 'Product ID missing']);
+    if (!$productId || $quantity < 1) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid product or quantity']);
         exit;
     }
 
-    // Get cart_id
-    $stmt = $connection->prepare("SELECT cart_id FROM shopping_carts WHERE customer_id = ?");
-    $stmt->execute([$customerId]);
-    $cart = $stmt->fetch();
-    if (!$cart) {
-        // Create cart if missing
-        $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
-        $stmt->execute([$customerId]);
-        $cartId = $connection->lastInsertId();
-    } else {
-        $cartId = $cart['cart_id'];
+    try {
+        // Get product and seller info
+        $stmt = $connection->prepare("
+            SELECT p.*, s.seller_id, s.business_name 
+            FROM products p
+            JOIN sellers s ON p.seller_id = s.seller_id
+            WHERE p.product_id = ? AND p.is_active = 1
+        ");
+        $stmt->execute([$productId]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$product) {
+            echo json_encode(['status' => 'error', 'message' => 'Product not found']);
+            exit;
+        }
+
+        // Check stock
+        if ($quantity > $product['stock_quantity']) {
+            echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+            exit;
+        }
+
+        // Check if item already in cart
+        $stmt = $connection->prepare("
+            SELECT cart_id, quantity 
+            FROM carts 
+            WHERE customer_id = ? AND product_id = ?
+        ");
+        $stmt->execute([$customerId, $productId]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existing) {
+            // Update quantity in cart
+            $newQuantity = $existing['quantity'] + $quantity;
+            
+            // Check stock again for new quantity
+            if ($newQuantity > $product['stock_quantity']) {
+                echo json_encode(['status' => 'error', 'message' => 'Cannot add more than available stock']);
+                exit;
+            }
+            
+            $stmt = $connection->prepare("
+                UPDATE carts 
+                SET quantity = ?, updated_at = NOW() 
+                WHERE cart_id = ?
+            ");
+            $stmt->execute([$newQuantity, $existing['cart_id']]);
+        } else {
+            // Insert new cart item
+            $stmt = $connection->prepare("
+                INSERT INTO carts (customer_id, seller_id, product_id, quantity, price_at_time)
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $customerId,
+                $product['seller_id'],
+                $productId,
+                $quantity,
+                $product['price']
+            ]);
+        }
+
+        echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
+        
+    } catch (PDOException $e) {
+        error_log("Add to cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
-
-    // Check if product already in cart
-    $stmt = $connection->prepare("SELECT cart_item_id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?");
-    $stmt->execute([$cartId, $productId]);
-    $existing = $stmt->fetch();
-
-    if ($existing) {
-        // Update quantity
-        $newQty = $existing['quantity'] + $quantity;
-        $stmt = $connection->prepare("UPDATE cart_items SET quantity = ? WHERE cart_item_id = ?");
-        $stmt->execute([$newQty, $existing['cart_item_id']]);
-    } else {
-        // Insert new
-        $stmt = $connection->prepare("INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->execute([$cartId, $productId, $quantity]);
-    }
-
-    echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
 }
 
 function updateCartItem() {
     global $connection;
-    $itemId = $_POST['cart_item_id'] ?? 0;
-    $quantity = $_POST['quantity'] ?? 1;
+    
+    $cartId = $_POST['cart_item_id'] ?? 0;
+    $quantity = (int)($_POST['quantity'] ?? 1);
 
-    if (!$itemId || $quantity < 1) {
+    if (!$cartId || $quantity < 1) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit;
     }
 
-    $stmt = $connection->prepare("UPDATE cart_items SET quantity = ? WHERE cart_item_id = ?");
-    $stmt->execute([$quantity, $itemId]);
+    try {
+        // Get product stock
+        $stmt = $connection->prepare("
+            SELECT p.stock_quantity
+            FROM carts c
+            JOIN products p ON c.product_id = p.product_id
+            WHERE c.cart_id = ?
+        ");
+        $stmt->execute([$cartId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$result) {
+            echo json_encode(['status' => 'error', 'message' => 'Cart item not found']);
+            exit;
+        }
+        
+        if ($quantity > $result['stock_quantity']) {
+            echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+            exit;
+        }
 
-    echo json_encode(['status' => 'success']);
+        $stmt = $connection->prepare("
+            UPDATE carts 
+            SET quantity = ?, updated_at = NOW() 
+            WHERE cart_id = ?
+        ");
+        $stmt->execute([$quantity, $cartId]);
+
+        echo json_encode(['status' => 'success']);
+        
+    } catch (PDOException $e) {
+        error_log("Update cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Update failed']);
+    }
 }
 
 function removeCartItem() {
     global $connection;
-    $itemId = $_POST['cart_item_id'] ?? 0;
+    
+    $cartId = $_POST['cart_item_id'] ?? 0;
 
-    if (!$itemId) {
+    if (!$cartId) {
         echo json_encode(['status' => 'error', 'message' => 'Item ID missing']);
         exit;
     }
 
-    $stmt = $connection->prepare("DELETE FROM cart_items WHERE cart_item_id = ?");
-    $stmt->execute([$itemId]);
+    try {
+        $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ?");
+        $stmt->execute([$cartId]);
 
-    echo json_encode(['status' => 'success']);
+        echo json_encode(['status' => 'success']);
+        
+    } catch (PDOException $e) {
+        error_log("Remove cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Remove failed']);
+    }
 }
 
 function getCartCount($customerId) {
     global $connection;
-    $stmt = $connection->prepare("
-        SELECT SUM(quantity) as count 
-        FROM cart_items ci
-        JOIN shopping_carts sc ON ci.cart_id = sc.cart_id
-        WHERE sc.customer_id = ?
-    ");
-    $stmt->execute([$customerId]);
-    $result = $stmt->fetch();
-    $count = $result['count'] ?? 0;
-    echo json_encode(['status' => 'success', 'count' => (int)$count]);
+    
+    try {
+        $stmt = $connection->prepare("
+            SELECT SUM(quantity) as count 
+            FROM carts 
+            WHERE customer_id = ?
+        ");
+        $stmt->execute([$customerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $count = $result['count'] ?? 0;
+        
+        echo json_encode(['status' => 'success', 'count' => (int)$count]);
+    } catch (PDOException $e) {
+        error_log("Get cart count error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'count' => 0]);
+    }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/checkout-handler.php ===
+## File: `Crooks-Cart-Collectives/database/checkout-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -2124,99 +2122,54 @@ $shipping_address = $user['address'];
 try {
     $connection->beginTransaction();
 
-    // Get cart items with seller info
+    // Get cart items
     $stmt = $connection->prepare("
-        SELECT ci.*, p.price, p.seller_id, p.name, p.stock_quantity
-        FROM cart_items ci
-        JOIN products p ON ci.product_id = p.product_id
-        WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
+        SELECT c.*, p.price, p.name, p.stock_quantity, p.seller_id
+        FROM carts c
+        JOIN products p ON c.product_id = p.product_id
+        WHERE c.customer_id = ?
     ");
     $stmt->execute([$customer_id]);
-    $cartItems = $stmt->fetchAll();
+    $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($cartItems)) {
         echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
         exit;
     }
 
-    // Calculate total and validate stock
-    $total_amount = 0;
+    // Validate stock and insert orders
     foreach ($cartItems as $item) {
-        $total_amount += $item['price'] * $item['quantity'];
-        
-        // Check stock
+        // Final stock check
         if ($item['quantity'] > $item['stock_quantity']) {
             throw new Exception("Insufficient stock for {$item['name']}");
         }
-    }
-
-    // 1. Insert into customer_orders (NO status column - removed from INSERT)
-    $stmt = $connection->prepare("
-        INSERT INTO customer_orders (customer_id, total_amount, shipping_address, payment_method, order_date)
-        VALUES (?, ?, ?, 'Cash on Delivery', NOW())
-    ");
-    $stmt->execute([$customer_id, $total_amount, $shipping_address]);
-    $order_id = $connection->lastInsertId();
-
-    // 2. Group items by seller
-    $sellerGroups = [];
-    foreach ($cartItems as $item) {
-        $sellerGroups[$item['seller_id']][] = $item;
-    }
-
-    // 3. Create seller_orders for each seller
-    $sellerOrderMap = []; // Maps seller_id to seller_order_id
-    foreach ($sellerGroups as $seller_id => $items) {
-        $seller_total = 0;
-        foreach ($items as $item) {
-            $seller_total += $item['price'] * $item['quantity'];
-        }
         
-        $stmt = $connection->prepare("
-            INSERT INTO seller_orders (order_id, seller_id, seller_total, seller_status)
-            VALUES (?, ?, ?, 'pending')
+        // Insert into orders table
+        $orderStmt = $connection->prepare("
+            INSERT INTO orders (customer_id, seller_id, product_id, quantity, price_at_time, shipping_address, payment_method)
+            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery')
         ");
-        $stmt->execute([$order_id, $seller_id, $seller_total]);
-        $sellerOrderMap[$seller_id] = $connection->lastInsertId();
-    }
-
-    // 4. Insert into purchase_items (this is where status belongs)
-    $insertItem = $connection->prepare("
-        INSERT INTO purchase_items (seller_order_id, product_id, quantity, price_at_time, status)
-        VALUES (?, ?, ?, ?, 'pending')
-    ");
-    
-    foreach ($cartItems as $item) {
-        $seller_order_id = $sellerOrderMap[$item['seller_id']];
-        $insertItem->execute([
-            $seller_order_id,
+        $orderStmt->execute([
+            $customer_id,
+            $item['seller_id'],
             $item['product_id'],
             $item['quantity'],
-            $item['price']
+            $item['price_at_time'],
+            $shipping_address
         ]);
         
-        // Update product stock
-        $updateStock = $connection->prepare("
-            UPDATE products 
-            SET stock_quantity = stock_quantity - ? 
-            WHERE product_id = ?
-        ");
-        $updateStock->execute([$item['quantity'], $item['product_id']]);
+        // Note: Stock is automatically reduced by the BEFORE INSERT trigger on orders table
     }
 
-    // 5. Clear the cart
-    $stmt = $connection->prepare("
-        DELETE FROM cart_items
-        WHERE cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
-    ");
-    $stmt->execute([$customer_id]);
+    // Clear the cart
+    $clearStmt = $connection->prepare("DELETE FROM carts WHERE customer_id = ?");
+    $clearStmt->execute([$customer_id]);
 
     $connection->commit();
 
     echo json_encode([
         'status' => 'success',
         'message' => 'Order placed successfully',
-        'order_id' => $order_id,
         'redirect' => 'orders.php'
     ]);
 
@@ -2226,15 +2179,15 @@ try {
     echo json_encode(['status' => 'error', 'message' => 'Failed to place order: ' . $e->getMessage()]);
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/order-handler.php ===
+## File: `Crooks-Cart-Collectives/database/order-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -2255,22 +2208,24 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 switch ($action) {
     case 'get_customer_orders':
-        getCustomerOrders($connection);
+        getCustomerOrders();
         break;
     case 'cancel_item':
-        cancelOrderItem($connection);
+        cancelOrderItem();
         break;
     case 'get_seller_orders':
-        getSellerOrders($connection);
+        getSellerOrders();
         break;
     case 'update_item_status':
-        updateItemStatus($connection);
+        updateItemStatus();
         break;
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 }
 
-function getCustomerOrders($connection) {
+function getCustomerOrders() {
+    global $connection;
+    
     if (!isset($_SESSION['customer_id'])) {
         echo json_encode(['status' => 'error', 'message' => 'Not a customer']);
         exit;
@@ -2279,89 +2234,32 @@ function getCustomerOrders($connection) {
     $customer_id = $_SESSION['customer_id'];
     
     try {
-        // Get all orders with proper joins - FIXED to get seller business_name
         $stmt = $connection->prepare("
             SELECT 
-                co.order_id,
-                co.order_date,
-                co.total_amount,
-                co.shipping_address,
-                co.payment_method,
-                so.seller_order_id,
-                so.seller_id,
-                so.seller_status,
-                pi.order_item_id,
-                pi.product_id,
-                pi.quantity,
-                pi.price_at_time,
-                pi.subtotal,
-                pi.status as item_status,
-                p.name as product_name,
+                o.order_id,
+                o.product_id,
+                o.quantity,
+                o.price_at_time,
+                o.subtotal,
+                o.status,
+                o.shipping_address,
+                o.order_date,
+                o.delivered_at,
+                o.cancelled_at,
+                p.name AS product_name,
                 p.image_path,
                 s.business_name,
-                (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_item_id = pi.order_item_id) as has_review
-            FROM customer_orders co
-            LEFT JOIN seller_orders so ON co.order_id = so.order_id
-            LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-            LEFT JOIN products p ON pi.product_id = p.product_id
-            LEFT JOIN sellers s ON so.seller_id = s.seller_id
-            WHERE co.customer_id = ?
-            ORDER BY co.order_date DESC, so.seller_order_id
+                (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_id = o.order_id) AS has_review
+            FROM orders o
+            JOIN products p ON o.product_id = p.product_id
+            JOIN sellers s ON o.seller_id = s.seller_id
+            WHERE o.customer_id = ?
+            ORDER BY o.order_date DESC
         ");
         $stmt->execute([$customer_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Group by order
-        $orders = [];
-        foreach ($rows as $row) {
-            $order_id = $row['order_id'];
-            
-            if (!isset($orders[$order_id])) {
-                $orders[$order_id] = [
-                    'order_id' => $row['order_id'],
-                    'order_date' => $row['order_date'],
-                    'total_amount' => $row['total_amount'],
-                    'shipping_address' => $row['shipping_address'],
-                    'payment_method' => $row['payment_method'],
-                    'items' => []
-                ];
-            }
-            
-            if ($row['order_item_id']) {
-                $orders[$order_id]['items'][] = [
-                    'order_item_id' => $row['order_item_id'],
-                    'product_id' => $row['product_id'],
-                    'product_name' => $row['product_name'],
-                    'business_name' => $row['business_name'] ?? 'Unknown Seller',
-                    'quantity' => $row['quantity'],
-                    'price_at_time' => $row['price_at_time'],
-                    'subtotal' => $row['subtotal'],
-                    'status' => $row['item_status'],
-                    'image_path' => $row['image_path'],
-                    'reviewed' => $row['has_review'] > 0
-                ];
-            }
-        }
-        
-        // Calculate order status for each order
-        foreach ($orders as &$order) {
-            $statuses = array_column($order['items'], 'status');
-            $total_items = count($statuses);
-            $cancelled = count(array_filter($statuses, function($s) { return $s === 'cancelled'; }));
-            $delivered = count(array_filter($statuses, function($s) { return $s === 'delivered'; }));
-            
-            if ($cancelled === $total_items) {
-                $order['order_status'] = 'cancelled';
-            } elseif ($delivered === $total_items) {
-                $order['order_status'] = 'completed';
-            } elseif (in_array('pending', $statuses)) {
-                $order['order_status'] = 'pending';
-            } else {
-                $order['order_status'] = 'processing';
-            }
-        }
-        
-        echo json_encode(['status' => 'success', 'data' => array_values($orders)]);
+        echo json_encode(['status' => 'success', 'data' => $rows]);
         
     } catch (Exception $e) {
         error_log("getCustomerOrders error: " . $e->getMessage());
@@ -2369,75 +2267,64 @@ function getCustomerOrders($connection) {
     }
 }
 
-function cancelOrderItem($connection) {
+function cancelOrderItem() {
+    global $connection;
+    
     if (!isset($_SESSION['customer_id'])) {
         echo json_encode(['status' => 'error', 'message' => 'Not a customer']);
         exit;
     }
     
     $customer_id = $_SESSION['customer_id'];
-    $item_id = $_POST['item_id'] ?? 0;
+    $order_id = $_POST['order_id'] ?? 0;
     
-    if (!$item_id) {
-        echo json_encode(['status' => 'error', 'message' => 'Item ID required']);
+    if (!$order_id) {
+        echo json_encode(['status' => 'error', 'message' => 'Order ID required']);
         exit;
     }
     
     try {
-        // Check if item belongs to customer and is pending
         $stmt = $connection->prepare("
-            SELECT pi.order_item_id, pi.status, pi.quantity, pi.product_id, so.seller_order_id
-            FROM purchase_items pi
-            JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
-            JOIN customer_orders co ON so.order_id = co.order_id
-            WHERE pi.order_item_id = ? AND co.customer_id = ?
+            SELECT order_id, status
+            FROM orders
+            WHERE order_id = ? AND customer_id = ?
         ");
-        $stmt->execute([$item_id, $customer_id]);
-        $item = $stmt->fetch();
+        $stmt->execute([$order_id, $customer_id]);
+        $order = $stmt->fetch();
         
-        if (!$item) {
-            echo json_encode(['status' => 'error', 'message' => 'Item not found']);
+        if (!$order) {
+            echo json_encode(['status' => 'error', 'message' => 'Order not found']);
             exit;
         }
         
-        if ($item['status'] !== 'pending') {
-            echo json_encode(['status' => 'error', 'message' => 'Item cannot be cancelled at this stage']);
+        if ($order['status'] !== 'ordered') {
+            echo json_encode(['status' => 'error', 'message' => 'Order can only be cancelled when status is ordered']);
             exit;
         }
         
         $connection->beginTransaction();
         
-        // Cancel the item
         $update = $connection->prepare("
-            UPDATE purchase_items
+            UPDATE orders
             SET status = 'cancelled', cancelled_at = NOW()
-            WHERE order_item_id = ?
+            WHERE order_id = ?
         ");
-        $update->execute([$item_id]);
-        
-        // Restore stock
-        $restoreStock = $connection->prepare("
-            UPDATE products 
-            SET stock_quantity = stock_quantity + ? 
-            WHERE product_id = ?
-        ");
-        $restoreStock->execute([$item['quantity'], $item['product_id']]);
-        
-        // Update seller_order status
-        updateSellerOrderStatus($connection, $item['seller_order_id']);
+        $update->execute([$order_id]);
         
         $connection->commit();
         
-        echo json_encode(['status' => 'success', 'message' => 'Item cancelled successfully']);
+        echo json_encode(['status' => 'success', 'message' => 'Order cancelled successfully']);
         
     } catch (Exception $e) {
         $connection->rollBack();
         error_log("cancelOrderItem error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Failed to cancel item']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to cancel order']);
     }
 }
 
-function getSellerOrders($connection) {
+function getSellerOrders() {
+    global $connection;
+    
     if (!isset($_SESSION['seller_id'])) {
         echo json_encode(['status' => 'error', 'message' => 'Not a seller']);
         exit;
@@ -2448,65 +2335,32 @@ function getSellerOrders($connection) {
     try {
         $stmt = $connection->prepare("
             SELECT 
-                co.order_id,
-                co.order_date,
-                co.shipping_address,
+                o.order_id,
+                o.customer_id,
+                o.product_id,
+                o.quantity,
+                o.price_at_time,
+                o.subtotal,
+                o.status,
+                o.shipping_address,
+                o.order_date,
+                p.name AS product_name,
+                p.image_path,
                 u.first_name,
                 u.last_name,
                 u.email,
-                u.contact_number,
-                so.seller_order_id,
-                so.seller_status,
-                pi.order_item_id,
-                pi.product_id,
-                pi.quantity,
-                pi.price_at_time,
-                pi.subtotal,
-                pi.status as item_status,
-                p.name as product_name,
-                p.image_path
-            FROM customer_orders co
-            JOIN seller_orders so ON co.order_id = so.order_id
-            JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-            JOIN products p ON pi.product_id = p.product_id
-            JOIN users u ON co.customer_id = (SELECT customer_id FROM customers WHERE user_id = u.user_id)
-            WHERE so.seller_id = ?
-            ORDER BY co.order_date DESC
+                u.contact_number
+            FROM orders o
+            JOIN products p ON o.product_id = p.product_id
+            JOIN customers c ON o.customer_id = c.customer_id
+            JOIN users u ON c.user_id = u.user_id
+            WHERE o.seller_id = ?
+            ORDER BY o.order_date DESC
         ");
         $stmt->execute([$seller_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        $orders = [];
-        foreach ($rows as $row) {
-            $order_id = $row['order_id'];
-            
-            if (!isset($orders[$order_id])) {
-                $orders[$order_id] = [
-                    'order_id' => $row['order_id'],
-                    'order_date' => $row['order_date'],
-                    'shipping_address' => $row['shipping_address'],
-                    'first_name' => $row['first_name'],
-                    'last_name' => $row['last_name'],
-                    'email' => $row['email'],
-                    'contact_number' => $row['contact_number'],
-                    'seller_status' => $row['seller_status'],
-                    'items' => []
-                ];
-            }
-            
-            $orders[$order_id]['items'][] = [
-                'order_item_id' => $row['order_item_id'],
-                'product_id' => $row['product_id'],
-                'product_name' => $row['product_name'],
-                'quantity' => $row['quantity'],
-                'price_at_time' => $row['price_at_time'],
-                'subtotal' => $row['subtotal'],
-                'status' => $row['item_status'],
-                'image_path' => $row['image_path']
-            ];
-        }
-        
-        echo json_encode(['status' => 'success', 'data' => array_values($orders)]);
+        echo json_encode(['status' => 'success', 'data' => $rows]);
         
     } catch (Exception $e) {
         error_log("getSellerOrders error: " . $e->getMessage());
@@ -2514,55 +2368,57 @@ function getSellerOrders($connection) {
     }
 }
 
-function updateItemStatus($connection) {
+function updateItemStatus() {
+    global $connection;
+    
     if (!isset($_SESSION['seller_id'])) {
         echo json_encode(['status' => 'error', 'message' => 'Not a seller']);
         exit;
     }
     
     $seller_id = $_SESSION['seller_id'];
-    $item_id = $_POST['item_id'] ?? 0;
+    $order_id = $_POST['order_id'] ?? 0;
     $status = $_POST['status'] ?? '';
     
-    $allowed_statuses = ['confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
-    if (!$item_id || !in_array($status, $allowed_statuses)) {
+    $allowed_statuses = ['delivered', 'cancelled'];
+    if (!$order_id || !in_array($status, $allowed_statuses)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid parameters']);
         exit;
     }
     
     try {
-        // Verify item belongs to seller
         $stmt = $connection->prepare("
-            SELECT pi.order_item_id, so.seller_order_id
-            FROM purchase_items pi
-            JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
-            WHERE pi.order_item_id = ? AND so.seller_id = ?
+            SELECT order_id, status
+            FROM orders
+            WHERE order_id = ? AND seller_id = ?
         ");
-        $stmt->execute([$item_id, $seller_id]);
-        $item = $stmt->fetch();
+        $stmt->execute([$order_id, $seller_id]);
+        $order = $stmt->fetch();
         
-        if (!$item) {
-            echo json_encode(['status' => 'error', 'message' => 'Item not found']);
+        if (!$order) {
+            echo json_encode(['status' => 'error', 'message' => 'Order not found']);
+            exit;
+        }
+        
+        if ($order['status'] !== 'ordered') {
+            echo json_encode(['status' => 'error', 'message' => 'Order cannot be updated from current status']);
             exit;
         }
         
         $connection->beginTransaction();
         
-        // Update status and corresponding timestamp
-        $timestamp_field = $status . '_at';
         $update = $connection->prepare("
-            UPDATE purchase_items
-            SET status = ?, $timestamp_field = NOW()
-            WHERE order_item_id = ?
+            UPDATE orders
+            SET status = ?, 
+                delivered_at = CASE WHEN ? = 'delivered' THEN NOW() ELSE delivered_at END,
+                cancelled_at = CASE WHEN ? = 'cancelled' THEN NOW() ELSE cancelled_at END
+            WHERE order_id = ?
         ");
-        $update->execute([$status, $item_id]);
-        
-        // Update seller_order status
-        updateSellerOrderStatus($connection, $item['seller_order_id']);
+        $update->execute([$status, $status, $status, $order_id]);
         
         $connection->commit();
         
-        echo json_encode(['status' => 'success', 'message' => 'Item status updated']);
+        echo json_encode(['status' => 'success', 'message' => 'Order status updated']);
         
     } catch (Exception $e) {
         $connection->rollBack();
@@ -2570,45 +2426,16 @@ function updateItemStatus($connection) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to update status']);
     }
 }
-
-function updateSellerOrderStatus($connection, $seller_order_id) {
-    $stmt = $connection->prepare("
-        SELECT 
-            COUNT(*) as total,
-            SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
-            SUM(CASE WHEN status IN ('delivered', 'refunded') THEN 1 ELSE 0 END) as completed,
-            SUM(CASE WHEN status IN ('confirmed', 'processing', 'shipped') THEN 1 ELSE 0 END) as processing
-        FROM purchase_items
-        WHERE seller_order_id = ?
-    ");
-    $stmt->execute([$seller_order_id]);
-    $counts = $stmt->fetch();
-    
-    $new_status = 'pending';
-    if ($counts['cancelled'] == $counts['total']) {
-        $new_status = 'cancelled';
-    } elseif ($counts['completed'] == $counts['total']) {
-        $new_status = 'completed';
-    } elseif ($counts['processing'] > 0) {
-        $new_status = 'processing';
-    }
-    
-    $update = $connection->prepare("
-        UPDATE seller_orders
-        SET seller_status = ?, updated_at = NOW()
-        WHERE seller_order_id = ?
-    ");
-    $update->execute([$new_status, $seller_order_id]);
-}
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/review-handler.php ===
+## File: `Crooks-Cart-Collectives/database/review-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -2628,41 +2455,39 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 $user_id = $_SESSION['user_id'];
 $customer_id = $_SESSION['customer_id'];
 
-$order_item_id = $_POST['order_item_id'] ?? 0;
+$order_id = $_POST['order_id'] ?? 0;
 $product_id = $_POST['product_id'] ?? 0;
-$rating = $_POST['rating'] ?? 0;
+$rating = (int)($_POST['rating'] ?? 0);
 $comment = trim($_POST['comment'] ?? '');
 
-if (!$order_item_id || !$product_id || !$rating || $rating < 1 || $rating > 5) {
+if (!$order_id || !$product_id || !$rating || $rating < 1 || $rating > 5) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid input']);
     exit;
 }
 
 try {
-    // Verify item belongs to customer and is delivered
+    // Verify order belongs to customer, is delivered, and matches product
     $stmt = $connection->prepare("
-        SELECT pi.order_item_id
-        FROM purchase_items pi
-        JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
-        JOIN customer_orders co ON so.order_id = co.order_id
-        WHERE pi.order_item_id = ? 
-          AND co.customer_id = ?
-          AND pi.product_id = ?
-          AND pi.status = 'delivered'
+        SELECT order_id
+        FROM orders
+        WHERE order_id = ? 
+          AND customer_id = ?
+          AND product_id = ?
+          AND status = 'delivered'
     ");
-    $stmt->execute([$order_item_id, $customer_id, $product_id]);
+    $stmt->execute([$order_id, $customer_id, $product_id]);
     
     if (!$stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'Item not delivered or not found']);
         exit;
     }
 
-    // Check if already reviewed
+    // Check if already reviewed (unique order_id in product_reviews)
     $stmt = $connection->prepare("
         SELECT review_id FROM product_reviews
-        WHERE order_item_id = ?
+        WHERE order_id = ?
     ");
-    $stmt->execute([$order_item_id]);
+    $stmt->execute([$order_id]);
     
     if ($stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'You have already reviewed this product']);
@@ -2671,15 +2496,15 @@ try {
 
     // Insert review
     $stmt = $connection->prepare("
-        INSERT INTO product_reviews (product_id, user_id, order_item_id, rating, comment, date_posted)
+        INSERT INTO product_reviews (product_id, user_id, order_id, rating, comment, date_posted)
         VALUES (?, ?, ?, ?, ?, NOW())
     ");
-    $stmt->execute([$product_id, $user_id, $order_item_id, $rating, $comment]);
+    $stmt->execute([$product_id, $user_id, $order_id, $rating, $comment]);
 
     echo json_encode(['status' => 'success', 'message' => 'Review submitted']);
 
 } catch (PDOException $e) {
-    if ($e->errorInfo[1] == 1062) { // Duplicate entry
+    if ($e->errorInfo[1] == 1062) {
         echo json_encode(['status' => 'error', 'message' => 'You have already reviewed this product']);
     } else {
         error_log("Review insert error: " . $e->getMessage());
@@ -2687,14 +2512,15 @@ try {
     }
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/report-seller-handler.php ===
+## File: `Crooks-Cart-Collectives/database/report-seller-handler.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 header('Content-Type: application/json');
@@ -2760,14 +2586,15 @@ try {
     echo json_encode(["status" => "error", "message" => "Failed to save report."]);
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/validation.php ===
+## File: `Crooks-Cart-Collectives/database/validation.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 // Validation functions for authentication
 
@@ -2919,299 +2746,29 @@ function logError($message, $context = []) {
     error_log($logEntry . PHP_EOL, 3, __DIR__ . '/error_log.txt');
 }
 ?>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/database/error_log.txt ===
+## File: `Crooks-Cart-Collectives/database/error_log.txt`
 
-[FOUND]
+**Status:** `FOUND`
 
-# Text File Content
-[16-Feb-2026 10:05:37 Europe/Berlin] Signin attempt for identifier: lance
-[16-Feb-2026 10:05:37 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
-[16-Feb-2026 11:07:24 Europe/Berlin] Signin attempt for identifier: brian
-[16-Feb-2026 11:07:24 Europe/Berlin] User login successful: brian (ID: 3) - Redirecting to: ../pages/seller-dashboard.php
-[16-Feb-2026 11:07:26 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[16-Feb-2026 11:07:34 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[16-Feb-2026 11:10:11 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
-[16-Feb-2026 11:10:11 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
-[16-Feb-2026 12:34:52 Europe/Berlin] Signin attempt for identifier: lance
-[16-Feb-2026 12:34:52 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
-[17-Feb-2026 07:43:48 Europe/Berlin] Signin attempt for identifier: lance
-[17-Feb-2026 07:43:48 Europe/Berlin] User login successful: lance (ID: 1) - Redirecting to: ../pages/customer-dashboard.php
-[17-Feb-2026 07:50:55 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:02 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:07 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:09 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:27 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:51:46 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 07:52:01 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pi2.image_path' in 'field list' in D:\Repository\Crooks-Cart-Collectives\pages\orders.php:74
-Stack trace:
-#0 D:\Repository\Crooks-Cart-Collectives\pages\orders.php(74): PDO->prepare('\r\n        SELEC...')
-#1 {main}
-  thrown in D:\Repository\Crooks-Cart-Collectives\pages\orders.php on line 74
-[17-Feb-2026 13:50:48 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:50:48 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:50:48 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:50:56 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:50:56 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:50:56 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:51:00 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:51:00 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:51:00 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:51:04 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:51:04 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:51:04 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:51:08 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:51:08 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:51:08 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:51:12 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
-[17-Feb-2026 13:51:12 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:51:12 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[17-Feb-2026 13:51:58 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2006] MySQL server has gone away
-[17-Feb-2026 13:51:58 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:52:37 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[17-Feb-2026 13:52:37 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:52:45 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[17-Feb-2026 13:52:45 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:52:47 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[17-Feb-2026 13:52:47 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[17-Feb-2026 13:53:04 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[17-Feb-2026 13:53:04 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[18-Feb-2026 15:52:11 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 15:52:11 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 15:52:12 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 15:52:37 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:00:55 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2005-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lance051117","confirm_password":"Lance051117","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
-[18-Feb-2026 16:00:55 Europe/Berlin] User inserted with ID: 6
-[18-Feb-2026 16:00:55 Europe/Berlin] Customer record already exists for user: 6
-[18-Feb-2026 16:00:55 Europe/Berlin] User registered successfully: lance (ID: 6)
-[18-Feb-2026 16:01:04 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:01:04 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
-[18-Feb-2026 16:01:10 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:01:10 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
-[18-Feb-2026 16:01:16 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:01:16 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:02:30 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:02:30 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:02:32 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:02:43 Europe/Berlin] PHP Warning:  Undefined array key "seller_order_id" in D:\Repository\Crooks-Cart-Collectives\database\order-handler.php on line 260
-[18-Feb-2026 16:03:03 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:03:27 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:03:27 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: lance
-[18-Feb-2026 16:03:31 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:03:31 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:08:26 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:08:26 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:12:57 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:12:57 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:12:58 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:13:25 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:17:04 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:17:04 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:31:42 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:31:42 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:31:44 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:31:52 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:32:37 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:32:37 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: Lance051117]
-[18-Feb-2026 16:32:42 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:32:42 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:33:26 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:33:26 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:33:27 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:35:29 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:35:29 Europe/Berlin] Password mismatch for user: lance - Expected: Lance051117, Got: Lance05117
-[18-Feb-2026 16:35:32 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 16:35:32 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 16:42:45 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:42:45 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:42:46 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:43:16 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:45:33 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:45:54 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:46:28 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:54:18 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:55:47 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:57:43 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:58:20 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 16:58:20 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 16:58:21 Europe/Berlin] Seller dashboard stats error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'co.status' in 'where clause'
-[18-Feb-2026 16:59:33 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 16:59:33 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 16:59:33 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 16:59:42 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 16:59:42 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 16:59:42 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:00:36 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 17:00:36 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:00:36 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:02:20 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 17:02:20 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:02:20 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:07:06 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 17:07:06 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:07:06 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:08:06 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 17:08:06 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 17:08:08 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 380
-[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 387
-[18-Feb-2026 17:08:08 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:08:08 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 394
-[18-Feb-2026 17:09:24 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:09:24 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:09:24 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:10:00 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:10:00 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:10:00 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:10:36 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:10:36 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:10:36 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:14 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:14:14 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:14 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:21 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:14:21 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:21 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:40 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:14:40 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:40 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:58 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:14:58 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:14:58 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:15:44 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:15:44 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:15:44 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:17:37 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 17:17:37 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 17:35:46 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 17:35:46 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 17:42:05 Europe/Berlin] Signin attempt for identifier: alex
-[18-Feb-2026 17:42:05 Europe/Berlin] User login successful: alex (ID: 1) - Redirecting to: ../pages/seller-dashboard.php
-[18-Feb-2026 17:42:07 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:42:07 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:42:07 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:42:07 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:42:07 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:42:52 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:42:52 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:42:52 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:42:52 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:42:52 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:42:58 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:42:58 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:42:58 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:42:58 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:42:58 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:45:10 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:45:10 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:45:10 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:45:10 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:45:10 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:33 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:46:33 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:46:33 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:46:33 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:33 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:37 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:46:37 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:46:37 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:46:37 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:37 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:44 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:46:44 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:46:44 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:46:44 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:46:44 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:11 Europe/Berlin] updateItemStatus error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'processing_at' in 'field list'
-[18-Feb-2026 17:47:35 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:47:35 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:47:35 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:47:35 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:35 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:43 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:47:43 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:47:43 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:47:43 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:43 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:48 Europe/Berlin] Seller dashboard stats error: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'seller_order_id' in field list is ambiguous
-[18-Feb-2026 17:47:48 Europe/Berlin] PHP Warning:  Undefined array key "orders" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 421
-[18-Feb-2026 17:47:48 Europe/Berlin] PHP Warning:  Undefined array key "items_sold" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 431
-[18-Feb-2026 17:47:48 Europe/Berlin] PHP Warning:  Undefined array key "revenue" in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:48 Europe/Berlin] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\seller-dashboard.php on line 441
-[18-Feb-2026 17:47:58 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 17:47:58 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
-[18-Feb-2026 17:47:59 Europe/Berlin] Signin attempt for identifier: lance
-[18-Feb-2026 17:47:59 Europe/Berlin] User login successful: lance (ID: 6) - Redirecting to: ../pages/customer-dashboard.php
+```text
+[26-Feb-2026 14:49:55 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[26-Feb-2026 14:49:55 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[26-Feb-2026 15:09:56 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 15:36:02 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2006-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lance051117","confirm_password":"Lance051117","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[26-Feb-2026 15:36:14 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/header.php ===
+## File: `Crooks-Cart-Collectives/pages/header.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php // PHP File Content ?>
 <?php
 if (session_status() === PHP_SESSION_NONE) {
@@ -3354,14 +2911,15 @@ if ($is_root) {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/footer.php ===
+## File: `Crooks-Cart-Collectives/pages/footer.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
 $is_root = ($current_page == 'index.php');
@@ -3401,14 +2959,15 @@ $pathPrefix = $is_root ? '' : '../';
         </div>
     </div>
 </footer>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/about.php ===
+## File: `Crooks-Cart-Collectives/pages/about.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php // PHP File Content ?>
 <?php
 session_start();
@@ -3584,14 +3143,15 @@ $current_page = 'about';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/contact.php ===
+## File: `Crooks-Cart-Collectives/pages/contact.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 // Crooks-Cart-Collectives/pages/contact.php
 // FIXED VERSION - Replaced emoji icons with SVG icons
@@ -3802,14 +3362,15 @@ $current_page = 'contact';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/privacy-policy.php ===
+## File: `Crooks-Cart-Collectives/pages/privacy-policy.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 $current_page = 'privacy-policy';
@@ -3960,14 +3521,15 @@ $current_page = 'privacy-policy';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/terms-and-conditions.php ===
+## File: `Crooks-Cart-Collectives/pages/terms-and-conditions.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 $current_page = 'terms-and-conditions';
@@ -4186,15 +3748,15 @@ $current_page = 'terms-and-conditions';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/sign-in.php ===
+## File: `Crooks-Cart-Collectives/pages/sign-in.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 
@@ -4221,45 +3783,6 @@ $redirect = $_GET['redirect'] ?? '';
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/sign-in.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Password toggle styles */
-    .password-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-wrapper input {
-        width: 100%;
-        padding-right: 40px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-    }
-
-    .password-toggle img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.6;
-        transition: opacity 0.3s;
-    }
-
-    .password-toggle:hover img {
-        opacity: 1;
-    }
-    </style>
 </head>
 
 <body>
@@ -4318,15 +3841,15 @@ $redirect = $_GET['redirect'] ?? '';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/sign-up.php ===
+## File: `Crooks-Cart-Collectives/pages/sign-up.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 
@@ -4345,45 +3868,6 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/sign-up.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Password toggle styles */
-    .password-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .password-wrapper input {
-        width: 100%;
-        padding-right: 40px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-    }
-
-    .password-toggle img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.6;
-        transition: opacity 0.3s;
-    }
-
-    .password-toggle:hover img {
-        opacity: 1;
-    }
-    </style>
 </head>
 
 <body>
@@ -4445,14 +3929,13 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Choose a username"
+                    <input type="text" id="username" name="username" required placeholder="Do not put your real name"
                         autocomplete="username">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <!-- REMOVED: maxlength="16" to prevent auto-limiting -->
                         <input type="password" id="password" name="password" required
                             placeholder="Create a strong password" autocomplete="new-password">
                         <button type="button" class="password-toggle" id="togglePassword" tabindex="-1"
@@ -4465,7 +3948,6 @@ if (isset($_SESSION['user_id'])) {
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
                     <div class="password-wrapper">
-                        <!-- REMOVED: maxlength="16" to prevent auto-limiting -->
                         <input type="password" id="confirm_password" name="confirm_password" required
                             placeholder="Confirm your password" autocomplete="new-password">
                         <button type="button" class="password-toggle" id="toggleConfirmPassword" tabindex="-1"
@@ -4526,15 +4008,15 @@ if (isset($_SESSION['user_id'])) {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/cart.php ===
+## File: `Crooks-Cart-Collectives/pages/cart.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -4546,23 +4028,32 @@ if (!isset($_SESSION['user_id'])) {
 
 $customerId = $_SESSION['customer_id'];
 
-// Fetch cart items
 $cartItems = [];
 $total = 0;
 try {
     $stmt = $connection->prepare("
-        SELECT ci.*, p.name, p.price, p.image_path, p.stock_quantity, s.business_name
-        FROM cart_items ci
-        JOIN products p ON ci.product_id = p.product_id
-        JOIN sellers s ON p.seller_id = s.seller_id
-        WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
-        ORDER BY ci.added_at DESC
+        SELECT 
+            c.cart_id,
+            c.quantity,
+            c.price_at_time,
+            p.product_id,
+            p.name,
+            p.price,
+            p.image_path,
+            p.stock_quantity,
+            s.business_name,
+            s.seller_id
+        FROM carts c
+        JOIN products p ON c.product_id = p.product_id
+        JOIN sellers s ON c.seller_id = s.seller_id
+        WHERE c.customer_id = ?
+        ORDER BY c.added_at DESC
     ");
     $stmt->execute([$customerId]);
     $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($cartItems as $item) {
-        $total += $item['price'] * $item['quantity'];
+        $total += $item['price_at_time'] * $item['quantity'];
     }
 } catch (PDOException $e) {
     error_log("Error fetching cart: " . $e->getMessage());
@@ -4604,25 +4095,25 @@ try {
                                 $imagePath = '../' . $item['image_path'];
                             }
                         }
-                        $subtotal = $item['price'] * $item['quantity'];
+                        $subtotal = $item['price_at_time'] * $item['quantity'];
                     ?>
-                <div class="cart-item" data-id="<?= $item['cart_item_id'] ?>">
+                <div class="cart-item" data-id="<?= $item['cart_id'] ?>">
                     <div class="cart-item-image">
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png'">
+                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
                     </div>
                     <div class="cart-item-details">
                         <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
                         <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
-                        <p class="cart-item-price">₱<?= number_format($item['price'], 2) ?></p>
+                        <p class="cart-item-price">₱<?= number_format($item['price_at_time'], 2) ?></p>
 
                         <div class="cart-item-controls">
                             <div class="cart-item-quantity">
-                                <label for="quantity-<?= $item['cart_item_id'] ?>" class="sr-only">Quantity</label>
-                                <input type="number" id="quantity-<?= $item['cart_item_id'] ?>" class="quantity-input"
+                                <label for="quantity-<?= $item['cart_id'] ?>" class="sr-only">Quantity</label>
+                                <input type="number" id="quantity-<?= $item['cart_id'] ?>" class="quantity-input"
                                     value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
-                                    data-id="<?= $item['cart_item_id'] ?>">
-                                <button class="remove-btn btn btn-secondary" data-id="<?= $item['cart_item_id'] ?>">
+                                    data-id="<?= $item['cart_id'] ?>">
+                                <button class="remove-btn btn btn-secondary" data-id="<?= $item['cart_id'] ?>">
                                     Remove
                                 </button>
                             </div>
@@ -4651,277 +4142,19 @@ try {
 
     <?php include_once('footer.php'); ?>
 
-    <script>
-    (function() {
-        // ============= NOTIFICATION MODAL FUNCTIONS =============
-        // Create modal if it doesn't exist
-        function ensureModalExists() {
-            let modal = document.getElementById('cartNotifierModal');
-
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'cartNotifierModal';
-                modal.className = 'cart-notifier-modal';
-                modal.innerHTML = `
-                <div class="cart-notifier-content">
-                    <div class="cart-notifier-icon">
-                        <!-- REPLACED: Hard-coded SVG with image tag -->
-                        <img src="../assets/image/icons/cart-shopping.svg" 
-                             alt="Cart" 
-                             style="width: 60px; height: 60px;"
-                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                    </div>
-                    <h3 id="cartNotifierTitle">Item Removed</h3>
-                    <p id="cartNotifierMessage">The item has been removed from your cart.</p>
-                    <div class="cart-notifier-actions">
-                        <button id="cartNotifierContinue" class="cart-notifier-btn continue-btn">Continue</button>
-                        <button id="cartNotifierViewCart" class="cart-notifier-btn view-cart-btn">View Cart</button>
-                    </div>
-                </div>
-            `;
-                document.body.appendChild(modal);
-
-                // Add event listeners
-                document.getElementById('cartNotifierContinue').addEventListener('click', closeModal);
-                document.getElementById('cartNotifierViewCart').addEventListener('click', function() {
-                    window.location.href = 'cart.php';
-                });
-
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) closeModal();
-                });
-            }
-
-            return modal;
-        }
-
-        function showModal(title, message) {
-            const modal = ensureModalExists();
-            document.getElementById('cartNotifierTitle').textContent = title;
-            document.getElementById('cartNotifierMessage').textContent = message;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('cartNotifierModal');
-            if (modal) modal.classList.remove('active');
-        }
-
-        // Helper function to show temporary messages (fallback)
-        function showMessage(message, type = 'error') {
-            // Try to use modal first for remove operations
-            if (type === 'success' && message.includes('removed')) {
-                showModal('Item Removed', message);
-                return;
-            }
-
-            // Fallback to temporary message for other cases
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `cart-message ${type}`;
-            msgDiv.textContent = message;
-            document.body.appendChild(msgDiv);
-            setTimeout(() => msgDiv.remove(), 3000);
-        }
-
-        // ============= CART FUNCTIONALITY =============
-
-        // Update quantity via AJAX
-        document.querySelectorAll('.quantity-input').forEach(input => {
-            input.addEventListener('change', async function() {
-                const itemId = this.dataset.id;
-                const quantity = this.value;
-                const originalValue = this.defaultValue;
-
-                // Basic validation
-                if (quantity < 1 || quantity > this.max) {
-                    this.value = originalValue;
-                    showMessage(`Quantity must be between 1 and ${this.max}`, 'error');
-                    return;
-                }
-
-                // Disable input while saving
-                this.disabled = true;
-
-                try {
-                    const response = await fetch('../database/cart-handler.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: new URLSearchParams({
-                            action: 'update',
-                            cart_item_id: itemId,
-                            quantity: quantity
-                        })
-                    });
-
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        // Update subtotal and total without reload
-                        const priceText = this.closest('.cart-item-details').querySelector(
-                            '.cart-item-price').textContent;
-                        const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ''));
-                        const newSubtotal = price * quantity;
-                        const subtotalSpan = this.closest('.cart-item-controls').querySelector(
-                            '.subtotal-amount');
-                        subtotalSpan.textContent = '₱' + newSubtotal.toFixed(2);
-
-                        // Update total
-                        let newTotal = 0;
-                        document.querySelectorAll('.subtotal-amount').forEach(span => {
-                            newTotal += parseFloat(span.textContent.replace(
-                                /[^0-9.-]+/g, ''));
-                        });
-                        document.getElementById('cartTotal').textContent = '₱' + newTotal
-                            .toFixed(2);
-
-                        this.defaultValue = quantity; // update default for future checks
-                    } else {
-                        this.value = originalValue;
-                        showMessage('Error updating quantity', 'error');
-                    }
-                } catch (error) {
-                    console.error('Update error:', error);
-                    this.value = originalValue;
-                    showMessage('Network error. Please try again.', 'error');
-                } finally {
-                    this.disabled = false;
-                }
-            });
-        });
-
-        // Remove item with MODAL confirmation
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                // Create and show confirmation modal
-                const confirmModal = document.createElement('div');
-                confirmModal.className = 'cart-notifier-modal';
-                confirmModal.id = 'confirmRemoveModal';
-                confirmModal.innerHTML = `
-                <div class="cart-notifier-content">
-                    <div class="cart-notifier-icon">
-                        <!-- REPLACED: Hard-coded SVG with image tag -->
-                        <img src="../assets/image/icons/trash.svg" 
-                             alt="Delete" 
-                             style="width: 60px; height: 60px;"
-                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                    </div>
-                    <h3>Confirm Removal</h3>
-                    <p>Are you sure you want to remove this item from your cart?</p>
-                    <div class="cart-notifier-actions">
-                        <button id="cancelRemove" class="cart-notifier-btn continue-btn">Cancel</button>
-                        <button id="confirmRemove" class="cart-notifier-btn view-cart-btn">Remove</button>
-                    </div>
-                </div>
-            `;
-                document.body.appendChild(confirmModal);
-                confirmModal.classList.add('active');
-
-                // Handle confirmation
-                const confirmed = await new Promise(resolve => {
-                    document.getElementById('cancelRemove').addEventListener('click',
-                        () => {
-                            confirmModal.remove();
-                            resolve(false);
-                        });
-
-                    document.getElementById('confirmRemove').addEventListener('click',
-                        () => {
-                            confirmModal.remove();
-                            resolve(true);
-                        });
-
-                    confirmModal.addEventListener('click', (e) => {
-                        if (e.target === confirmModal) {
-                            confirmModal.remove();
-                            resolve(false);
-                        }
-                    });
-                });
-
-                if (!confirmed) return;
-
-                const itemId = this.dataset.id;
-                const cartItem = this.closest('.cart-item');
-
-                // Disable button while processing
-                this.disabled = true;
-                this.textContent = 'Removing...';
-
-                try {
-                    const response = await fetch('../database/cart-handler.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: new URLSearchParams({
-                            action: 'remove',
-                            cart_item_id: itemId
-                        })
-                    });
-
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        // Remove item from DOM
-                        cartItem.remove();
-
-                        // Update total
-                        let newTotal = 0;
-                        document.querySelectorAll('.subtotal-amount').forEach(span => {
-                            newTotal += parseFloat(span.textContent.replace(
-                                /[^0-9.-]+/g, ''));
-                        });
-
-                        const totalElement = document.getElementById('cartTotal');
-                        if (totalElement) {
-                            totalElement.textContent = '₱' + newTotal.toFixed(2);
-                        }
-
-                        // Show success modal
-                        showModal('Item Removed', 'The item has been removed from your cart.');
-
-                        // If cart is now empty, reload after a delay
-                        if (document.querySelectorAll('.cart-item').length === 0) {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2000);
-                        }
-                    } else {
-                        showMessage('Error removing item', 'error');
-                        this.disabled = false;
-                        this.textContent = 'Remove';
-                    }
-                } catch (error) {
-                    console.error('Remove error:', error);
-                    showMessage('Network error. Please try again.', 'error');
-                    this.disabled = false;
-                    this.textContent = 'Remove';
-                }
-            });
-        });
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('cartNotifierModal');
-                if (modal && modal.classList.contains('active')) {
-                    closeModal();
-                }
-            }
-        });
-    })();
-    </script>
+    <script src="../scripts/cart.js"></script>
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/checkout.php ===
+## File: `Crooks-Cart-Collectives/pages/checkout.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -4934,27 +4167,25 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 $customer_id = $_SESSION['customer_id'];
 $user_id = $_SESSION['user_id'];
 
-// Fetch cart items for display
 $cartItems = [];
 $total = 0;
 try {
     $stmt = $connection->prepare("
-        SELECT ci.*, p.name, p.price, p.image_path, s.business_name
-        FROM cart_items ci
-        JOIN products p ON ci.product_id = p.product_id
+        SELECT c.*, p.name, p.price, p.image_path, s.business_name
+        FROM carts c
+        JOIN products p ON c.product_id = p.product_id
         JOIN sellers s ON p.seller_id = s.seller_id
-        WHERE ci.cart_id = (SELECT cart_id FROM shopping_carts WHERE customer_id = ?)
+        WHERE c.customer_id = ?
     ");
     $stmt->execute([$customer_id]);
     $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($cartItems as $item) {
-        $total += $item['price'] * $item['quantity'];
+        $total += $item['price_at_time'] * $item['quantity'];
     }
 } catch (PDOException $e) {
     error_log("Checkout cart fetch error: " . $e->getMessage());
 }
 
-// Fetch user's shipping address
 $user = [];
 try {
     $stmt = $connection->prepare("SELECT address, first_name, last_name, email, contact_number FROM users WHERE user_id = ?");
@@ -4988,7 +4219,6 @@ if (empty($cartItems)) {
         <h1 class="checkout-title">Checkout</h1>
 
         <div class="checkout-grid">
-            <!-- Order Summary -->
             <div class="checkout-summary">
                 <h2>Order Summary</h2>
                 <div class="checkout-items">
@@ -5000,7 +4230,8 @@ if (empty($cartItems)) {
                     ?>
                     <div class="checkout-item">
                         <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                            class="checkout-item-image">
+                            class="checkout-item-image"
+                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
                         <div class="checkout-item-details">
                             <h3><?= htmlspecialchars($item['name']) ?></h3>
                             <p>Seller: <?= htmlspecialchars($item['business_name']) ?></p>
@@ -5017,7 +4248,6 @@ if (empty($cartItems)) {
                 </div>
             </div>
 
-            <!-- Shipping & Payment -->
             <div class="checkout-info">
                 <h2>Shipping Address</h2>
                 <div class="shipping-details">
@@ -5044,6 +4274,8 @@ if (empty($cartItems)) {
 
     <div id="checkoutNotifier" class="notifier hidden">
         <div class="notifier-content">
+            <img src="../assets/image/icons/mail.svg" alt="Notification"
+                style="width: 40px; height: 40px; margin-bottom: 15px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             <p id="checkoutMessage"></p>
             <button id="checkoutCloseBtn" class="btn btn-primary">OK</button>
         </div>
@@ -5053,34 +4285,31 @@ if (empty($cartItems)) {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/products.php ===
+## File: `Crooks-Cart-Collectives/pages/products.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
 
-// Pagination setup
 $items_per_page = 12;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $items_per_page;
 
-// Get total number of products
 $total_stmt = $connection->prepare("SELECT COUNT(*) as total FROM products WHERE is_active = 1");
 $total_stmt->execute();
 $total_products = $total_stmt->fetch()['total'];
 $total_pages = ceil($total_products / $items_per_page);
 
-// Ensure page is within valid range
 if ($page < 1) $page = 1;
 if ($page > $total_pages && $total_pages > 0) $page = $total_pages;
 
-// Fetch products for current page
 $products = [];
 try {
     $stmt = $connection->prepare("
@@ -5096,25 +4325,18 @@ try {
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // FIX: Process image paths for all products based on your schema
     foreach ($products as &$product) {
         if (!empty($product['image_path'])) {
-            // Schema stores as 'assets/PlaceholderAssetProduct.png'
             if (strpos($product['image_path'], 'assets/') === 0) {
-                // It's already a path from root, just add '../' since we're in pages folder
                 $product['display_image'] = '../' . $product['image_path'];
             } elseif (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
-                // It's a full URL
                 $product['display_image'] = $product['image_path'];
             } elseif (strpos($product['image_path'], '/') === false) {
-                // It's just a filename, assume it's in assets/image/icons/
                 $product['display_image'] = '../assets/image/icons/' . $product['image_path'];
             } else {
-                // Some other relative path
                 $product['display_image'] = '../' . $product['image_path'];
             }
         } else {
-            // No image, use placeholder
             $product['display_image'] = '../assets/image/icons/PlaceholderAssetProduct.png';
         }
     }
@@ -5133,8 +4355,6 @@ try {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/products.css">
     <link rel="stylesheet" href="../styles/footer.css">
-
-    <!-- FIX: Remove inline styles and use external CSS properly -->
 </head>
 
 <body>
@@ -5146,26 +4366,9 @@ try {
         <?php if (empty($products)): ?>
         <div class="no-products">
             <p>No products available at the moment.</p>
-            <p>Check back soon or <a href="seller-registration.php">become a seller</a> to add products!</p>
+            <p>Check back soon or <a href="seller-fill-form.php">become a seller</a> to add products!</p>
         </div>
         <?php else: ?>
-
-        <!-- FIX: Add filter/sort controls (optional enhancement)
-        <div class="products-controls">
-            <div class="products-count">
-                Showing <?php echo ($offset + 1); ?> - <?php echo min($offset + $items_per_page, $total_products); ?> of
-                <?php echo $total_products; ?> products
-            </div>
-            <div class="products-sort">
-                <label for="sort">Sort by:</label>
-                <select id="sort" name="sort">
-                    <option value="newest">Newest</option>
-                    <option value="price_low">Price: Low to High</option>
-                    <option value="price_high">Price: High to Low</option>
-                    <option value="name">Name</option>
-                </select>
-            </div>
-        </div> -->
 
         <div class="products-grid">
             <?php foreach ($products as $product): ?>
@@ -5187,9 +4390,8 @@ try {
             </div>
             <?php endforeach; ?>
         </div>
-        <?php if ($total_pages > 1): ?>
-        <!-- FIX: Improved pagination with better styling -->
 
+        <?php if ($total_pages > 1): ?>
         <div class="pagination-container">
             <div class="pagination">
                 <?php if ($page > 1): ?>
@@ -5199,7 +4401,6 @@ try {
                 <?php endif; ?>
 
                 <?php
-                // Show page numbers with intelligent range
                 $start_page = max(1, $page - 2);
                 $end_page = min($total_pages, $page + 2);
                 
@@ -5234,47 +4435,24 @@ try {
     </div>
 
     <?php include_once('footer.php'); ?>
-
-    <!-- FIX: Add JavaScript for sorting functionality -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sortSelect = document.getElementById('sort');
-        if (sortSelect) {
-            sortSelect.addEventListener('change', function() {
-                const url = new URL(window.location.href);
-                url.searchParams.set('sort', this.value);
-                url.searchParams.set('page', '1'); // Reset to first page
-                window.location.href = url.toString();
-            });
-
-            // Preserve selected sort option
-            const urlParams = new URLSearchParams(window.location.search);
-            const sortParam = urlParams.get('sort');
-            if (sortParam) {
-                sortSelect.value = sortParam;
-            }
-        }
-    });
-    </script>
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/product-details.php ===
+## File: `Crooks-Cart-Collectives/pages/product-details.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
 
 $product_id = $_GET['id'] ?? 0;
 
-// Fetch product details
 $product = [];
 try {
     $stmt = $connection->prepare("
@@ -5294,28 +4472,23 @@ if (!$product) {
     exit;
 }
 
-// Improved image path handling
 function getProductImagePath($image_path) {
     if (empty($image_path)) {
         return '../assets/image/icons/PlaceholderAssetProduct.png';
     }
     
-    // If it's already a full URL
     if (filter_var($image_path, FILTER_VALIDATE_URL)) {
         return $image_path;
     }
     
-    // If it's stored as 'assets/...' from root
     if (strpos($image_path, 'assets/') === 0) {
         return '../' . $image_path;
     }
     
-    // If it's just a filename
     if (strpos($image_path, '/') === false) {
         return '../assets/image/icons/' . $image_path;
     }
     
-    // Some other relative path
     return '../' . $image_path;
 }
 
@@ -5338,7 +4511,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
 
     <div class="content">
         <div class="product-details-wrapper">
-            <!-- Breadcrumb navigation -->
             <nav class="breadcrumb" aria-label="breadcrumb">
                 <ol class="breadcrumb-list">
                     <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
@@ -5349,7 +4521,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
             </nav>
 
             <div class="product-details-grid">
-                <!-- Product Image Column -->
                 <div class="product-image-column">
                     <div class="product-image-container">
                         <div class="main-image-wrapper">
@@ -5360,7 +4531,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         </div>
                     </div>
 
-                    <!-- Thumbnail gallery (can be extended for multiple images) -->
                     <div class="product-thumbnails">
                         <button class="thumbnail active" aria-label="Main image">
                             <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Thumbnail"
@@ -5369,7 +4539,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                     </div>
                 </div>
 
-                <!-- Product Info Column -->
                 <div class="product-info-column">
                     <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
 
@@ -5424,7 +4593,8 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <?php else: ?>
                         <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
                             class="btn btn-primary login-to-purchase-btn">
-                            <span class="btn-icon">🔐</span>
+                            <img src="../assets/image/icons/cart-shopping.svg" alt="Login to purchase"
+                                style="width: 20px; height: 20px; margin-right: 8px; filter: brightness(0) invert(1);">
                             <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>
@@ -5440,14 +4610,15 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/report-seller.php ===
+## File: `Crooks-Cart-Collectives/pages/report-seller.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -5499,7 +4670,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report a Seller - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/complaint-page.css">
+    <link rel="stylesheet" href="../styles/report-seller.css">
     <link rel="stylesheet" href="../styles/footer.css">
 </head>
 
@@ -5580,14 +4751,15 @@ try {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/orders.php ===
+## File: `Crooks-Cart-Collectives/pages/orders.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -5625,14 +4797,12 @@ $customer_id = $_SESSION['customer_id'];
     <div id="reviewModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2">
-                    <path
-                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
+                <img src="../assets/image/icons/star-filled.svg" alt="Review"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             </div>
             <h2 class="modal-title">Write a Review</h2>
             <form id="reviewForm">
-                <input type="hidden" name="order_item_id" id="reviewOrderItemId">
+                <input type="hidden" name="order_id" id="reviewOrderId">
                 <input type="hidden" name="product_id" id="reviewProductId">
 
                 <div class="form-group">
@@ -5666,11 +4836,8 @@ $customer_id = $_SESSION['customer_id'];
     <div id="cancelModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="15" y1="9" x2="9" y2="15" />
-                    <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
+                <img src="../assets/image/icons/cancel.svg" alt="Cancel"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             </div>
             <h2 class="modal-title">Cancel Order Item</h2>
             <p class="modal-message">Are you sure you want to cancel this item? This action cannot be undone.</p>
@@ -5685,11 +4852,8 @@ $customer_id = $_SESSION['customer_id'];
     <div id="notificationModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <img src="../assets/image/icons/mail.svg" alt="Notification"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             </div>
             <p id="notificationMessage" class="modal-message"></p>
             <div class="modal-actions">
@@ -5703,14 +4867,15 @@ $customer_id = $_SESSION['customer_id'];
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/customer-dashboard.php ===
+## File: `Crooks-Cart-Collectives/pages/customer-dashboard.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php // PHP File Content ?>
 <?php // PHP File Content ?>
 <?php
@@ -5899,14 +5064,15 @@ try {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/customer-profile.php ===
+## File: `Crooks-Cart-Collectives/pages/customer-profile.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -6122,7 +5288,7 @@ $pathPrefix = $is_root ? '' : '../';
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('profileForm');
-        if (!form) return; // Exit if form doesn't exist (error state)
+        if (!form) return;
 
         const saveBtn = document.getElementById('saveBtn');
         const successMessage = document.getElementById('successMessage');
@@ -6131,46 +5297,78 @@ $pathPrefix = $is_root ? '' : '../';
 
         // ============= PHONE NUMBER FORMATTING =============
         if (contactInput) {
+            // Store original value for comparison
+            const originalPhone = contactInput.value;
+
             // Format on input
             contactInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
 
                 if (value.length === 0) {
                     e.target.value = '';
-                } else if (value.startsWith('63') && value.length === 12) {
-                    // +639 format
-                    e.target.value = '+63' + value.substring(2, 5) + ' ' +
-                        value.substring(5, 8) + ' ' +
-                        value.substring(8, 12);
-                } else if (value.startsWith('0') && value.length === 11) {
-                    // 09 format
-                    e.target.value = value.substring(0, 4) + ' ' +
-                        value.substring(4, 7) + ' ' +
-                        value.substring(7, 11);
-                } else if (value.startsWith('9') && value.length === 10) {
-                    // 9 format (convert to 09)
-                    e.target.value = '09' + value.substring(0, 3) + ' ' +
-                        value.substring(3, 6) + ' ' +
-                        value.substring(6, 10);
+                    return;
+                }
+
+                // Auto-format as user types
+                if (value.startsWith('63') && value.length <= 12) {
+                    // International format
+                    if (value.length > 2) {
+                        let formatted = '+63';
+                        if (value.length > 5) {
+                            formatted += ' ' + value.substring(2, 5);
+                        } else {
+                            formatted += ' ' + value.substring(2);
+                        }
+                        if (value.length > 8) {
+                            formatted += ' ' + value.substring(5, 8);
+                        }
+                        if (value.length > 11) {
+                            formatted += ' ' + value.substring(8, 12);
+                        }
+                        e.target.value = formatted;
+                    }
+                } else if (value.startsWith('0') && value.length <= 11) {
+                    // Local format
+                    if (value.length > 4) {
+                        e.target.value = value.substring(0, 4) + ' ' + value.substring(4);
+                    } else {
+                        e.target.value = value;
+                    }
                 }
             });
 
-            // Format on blur
+            // Validate on blur
             contactInput.addEventListener('blur', function(e) {
                 const value = e.target.value.trim();
-                if (value) {
-                    const cleaned = value.replace(/\D/g, '');
-                    if (cleaned.length === 11 && cleaned.startsWith('09')) {
-                        // Already in correct format
-                    } else if (cleaned.length === 12 && cleaned.startsWith('63')) {
-                        e.target.value = '+63' + cleaned.substring(2, 5) + ' ' +
-                            cleaned.substring(5, 8) + ' ' +
-                            cleaned.substring(8, 12);
-                    } else if (cleaned.length === 10 && cleaned.startsWith('9')) {
-                        e.target.value = '09' + cleaned.substring(0, 3) + ' ' +
-                            cleaned.substring(3, 6) + ' ' +
-                            cleaned.substring(6, 10);
-                    }
+                if (!value) return;
+
+                const cleaned = value.replace(/\D/g, '');
+                let isValid = false;
+
+                if (cleaned.length === 11 && cleaned.startsWith('09')) {
+                    isValid = true;
+                    // Format nicely
+                    e.target.value = cleaned.substring(0, 4) + ' ' +
+                        cleaned.substring(4, 7) + ' ' +
+                        cleaned.substring(7, 11);
+                } else if (cleaned.length === 12 && cleaned.startsWith('63')) {
+                    isValid = true;
+                    // Format as international
+                    e.target.value = '+63 ' + cleaned.substring(2, 5) + ' ' +
+                        cleaned.substring(5, 8) + ' ' +
+                        cleaned.substring(8, 12);
+                } else if (cleaned.length === 10 && cleaned.startsWith('9')) {
+                    isValid = true;
+                    // Convert to local format
+                    e.target.value = '09' + cleaned.substring(0, 3) + ' ' +
+                        cleaned.substring(3, 6) + ' ' +
+                        cleaned.substring(6, 10);
+                }
+
+                if (!isValid && value !== originalPhone) {
+                    showFieldError('contact_number', 'Please enter a valid Philippine mobile number');
+                } else {
+                    clearFieldError('contact_number');
                 }
             });
         }
@@ -6179,12 +5377,9 @@ $pathPrefix = $is_root ? '' : '../';
         function validatePhoneNumber(phone) {
             if (!phone) return false;
             const cleaned = phone.replace(/\D/g, '');
-            return cleaned.length === 11 && cleaned.startsWith('09');
-        }
-
-        function validateEmail(email) {
-            if (!email) return false;
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            return (cleaned.length === 11 && cleaned.startsWith('09')) ||
+                (cleaned.length === 12 && cleaned.startsWith('63')) ||
+                (cleaned.length === 10 && cleaned.startsWith('9'));
         }
 
         function validateName(name) {
@@ -6245,6 +5440,17 @@ $pathPrefix = $is_root ? '' : '../';
             });
         }
 
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.getElementById(fieldId + 'Error');
+
+            if (field && errorEl) {
+                field.classList.remove('error');
+                errorEl.textContent = '';
+                errorEl.classList.remove('show');
+            }
+        }
+
         function showFieldError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const errorEl = document.getElementById(fieldId + 'Error');
@@ -6296,7 +5502,7 @@ $pathPrefix = $is_root ? '' : '../';
                 isValid = false;
             } else if (!validatePhoneNumber(contactNumber)) {
                 showFieldError('contact_number',
-                    'Please enter a valid Philippine mobile number (e.g., 09123456789)');
+                    'Please enter a valid Philippine mobile number (e.g., 09123456789 or +63 912 345 6789)');
                 isValid = false;
             }
 
@@ -6327,116 +5533,97 @@ $pathPrefix = $is_root ? '' : '../';
         }
 
         // ============= FORM SUBMISSION =============
-        if (form) {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                if (!validateForm()) {
-                    showError('Please fix the errors in the form');
-                    return;
-                }
+            if (!validateForm()) {
+                showError('Please fix the errors in the form');
+                return;
+            }
 
-                // Disable button and show loading
-                const originalText = saveBtn.textContent;
-                saveBtn.textContent = 'Saving...';
-                saveBtn.disabled = true;
-                saveBtn.classList.add('loading');
+            // Disable button and show loading
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            saveBtn.classList.add('loading');
 
-                try {
-                    const formData = new FormData(form);
+            try {
+                const formData = new FormData(form);
 
-                    // Add timestamp to prevent caching
-                    formData.append('timestamp', Date.now());
-
-                    const response = await fetch('../database/profile-handler.php', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
-
-                    const responseText = await response.text();
-                    let result;
-
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (parseError) {
-                        console.error('Parse error:', responseText);
-                        throw new Error('Server returned invalid response');
-                    }
-
-                    if (result.status === 'success') {
-                        showSuccess('Profile updated successfully!');
-
-                        // Update progress bar without reload
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
-                    } else {
-                        if (result.message && result.message.includes('duplicate')) {
-                            if (result.message.includes('contact')) {
-                                showFieldError('contact_number',
-                                    'This phone number is already registered');
-                            } else {
-                                showError(result.message);
-                            }
-                        } else {
-                            showError(result.message ||
-                                'Failed to update profile. Please try again.');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Update error:', error);
-                    showError('Network error. Please check your connection and try again.');
-                } finally {
-                    // Re-enable button
-                    saveBtn.textContent = originalText;
-                    saveBtn.disabled = false;
-                    saveBtn.classList.remove('loading');
-                }
-            });
-
-            // Real-time validation on blur
-            form.querySelectorAll('input, select, textarea').forEach(field => {
-                field.addEventListener('blur', function() {
-                    if (this.id && !this.readOnly) {
-                        const fieldId = this.id;
-                        const value = this.value.trim();
-
-                        // Simple per-field validation
-                        if (this.required && !value) {
-                            showFieldError(fieldId, this.getAttribute('placeholder') +
-                                ' is required');
-                        } else {
-                            const errorEl = document.getElementById(fieldId + 'Error');
-                            if (errorEl) {
-                                errorEl.textContent = '';
-                                errorEl.classList.remove('show');
-                            }
-                            this.classList.remove('error');
-                        }
+                const response = await fetch('../database/customer-profile-handler.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
+
+                const responseText = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Parse error:', responseText);
+                    throw new Error('Server returned invalid response');
+                }
+
+                if (result.status === 'success') {
+                    showSuccess('Profile updated successfully!');
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    if (result.message.includes('phone number already registered')) {
+                        showFieldError('contact_number', 'This phone number is already registered');
+                    } else {
+                        showError(result.message || 'Failed to update profile. Please try again.');
+                    }
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showError('Network error. Please check your connection and try again.');
+            } finally {
+                // Re-enable button
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('loading');
+            }
+        });
+
+        // Real-time validation on blur
+        form.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (this.id && !this.readOnly) {
+                    const fieldId = this.id;
+                    const value = this.value.trim();
+
+                    // Clear previous error
+                    clearFieldError(fieldId);
+
+                    // Simple per-field validation
+                    if (this.required && !value) {
+                        showFieldError(fieldId, this.getAttribute('placeholder') +
+                            ' is required');
+                    }
+                }
             });
-        }
+        });
     });
     </script>
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/seller-dashboard.php ===
+## File: `Crooks-Cart-Collectives/pages/seller-dashboard.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
-<?php
-// Crooks-Cart-Collectives/pages/seller-dashboard.php
-// FIXED VERSION - Replaced emoji icons with SVG icons
-?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -6454,7 +5641,7 @@ $stmt->execute([$sellerId]);
 $seller = $stmt->fetch();
 $business_name = $seller['business_name'] ?? 'Your Store';
 
-// Fetch basic stats
+// Fetch stats - FIXED: Removed references to non-existent columns
 $stats = [];
 try {
     // Total products
@@ -6462,31 +5649,53 @@ try {
     $stmt->execute([$sellerId]);
     $stats['products'] = $stmt->fetch()['total'];
 
-    // Total orders count (distinct seller orders)
-    $stmt = $connection->prepare("
-        SELECT COUNT(DISTINCT seller_order_id) as orders,
-               SUM(quantity) as items_sold
-        FROM purchase_items pi
-        JOIN seller_orders so ON pi.seller_order_id = so.seller_order_id
-        WHERE so.seller_id = ?
-    ");
+    // Total orders
+    $stmt = $connection->prepare("SELECT COUNT(*) as orders FROM orders WHERE seller_id = ?");
     $stmt->execute([$sellerId]);
-    $orderStats = $stmt->fetch(PDO::FETCH_ASSOC);
-    $stats['orders'] = $orderStats['orders'] ?? 0;
-    $stats['items_sold'] = $orderStats['items_sold'] ?? 0;
+    $stats['orders'] = $stmt->fetch()['orders'];
 
-    // Total revenue
+    // Items sold (sum of quantity where status = 'delivered')
     $stmt = $connection->prepare("
-        SELECT SUM(seller_total) as total_revenue
-        FROM seller_orders
-        WHERE seller_id = ? AND seller_status = 'completed'
+        SELECT COALESCE(SUM(quantity), 0) as items_sold 
+        FROM orders 
+        WHERE seller_id = ? AND status = 'delivered'
     ");
     $stmt->execute([$sellerId]);
-    $revenue = $stmt->fetch();
-    $stats['revenue'] = $revenue['total_revenue'] ?? 0;
+    $stats['items_sold'] = $stmt->fetch()['items_sold'];
+
+    // Total revenue (sum of subtotal where status = 'delivered')
+    $stmt = $connection->prepare("
+        SELECT COALESCE(SUM(subtotal), 0) as revenue 
+        FROM orders 
+        WHERE seller_id = ? AND status = 'delivered'
+    ");
+    $stmt->execute([$sellerId]);
+    $stats['revenue'] = $stmt->fetch()['revenue'];
 
 } catch (PDOException $e) {
     error_log("Seller dashboard stats error: " . $e->getMessage());
+}
+
+// Fetch recent 5 orders
+$recentOrders = [];
+try {
+    $stmt = $connection->prepare("
+        SELECT 
+            o.order_id,
+            o.status,
+            o.order_date,
+            o.quantity,
+            p.name as product_name
+        FROM orders o
+        JOIN products p ON o.product_id = p.product_id
+        WHERE o.seller_id = ?
+        ORDER BY o.order_date DESC
+        LIMIT 5
+    ");
+    $stmt->execute([$sellerId]);
+    $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching recent orders: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
@@ -6498,332 +5707,8 @@ try {
     <title>Seller Dashboard - <?php echo htmlspecialchars($business_name); ?></title>
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Main Content Layout */
-    .content {
-        max-width: 1200px;
-        margin: 100px auto 40px;
-        padding: 0 20px;
-    }
-
-    /* Welcome Section */
-    .welcome-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        padding: 40px 30px;
-        border-radius: 16px;
-        margin-bottom: 40px;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e9ecef;
-    }
-
-    .welcome-section h1 {
-        font-size: 2rem;
-        color: #333;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .welcome-section h1 span {
-        color: #FF8246;
-    }
-
-    .welcome-section p {
-        font-size: 1.1rem;
-        color: #666;
-        margin: 0;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 25px;
-        margin-bottom: 40px;
-    }
-
-    .stat-card {
-        background: white;
-        border-radius: 16px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #eef2f6;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #FF8246, #FFA500);
-    }
-
-    /* FIXED: Stat icon styling */
-    .stat-icon {
-        width: 48px;
-        height: 48px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .stat-icon img {
-        width: 40px;
-        height: 40px;
-        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-        transition: transform 0.3s ease;
-    }
-
-    .stat-card:hover .stat-icon img {
-        transform: scale(1.1);
-    }
-
-    .stat-number {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #FF8246;
-        line-height: 1.2;
-        margin-bottom: 5px;
-    }
-
-    .stat-label {
-        font-size: 1rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 600;
-    }
-
-    .stat-subtext {
-        font-size: 0.9rem;
-        color: #adb5bd;
-        margin-top: 10px;
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-        margin-bottom: 40px;
-    }
-
-    .quick-actions h2 {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 20px;
-        font-weight: 600;
-    }
-
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-    }
-
-    .action-card {
-        background: white;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #eef2f6;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .action-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        border-color: #FF8246;
-    }
-
-    /* FIXED: Action icon styling */
-    .action-icon {
-        width: 48px;
-        height: 48px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .action-icon img {
-        width: 40px;
-        height: 40px;
-        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-        transition: transform 0.3s ease;
-    }
-
-    .action-card:hover .action-icon img {
-        transform: scale(1.1);
-    }
-
-    .action-card h3 {
-        font-size: 1.3rem;
-        color: #333;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .action-card p {
-        font-size: 0.95rem;
-        color: #6c757d;
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
-
-    /* Recent Activity */
-    .recent-activity {
-        background: white;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #eef2f6;
-    }
-
-    .recent-activity h2 {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .recent-activity h2 a {
-        font-size: 0.95rem;
-        color: #FF8246;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .recent-activity h2 a:hover {
-        text-decoration: underline;
-    }
-
-    .activity-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .activity-item {
-        display: flex;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid #eef2f6;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .activity-status {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 15px;
-    }
-
-    .activity-status.pending {
-        background: #ffc107;
-    }
-
-    .activity-status.confirmed {
-        background: #17a2b8;
-    }
-
-    .activity-status.processing {
-        background: #007bff;
-    }
-
-    .activity-status.shipped {
-        background: #6f42c1;
-    }
-
-    .activity-status.delivered {
-        background: #28a745;
-    }
-
-    .activity-status.cancelled {
-        background: #dc3545;
-    }
-
-    .activity-details {
-        flex: 1;
-    }
-
-    .activity-details p {
-        margin: 0;
-        font-size: 0.95rem;
-        color: #495057;
-    }
-
-    .activity-details small {
-        font-size: 0.8rem;
-        color: #adb5bd;
-    }
-
-    .activity-link {
-        color: #FF8246;
-        text-decoration: none;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .content {
-            margin-top: 80px;
-        }
-
-        .welcome-section {
-            padding: 30px 20px;
-        }
-
-        .welcome-section h1 {
-            font-size: 1.8rem;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-        }
-
-        .actions-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .welcome-section {
-            padding: 25px 15px;
-        }
-
-        .welcome-section h1 {
-            font-size: 1.5rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .action-card {
-            padding: 25px;
-        }
-    }
-    </style>
+    <link rel="stylesheet" href="../styles/seller-dashboard.css">
+    <script defer src="../scripts/seller-dashboard.js"></script>
 </head>
 
 <body>
@@ -6836,7 +5721,7 @@ try {
             <p>Manage your products, track orders, and grow your business</p>
         </div>
 
-        <!-- Statistics - FIXED: Replaced emojis with SVG icons -->
+        <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">
@@ -6879,7 +5764,7 @@ try {
             </div>
         </div>
 
-        <!-- Quick Actions - FIXED: Replaced emojis with SVG icons -->
+        <!-- Quick Actions -->
         <div class="quick-actions">
             <h2>Quick Actions</h2>
             <div class="actions-grid">
@@ -6919,50 +5804,26 @@ try {
                 <a href="seller-orders.php">View All →</a>
             </h2>
             <?php
-            // Fetch recent 5 orders
-            try {
-                $stmt = $connection->prepare("
-                    SELECT 
-                        so.seller_order_id,
-                        so.seller_status,
-                        so.created_at,
-                        COUNT(pi.order_item_id) as item_count,
-                        co.order_id
-                    FROM seller_orders so
-                    JOIN customer_orders co ON so.order_id = co.order_id
-                    LEFT JOIN purchase_items pi ON so.seller_order_id = pi.seller_order_id
-                    WHERE so.seller_id = ?
-                    GROUP BY so.seller_order_id
-                    ORDER BY so.created_at DESC
-                    LIMIT 5
-                ");
-                $stmt->execute([$sellerId]);
-                $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
-                if (empty($recentOrders)) {
-                    echo '<p style="text-align: center; color: #6c757d; padding: 20px;">No orders yet. Check back soon!</p>';
-                } else {
-                    echo '<ul class="activity-list">';
-                    foreach ($recentOrders as $order) {
-                        $date = new DateTime($order['created_at']);
-                        $formattedDate = $date->format('M j, Y g:i A');
-                        ?>
+            if (empty($recentOrders)) {
+                echo '<p style="text-align: center; color: #6c757d; padding: 20px;">No orders yet. Check back soon!</p>';
+            } else {
+                echo '<ul class="activity-list">';
+                foreach ($recentOrders as $order) {
+                    $date = new DateTime($order['order_date']);
+                    $formattedDate = $date->format('M j, Y g:i A');
+                    ?>
             <li class="activity-item">
-                <span class="activity-status <?= $order['seller_status'] ?>"></span>
+                <span class="activity-status <?= $order['status'] ?>"></span>
                 <div class="activity-details">
-                    <p>Order #<?= $order['order_id'] ?> - <?= $order['item_count'] ?> item(s)</p>
+                    <p>Order #<?= $order['order_id'] ?> - <?= htmlspecialchars($order['product_name']) ?> (Qty:
+                        <?= $order['quantity'] ?>)</p>
                     <small><?= $formattedDate ?></small>
                 </div>
-                <a href="seller-orders.php#order-<?= $order['seller_order_id'] ?>" class="activity-link">View Details
-                    →</a>
+                <a href="seller-orders.php#order-<?= $order['order_id'] ?>" class="activity-link">View Details →</a>
             </li>
             <?php
-                    }
-                    echo '</ul>';
                 }
-            } catch (PDOException $e) {
-                error_log("Error fetching recent orders: " . $e->getMessage());
-                echo '<p style="text-align: center; color: #6c757d; padding: 20px;">Unable to load recent orders.</p>';
+                echo '</ul>';
             }
             ?>
         </div>
@@ -6972,14 +5833,15 @@ try {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/seller-fill-form.php ===
+## File: `Crooks-Cart-Collectives/pages/seller-fill-form.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -7096,14 +5958,15 @@ if ($stmt->fetch()) {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/seller-add-product.php ===
+## File: `Crooks-Cart-Collectives/pages/seller-add-product.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -7232,14 +6095,15 @@ if (isset($_GET['id'])) {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/seller-products.php ===
+## File: `Crooks-Cart-Collectives/pages/seller-products.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -7380,14 +6244,15 @@ try {
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/pages/seller-orders.php ===
+## File: `Crooks-Cart-Collectives/pages/seller-orders.php`
 
-[FOUND]
+**Status:** `FOUND`
 
-<?php // PHP File Content ?>
+```php
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -7399,7 +6264,6 @@ if (!isset($_SESSION['is_seller']) || !$_SESSION['is_seller']) {
 
 $seller_id = $_SESSION['seller_id'];
 
-// Fetch seller info
 $stmt = $connection->prepare("SELECT business_name FROM sellers WHERE seller_id = ?");
 $stmt->execute([$seller_id]);
 $seller = $stmt->fetch();
@@ -7422,34 +6286,26 @@ $business_name = $seller['business_name'] ?? 'Your Store';
 
     <main class="content">
         <div class="seller-header">
-            <h1 class="page-title">Manage Orders</h1>
-            <a href="seller-dashboard.php" class="back-link">← Back to Dashboard</a>
+            <h1 class="page-title">Seller Order Management</h1>
         </div>
 
-        <!-- Filter Tabs - Reusing the same pattern as customer orders -->
         <div class="filter-tabs" id="filterTabs">
             <span class="filter-tab active" data-filter="all">All Orders</span>
-            <span class="filter-tab" data-filter="pending">Pending</span>
-            <span class="filter-tab" data-filter="processing">Processing</span>
-            <span class="filter-tab" data-filter="completed">Completed</span>
+            <span class="filter-tab" data-filter="ordered">Ordered</span>
+            <span class="filter-tab" data-filter="delivered">Delivered</span>
             <span class="filter-tab" data-filter="cancelled">Cancelled</span>
         </div>
 
-        <!-- Orders List Container -->
         <div id="sellerOrdersList" class="seller-orders-list">
             <div class="loading">Loading orders...</div>
         </div>
     </main>
 
-    <!-- Confirmation Modal - Reusing pattern from orders.php -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <img src="../assets/image/icons/cancel.svg" alt="Confirm"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             </div>
             <h3 id="confirmTitle" class="modal-title">Confirm Action</h3>
             <p id="confirmMessage" class="modal-message">Are you sure?</p>
@@ -7460,15 +6316,11 @@ $business_name = $seller['business_name'] ?? 'Your Store';
         </div>
     </div>
 
-    <!-- Notification Modal - Reusing pattern from orders.php -->
     <div id="notificationModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF8246" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <img src="../assets/image/icons/mail.svg" alt="Notification"
+                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             </div>
             <p id="notificationMessage" class="modal-message"></p>
             <div class="modal-actions">
@@ -7483,14 +6335,15 @@ $business_name = $seller['business_name'] ?? 'Your Store';
 </body>
 
 </html>
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/index.js ===
+## File: `Crooks-Cart-Collectives/scripts/index.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 // Hero Slider Functionality
 class HeroSlider {
     constructor() {
@@ -7630,14 +6483,15 @@ async function loadFeaturedProducts() {
     }, 1000);
 }
 */
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/header.js ===
+## File: `Crooks-Cart-Collectives/scripts/header.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* JavaScript File Content */
 document.addEventListener("DOMContentLoaded", () => {
     // Content fade in effect
@@ -7916,14 +6770,15 @@ setTimeout(() => {
         window.testMenu();
     }
 }, 1000);
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/contact.js ===
+## File: `Crooks-Cart-Collectives/scripts/contact.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* ============================================
    CONTACT PAGE JAVASCRIPT
    Handles form validation, submission, and UI interactions
@@ -8189,14 +7044,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/sign-in.js ===
+## File: `Crooks-Cart-Collectives/scripts/sign-in.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* JavaScript File Content */
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signinForm');
@@ -8385,14 +7241,15 @@ document.addEventListener('DOMContentLoaded', () => {
         identifierInput.focus();
     }, 100);
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/sign-out.js ===
+## File: `Crooks-Cart-Collectives/scripts/sign-out.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 // Crooks-Cart-Collectives/scripts/sign-out.js
 document.addEventListener('DOMContentLoaded', () => {
     const logoutTriggers = document.querySelectorAll('.logout-trigger');
@@ -8470,14 +7327,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/sign-up.js ===
+## File: `Crooks-Cart-Collectives/scripts/sign-up.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* JavaScript File Content */
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signupForm');
@@ -8602,7 +7460,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { valid: false, message: 'Password must contain both uppercase and lowercase letters.' };
         }
         if (!/[0-9]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one number.' };
+            return { valid: false, message: 'Password must contain number.' };
         }
         return { valid: true, message: '' };
     }
@@ -8832,14 +7690,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/central-link-navigation.js ===
+## File: `Crooks-Cart-Collectives/scripts/central-link-navigation.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 const PathManager = {
     init() {
         console.log('PathManager initializing for Crooks-Cart-Collectives...');
@@ -8924,22 +7783,352 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(() => PathManager.init(), 10);
 }
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/error-handler.js ===
+## File: `Crooks-Cart-Collectives/scripts/error-handler.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
+/* Crooks-Cart-Collectives/scripts/error-handler.js */
+/* Global error handling and logging functions */
 
-==============================================
+(function() {
+    'use strict';
 
-=== File: Crooks-Cart-Collectives/scripts/showcase-slider.js ===
+    // Store original console methods
+    const originalConsole = {
+        log: console.log,
+        error: console.error,
+        warn: console.warn,
+        info: console.info
+    };
 
-[FOUND]
+    // Error logging configuration
+    const ERROR_CONFIG = {
+        logToConsole: true,
+        logToServer: false, // Set to true to enable server-side logging
+        maxLogEntries: 100,
+        showNotifications: true
+    };
 
-/* JavaScript File Content */
+    // In-memory log storage
+    const errorLog = [];
+    const MAX_LOG_ENTRIES = 100;
+
+    /**
+     * Format error for logging
+     * @param {Error|string} error - The error object or message
+     * @param {string} source - Source of the error
+     * @returns {Object} Formatted error object
+     */
+    function formatError(error, source = 'unknown') {
+        const timestamp = new Date().toISOString();
+        const userAgent = navigator.userAgent;
+        const url = window.location.href;
+
+        if (error instanceof Error) {
+            return {
+                timestamp,
+                source,
+                message: error.message,
+                stack: error.stack,
+                name: error.name,
+                url,
+                userAgent
+            };
+        }
+
+        return {
+            timestamp,
+            source,
+            message: String(error),
+            stack: new Error().stack,
+            url,
+            userAgent
+        };
+    }
+
+    /**
+     * Add error to log
+     * @param {Object} formattedError - Formatted error object
+     */
+    function addToLog(formattedError) {
+        errorLog.unshift(formattedError);
+        
+        // Keep log size manageable
+        if (errorLog.length > MAX_LOG_ENTRIES) {
+            errorLog.pop();
+        }
+
+        // Store in sessionStorage for debugging
+        try {
+            sessionStorage.setItem('errorLog', JSON.stringify(errorLog.slice(0, 10)));
+        } catch (e) {
+            // Ignore storage errors
+        }
+    }
+
+    /**
+     * Send error to server
+     * @param {Object} formattedError - Formatted error object
+     */
+    function sendToServer(formattedError) {
+        if (!ERROR_CONFIG.logToServer) return;
+
+        // Determine correct path for API
+        const currentPath = window.location.pathname;
+        let apiPath = '../database/error-log-handler.php';
+        
+        if (currentPath.includes('/pages/')) {
+            apiPath = '../database/error-log-handler.php';
+        } else if (currentPath.includes('/database/')) {
+            apiPath = 'error-log-handler.php';
+        } else {
+            apiPath = 'database/error-log-handler.php';
+        }
+
+        // Send error to server (fire and forget)
+        fetch(apiPath, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formattedError),
+            keepalive: true // Ensure request completes even if page unloads
+        }).catch(e => {
+            // Fail silently - don't create infinite loops
+            originalConsole.error.call(console, 'Failed to send error to server:', e);
+        });
+    }
+
+    /**
+     * Show user-friendly error notification
+     * @param {string} message - Error message to display
+     */
+    function showErrorNotification(message) {
+        if (!ERROR_CONFIG.showNotifications) return;
+
+        // Check if notification already exists
+        if (document.querySelector('.global-error-notification')) {
+            return;
+        }
+
+        const notification = document.createElement('div');
+        notification.className = 'global-error-notification';
+        notification.setAttribute('role', 'alert');
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">⚠️</span>
+                <span class="notification-message">${message}</span>
+                <button class="notification-close" aria-label="Close">&times;</button>
+            </div>
+        `;
+
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        `;
+
+        // Add close button functionality
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 5px;
+            margin-left: 10px;
+            color: #721c24;
+        `;
+
+        closeBtn.addEventListener('click', () => {
+            notification.remove();
+        });
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 5000);
+
+        document.body.appendChild(notification);
+
+        // Add animations if not already present
+        if (!document.querySelector('#error-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'error-notification-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    /**
+     * Global error handler
+     */
+    window.addEventListener('error', function(event) {
+        const formattedError = formatError(event.error || event.message, 'window.onerror');
+        
+        if (ERROR_CONFIG.logToConsole) {
+            originalConsole.error.call(console, 'Global error caught:', formattedError);
+        }
+        
+        addToLog(formattedError);
+        sendToServer(formattedError);
+        
+        // Show notification for critical errors
+        if (event.error && event.error.message) {
+            showErrorNotification('An error occurred. Please try again.');
+        }
+    });
+
+    /**
+     * Unhandled promise rejection handler
+     */
+    window.addEventListener('unhandledrejection', function(event) {
+        const formattedError = formatError(event.reason, 'unhandledrejection');
+        
+        if (ERROR_CONFIG.logToConsole) {
+            originalConsole.error.call(console, 'Unhandled promise rejection:', formattedError);
+        }
+        
+        addToLog(formattedError);
+        sendToServer(formattedError);
+        
+        showErrorNotification('An unexpected error occurred.');
+    });
+
+    /**
+     * Override console methods to capture errors
+     */
+    console.error = function() {
+        if (ERROR_CONFIG.logToConsole) {
+            originalConsole.error.apply(console, arguments);
+        }
+        
+        // Convert arguments to string
+        const args = Array.from(arguments);
+        const message = args.map(arg => {
+            if (arg instanceof Error) {
+                return arg.message;
+            }
+            if (typeof arg === 'object') {
+                try {
+                    return JSON.stringify(arg);
+                } catch (e) {
+                    return String(arg);
+                }
+            }
+            return String(arg);
+        }).join(' ');
+
+        const formattedError = formatError(message, 'console.error');
+        addToLog(formattedError);
+    };
+
+    /**
+     * Public API for error handling
+     */
+    window.ErrorHandler = {
+        /**
+         * Log an error manually
+         * @param {Error|string} error - The error to log
+         * @param {string} source - Error source
+         */
+        logError: function(error, source = 'manual') {
+            const formattedError = formatError(error, source);
+            
+            if (ERROR_CONFIG.logToConsole) {
+                originalConsole.error.call(console, 'Manual error log:', formattedError);
+            }
+            
+            addToLog(formattedError);
+            sendToServer(formattedError);
+        },
+
+        /**
+         * Show user-friendly error message
+         * @param {string} message - Message to display
+         */
+        showError: function(message) {
+            showErrorNotification(message);
+        },
+
+        /**
+         * Get recent error logs
+         * @param {number} limit - Number of logs to return
+         * @returns {Array} Recent error logs
+         */
+        getRecentLogs: function(limit = 10) {
+            return errorLog.slice(0, limit);
+        },
+
+        /**
+         * Clear error logs
+         */
+        clearLogs: function() {
+            errorLog.length = 0;
+            sessionStorage.removeItem('errorLog');
+        },
+
+        /**
+         * Configure error handler
+         * @param {Object} config - Configuration options
+         */
+        configure: function(config) {
+            Object.assign(ERROR_CONFIG, config);
+        }
+    };
+
+    // Log initialization
+    originalConsole.log.call(console, 'Error handler initialized');
+})();
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/scripts/showcase-slider.js`
+
+**Status:** `FOUND`
+
+```javascript
 class ShowcaseSlider {
     constructor() {
         this.slides = document.querySelectorAll('.showcase-slide');
@@ -9078,14 +8267,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', adjustContentMargin);
     window.addEventListener('orientationchange', adjustContentMargin);
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/product-details.js ===
+## File: `Crooks-Cart-Collectives/scripts/product-details.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* JavaScript File Content */
 // Crooks-Cart-Collectives/scripts/product-details.js
 
@@ -9164,7 +8354,7 @@ document.addEventListener('DOMContentLoaded', function() {
             top: 100px;
             right: 20px;
             padding: 15px 25px;
-            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            background: ${type === 'success' ? '#000000' : '#dc3545'};
             color: white;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -9183,7 +8373,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 notification.remove();
             }, 300);
-        }, 3000);
+        }, 5000);
     }
     
     // Function to handle cart operations
@@ -9233,7 +8423,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Disable button and show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Adding...</span>';
+            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Adding...</span>';
             
             const success = await handleCartAction(productId, 'add');
             
@@ -9261,7 +8451,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Disable button and show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Processing...</span>';
+            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Processing...</span>';
             
             const success = await handleCartAction(productId, 'add');
             
@@ -9403,13 +8593,15 @@ window.ProductDetails = {
         }, 3000);
     }
 };
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/report-seller.js ===
+## File: `Crooks-Cart-Collectives/scripts/report-seller.js`
 
-[FOUND]
+**Status:** `FOUND`
 
+```javascript
 /* JavaScript File Content */
 document.addEventListener("DOMContentLoaded", () => {
     const openButton = document.getElementById("openReportButton");
@@ -9419,35 +8611,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeButton = document.getElementById("closeReport");
     const sellerSelect = document.getElementById("seller_id");
 
-    // Load sellers for dropdown
-    async function loadSellers() {
-        if (!sellerSelect) return;
-        
-        try {
-            const currentPath = window.location.pathname;
-            let fetchPath = "../database/sellers-list.php";
-            
-            if (currentPath.includes('/pages/')) {
-                fetchPath = "../database/sellers-list.php";
-            } else {
-                fetchPath = "database/sellers-list.php";
-            }
-            
-            const response = await fetch(fetchPath);
-            const sellers = await response.json();
-            
-            if (sellers.status === 'success' && sellers.data) {
-                sellers.data.forEach(seller => {
-                    const option = document.createElement('option');
-                    option.value = seller.seller_id;
-                    option.textContent = seller.business_name || seller.username;
-                    sellerSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading sellers:', error);
-        }
-    }
+    // REMOVED: loadSellers() function - dropdown is already populated by PHP
 
     const closeForm = () => {
         overlay.style.display = "none";
@@ -9457,7 +8621,7 @@ document.addEventListener("DOMContentLoaded", () => {
     openButton?.addEventListener("click", () => {
         document.body.classList.add("blurred-background");
         overlay.style.display = "flex";
-        loadSellers();
+        // REMOVED: loadSellers() call
     });
 
     overlay?.addEventListener("click", (e) => {
@@ -9542,14 +8706,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/checkout.js ===
+## File: `Crooks-Cart-Collectives/scripts/checkout.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 document.addEventListener('DOMContentLoaded', () => {
     const placeOrderBtn = document.getElementById('placeOrderBtn');
     const notifier = document.getElementById('checkoutNotifier');
@@ -9600,16 +8765,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/orders.js ===
+## File: `Crooks-Cart-Collectives/scripts/orders.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Complete orders page functionality with star rating using icons */
+/* UPDATED: Handles flat orders list with database statuses: ordered, delivered, cancelled */
 
 document.addEventListener('DOMContentLoaded', () => {
     // ============= DOM ELEMENTS =============
@@ -9618,7 +8784,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Review Modal Elements
     const reviewModal = document.getElementById('reviewModal');
     const reviewForm = document.getElementById('reviewForm');
-    const reviewOrderItemId = document.getElementById('reviewOrderItemId');
+    const reviewOrderId = document.getElementById('reviewOrderId');
     const reviewProductId = document.getElementById('reviewProductId');
     const ratingValue = document.getElementById('ratingValue');
     const ratingError = document.getElementById('ratingError');
@@ -9638,113 +8804,68 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // State
     let currentRating = 0;
-    let currentCancelItemId = null;
+    let currentCancelOrderId = null;
     let stars = [];
 
     // ============= INITIALIZE STAR RATING =============
-    // In orders.js, update the initStarRating function (around line 60-90)
-function initStarRating() {
-    if (!starContainer) return;
-    
-    starContainer.innerHTML = '';
-    stars = [];
-    
-    for (let i = 1; i <= 5; i++) {
-        const star = document.createElement('span');
-        star.className = 'star';
-        star.dataset.value = i;
-        star.style.cssText = 'cursor: pointer; display: inline-block; width: 32px; height: 32px;';
+    function initStarRating() {
+        if (!starContainer) return;
         
-        const img = document.createElement('img');
-        img.src = '../assets/image/icons/star-empty.svg';
-        img.alt = 'Star';
-        img.style.width = '32px';
-        img.style.height = '32px';
-        img.dataset.filled = 'false';
+        starContainer.innerHTML = '';
+        stars = [];
         
-        star.appendChild(img);
-        starContainer.appendChild(star);
-        stars.push(star);
-        
-        // Add hover/click handlers
-        star.addEventListener('mouseover', function() {
-            const value = parseInt(this.dataset.value);
-            for (let j = 0; j < stars.length; j++) {
-                const starImg = stars[j].querySelector('img');
-                if (j < value) {
-                    starImg.src = '../assets/image/icons/star-filled.svg';
-                } else {
-                    starImg.src = '../assets/image/icons/star-empty.svg';
-                }
-            }
-        });
-        
-        star.addEventListener('mouseout', function() {
-            for (let j = 0; j < stars.length; j++) {
-                const starImg = stars[j].querySelector('img');
-                if (j < currentRating) {
-                    starImg.src = '../assets/image/icons/star-filled.svg';
-                } else {
-                    starImg.src = '../assets/image/icons/star-empty.svg';
-                }
-            }
-        });
-        
-        star.addEventListener('click', function() {
-            const value = parseInt(this.dataset.value);
-            currentRating = value;
-            ratingValue.value = value;
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            star.className = 'star';
+            star.dataset.value = i;
+            star.style.cssText = 'cursor: pointer; display: inline-block; width: 32px; height: 32px;';
             
-            for (let j = 0; j < stars.length; j++) {
-                const starImg = stars[j].querySelector('img');
-                starImg.src = j < value ? '../assets/image/icons/star-filled.svg' : '../assets/image/icons/star-empty.svg';
-            }
-        });
-    }
-}
-    
-    // Highlight stars up to a certain value
-    function highlightStars(value, className = 'active') {
-        stars.forEach((star, index) => {
-            const empty = star.querySelector('.star-empty');
-            const filled = star.querySelector('.star-filled');
+            const img = document.createElement('img');
+            img.src = '../assets/image/icons/star-empty.svg';
+            img.alt = 'Star';
+            img.style.width = '32px';
+            img.style.height = '32px';
+            img.dataset.filled = 'false';
             
-            if (index < value) {
-                star.classList.add(className);
-                if (empty) empty.style.display = 'none';
-                if (filled) {
-                    filled.style.display = 'block';
-                    filled.style.filter = 'brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%)';
+            star.appendChild(img);
+            starContainer.appendChild(star);
+            stars.push(star);
+            
+            // Add hover handlers
+            star.addEventListener('mouseover', function() {
+                const value = parseInt(this.dataset.value);
+                for (let j = 0; j < stars.length; j++) {
+                    const starImg = stars[j].querySelector('img');
+                    if (j < value) {
+                        starImg.src = '../assets/image/icons/star-filled.svg';
+                    } else {
+                        starImg.src = '../assets/image/icons/star-empty.svg';
+                    }
                 }
-            } else {
-                star.classList.remove(className);
-                if (empty) empty.style.display = 'block';
-                if (filled) filled.style.display = 'none';
-            }
-        });
-    }
-    
-    // Reset stars to current rating
-    function resetStars() {
-        if (currentRating > 0) {
-            highlightStars(currentRating, 'active');
-        } else {
-            stars.forEach(star => {
-                const empty = star.querySelector('.star-empty');
-                const filled = star.querySelector('.star-filled');
-                star.classList.remove('active', 'hover');
-                if (empty) empty.style.display = 'block';
-                if (filled) filled.style.display = 'none';
+            });
+            
+            star.addEventListener('mouseout', function() {
+                for (let j = 0; j < stars.length; j++) {
+                    const starImg = stars[j].querySelector('img');
+                    if (j < currentRating) {
+                        starImg.src = '../assets/image/icons/star-filled.svg';
+                    } else {
+                        starImg.src = '../assets/image/icons/star-empty.svg';
+                    }
+                }
+            });
+            
+            star.addEventListener('click', function() {
+                const value = parseInt(this.dataset.value);
+                currentRating = value;
+                if (ratingValue) ratingValue.value = value;
+                
+                for (let j = 0; j < stars.length; j++) {
+                    const starImg = stars[j].querySelector('img');
+                    starImg.src = j < value ? '../assets/image/icons/star-filled.svg' : '../assets/image/icons/star-empty.svg';
+                }
             });
         }
-    }
-    
-    // Set rating value
-    function setRating(value) {
-        currentRating = value;
-        if (ratingValue) ratingValue.value = value;
-        if (ratingError) ratingError.textContent = '';
-        highlightStars(value, 'active');
     }
     
     // Reset rating form
@@ -9753,7 +8874,12 @@ function initStarRating() {
         if (ratingValue) ratingValue.value = '';
         if (ratingError) ratingError.textContent = '';
         if (reviewForm) reviewForm.reset();
-        resetStars();
+        
+        // Reset stars
+        stars.forEach(star => {
+            const img = star.querySelector('img');
+            if (img) img.src = '../assets/image/icons/star-empty.svg';
+        });
     }
 
     // ============= MODAL FUNCTIONS =============
@@ -9776,7 +8902,7 @@ function initStarRating() {
         hideModal(cancelModal);
         hideModal(notificationModal);
         resetRatingForm();
-        currentCancelItemId = null;
+        currentCancelOrderId = null;
     }
     
     function showNotification(message, isError = false) {
@@ -9801,6 +8927,8 @@ function initStarRating() {
     async function loadOrders() {
         if (!ordersList) return;
         
+        ordersList.innerHTML = '<div class="loading">Loading orders...</div>';
+        
         try {
             const response = await fetch('../database/order-handler.php?action=get_customer_orders');
             const result = await response.json();
@@ -9816,7 +8944,7 @@ function initStarRating() {
         }
     }
 
-    // ============= RENDER ORDERS =============
+    // ============= RENDER ORDERS (FLAT LIST) =============
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
@@ -9832,164 +8960,84 @@ function initStarRating() {
 
         orders.forEach(order => {
             const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
-            const orderStatus = order.order_status || 'pending';
-            const total = Number(order.total_amount).toFixed(2);
-            const shippingAddress = escapeHtml(order.shipping_address || 'Address not available');
-
+            const status = order.status || 'ordered';
+            const statusClass = status.toLowerCase();
+            const canCancel = status === 'ordered';
+            const canReview = status === 'delivered' && !order.has_review;
+            const imagePath = getImagePath(order.image_path);
+            
             html += `
-                <div class="order-card">
+                <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
                         <div class="order-header-left">
                             <span class="order-id">Order #${order.order_id}</span>
                             <span class="order-date">${orderDate}</span>
                         </div>
                         <div class="order-header-right">
-                            <span class="order-status-badge ${orderStatus}">${orderStatus}</span>
+                            <span class="order-status-badge ${statusClass}">${status}</span>
                         </div>
                     </div>
 
                     <div class="order-body">
-                        <!-- Column 1: Order Items -->
-                        <div class="order-items-column">
-                            <div class="order-items">
-            `;
-
-            // Group items by seller
-            const itemsBySeller = {};
-            order.items.forEach(item => {
-                const sellerName = item.business_name || 'Unknown Seller';
-                if (!itemsBySeller[sellerName]) {
-                    itemsBySeller[sellerName] = {
-                        sellerName: sellerName,
-                        items: []
-                    };
-                }
-                itemsBySeller[sellerName].items.push(item);
-            });
-
-            // Render items
-            for (const [sellerName, sellerData] of Object.entries(itemsBySeller)) {
-                sellerData.items.forEach(item => {
-                    const imagePath = getImagePath(item.image_path);
-                    const productName = escapeHtml(item.product_name || 'Product');
-                    const itemStatus = item.status || 'pending';
-                    const statusClass = itemStatus.toLowerCase();
-
-                    html += `
-                        <div class="order-item" data-item-id="${item.order_item_id}">
-                            <img src="${imagePath}" alt="${productName}" class="order-item-image"
+                        <!-- Product Image -->
+                        <div class="order-item-image">
+                            <img src="${imagePath}" alt="${escapeHtml(order.product_name)}"
                                  onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="order-item-details">
+                            <h3 class="product-name">${escapeHtml(order.product_name)}</h3>
+                            <p class="seller-name">Seller: ${escapeHtml(order.business_name || 'Unknown Seller')}</p>
                             
-                            <div class="order-item-details">
-                                <div class="order-item-seller">${escapeHtml(sellerName)}</div>
-                                <div class="order-item-title">${productName}</div>
-                                <div class="order-item-meta">
-                                    <span class="item-quantity">Qty: ${item.quantity}</span>
-                                    <span class="item-price">₱${Number(item.price_at_time).toFixed(2)}</span>
-                                </div>
-                                <div class="order-item-status">
-                                    <span class="status-badge ${statusClass}">${itemStatus}</span>
-                                </div>
+                            <div class="order-meta">
+                                <span class="item-quantity">Quantity: ${order.quantity}</span>
+                                <span class="item-price">₱${Number(order.price_at_time).toFixed(2)} each</span>
+                            </div>
+                            
+                            <div class="order-subtotal">
+                                Subtotal: <strong>₱${Number(order.subtotal).toFixed(2)}</strong>
+                            </div>
+                            
+                            <div class="shipping-address">
+                                <strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}
                             </div>
                         </div>
-                    `;
-                });
-            }
-
-            html += `
-                            </div>
-                        </div>
-
-                        <!-- Column 2: Price Summary -->
-                        <div class="order-price-summary">
-                            <div class="price-summary-title">Order Summary</div>
+                        
+                        <!-- Actions -->
+                        <div class="order-actions">
             `;
-
-            // Calculate totals
-            let subtotal = 0;
-            let totalQuantity = 0;
-            order.items.forEach(item => {
-                subtotal += Number(item.subtotal || (item.price_at_time * item.quantity));
-                totalQuantity += item.quantity;
-            });
-
-            html += `
-                            <div class="price-row">
-                                <span>Total Items</span>
-                                <span class="price-value">${totalQuantity}</span>
-                            </div>
-                            
-                            <div class="price-divider"></div>
-                            
-                            <div class="price-row">
-                                <span>Subtotal</span>
-                                <span class="price-value">₱${subtotal.toFixed(2)}</span>
-                            </div>
-                            
-                            <div class="price-row">
-                                <span>Shipping Fee</span>
-                                <span class="price-value">Free</span>
-                            </div>
-                            
-                            <div class="price-divider"></div>
-                            
-                            <div class="price-row price-total">
-                                <span>Total</span>
-                                <span class="price-value">₱${total}</span>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Shipping + Actions -->
-                        <div class="order-shipping-column">
-                            <div class="order-shipping-location">
-                                <div class="shipping-address-title">Shipping Address</div>
-                                <div class="shipping-address-text">${shippingAddress}</div>
-                            </div>
-
-                            <div class="order-item-actions">
-            `;
-
-            // Add action buttons for each item - REMOVED ALL EMOJIS
-            order.items.forEach(item => {
-                const itemStatus = item.status || 'pending';
-                const canCancel = ['pending', 'confirmed'].includes(itemStatus);
-                const reviewed = item.reviewed || false;
-
-                if (itemStatus === 'delivered' && !reviewed) {
-                    html += `
-                        <button class="action-btn action-btn-review" 
-                                data-item="${item.order_item_id}" 
-                                data-product="${item.product_id}">
-                            Write Review
-                        </button>
-                    `;
-                } else if (reviewed) {
-                    html += `
-                        <span class="reviewed-badge">
-                            Reviewed
-                        </span>
-                    `;
-                }
-                
-                if (canCancel) {
-                    html += `
-                        <button class="action-btn action-btn-cancel" 
-                                data-item="${item.order_item_id}">
-                            Cancel Item
-                        </button>
-                    `;
-                }
-                
+            
+            // Add action buttons based on status
+            if (canCancel) {
                 html += `
-                    <a href="product-details.php?id=${item.product_id}" 
-                       class="action-btn action-btn-view">
-                        View Product
-                    </a>
+                    <button class="action-btn action-btn-cancel" data-order-id="${order.order_id}">
+                        Cancel Item
+                    </button>
                 `;
-            });
-
+            }
+            
+            if (canReview) {
+                html += `
+                    <button class="action-btn action-btn-review" 
+                            data-order-id="${order.order_id}" 
+                            data-product-id="${order.product_id}">
+                        Write Review
+                    </button>
+                `;
+            } else if (order.has_review) {
+                html += `
+                    <span class="reviewed-badge">
+                        Reviewed
+                    </span>
+                `;
+            }
+            
             html += `
-                            </div>
+                            <a href="product-details.php?id=${order.product_id}" 
+                               class="action-btn action-btn-view">
+                                View Product
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -10028,14 +9076,14 @@ function initStarRating() {
         return div.innerHTML;
     }
 
-    // ===== ATTACH EVENT LISTENERS =====
+    // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
         // Review buttons
         document.querySelectorAll('.action-btn-review').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (reviewOrderItemId) reviewOrderItemId.value = btn.dataset.item;
-                if (reviewProductId) reviewProductId.value = btn.dataset.product;
+                if (reviewOrderId) reviewOrderId.value = btn.dataset.orderId;
+                if (reviewProductId) reviewProductId.value = btn.dataset.productId;
                 resetRatingForm();
                 showModal(reviewModal);
             });
@@ -10045,7 +9093,7 @@ function initStarRating() {
         document.querySelectorAll('.action-btn-cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                currentCancelItemId = btn.dataset.item;
+                currentCancelOrderId = btn.dataset.orderId;
                 showModal(cancelModal);
             });
         });
@@ -10070,8 +9118,7 @@ function initStarRating() {
             
             try {
                 const formData = new FormData();
-                formData.append('action', 'add_review');
-                formData.append('order_item_id', reviewOrderItemId?.value || '');
+                formData.append('order_id', reviewOrderId?.value || '');
                 formData.append('product_id', reviewProductId?.value || '');
                 formData.append('rating', currentRating);
                 formData.append('comment', document.getElementById('comment')?.value || '');
@@ -10104,10 +9151,10 @@ function initStarRating() {
         });
     }
 
-    // ============= CANCEL ITEM =============
+    // ============= CANCEL ORDER =============
     if (confirmCancel) {
         confirmCancel.addEventListener('click', async () => {
-            if (!currentCancelItemId) return;
+            if (!currentCancelOrderId) return;
             
             confirmCancel.disabled = true;
             confirmCancel.textContent = 'Processing...';
@@ -10115,7 +9162,7 @@ function initStarRating() {
             try {
                 const formData = new URLSearchParams();
                 formData.append('action', 'cancel_item');
-                formData.append('item_id', currentCancelItemId);
+                formData.append('order_id', currentCancelOrderId);
                 
                 const response = await fetch('../database/order-handler.php', {
                     method: 'POST',
@@ -10126,11 +9173,11 @@ function initStarRating() {
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    showNotification('Item cancelled successfully');
+                    showNotification('Order cancelled successfully');
                     hideModal(cancelModal);
                     loadOrders(); // Reload orders
                 } else {
-                    showNotification(result.message || 'Failed to cancel item', true);
+                    showNotification(result.message || 'Failed to cancel order', true);
                 }
             } catch (error) {
                 console.error('Cancel error:', error);
@@ -10138,7 +9185,7 @@ function initStarRating() {
             } finally {
                 confirmCancel.disabled = false;
                 confirmCancel.textContent = 'Yes, Cancel Item';
-                currentCancelItemId = null;
+                currentCancelOrderId = null;
             }
         });
     }
@@ -10147,7 +9194,7 @@ function initStarRating() {
     if (cancelCancel) {
         cancelCancel.addEventListener('click', () => {
             hideModal(cancelModal);
-            currentCancelItemId = null;
+            currentCancelOrderId = null;
         });
     }
 
@@ -10184,16 +9231,17 @@ function initStarRating() {
     // Load orders on page start
     loadOrders();
 });
+```
 
-==============================================
+---
 
-=== File: Crooks-Cart-Collectives/scripts/seller-orders.js ===
+## File: `Crooks-Cart-Collectives/scripts/seller-orders.js`
 
-[FOUND]
+**Status:** `FOUND`
 
-/* JavaScript File Content */
+```javascript
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* Reusing patterns from orders.js - Complete seller orders functionality */
+/* UPDATED: Uses database statuses: ordered, delivered, cancelled */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -10202,7 +9250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ordersList = document.getElementById('sellerOrdersList');
     const filterTabs = document.querySelectorAll('.filter-tab');
 
-    // Modal Elements - Matching orders.js pattern
+    // Modal Elements
     const confirmModal = document.getElementById('confirmModal');
     const confirmTitle = document.getElementById('confirmTitle');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -10215,12 +9263,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State
     let currentAction = null;
-    let currentItemId = null;
+    let currentOrderId = null;
     let currentNewStatus = null;
     let allOrders = []; // Store all orders for filtering
 
-    // ============= MODAL FUNCTIONS - Matching orders.js pattern =============
+    // ============= MODAL FUNCTIONS =============
     function showConfirmModal(title, message, onConfirm) {
+        if (!confirmModal || !confirmTitle || !confirmMessage) return;
+        
         confirmTitle.textContent = title;
         confirmMessage.textContent = message;
         confirmModal.style.display = 'flex';
@@ -10229,14 +9279,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideConfirmModal() {
-        confirmModal.style.display = 'none';
+        if (confirmModal) confirmModal.style.display = 'none';
         document.body.style.overflow = '';
         currentAction = null;
-        currentItemId = null;
+        currentOrderId = null;
         currentNewStatus = null;
     }
 
     function showNotification(message, isError = false) {
+        if (!notificationModal || !notificationMessage) return;
+        
         notificationMessage.textContent = message;
         const icon = notificationModal.querySelector('.modal-icon svg');
         if (icon) {
@@ -10245,7 +9297,6 @@ document.addEventListener('DOMContentLoaded', () => {
         notificationModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
 
-        // Auto-hide after 3 seconds for success messages (matching orders.js)
         if (!isError) {
             setTimeout(() => {
                 hideNotificationModal();
@@ -10254,30 +9305,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideNotificationModal() {
-        notificationModal.style.display = 'none';
+        if (notificationModal) notificationModal.style.display = 'none';
         document.body.style.overflow = '';
     }
 
-    // Close modals when clicking outside - Matching orders.js pattern
-    confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) hideConfirmModal();
-    });
+    // Close modals when clicking outside
+    if (confirmModal) {
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) hideConfirmModal();
+        });
+    }
 
-    notificationModal.addEventListener('click', (e) => {
-        if (e.target === notificationModal) hideNotificationModal();
-    });
+    if (notificationModal) {
+        notificationModal.addEventListener('click', (e) => {
+            if (e.target === notificationModal) hideNotificationModal();
+        });
+    }
 
-    notificationClose.addEventListener('click', hideNotificationModal);
-    cancelAction.addEventListener('click', hideConfirmModal);
+    if (notificationClose) {
+        notificationClose.addEventListener('click', hideNotificationModal);
+    }
 
-    confirmAction.addEventListener('click', () => {
-        if (currentAction) {
-            currentAction();
-        }
-        hideConfirmModal();
-    });
+    if (cancelAction) {
+        cancelAction.addEventListener('click', hideConfirmModal);
+    }
 
-    // Escape key handler - Matching orders.js pattern
+    if (confirmAction) {
+        confirmAction.addEventListener('click', () => {
+            if (currentAction) {
+                currentAction();
+            }
+            hideConfirmModal();
+        });
+    }
+
+    // Escape key handler
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             hideConfirmModal();
@@ -10285,9 +9347,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ============= LOAD ORDERS - Using same endpoint as orders.js but for seller =============
+    // ============= LOAD ORDERS =============
     async function loadOrders() {
         if (!ordersList) return;
+
+        ordersList.innerHTML = '<div class="loading">Loading orders...</div>';
 
         try {
             const response = await fetch('../database/order-handler.php?action=get_seller_orders');
@@ -10295,7 +9359,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.status === 'success') {
                 allOrders = result.data || [];
-                renderOrders(allOrders, 'all');
+                const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'all';
+                renderOrders(allOrders, activeFilter);
             } else {
                 ordersList.innerHTML = '<div class="empty-orders"><p>Failed to load orders. Please try again.</p></div>';
             }
@@ -10305,12 +9370,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= RENDER ORDERS - Matching the structure of orders.js =============
+    // ============= RENDER ORDERS (FLAT LIST) =============
     function renderOrders(orders, filter) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
                 <div class="empty-orders">
                     <p>No orders yet.</p>
+                    <a href="seller-products.php" class="btn-primary">Manage Products</a>
                 </div>
             `;
             return;
@@ -10319,10 +9385,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Filter orders based on selected tab
         let filteredOrders = orders;
         if (filter !== 'all') {
-            filteredOrders = orders.filter(order => 
-                order.seller_status === filter || 
-                (order.items && order.items.some(item => item.status === filter))
-            );
+            filteredOrders = orders.filter(order => order.status === filter);
         }
 
         if (filteredOrders.length === 0) {
@@ -10337,7 +9400,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const customerName = order.first_name && order.last_name 
                 ? `${escapeHtml(order.first_name)} ${escapeHtml(order.last_name)}`
                 : 'Customer';
-            const sellerStatus = order.seller_status || 'pending';
+            const status = order.status || 'ordered';
+            const statusClass = status.toLowerCase();
+            const imagePath = getImagePath(order.image_path);
 
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
@@ -10348,12 +9413,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="order-header-right">
                             <span class="customer-info">${customerName}</span>
-                            <span class="order-status-badge ${sellerStatus}">${sellerStatus}</span>
+                            <span class="order-status-badge ${statusClass}">${status}</span>
                         </div>
                     </div>
 
                     <div class="order-body">
-                        <!-- Customer Details - Matching orders.php structure -->
+                        <!-- Customer Details -->
                         <div class="customer-details">
                             <p><strong>Customer:</strong> ${customerName}</p>
                             <p><strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}</p>
@@ -10361,79 +9426,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p><strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'N/A')}</p>
                         </div>
 
-                        <!-- Order Items -->
-                        <div class="order-items">
+                        <!-- Product Details -->
+                        <div class="product-details">
+                            <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                 class="product-thumbnail"
+                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                            
+                            <div class="product-info">
+                                <h4>${escapeHtml(order.product_name)}</h4>
+                                <p>Quantity: ${order.quantity}</p>
+                                <p>Price: ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                <p class="subtotal">Subtotal: ₱${Number(order.subtotal).toFixed(2)}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="order-actions">
             `;
 
-            let orderSubtotal = 0;
-            order.items.forEach(item => {
-                const imagePath = getImagePath(item.image_path);
-                const productName = escapeHtml(item.product_name || 'Product');
-                const itemStatus = item.status || 'pending';
-                const quantity = item.quantity || 1;
-                const price = parseFloat(item.price_at_time) || 0;
-                const subtotal = parseFloat(item.subtotal) || (price * quantity);
-                orderSubtotal += subtotal;
-
+            // Only show actions for 'ordered' status
+            if (status === 'ordered') {
                 html += `
-                    <div class="order-item" data-item-id="${item.order_item_id}">
-                        <img src="${imagePath}" alt="${productName}" class="order-item-image"
-                             onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                        
-                        <div class="order-item-details">
-                            <h4>${productName}</h4>
-                            <p>Quantity: ${quantity} × ₱${price.toFixed(2)}</p>
-                            <p class="item-subtotal">Subtotal: ₱${subtotal.toFixed(2)}</p>
-                            <span class="badge ${itemStatus}">${itemStatus}</span>
-                        </div>
-                        
-                        <div class="order-item-actions">
+                    <button class="action-btn complete" data-order-id="${order.order_id}" data-status="delivered">
+                        <span class="btn-text">Mark Delivered</span>
+                    </button>
+                    <button class="action-btn cancel" data-order-id="${order.order_id}" data-status="cancelled">
+                        <span class="btn-text">Cancel Order</span>
+                    </button>
                 `;
-
-                // Status update buttons based on current status - Following the workflow
-                if (itemStatus === 'pending') {
-                    html += `
-                        <button class="action-btn complete" data-item="${item.order_item_id}" data-status="confirmed">
-                            Confirm
-                        </button>
-                        <button class="action-btn cancel" data-item="${item.order_item_id}" data-status="cancelled">
-                            Cancel
-                        </button>
-                    `;
-                } else if (itemStatus === 'confirmed') {
-                    html += `
-                        <button class="action-btn complete" data-item="${item.order_item_id}" data-status="processing">
-                            Process
-                        </button>
-                        <button class="action-btn cancel" data-item="${item.order_item_id}" data-status="cancelled">
-                            Cancel
-                        </button>
-                    `;
-                } else if (itemStatus === 'processing') {
-                    html += `
-                        <button class="action-btn complete" data-item="${item.order_item_id}" data-status="shipped">
-                            Ship
-                        </button>
-                    `;
-                } else if (itemStatus === 'shipped') {
-                    html += `
-                        <button class="action-btn complete" data-item="${item.order_item_id}" data-status="delivered">
-                            Deliver
-                        </button>
-                    `;
-                }
-
+            } else {
                 html += `
-                        </div>
-                    </div>
+                    <span class="status-badge ${statusClass}">
+                        ${status}
+                    </span>
                 `;
-            });
+            }
 
             html += `
-                        </div>
-                        
-                        <div class="order-total">
-                            <strong>Order Total:</strong> ₱${orderSubtotal.toFixed(2)}
                         </div>
                     </div>
                 </div>
@@ -10444,7 +9473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         attachEventListeners();
     }
 
-    // ============= HELPER FUNCTIONS - Same as orders.js =============
+    // ============= HELPER FUNCTIONS =============
     function formatDate(dateString) {
         const date = new Date(dateString);
         const options = { 
@@ -10474,46 +9503,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        document.querySelectorAll('.action-btn').forEach(btn => {
+        document.querySelectorAll('.action-btn.complete, .action-btn.cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                const itemId = btn.dataset.item;
+                const orderId = btn.dataset.orderId;
                 const newStatus = btn.dataset.status;
 
-                if (!itemId || !newStatus) return;
+                if (!orderId || !newStatus) return;
 
-                currentItemId = itemId;
+                currentOrderId = orderId;
                 currentNewStatus = newStatus;
 
                 let title = 'Update Order Status';
-                let message = `Are you sure you want to mark this item as ${newStatus}?`;
+                let message = `Are you sure you want to mark this order as ${newStatus}?`;
 
                 if (newStatus === 'cancelled') {
-                    title = 'Cancel Order Item';
-                    message = 'Are you sure you want to cancel this item? This action cannot be undone.';
+                    title = 'Cancel Order';
+                    message = 'Are you sure you want to cancel this order? This action cannot be undone and will restore product stock.';
                 } else if (newStatus === 'delivered') {
                     title = 'Mark as Delivered';
-                    message = 'Confirm that this item has been delivered to the customer.';
+                    message = 'Confirm that this order has been delivered to the customer. This will allow the customer to leave a review.';
                 }
 
-                showConfirmModal(title, message, () => handleStatusUpdate(itemId, newStatus));
+                showConfirmModal(title, message, () => handleStatusUpdate(orderId, newStatus));
             });
         });
     }
 
-    // ============= HANDLE STATUS UPDATE - Same pattern as orders.js =============
-    async function handleStatusUpdate(itemId, newStatus) {
-        const btn = document.querySelector(`[data-item="${itemId}"]`);
+    // ============= HANDLE STATUS UPDATE =============
+    async function handleStatusUpdate(orderId, newStatus) {
+        const btn = document.querySelector(`[data-order-id="${orderId}"]`);
         if (btn) {
             btn.disabled = true;
-            btn.textContent = 'Updating...';
+            btn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Updating...</span>';
         }
 
         try {
             const formData = new URLSearchParams();
             formData.append('action', 'update_item_status');
-            formData.append('item_id', itemId);
+            formData.append('order_id', orderId);
             formData.append('status', newStatus);
 
             const response = await fetch('../database/order-handler.php', {
@@ -10527,7 +9556,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                showNotification('Order status updated successfully!');
+                showNotification(`Order marked as ${newStatus} successfully!`);
                 
                 // Reload orders after short delay
                 setTimeout(() => {
@@ -10538,7 +9567,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Error: ' + (result.message || 'Failed to update status'), true);
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = getButtonText(newStatus);
+                    btn.innerHTML = newStatus === 'delivered' 
+                        ? '<span class="btn-text">Mark Delivered</span>'
+                        : '<span class="btn-text">Cancel Order</span>';
                 }
             }
         } catch (error) {
@@ -10546,23 +9577,14 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Network error. Please try again.', true);
             if (btn) {
                 btn.disabled = false;
-                btn.textContent = getButtonText(newStatus);
+                btn.innerHTML = newStatus === 'delivered' 
+                    ? '<span class="btn-text">Mark Delivered</span>'
+                    : '<span class="btn-text">Cancel Order</span>';
             }
         }
     }
 
-    function getButtonText(status) {
-        const texts = {
-            'confirmed': 'Confirm',
-            'processing': 'Process',
-            'shipped': 'Ship',
-            'delivered': 'Deliver',
-            'cancelled': 'Cancel'
-        };
-        return texts[status] || 'Update';
-    }
-
-    // ============= FILTER TAB EVENT LISTENERS - Same pattern as orders.js =============
+    // ============= FILTER TAB EVENT LISTENERS =============
     filterTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             filterTabs.forEach(t => t.classList.remove('active'));
@@ -10573,9 +9595,8870 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ============= CHECK FOR URL HASH =============
+    function checkUrlHash() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#order-')) {
+            setTimeout(() => {
+                const element = document.getElementById(hash.substring(1));
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    element.style.backgroundColor = '#fff3e0';
+                    setTimeout(() => {
+                        element.style.backgroundColor = '';
+                    }, 2000);
+                }
+            }, 500);
+        }
+    }
+
     // ============= INITIAL LOAD =============
     loadOrders();
+    checkUrlHash();
 });
 
-==============================================
+// Add some CSS for the refresh button and improved UI
+const style = document.createElement('style');
+style.textContent = `
+    .refresh-btn {
+        background: #FF8246;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 15px;
+        transition: background 0.3s;
+    }
+    
+    .refresh-btn:hover {
+        background: #e66a2c;
+    }
+    
+    .order-item-actions .btn-icon {
+        margin-right: 5px;
+        font-size: 14px;
+    }
+    
+    .order-item-actions .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+    
+    .order-item-actions .status-badge.delivered {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .order-item-actions .status-badge.cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-icon {
+        margin-right: 5px;
+        font-size: 14px;
+    }
+`;
+document.head.appendChild(style);
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/scripts/seller-dashboard.js`
+
+**Status:** `FOUND`
+
+```javascript
+/* Crooks-Cart-Collectives/scripts/seller-dashboard.js */
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dashboard charts if needed
+    initDashboardStats();
+    
+    // Handle product quick actions
+    initQuickActions();
+});
+
+function initDashboardStats() {
+    // Stats card animations
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+}
+
+function initQuickActions() {
+    const actionCards = document.querySelectorAll('.action-card');
+    actionCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Prevent default if it's not a link
+            if (!this.hasAttribute('href')) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/about.css`
+
+**Status:** `FOUND`
+
+```css
+/* About Page Styles - Professional & Minimalist */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    margin-top: 100px; /*negative value to pull from header, positive to push towards header*/
+    margin-bottom: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.header-content h1 {
+    font-size: clamp(2.5rem, 8vw, 3.2rem);
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.header-content h1 span {
+    color: #ff8246;
+}
+
+.header-content p {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: #666;
+}
+
+/* ===== PROJECT OVERVIEW ===== */
+.overview-section {
+    margin-bottom: 60px;
+}
+
+.overview-container {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.overview-content h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.overview-content h2 span {
+    color: #ff8246;
+}
+
+.overview-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.overview-content strong {
+    color: #333;
+    font-weight: 600;
+}
+
+/* ===== COURSES SECTION ===== */
+.courses-section {
+    margin-bottom: 60px;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.course-card {
+    background: white;
+    border-radius: 12px;
+    padding: 35px 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.course-card h3 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.course-subject {
+    font-size: 1.1rem;
+    color: #ff8246;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.instructor {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.course-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* ===== TEAM SECTION ===== */
+.team-section {
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.team-section h2 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.team-section h2 span {
+    color: #ff8246;
+}
+
+.team-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* Lead Developer - Full Width Container */
+.lead-container {
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Lead Card - Matches the full width of the members grid */
+.lead-card {
+    display: flex;
+    flex-direction: column; /* Column layout for centered content */
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #ff8246;
+    text-align: center;
+    width: 100%;
+    max-width: 100%; /* Take full width of its container */
+}
+
+/* For desktop, match the grid container width */
+@media (min-width: 1025px) {
+    .lead-card {
+        max-width: calc(100% - 40px); /* Account for padding */
+        margin: 0 auto;
+    }
+}
+
+.lead-card .team-image {
+    width: 200px; /* Larger for lead card */
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #ff8246;
+    flex-shrink: 0;
+    margin: 0 auto;
+}
+
+.lead-card .team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lead-card .team-info {
+    flex: 1;
+    width: 100%;
+    max-width: 800px; /* Limit text width for readability */
+    margin: 0 auto;
+}
+
+.lead-card h3 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.lead-card .team-role {
+    font-size: 1.3rem;
+    color: #ff8246;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.lead-card .team-bio {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* Team Members Grid */
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+/* Center the last child in desktop view */
+@media (min-width: 1025px) {
+    .members-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Force 3 columns on desktop */
+    }
+    
+    .members-grid .team-card:last-child {
+        grid-column: 2 / 3; /* Place last child in the middle column */
+        justify-self: center;
+        width: 100%;
+    }
+}
+
+.team-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.team-card .team-image {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #ff8246;
+}
+
+.team-card .team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-card h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.team-card .team-role {
+    font-size: 1rem;
+    color: #ff8246;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.team-card .team-bio {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #666;
+    flex-grow: 1;
+}
+
+.team-note {
+    margin-top: 30px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #666;
+    font-style: italic;
+    font-size: 1rem;
+}
+
+/* ===== PROJECT CRITERIA ===== */
+.criteria-section {
+    background: white;
+    border-radius: 12px;
+    padding: 50px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.criteria-section h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 35px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.criteria-section h2 span {
+    color: #ff8246;
+}
+
+.criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.criteria-item {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.criteria-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.criteria-weight {
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ff8246;
+    margin-bottom: 10px;
+}
+
+.criteria-item h4 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.criteria-item p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.criteria-total {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Desktop */
+@media (min-width: 1025px) {
+    .lead-card {
+        max-width: 100%; /* Full width of container */
+    }
+    
+    .lead-card .team-info {
+        max-width: 800px;
+    }
+    
+    .members-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablet */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .lead-card {
+        max-width: 100%;
+        padding: 35px 30px;
+    }
+    
+    .lead-card .team-image {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .lead-card h3 {
+        font-size: 2rem;
+    }
+    
+    .lead-card .team-info {
+        max-width: 600px;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .criteria-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* For tablets, last child centered in a 2-column grid */
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .members-grid .team-card:last-child {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 50%;
+        min-width: 280px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+    }
+    
+    .page-header {
+        padding: 40px 15px;
+    }
+    
+    .overview-container {
+        padding: 30px 20px;
+    }
+    
+    .overview-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .overview-content p {
+        font-size: 1rem;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .course-card {
+        padding: 25px 20px;
+    }
+    
+    .course-card h3 {
+        font-size: 1.4rem;
+    }
+    
+    /* Lead card - full width on mobile */
+    .lead-card {
+        max-width: 100%;
+        padding: 30px 20px;
+    }
+    
+    .lead-card .team-image {
+        width: 160px;
+        height: 160px;
+        border-width: 3px;
+    }
+    
+    .lead-card h3 {
+        font-size: 1.8rem;
+    }
+    
+    .lead-card .team-role {
+        font-size: 1.2rem;
+    }
+    
+    .lead-card .team-bio {
+        font-size: 1rem;
+    }
+    
+    .lead-card .team-info {
+        max-width: 100%;
+    }
+    
+    .members-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+    
+    .members-grid .team-card:last-child {
+        grid-column: auto; /* Reset for mobile */
+        width: 100%;
+    }
+    
+    .team-card .team-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .criteria-section {
+        padding: 35px 20px;
+    }
+    
+    .criteria-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .criteria-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .page-header {
+        padding: 30px 15px;
+    }
+    
+    .header-content h1 {
+        font-size: 2rem;
+    }
+    
+    .overview-container {
+        padding: 25px 15px;
+    }
+    
+    .overview-content h2 {
+        font-size: 1.6rem;
+    }
+    
+    .lead-card {
+        padding: 25px 15px;
+    }
+    
+    .lead-card .team-image {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .lead-card h3 {
+        font-size: 1.6rem;
+    }
+    
+    .lead-card .team-role {
+        font-size: 1.1rem;
+    }
+    
+    .team-card {
+        padding: 25px 15px;
+    }
+    
+    .team-card .team-image {
+        width: 110px;
+        height: 110px;
+    }
+    
+    .criteria-section {
+        padding: 30px 15px;
+    }
+    
+    .criteria-section h2 {
+        font-size: 1.6rem;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/cart.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/cart.css */
+/* Using only CSS variables from header.css */
+
+/* ===== CART CONTAINER ===== */
+.cart-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cart-title {
+    font-size: 2.2rem;
+    color: var(--color-text-C);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--color-accent-A);
+}
+
+/* ===== EMPTY CART ===== */
+.empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--color-background-B);
+    border-radius: 12px;
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.empty-cart-message {
+    font-size: 1.2rem;
+    color: var(--color-text-C);
+    margin-bottom: 25px;
+}
+
+/* ===== CART ITEMS LIST ===== */
+.cart-items {
+    margin-bottom: 30px;
+}
+
+.cart-item {
+    display: flex;
+    gap: 25px;
+    padding: 25px;
+    margin-bottom: 20px;
+    background: var(--color-background-B);
+    border-radius: 12px;
+    border: 1px solid var(--color-border-A);
+    box-shadow: var(--effect-box-shadow-default);
+    transition: var(--effect-transition-default);
+}
+
+.cart-item:hover {
+    box-shadow: var(--effect-glow-A);
+    transform: translateY(-2px);
+}
+
+/* Image container */
+.cart-item-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-background-B);
+    border: 1px solid var(--color-border-A);
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Details section */
+.cart-item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cart-item-title {
+    font-size: 1.3rem;
+    color: var(--color-text-C);
+    margin: 0;
+}
+
+.cart-item-seller {
+    font-size: 0.95rem;
+    color: var(--color-text-C);
+    margin: 0;
+}
+
+.cart-item-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-accent-A);
+    margin: 0;
+}
+
+/* Controls row (quantity + remove + subtotal) */
+.cart-item-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-input {
+    width: 80px;
+    height: 40px;
+    padding: 0 10px;
+    border: 2px solid var(--color-border-A);
+    border-radius: 6px;
+    font-size: 1rem;
+    text-align: center;
+    transition: var(--effect-transition-default);
+}
+
+.quantity-input:focus {
+    border-color: var(--color-accent-A);
+    box-shadow: var(--effect-glow-A);
+    outline: none;
+}
+
+.quantity-input:disabled {
+    background-color: var(--color-background-B);
+    cursor: not-allowed;
+}
+
+.remove-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    background-color: var(--color-border-A);
+    color: var(--color-text-B);
+    border: none;
+    border-radius: 6px;
+    transition: var(--effect-transition-default);
+}
+
+.remove-btn:hover {
+    background-color: var(--color-background-C);
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.item-subtotal {
+    font-size: 1rem;
+    color: var(--color-text-A);
+    margin: 0;
+}
+
+.subtotal-amount {
+    font-weight: 700;
+    color: var(--color-text-C);
+}
+
+/* ===== CART SUMMARY ===== */
+.cart-summary {
+    margin-top: 30px;
+    padding: 25px;
+    background: var(--color-background-B);
+    border-radius: 12px;
+    border: 1px solid var(--color-border-A);
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--color-border-A);
+    font-size: 1.5rem;
+}
+
+.total-label {
+    font-weight: 600;
+    color: var(--color-text-C);
+}
+
+.total-amount {
+    font-weight: 700;
+    color: var(--color-accent-A);
+}
+
+.cart-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--effect-transition-default);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-hover-A);
+    transform: translateY(-2px);
+    box-shadow: var(--effect-glow-B);
+}
+
+.btn-secondary {
+    background-color: var(--color-background-C);
+    color: var(--color-text-B);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-border-A);
+    transform: translateY(-2px);
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+/* Checkout uses primary style, so no separate class needed */
+
+/* ===== TEMPORARY MESSAGES ===== */
+.cart-message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: var(--color-text-B);
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    box-shadow: var(--effect-glow-A);
+}
+
+.cart-message.error {
+    background-color: var(--color-background-C);
+}
+
+.cart-message.success {
+    background-color: var(--color-accent-A);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 992px) {
+    .cart-item {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .cart-item-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .cart-item-image {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 5px;
+    }
+    
+    .cart-item-image img {
+        object-fit: contain;
+    }
+    
+    .cart-item-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .cart-item-quantity {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .quantity-input {
+        width: 100px;
+    }
+    
+    .cart-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .cart-total {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-title {
+        font-size: 1.8rem;
+    }
+    
+    .cart-item {
+        padding: 15px;
+    }
+    
+    .cart-item-title {
+        font-size: 1.1rem;
+    }
+    
+    .cart-item-price {
+        font-size: 1rem;
+    }
+    
+    .quantity-input {
+        width: 70px;
+        height: 36px;
+    }
+    
+    .remove-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .cart-summary {
+        padding: 20px;
+    }
+    
+    .cart-total {
+        font-size: 1.2rem;
+    }
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+/* ===== NOTIFICATION MODAL FOR CART ===== */
+/* Modal styles matching your logout modal */
+
+.cart-notifier-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.cart-notifier-modal.active {
+    display: flex;
+}
+
+.cart-notifier-content {
+    background-color: white;
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: var(--effect-box-shadow-default, 0 4px 20px rgba(0, 0, 0, 0.15));
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeScale 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-notifier-icon {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.cart-notifier-icon svg {
+    width: 70px;
+    height: 70px;
+    display: block;
+    margin: 0 auto;
+}
+
+.cart-notifier-content h3 {
+    color: var(--color-text-C, #333);
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+}
+
+.cart-notifier-content p {
+    color: var(--color-text-A, #666);
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cart-notifier-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.cart-notifier-btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 0 1 auto;
+    min-width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-notifier-btn.continue-btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.cart-notifier-btn.continue-btn:hover {
+    background-color: #d0d0d0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cart-notifier-btn.view-cart-btn {
+    background-color: var(--color-accent-A, #FF8246);
+    color: white;
+}
+
+.cart-notifier-btn.view-cart-btn:hover {
+    background-color: var(--color-hover-A, #e66a2e);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.4);
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Confirmation Modal Specific */
+#confirmRemoveModal .cart-notifier-content {
+    padding: 35px 30px;
+}
+
+#confirmRemoveModal .cart-notifier-icon svg {
+    stroke: var(--color-accent-A, #FF8246);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-notifier-content {
+        padding: 30px 25px;
+        width: 85%;
+    }
+    
+    .cart-notifier-content h3 {
+        font-size: 22px;
+    }
+    
+    .cart-notifier-content p {
+        font-size: 15px;
+        max-width: 280px;
+    }
+    
+    .cart-notifier-btn {
+        padding: 12px 20px;
+        min-width: 110px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-notifier-content {
+        padding: 28px 20px;
+        width: 90%;
+    }
+    
+    .cart-notifier-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .cart-notifier-content h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .cart-notifier-content p {
+        font-size: 14px;
+        margin-bottom: 25px;
+        max-width: 250px;
+    }
+    
+    .cart-notifier-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .cart-notifier-btn {
+        width: 100%;
+        max-width: 200px;
+        padding: 14px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 375px) {
+    .cart-notifier-content {
+        padding: 25px 15px;
+    }
+    
+    .cart-notifier-content p {
+        font-size: 13px;
+        max-width: 220px;
+    }
+    
+    .cart-notifier-btn {
+        padding: 12px 16px;
+        max-width: 180px;
+        font-size: 13px;
+    }
+}
+
+/* Optional: Temporary message fallback (kept for backward compatibility) */
+.cart-message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.cart-message.error {
+    background-color: #dc3545;
+}
+
+.cart-message.success {
+    background-color: #28a745;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Add these to the existing cart.css file */
+
+/* Loading state for cart items */
+.cart-item.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.cart-item.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 130, 70, 0.3);
+    border-top-color: #FF8246;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Cart notifier modal styles */
+.cart-notifier-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.cart-notifier-modal.active {
+    display: flex;
+}
+
+.cart-notifier-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+.cart-notifier-icon {
+    margin-bottom: 20px;
+}
+
+.cart-notifier-icon img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.cart-notifier-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+.cart-notifier-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cart-notifier-btn.continue-btn {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.cart-notifier-btn.continue-btn:hover {
+    background: #e9ecef;
+}
+
+.cart-notifier-btn.view-cart-btn {
+    background: #FF8246;
+    color: white;
+}
+
+.cart-notifier-btn.view-cart-btn:hover {
+    background: #e66a2c;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Remove button disabled state */
+.remove-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Quantity input disabled state */
+.quantity-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/checkout.css`
+
+**Status:** `FOUND`
+
+```css
+/* Checkout Page Styles */
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.checkout-title {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #FF8246;
+    padding-bottom: 10px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.checkout-summary,
+.checkout-info {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.checkout-summary h2,
+.checkout-info h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.checkout-items {
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.checkout-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+}
+
+.checkout-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.checkout-item-details {
+    flex: 1;
+}
+
+.checkout-item-details h3 {
+    font-size: 1rem;
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.checkout-item-details p {
+    margin: 2px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.checkout-item-price {
+    font-weight: 600;
+    color: #FF8246 !important;
+    margin-top: 5px !important;
+}
+
+.checkout-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.total-amount {
+    color: #FF8246;
+}
+
+.shipping-details p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.payment-method {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.checkout-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    flex: 1;
+}
+
+.btn-primary {
+    background: #FF8246;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #e66a2e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,130,70,0.3);
+}
+
+.btn-secondary {
+    background: #212529;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #000;
+}
+
+/* Notifier */
+.notifier {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+.notifier.hidden { display: none; }
+.notifier-content {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeScale 0.3s;
+}
+@keyframes fadeScale {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+.notifier-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .checkout-actions {
+        flex-direction: column;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/contact.css`
+
+**Status:** `FOUND`
+
+```css
+/* ============================================
+   CONTACT PAGE STYLES
+============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.contact-page {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+/* ===== HERO SECTION ===== */
+.contact-hero {
+    margin-top: 100px;
+    position: relative;
+    width: 100%;
+    height: 35vh;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    margin-bottom: 60px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contact-hero__container {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.contact-hero__title {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.contact-hero__highlight {
+    color: #ff8246;
+}
+
+.contact-hero__subtitle {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: #666;
+}
+
+/* ===== CONTACT INFO GRID ===== */
+.contact-info {
+    margin-bottom: 60px;
+}
+
+.contact-info__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.contact-card__icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 130, 70, 0.1);
+    border-radius: 50%;
+    padding: 15px;
+}
+
+.contact-card__icon img {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+.contact-card:hover .contact-card__icon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
+.contact-card__title {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.contact-card__details {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #666;
+    font-style: normal;
+}
+
+/* ===== CONTACT INTERACTION SECTION ===== */
+.contact-interaction {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.contact-form-container {
+    flex: 1.2;
+    min-width: 350px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form__header {
+    margin-bottom: 30px;
+}
+
+.contact-form__title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.contact-form__highlight {
+    color: #ff8246;
+}
+
+.contact-form__subtitle {
+    font-size: 1rem;
+    color: #666;
+}
+
+.contact-form {
+    width: 100%;
+}
+
+.contact-form__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.contact-form__group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 20px;
+}
+
+.contact-form__group--full {
+    width: 100%;
+    flex: 0 0 100%;
+}
+
+.contact-form__label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.contact-form__input,
+.contact-form__select,
+.contact-form__textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background-color: white;
+    font-family: inherit;
+}
+
+.contact-form__input:focus,
+.contact-form__select:focus,
+.contact-form__textarea:focus {
+    border-color: #ff8246;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+.contact-form__input.error,
+.contact-form__select.error,
+.contact-form__textarea.error {
+    border-color: #dc3545;
+}
+
+.contact-form__error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+.contact-form__actions {
+    margin-top: 20px;
+}
+
+.contact-form__submit-btn {
+    display: inline-block;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    background-color: #ff8246;
+    color: white;
+    width: 100%;
+    border: none;
+}
+
+.contact-form__submit-btn:hover {
+    background-color: #e66a2e;
+}
+
+.contact-form__submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.contact-form__success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    border-left: 3px solid #2e7d32;
+}
+
+.map-container {
+    flex: 0.8;
+    min-width: 300px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.map-container__header {
+    margin-bottom: 20px;
+}
+
+.map-container__title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.map-container__highlight {
+    color: #ff8246;
+}
+
+.map-container__embed {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.map-container__embed iframe {
+    display: block;
+    width: 100%;
+    height: 400px;
+    border: 0;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.modal--hidden {
+    display: none;
+}
+
+.modal__content {
+    background: white;
+    border-radius: 10px;
+    padding: 30px 40px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal__message {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal__close-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #ff8246;
+    color: white;
+}
+
+.modal__close-btn:hover {
+    background-color: #e66a2e;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-page {
+        margin-top: 80px;
+    }
+    
+    .contact-hero {
+        height: 30vh;
+        min-height: 250px;
+    }
+    
+    .contact-form-container,
+    .map-container {
+        padding: 30px 20px;
+    }
+    
+    .contact-form__row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .contact-form__group {
+        min-width: 100%;
+    }
+    
+    .map-container__embed iframe {
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-hero {
+        height: 25vh;
+        min-height: 200px;
+    }
+    
+    .contact-hero__title {
+        font-size: 2rem;
+    }
+    
+    .contact-form-container {
+        padding: 20px 15px;
+    }
+    
+    .contact-form__title {
+        font-size: 1.8rem;
+    }
+    
+    .map-container {
+        padding: 20px;
+    }
+    
+    .map-container__title {
+        font-size: 1.8rem;
+    }
+    
+    .map-container__embed iframe {
+        height: 300px;
+    }
+    
+    .contact-card {
+        padding: 25px 15px;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/customer-dashboard.css`
+
+**Status:** `FOUND`
+
+```css
+/* ===== DASHBOARD LAYOUT ===== */
+.content {
+    max-width: 1200px;
+    margin: 80px auto 20px;
+    padding: 20px;
+    min-height: calc(100vh - 200px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===== WELCOME SECTION ===== */
+.welcome-section {
+    background: linear-gradient(135deg, #f2f4f6 0%, #ffffff 100%);
+    padding: 50px 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    border: 1px solid #363940;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.welcome-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff8246, #e8693d);
+}
+
+.welcome-section h1 {
+    font-size: 2.2rem;
+    color: #1e2e2f;
+    margin-bottom: 15px;
+    font-weight: 400;
+    position: relative;
+}
+
+.welcome-section h1 span {
+    color: #ff8246;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #000000;
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ===== DASHBOARD GRID ===== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-card {
+    background: #f2f4f6;
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+    border: 1px solid #363940;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    border-color: #ff8246;
+}
+
+.dashboard-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ff8246, transparent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover::after {
+    transform: scaleX(1);
+}
+
+.dashboard-card h3 {
+    font-size: 1.4rem;
+    color: #1e2e2f;
+    margin-bottom: 15px;
+    font-weight: 400;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.dashboard-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: #ff8246;
+    transition: width 0.3s ease;
+}
+
+.dashboard-card:hover h3::after {
+    width: 80px;
+}
+
+.dashboard-card p {
+    font-size: 1rem;
+    color: #000000;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    flex-grow: 1;
+    opacity: 0.8;
+}
+
+.card-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 130, 70, 0.1);
+    border-radius: 50%;
+    padding: 12px;
+}
+
+.card-icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
+/* ===== BUTTON STYLES ===== */
+.btn-primary {
+    display: inline-block;
+    background: #ff8246;
+    color: #ffffff;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 1rem;
+    transition: background-color 0.3s ease-in-out;
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: auto;
+    align-self: center;
+    min-width: 140px;
+    box-sizing: border-box;
+}
+
+.btn-primary:hover {
+    background: #e8693d;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (min-width: 1200px) {
+    .content {
+        margin-top: 100px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .welcome-section h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .content {
+        margin-top: 70px;
+        padding: 15px;
+    }
+    
+    .welcome-section {
+        padding: 40px 30px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 2rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .dashboard-card {
+        padding: 25px 20px;
+    }
+    
+    .dashboard-card h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .content {
+        margin-top: 60px;
+        padding: 15px;
+        max-width: 100%;
+    }
+    
+    .welcome-section {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .welcome-section p {
+        font-size: 1rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        width: 100%;
+    }
+    
+    .dashboard-card {
+        padding: 25px 20px;
+        max-width: 100%;
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    .dashboard-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-primary {
+        padding: 10px 25px;
+        min-width: 120px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        margin-top: 55px;
+        padding: 12px;
+    }
+    
+    .welcome-section {
+        padding: 25px 15px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .welcome-section p {
+        font-size: 0.95rem;
+    }
+    
+    .dashboard-card {
+        padding: 20px 15px;
+    }
+    
+    .dashboard-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-card p {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+    
+    .btn-primary {
+        padding: 10px 20px;
+        min-width: 110px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .content {
+        margin-top: 50px;
+        padding: 10px;
+    }
+    
+    .welcome-section {
+        padding: 20px 12px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.3rem;
+    }
+    
+    .dashboard-card {
+        padding: 18px 12px;
+    }
+    
+    .btn-primary {
+        padding: 8px 16px;
+        min-width: 100px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .content {
+        margin-top: 50px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .welcome-section {
+        padding: 20px;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+.dashboard-card:nth-child(7) { animation-delay: 0.7s; }
+
+@media print {
+    .btn-primary {
+        display: none;
+    }
+    
+    .dashboard-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/footer.css`
+
+**Status:** `FOUND`
+
+```css
+.footer {
+  background-color: var(--color-background-B);
+  padding: var(--size-header-padding);
+  box-shadow: var(--effect-box-shadow-default);
+  border-top: 2px solid var(--color-border-A);
+  width: 100vw !important;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  margin: 0 !important;
+}
+
+.footer-upper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--size-navigation-gap);
+  margin: 0;
+  color: var(--color-text-B);
+}
+
+.queries {
+  max-width: 50%;
+  color: var(--color-text-A);
+}
+
+.queries h2 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.queries span {
+  color: var(--color-accent-A);
+}
+
+.socials {
+  display: flex;
+  gap: var(--size-navigation-gap);
+}
+
+.socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.socials a img {
+  width:  40px;
+  height: 40px;
+}
+
+.footer-lower {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 0;
+  font-size: var(--font-size-base);
+  margin-top: 20px;
+  border-top: 2px solid var(--color-border-A);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mail-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--color-text-A);
+}
+
+.mail-button img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0);
+}
+
+.policy-links {
+  display: flex;
+  gap: var(--size-navigation-gap);
+  padding: 5px 0;
+}
+
+.policy-links a {
+  color: var(--color-text-A);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.policy-links a:hover {
+  color: var(--color-accent-A);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .policy-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .footer-lower {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mail-button {
+    margin-bottom: 10px;
+  }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/header.css`
+
+**Status:** `FOUND`
+
+```css
+/* CSS File Content */
+:root {
+  /* Sizes & Spacing */
+  --size-logo-height: 40px;
+  --size-button-padding: 10px 20px;
+  --size-button-radius: 5px;
+  --size-navigation-gap: 30px;
+  --size-header-padding: 15px 40px;
+  --size-mobile-menu-max-width: 270px;
+
+  /* Color Palette - Light Theme */
+  --color-background-A: #e4eaf2;        /* body background */
+  --color-background-B: #f2f4f6;        /* header background */
+  --color-background-C: #000000;  
+  --color-linear-gradient-A: #a49bf8, #b8b9fa, #dbd5fd, #43c9fb;      /* mobile menu bg or secondary light bg */
+  --color-text-A: #000000;              /* main text */
+  --color-text-B: #ffffff;              /* button text on orange */
+  --color-text-C: #1e2e2f;
+  --color-accent-A: #ff8246;            /* primary orange */
+  --color-hover-A: #e8693d;             /* hover orange variant */
+  --color-border-A: #363940;            /* border */
+
+  /* Effects */
+  --effect-glow-A: 0 0 10px rgba(0, 0, 0, 0.2);                /* soft shadow */
+  --effect-glow-B: 0 0 10px rgba(211, 94, 53, 0.7);            /* orange glow */
+  --effect-box-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);  /* lighter shadow */
+  --effect-transition-default: all 0.3s ease-in-out;
+
+  /* Typography */
+  --font-family-base: Arial, sans-serif;
+  --font-size-base: 16px;
+  --font-size-title: 22px;
+  --font-weight-bold: 400;
+}
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-background-A);
+  color: var(--color-text-A);
+  font-family: var(--font-family-base);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Scrollbar Removal */
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Header Styles */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-background-B);
+  padding: var(--size-header-padding);
+  box-shadow: var(--effect-box-shadow-default);
+  border-bottom: 2px solid var(--color-border-A);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.header-logo img {
+  height: var(--size-logo-height);
+  width: auto;
+}
+
+.title {
+  color: var(--color-text-A);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title span {
+  color: var(--color-accent-A);
+}
+
+/* Navigation Styles */
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: var(--size-navigation-gap);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nav-bar {
+  display: flex;
+  gap: var(--size-navigation-gap);
+  overflow: hidden;
+}
+
+/* Desktop Navigation Link Styles */
+.nav-link {
+  color: var(--color-text-A);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  transition: var(--effect-transition-default);
+  white-space: nowrap;
+  position: relative;
+  padding: 5px 0;
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--color-hover-A);
+}
+
+/* Desktop hover underline effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent-A);
+  transition: var(--effect-transition-default);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Button Styles */
+.social-button {
+  background: var(--color-accent-A);
+  color: var(--color-text-A);
+  padding: var(--size-button-padding);
+  border-radius: var(--size-button-radius);
+  text-decoration: none;
+  transition: var(--effect-transition-default);
+  border: 2px solid transparent;
+}
+
+.social-button:hover {
+  background: var(--color-hover-A);
+  box-shadow: var(--effect-glow-B);
+  color: var(--color-text-B);
+}
+
+/* Mobile Menu Styles */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  z-index: 1001;
+}
+
+.hamburger-icon {
+  width: 30px;
+  height: 30px;
+  transition: var(--effect-transition-default);
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    width: 50%;
+    max-width: var(--size-mobile-menu-max-width);
+    text-align: center;
+    height: calc(100vh - 80px);
+    background-color: var(--color-background-B);
+    z-index: 1000;
+    transform: translateX(100%); /* This is the key - hidden off-screen */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+    overflow-y: auto;
+    border-left: 2px solid var(--color-border-A);
+    border-radius: 15px 0 0 15px;
+    box-shadow: none;
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-nav.open {
+    transform: translateX(0) !important; /* ensure it overrides any leftover inline */
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+}
+/* Mobile Navigation Link Styles - RESTORED ORIGINAL HOVER EFFECT */
+.mobile-nav .nav-link {
+  color: var(--color-text-A);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 15px 10px; /* Increased padding for better touch targets */
+  position: relative;
+  transition: var(--effect-transition-default);
+  border-bottom: 1px solid var(--color-border-A);
+  display: block; /* Make it block level for full width */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* RESTORED: Underline hover effect for mobile nav - properly aligned */
+.mobile-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; /* Adjusted to sit right on the border */
+  left: 10px; /* Start after padding */
+  right: 10px; /* End before padding */
+  width: calc(100% - 20px); /* Full width minus left/right padding */
+  height: 2px;
+  background: var(--color-accent-A);
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+  transform-origin: left;
+}
+
+.mobile-nav .nav-link:hover::after,
+.mobile-nav .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.mobile-nav .nav-link:hover,
+.mobile-nav .nav-link.active {
+  color: var(--color-hover-A);
+}
+
+/* Special styling for the social button in mobile nav */
+.mobile-nav .social-button {
+  margin-top: 20px;
+  background-color: var(--color-accent-A);
+  color: var(--color-text-A);
+  padding: 15px 10px; /* Match nav link padding */
+  border-radius: var(--size-button-radius);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  transition: var(--effect-transition-default);
+  border: 2px solid transparent;
+  text-align: center;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Remove the after element for social button */
+.mobile-nav .social-button::after {
+  display: none;
+}
+
+.mobile-nav .social-button:hover {
+  background: var(--color-hover-A);
+  box-shadow: var(--effect-glow-B);
+  color: var(--color-text-B);
+}
+
+/* Backdrop for mobile menu */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cart count badge */
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--color-accent-A);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1005px) {
+  .hamburger-menu {
+    display: block;
+  }
+  
+  .nav-container {
+    display: none;
+  }
+  
+  .header-logo {
+    gap: 5px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-bar {
+    padding: 12px 25px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+  
+  .mobile-nav {
+    width: 65%;
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  /* Adjust underline for smaller screens */
+  .mobile-nav .nav-link::after {
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-bar {
+    padding: 10px 20px;
+  }
+  
+  .title {
+    font-size: 16px;
+  }
+  
+  .mobile-nav {
+    width: 80%;
+    top: 65px;
+    height: calc(100vh - 65px);
+    padding: 15px;
+  }
+  
+  .mobile-nav .nav-link {
+    padding: 12px 10px;
+  }
+  
+  /* Adjust underline for mobile */
+  .mobile-nav .nav-link::after {
+    bottom: -1px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+}
+
+/* Animation Enhancements */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.header-bar.header-delay,
+.mobile-nav.header-delay {
+  transition: none !important;
+}
+
+/* Fix for active link in desktop navigation */
+.nav-link.active {
+  color: var(--color-hover-A);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/index.css`
+
+**Status:** `FOUND`
+
+```css
+/* ===== RESET & BASE STYLES ===== */
+.content {
+    margin-top: 100px;
+}
+
+/* ===== SHOWCASE SECTION ===== */
+.showcase-section {
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+    margin-top: 70px;
+    margin-bottom: 40px;
+}
+
+.showcase-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.showcase-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.showcase-slide.active {
+    opacity: 1;
+}
+
+.showcase-content {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    max-width: 600px;
+}
+
+.showcase-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.showcase-content p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.showcase-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #ff8246;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.showcase-button:hover {
+    background-color: #e8693d;
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.slider-controls button {
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.slider-controls button:hover {
+    background: #ff8246;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+    padding: 40px 0;
+    background-color: #f2f4f6;
+    margin-bottom: 20px;
+}
+
+.features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.features-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #1e2e2f;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.feature-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+.feature-card:hover .feature-icon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+    color: #1e2e2f;
+    font-size: 1.2rem;
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ===== FEATURED PRODUCTS SECTION ===== */
+.featured-products-section {
+    padding: 30px 0;
+}
+
+.products-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.featured-products-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #1e2e2f;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #1e2e2f;
+    line-height: 1.4;
+    min-height: 2.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    --webkit-line-clamp: 2;
+    --webkit-box-orient: vertical;
+}
+
+.product-price {
+    color: #ff8246;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin: 8px 0;
+}
+
+.product-seller {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 5px 0 12px 0;
+}
+
+.view-product-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff8246;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+.view-product-btn:hover {
+    background-color: #e8693d;
+}
+
+.no-products-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.no-products-message p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.become-seller-link {
+    color: #ff8246;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.become-seller-link:hover {
+    text-decoration: underline;
+}
+
+.view-all-products-btn {
+    display: block;
+    width: fit-content;
+    margin: 20px auto 0;
+    padding: 12px 35px;
+    background-color: #ff8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.view-all-products-btn:hover {
+    background-color: #e8693d;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 70px;
+    }
+    
+    .showcase-section {
+        height: 60vh;
+        margin-top: -70px;
+        margin-bottom: 30px;
+    }
+    
+    .showcase-content {
+        left: 5%;
+        max-width: 90%;
+    }
+    
+    .showcase-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .showcase-content p {
+        font-size: 1.2rem;
+    }
+    
+    .features-section {
+        padding: 30px 0;
+        margin-bottom: 15px;
+    }
+    
+    .features-section h2 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .featured-products-section {
+        padding: 20px 0;
+    }
+    
+    .featured-products-section h2 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+    
+    .product-image-container {
+        height: 180px;
+    }
+    
+    .view-all-products-btn {
+        margin: 15px auto 0;
+        padding: 10px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        margin-top: 60px;
+    }
+    
+    .showcase-section {
+        height: 50vh;
+        margin-top: -60px;
+        margin-bottom: 20px;
+    }
+    
+    .showcase-content h1 {
+        font-size: 2rem;
+    }
+    
+    .showcase-content p {
+        font-size: 1rem;
+    }
+    
+    .showcase-button {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+    
+    .features-section h2,
+    .featured-products-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .view-all-products-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .showcase-slide {
+        background-position: center center;
+    }
+}
+
+.features-section {
+    position: relative;
+}
+
+.features-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff8246, transparent);
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/orders.css`
+
+**Status:** `FOUND`
+
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    max-width: 1400px;
+    margin: 80px auto 20px;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #FF8246;
+    font-weight: 600;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===== ORDER CARD ===== */
+.order-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #eef2f6;
+}
+
+.order-header {
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid #eef2f6;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-id {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1e24;
+}
+
+.order-date {
+    color: #000000;
+    font-size: 0.85rem;
+    background: #e9ecef;
+    padding: 3px 10px;
+    border-radius: 30px;
+}
+
+.order-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-status-badge {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 120px;
+    text-align: center;
+}
+
+.order-status-badge.pending { background: #ff8246; color: #ffffff; }
+.order-status-badge.processing { background: #ff8246; color: #ffffff; }
+.order-status-badge.completed { background: #ff8246; color: #ffffff; }
+.order-status-badge.cancelled { background: #000000; color: #ffffff; }
+
+/* ===== ORDER BODY ===== */
+.order-body {
+    display: grid;
+    grid-template-columns: 1.2fr 220px 280px;
+    gap: 0;
+}
+
+.order-items-column {
+    background: #ffffff;
+    padding: 16px;
+    border-right: 1px solid #eef2f6;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-price-summary {
+    background: #f8fafc;
+    padding: 16px;
+    border-right: 1px solid #eef2f6;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-shipping-column {
+    background: #f8fafc;
+    padding: 16px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+}
+
+.order-item {
+    display: flex;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.order-item-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    background: white;
+    flex-shrink: 0;
+}
+
+.order-item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.order-item-seller {
+    font-weight: 700;
+    color: #FF8246;
+    font-size: 2rem;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+.order-item-gap {
+    height: 8px;
+}
+
+.order-item-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a1e24;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.order-item-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+.item-quantity {
+    font-weight: 500;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #FF8246;
+}
+
+.price-summary-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #FF8246;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.price-row.price-total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #212529;
+    margin-top: 5px;
+}
+
+.price-value {
+    font-weight: 600;
+    color: #212529;
+}
+
+.price-total .price-value {
+    color: #FF8246;
+    font-size: 1.2rem;
+}
+
+.price-divider {
+    height: 1px;
+    background: #dee2e6;
+    margin: 12px 0;
+}
+
+.order-shipping-location {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e9ecef;
+}
+
+.shipping-address-title {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.shipping-address-text {
+    color: #6c757d;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+.order-item-actions {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.action-btn-view {
+    background: #FF8246;
+    color: white;
+}
+
+.action-btn-view:hover {
+    background: #e66a2e;
+}
+
+.action-btn-cancel {
+    background: #000000;
+    color: white;
+}
+
+.action-btn-cancel:hover {
+    background: #333333;
+}
+
+.action-btn-review {
+    background: #000000;
+    color: white;
+}
+
+.action-btn-review:hover {
+    background: #333333;
+}
+
+.reviewed-badge {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #000000;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.empty-orders {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.empty-orders p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.empty-orders .btn {
+    display: inline-block;
+    padding: 10px 30px;
+    background: #FF8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.empty-orders .btn:hover {
+    background: #e66a2e;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* ===== MODAL STYLES ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeScale 0.3s ease-in-out;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-icon {
+    margin-bottom: 15px;
+}
+
+.modal-icon svg {
+    width: 50px;
+    height: 50px;
+    stroke: #FF8246;
+}
+
+.modal-title {
+    color: #333;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.modal-message {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex: 1;
+    max-width: 120px;
+}
+
+.modal-btn-cancel {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.modal-btn-cancel:hover {
+    background: #dee2e6;
+}
+
+.modal-btn-confirm {
+    background: #FF8246;
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background: #e66a2e;
+}
+
+/* ===== FORM STYLES ===== */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #FF8246;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+/* ===== STAR RATING ===== */
+.star-rating {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.star {
+    cursor: pointer;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+
+.star img {
+    width: 32px;
+    height: 32px;
+    transition: filter 0.2s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.star .star-empty {
+    display: block;
+}
+
+.star .star-filled {
+    display: none;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.star.active .star-empty {
+    display: none;
+}
+
+.star.active .star-filled {
+    display: block;
+}
+
+.star:hover .star-empty {
+    display: none;
+}
+
+.star:hover .star-filled {
+    display: block;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
+}
+
+.star.hover .star-empty {
+    display: none;
+}
+
+.star.hover .star-filled {
+    display: block;
+    opacity: 0.8;
+}
+
+/* ===== PACKAGE ICON ===== */
+img[src*="package.svg"] {
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1100px) {
+    .order-body {
+        grid-template-columns: 1.1fr 200px 260px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .order-body {
+        grid-template-columns: 1fr 180px 240px;
+    }
+}
+
+@media (max-width: 900px) {
+    .order-body {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .order-items-column {
+        border-right: none;
+        border-bottom: 1px solid #eef2f6;
+    }
+    
+    .order-price-summary {
+        border-right: none;
+        border-bottom: 1px solid #eef2f6;
+    }
+    
+    .order-shipping-column {
+        border-right: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 0 15px;
+        margin-top: 70px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .order-item-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .order-item-meta {
+        justify-content: center;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .modal-btn {
+        max-width: 100%;
+    }
+}
+
+.empty-orders .btn-primary {
+    display: inline-block;
+    padding: 10px 30px;
+    background: #FF8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.empty-orders .btn-primary:hover {
+    background: #e66a2e;
+}
+
+.btn-primary {
+    background: #FF8246;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #e66a2e;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/privacy-policy.css`
+
+**Status:** `FOUND`
+
+```css
+/* ============================================
+   PRIVACY POLICY PAGE STYLES
+   Class naming convention: BEM (Block Element Modifier)
+   Block: privacy-policy-page, policy-hero, policy-intro, policy-section
+============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.privacy-policy-page {
+    max-width: 1000px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+/* ===== HERO SECTION ===== */
+.policy-hero {
+    margin-top: 100px;
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.policy-hero__container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.policy-hero__title {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.policy-hero__highlight {
+    color: #ff8246;
+}
+
+.policy-hero__subtitle {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: #666;
+}
+
+/* ===== INTRO SECTION ===== */
+.policy-intro {
+    margin-bottom: 40px;
+}
+
+.policy-intro__card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.policy-intro__text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.policy-intro__last-updated {
+    font-size: 0.95rem;
+    color: #ff8246;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* ===== POLICY SECTIONS ===== */
+.policy-sections {
+    width: 100%;
+}
+
+.policy-section {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.policy-section__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.policy-section__accent {
+    width: 4px;
+    height: 30px;
+    background-color: #ff8246;
+    margin-right: 15px;
+    border-radius: 2px;
+}
+
+.policy-section__title {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+}
+
+.policy-section__body {
+    padding-left: 19px; /* Aligns with accent line */
+}
+
+.policy-section__body p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.policy-section__list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.policy-section__list-item {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.policy-section__list-item::before {
+    content: "•";
+    color: #ff8246;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.policy-section__note {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #ff8246;
+    font-style: italic;
+    color: #666;
+}
+
+.policy-section__important {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #ff8246;
+    margin-bottom: 15px;
+}
+
+/* Contact Details */
+.policy-contact {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-style: normal;
+}
+
+.policy-contact__item {
+    margin-bottom: 8px;
+}
+
+.policy-contact__item:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .privacy-policy-page {
+        margin-top: 80px;
+    }
+    
+    .policy-hero {
+        padding: 40px 20px;
+    }
+    
+    .policy-section__title {
+        font-size: 1.3rem;
+    }
+    
+    .policy-section {
+        padding: 25px 20px;
+    }
+    
+    .policy-section__body {
+        padding-left: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .policy-hero {
+        padding: 30px 15px;
+    }
+    
+    .policy-hero__title {
+        font-size: 2rem;
+    }
+    
+    .policy-intro__card {
+        padding: 20px;
+    }
+    
+    .policy-intro__text {
+        font-size: 1rem;
+    }
+    
+    .policy-section__title {
+        font-size: 1.2rem;
+    }
+    
+    .policy-section__accent {
+        height: 25px;
+    }
+    
+    .policy-section {
+        padding: 20px 15px;
+    }
+    
+    .policy-section__body {
+        padding-left: 9px;
+    }
+    
+    .policy-section__body p,
+    .policy-section__list-item {
+        font-size: 0.95rem;
+    }
+    
+    .policy-contact {
+        padding: 15px;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/product-details.css`
+
+**Status:** `FOUND`
+
+```css
+/* CSS File Content */
+/* Crooks-Cart-Collectives/styles/product-details.css */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+    min-height: calc(100vh - 140px);
+}
+
+.product-details-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+}
+
+/* ===== BREADCRUMB NAVIGATION ===== */
+.breadcrumb {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+    content: '/';
+    margin-left: 8px;
+    color: #adb5bd;
+}
+
+.breadcrumb-item a {
+    color: #FF8246;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+    color: #e66a2e;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #212529;
+    font-weight: 500;
+}
+
+/* ===== PRODUCT DETAILS GRID ===== */
+.product-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* ===== IMAGE COLUMN - IMPROVED RESPONSIVE HANDLING ===== */
+.product-image-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-image-container {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.main-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Creates a perfect square aspect ratio */
+    background: #f8f9fa;
+}
+
+.main-product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the whole image is visible without cropping */
+    padding: 15px; /* Adds some breathing room */
+    transition: transform 0.3s ease;
+}
+
+.main-product-image:hover {
+    transform: scale(1.05);
+}
+
+/* Thumbnail gallery */
+.product-thumbnails {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 4px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.thumbnail:hover {
+    border-color: #FF8246;
+    transform: translateY(-2px);
+}
+
+.thumbnail.active {
+    border-color: #FF8246;
+    box-shadow: 0 0 0 2px rgba(255, 130, 70, 0.2);
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ===== INFO COLUMN ===== */
+.product-info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.2;
+    margin: 0;
+    word-break: break-word;
+}
+
+/* Product meta information */
+.product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.product-category {
+    background: #f0f0f0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.product-seller {
+    font-size: 15px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.product-seller strong {
+    color: #212529;
+    font-weight: 700;
+}
+
+.verified-badge {
+    background: #28a745;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Price section */
+.product-price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 20px 0;
+    border-top: 2px solid #e9ecef;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.price-label {
+    font-size: 16px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.product-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #FF8246;
+    line-height: 1;
+}
+
+/* Stock status */
+.product-availability {
+    margin: 5px 0;
+}
+
+.stock-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    width: fit-content;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.in-stock .status-indicator {
+    background: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.out-of-stock .status-indicator {
+    background: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+.status-text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.in-stock .status-text {
+    color: #28a745;
+}
+
+.out-of-stock .status-text {
+    color: #dc3545;
+}
+
+/* Product description */
+.product-description {
+    margin: 10px 0;
+}
+
+.product-description h2 {
+    font-size: 1.3rem;
+    color: #212529;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.description-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #495057;
+    white-space: pre-line;
+    word-break: break-word;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Action buttons - IMPROVED DESKTOP STYLING */
+.product-actions {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 200px;
+    max-width: 250px; /* Prevents buttons from getting too wide on large screens */
+    white-space: nowrap;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.btn-primary {
+    background: #FF8246;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #e66a2e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 130, 70, 0.3);
+}
+
+.btn-secondary {
+    background: #212529;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Login button - matches primary style */
+.login-to-purchase-btn {
+    background: #212529;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.login-to-purchase-btn:hover {
+    background: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Product highlights */
+.product-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.highlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.highlight-icon {
+    font-size: 1.5rem;
+}
+
+.highlight-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+/* ===== NOTIFICATION STYLES ===== */
+.product-notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 350px;
+}
+
+.product-notification.success {
+    background: #28a745;
+}
+
+.product-notification.error {
+    background: #dc3545;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Desktop - Large */
+@media (min-width: 1200px) {
+    .product-details-wrapper {
+        padding: 40px;
+    }
+    
+    .product-title {
+        font-size: 2.2rem;
+    }
+    
+    .product-price {
+        font-size: 2.8rem;
+    }
+    
+    .btn {
+        padding: 18px 28px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Desktop - Medium / Tablet Landscape */
+@media (max-width: 992px) {
+    .product-details-grid {
+        gap: 30px;
+    }
+    
+    .product-title {
+        font-size: 1.8rem;
+    }
+    
+    .product-price {
+        font-size: 2.2rem;
+    }
+    
+    .product-highlights {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .btn {
+        min-width: 180px;
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}
+
+/* Tablet Portrait */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .product-details-wrapper {
+        padding: 20px;
+    }
+    
+    .product-details-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .product-image-column {
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    .main-image-wrapper {
+        padding-bottom: 100%; /* Maintain square aspect ratio */
+    }
+    
+    .product-title {
+        font-size: 1.8rem;
+    }
+    
+    .product-price-wrapper {
+        padding: 15px 0;
+    }
+    
+    .product-price {
+        font-size: 2.2rem;
+    }
+    
+    .product-actions {
+        justify-content: center;
+    }
+    
+    .btn {
+        min-width: 160px;
+        padding: 14px 18px;
+    }
+    
+    .product-highlights {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    
+    .highlight-item {
+        padding: 8px 5px;
+    }
+    
+    .highlight-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile Large */
+@media (max-width: 576px) {
+    .content {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+    
+    .product-details-wrapper {
+        padding: 15px;
+    }
+    
+    .product-title {
+        font-size: 1.5rem;
+    }
+    
+    .product-price {
+        font-size: 2rem;
+    }
+    
+    .product-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .product-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding: 14px 16px;
+        white-space: normal;
+        word-break: break-word;
+    }
+    
+    .product-highlights {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .highlight-item {
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 12px;
+    }
+    
+    .highlight-icon {
+        font-size: 1.2rem;
+        width: 24px;
+    }
+    
+    .breadcrumb-list {
+        font-size: 13px;
+    }
+}
+
+/* Mobile Small */
+@media (max-width: 375px) {
+    .content {
+        padding: 0 10px;
+    }
+    
+    .product-details-wrapper {
+        padding: 12px;
+    }
+    
+    .product-title {
+        font-size: 1.3rem;
+    }
+    
+    .product-price {
+        font-size: 1.8rem;
+    }
+    
+    .product-category {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+    
+    .product-seller {
+        font-size: 13px;
+    }
+    
+    .verified-badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+    
+    .description-content {
+        padding: 15px;
+        font-size: 0.95rem;
+    }
+    
+    .btn {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-icon {
+        font-size: 1rem;
+    }
+    
+    .stock-status {
+        padding: 6px 10px;
+    }
+    
+    .status-text {
+        font-size: 13px;
+    }
+    
+    .thumbnail {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Handle orientation changes on mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .product-details-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .product-image-column {
+        max-width: 350px;
+    }
+    
+    .main-image-wrapper {
+        padding-bottom: 75%; /* Slightly shorter in landscape */
+    }
+}
+
+/* Print styles */
+@media print {
+    .product-actions,
+    .product-highlights,
+    .breadcrumb {
+        display: none;
+    }
+    
+    .product-details-wrapper {
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .main-product-image {
+        max-height: 400px;
+        object-fit: contain;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/products.css`
+
+**Status:** `FOUND`
+
+```css
+/* products.css */
+.content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pageTitleHeader {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF8246;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.pagination {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-item {
+    display: inline-block;
+    min-width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0 5px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background: #f5f5f5;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.pagination-item:hover:not(.disabled):not(.active) {
+    background: #FF8246;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.pagination-item.active {
+    background: #FF8246;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(255, 130, 70, 0.3);
+}
+
+.pagination-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e0e0e0;
+}
+
+.pagination-ellipsis {
+    padding: 0 10px;
+    color: #666;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 3px;
+    }
+    
+    .pagination-item {
+        min-width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 2px;
+    }
+    
+    .pagination-item {
+        min-width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 24px;
+    }
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-title {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+    color: #333;
+    line-height: 1.3;
+    height: 2.6em;
+    overflow: hidden;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FF8246;
+    margin: 0 0 5px 0;
+}
+
+.product-seller {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 10px 0;
+}
+
+.view-product-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #FF8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.view-product-btn:hover {
+    background: #e66a2e;
+}
+
+.no-products {
+    text-align: center;
+    padding: 50px 20px;
+    color: #666;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.no-products p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.no-products a {
+    color: #FF8246;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.no-products a:hover {
+    text-decoration: underline;
+}
+
+/* Loading state */
+.products-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.products-loading::after {
+    content: 'Loading products...';
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Filter and Sort Controls */
+.products-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.products-controls select,
+.products-controls input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.products-controls input[type="search"] {
+    min-width: 200px;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/profile.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/profile.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.content {
+    max-width: 1000px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.pageTitleHeader {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 40px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #FF8246;
+    position: relative;
+}
+
+.pageTitleHeader::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background-color: #FF8246;
+}
+
+.profile-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-bottom: 40px;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.form-group label::after {
+    content: attr(data-required);
+    color: #ff4444;
+    margin-left: 4px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="email"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FF8246;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #ff4444;
+    background-color: #fff5f5;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.error-message {
+    color: #ff4444;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.btn-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #FF8246;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #e66a2e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+}
+
+.btn-secondary {
+    background-color: #000;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Phone number formatting hints */
+.phone-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Success/Error messages */
+.message {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+/* Loading state */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Profile completeness indicator */
+.profile-completeness {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #FF8246;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.completeness-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.completeness-text span {
+    font-weight: 600;
+    color: #333;
+}
+
+.completeness-text .percentage {
+    color: #FF8246;
+    font-size: 1.1rem;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/report-seller.css`
+
+**Status:** `FOUND`
+
+```css
+/* Complaint Page Styles */
+.page-title {
+    text-align: center;
+    margin: 30px 0;
+    color: #333;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.complaints-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.complaint-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.complaint-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.complaint-header {
+    background: linear-gradient(135deg, #a49bf8 0%, #43c9fb 100%);
+    padding: 20px;
+    color: white;
+    position: relative;
+}
+
+.complaint-about {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.complaint-author {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.complaint-date {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.complaint-body {
+    padding: 25px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #444;
+    border-left: 5px solid #43c9fb;
+}
+
+.no-complaints, .error-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.3rem;
+    color: #666;
+    background: #f9f9f9;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .complaint-header {
+        padding: 15px;
+    }
+    
+    .complaint-about {
+        font-size: 1.3rem;
+    }
+    
+    .complaint-date {
+        position: static;
+        margin-top: 10px;
+        display: inline-block;
+    }
+}
+
+/* Floating Button */
+.floating-complaint-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: var(--effect-box-shadow-default);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1001;
+    transition: background-color 0.3s;
+}
+
+.floating-complaint-button:hover {
+    background-color: var(--color-hover-A);
+}
+
+.floating-complaint-button img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Modal Styles */
+.complaint-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.complaint-modal {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--effect-box-shadow-default);
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #777;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+/* Form Styles */
+.complaint-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.complaint-form label {
+    font-weight: 600;
+    color: #444;
+}
+
+.complaint-form input,
+.complaint-form textarea {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.complaint-form input:focus,
+.complaint-form textarea:focus {
+    outline: none;
+    border-color: #43c9fb;
+    box-shadow: 0 0 0 2px rgba(67, 201, 251, 0.2);
+}
+
+.complaint-form textarea {
+    resize: none; /* Disable resizing */
+    min-height: 150px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.submit-button, .cancel-button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit-button {
+    background-color: var(--color-accent-A);
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: var(--color-hover-A);
+    box-shadow: var(--effect-glow-B);
+}
+
+.cancel-button {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* Blur effect for background */
+.blurred-background > *:not(.complaint-overlay):not(script) {
+    filter: blur(4px);
+    pointer-events: none;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/seller-orders.css`
+
+**Status:** `FOUND`
+
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    max-width: 1400px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.seller-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.back-link {
+    color: #FF8246;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #e66a2e;
+    text-decoration: underline;
+}
+
+/* ===== FILTER TABS ===== */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+.filter-tab.active {
+    background: #FF8246;
+    color: white;
+}
+
+.filter-tab:hover:not(.active) {
+    background: #e0e0e0;
+}
+
+/* ===== ORDERS LIST ===== */
+.seller-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== ORDER CARD ===== */
+.order-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #eef2f6;
+}
+
+.order-header {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #eef2f6;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.order-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.order-id {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1e24;
+}
+
+.order-date {
+    color: #666;
+    font-size: 0.85rem;
+    background: #e9ecef;
+    padding: 3px 10px;
+    border-radius: 30px;
+}
+
+.order-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.customer-info {
+    font-weight: 500;
+    color: #333;
+    background: rgba(255, 130, 70, 0.1);
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+}
+
+.order-status-badge {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 100px;
+    text-align: center;
+}
+
+.order-status-badge.pending { background: #ffc107; color: #000; }
+.order-status-badge.processing { background: #FF8246; color: white; }
+.order-status-badge.completed { background: #FF8246; color: white; }
+.order-status-badge.cancelled { background: #000000; color: white; }
+
+/* ===== ORDER BODY ===== */
+.order-body {
+    padding: 20px;
+}
+
+.customer-details {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #eef2f6;
+}
+
+.customer-details p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.customer-details strong {
+    color: #212529;
+    min-width: 70px;
+    display: inline-block;
+}
+
+/* ===== ORDER ITEMS ===== */
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #eef2f6;
+    position: relative;
+}
+
+.order-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    background: white;
+    flex-shrink: 0;
+}
+
+.order-item-image[src*="package.svg"] {
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.order-item-details {
+    flex: 1;
+}
+
+.order-item-details h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 5px;
+}
+
+.order-item-details p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 2px 0;
+}
+
+.item-subtotal {
+    font-weight: 600;
+    color: #FF8246 !important;
+    margin-top: 5px !important;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+.badge.pending { background: #ffc107; color: #000; }
+.badge.confirmed { background: #FF8246; color: white; }
+.badge.processing { background: #FF8246; color: white; }
+.badge.shipped { background: #FF8246; color: white; }
+.badge.delivered { background: #FF8246; color: white; }
+.badge.cancelled { background: #000000; color: white; }
+
+/* ===== ACTION BUTTONS ===== */
+.order-item-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.action-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.action-btn.complete {
+    background: #FF8246;
+    color: white;
+}
+
+.action-btn.complete:hover:not(:disabled) {
+    background: #e66a2e;
+}
+
+.action-btn.cancel {
+    background: #000000;
+    color: white;
+}
+
+.action-btn.cancel:hover:not(:disabled) {
+    background: #333333;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.order-total {
+    text-align: right;
+    padding-top: 15px;
+    border-top: 2px solid #eef2f6;
+    font-size: 1.1rem;
+    color: #212529;
+}
+
+.order-total strong {
+    color: #FF8246;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-orders {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.empty-orders p {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+/* ===== LOADING STATE ===== */
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* ===== MODAL STYLES ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeScale 0.3s ease-in-out;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-icon {
+    margin-bottom: 15px;
+}
+
+.modal-icon svg {
+    width: 50px;
+    height: 50px;
+    stroke: #FF8246;
+}
+
+.modal-title {
+    color: #333;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.modal-message {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex: 1;
+    max-width: 120px;
+}
+
+.modal-btn-cancel {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.modal-btn-cancel:hover {
+    background: #dee2e6;
+}
+
+.modal-btn-confirm {
+    background: #FF8246;
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background: #e66a2e;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .order-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .order-item-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .order-item-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .action-btn {
+        flex: 1;
+        max-width: 120px;
+    }
+    
+    .customer-details p {
+        font-size: 0.9rem;
+    }
+    
+    .customer-details strong {
+        min-width: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-tabs {
+        gap: 5px;
+    }
+    
+    .filter-tab {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .order-item-actions {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        max-width: 100%;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .modal-btn {
+        max-width: 100%;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/seller-registration.css`
+
+**Status:** `FOUND`
+
+```css
+:root {
+  /* Sizes */
+  --seller-form-max-width: 600px;
+  --seller-input-height: 50px;
+  --section-spacing: 35px;
+  
+  /* Effects */
+  --effect-box-shadow-default: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --effect-transition-default: all 0.3s ease;
+  --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-background-A);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pageTitleHeader {
+  font-size: 2.5rem;
+  padding: 20px;
+  margin: 20px auto 40px;
+  text-align: center;
+  width: 100%;
+  color: var(--color-text-C);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Form Container */
+.seller-container {
+  background-color: var(--color-background-B);
+  border-radius: 12px;
+  border: 1px solid var(--color-border-A);
+  padding: 40px;
+  box-shadow: var(--effect-box-shadow-default);
+  transition: var(--effect-transition-default);
+  width: 100%;
+  max-width: var(--seller-form-max-width);
+  margin: 0 auto;
+}
+
+.seller-container:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
+  border-bottom: 2px solid var(--color-border-A);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.form-section h3 {
+  font-size: 1.5rem;
+  color: var(--color-text-C);
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-accent-A);
+  display: inline-block;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-C);
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  height: var(--seller-input-height);
+  font-size: var(--font-size-base);
+  padding: 0 15px;
+  border: 2px solid var(--color-border-A);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--color-text-A);
+  transition: var(--effect-transition-default);
+}
+
+.form-group input[type="text"]:focus {
+  border-color: var(--color-accent-A);
+  box-shadow: var(--effect-glow-B);
+  outline: none;
+}
+
+/* File Upload */
+.file-upload-container {
+  border: 2px dashed var(--color-border-A);
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  transition: var(--effect-transition-default);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.file-upload-container:hover {
+  border-color: var(--color-accent-A);
+  background-color: rgba(255, 130, 70, 0.05);
+}
+
+.file-upload-container.dragover {
+  border-color: var(--color-accent-A);
+  background-color: rgba(255, 130, 70, 0.1);
+  transform: scale(1.02);
+}
+
+.file-input-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: var(--color-accent-A);
+  color: var(--color-text-B);
+  border-radius: 8px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: var(--effect-transition-default);
+}
+
+.file-upload-label:hover {
+  background-color: var(--color-hover-A);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: var(--color-text-C);
+  margin-top: 10px;
+  word-break: break-all;
+}
+
+.file-name::before {
+  content: '📄 ';
+}
+
+.help-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Agreement Box */
+.agreement-box {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 25px;
+  border-left: 4px solid var(--color-accent-A);
+}
+
+.agreement-box p {
+  font-size: 1.1rem;
+  color: var(--color-text-C);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.agreement-box ul {
+  list-style: none;
+  padding-left: 20px;
+  margin-bottom: 25px;
+}
+
+.agreement-box li {
+  margin-bottom: 10px;
+  color: var(--color-text-A);
+  position: relative;
+  padding-left: 25px;
+}
+
+.agreement-box li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent-A);
+  font-weight: bold;
+}
+
+/* Checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--color-text-C);
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid var(--color-border-A);
+  transition: var(--effect-transition-default);
+}
+
+.checkbox:hover {
+  border-color: var(--color-accent-A);
+  background-color: rgba(255, 130, 70, 0.05);
+}
+
+.checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-accent-A);
+}
+
+.checkbox span {
+  font-weight: 600;
+}
+
+/* Button Container */
+.btn-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 16px 35px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  font-weight: var(--font-weight-bold);
+  transition: var(--effect-transition-default);
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: var(--color-accent-A);
+  color: var(--color-text-B);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-hover-A);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 130, 70, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--color-background-C);
+  color: var(--color-text-B);
+  border: 2px solid var(--color-border-A);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-background-A);
+  color: var(--color-text-A);
+  border-color: var(--color-accent-A);
+  transform: translateY(-3px);
+}
+
+/* File Preview */
+.file-preview {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.file-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 2px solid var(--color-border-A);
+  box-shadow: var(--effect-box-shadow-default);
+}
+
+/* Loading State */
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.btn-secondary.loading::after {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--color-text-A);
+}
+
+/* Animations */
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-section {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.form-section:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+/* Validation */
+.form-group.error .file-upload-container {
+  border-color: #e74c3c;
+  animation: shake 0.3s;
+}
+
+.form-group.error .checkbox {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  display: none;
+}
+
+.form-group.error .error-message {
+  display: block;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 20px 15px;
+  }
+  
+  .pageTitleHeader {
+    font-size: 2rem;
+    padding: 15px;
+    margin: 10px auto 30px;
+  }
+  
+  .seller-container {
+    padding: 30px 25px;
+  }
+  
+  .form-section h3 {
+    font-size: 1.3rem;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .file-upload-container {
+    padding: 20px;
+  }
+  
+  .agreement-box {
+    padding: 20px;
+  }
+  
+  .btn {
+    padding: 14px 25px;
+    font-size: 1rem;
+  }
+  
+  .btn-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seller-container {
+    padding: 25px 20px;
+  }
+  
+  .pageTitleHeader {
+    font-size: 1.8rem;
+  }
+  
+  .form-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+  }
+  
+  .form-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    font-size: 1rem;
+  }
+  
+  .form-group input[type="text"] {
+    height: 45px;
+    font-size: 0.95rem;
+    padding: 0 12px;
+  }
+  
+  .agreement-box p {
+    font-size: 1rem;
+  }
+  
+  .checkbox {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .btn {
+    padding: 14px;
+    font-size: 0.95rem;
+  }
+  
+  .help-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* Success Message */
+.success-message {
+  background-color: rgba(46, 204, 113, 0.1);
+  border: 2px solid #2ecc71;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.success-message p {
+  color: #27ae60;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.success-message::before {
+  content: '✅ ';
+  font-size: 1.5rem;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/seller-dashboard.css`
+
+**Status:** `FOUND`
+
+```css
+
+/* Main Content Layout */
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+/* Welcome Section */
+.welcome-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+}
+.welcome-section h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.welcome-section h1 span {
+    color: #FF8246;
+}
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+}
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eef2f6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FF8246, #FFA500);
+}
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stat-icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: transform 0.3s ease;
+}
+.stat-card:hover .stat-icon img {
+    transform: scale(1.1);
+}
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #FF8246;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+.stat-label {
+    font-size: 1rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.stat-subtext {
+    font-size: 0.9rem;
+    color: #adb5bd;
+    margin-top: 10px;
+}
+/* Quick Actions */
+.quick-actions {
+    margin-bottom: 40px;
+}
+.quick-actions h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+.action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eef2f6;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #FF8246;
+}
+.action-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.action-icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: transform 0.3s ease;
+}
+.action-card:hover .action-icon img {
+    transform: scale(1.1);
+}
+.action-card h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.action-card p {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+/* Recent Activity */
+.recent-activity {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eef2f6;
+}
+.recent-activity h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.recent-activity h2 a {
+    font-size: 0.95rem;
+    color: #FF8246;
+    text-decoration: none;
+    font-weight: 500;
+}
+.recent-activity h2 a:hover {
+    text-decoration: underline;
+}
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eef2f6;
+}
+.activity-item:last-child {
+    border-bottom: none;
+}
+.activity-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.activity-status.ordered {
+    background: #007bff;
+}
+.activity-status.delivered {
+    background: #28a745;
+}
+.activity-status.cancelled {
+    background: #dc3545;
+}
+.activity-details {
+    flex: 1;
+}
+.activity-details p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #495057;
+}
+.activity-details small {
+    font-size: 0.8rem;
+    color: #adb5bd;
+}
+.activity-link {
+    color: #FF8246;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+    }
+    .welcome-section {
+        padding: 30px 20px;
+    }
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 480px) {
+    .welcome-section {
+        padding: 25px 15px;
+    }
+    .welcome-section h1 {
+        font-size: 1.5rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .action-card {
+        padding: 25px;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/sign-in.css`
+
+**Status:** `FOUND`
+
+```css
+:root {
+  /* Sizes */
+  --login-form-max-width: 400px;
+  --login-input-height: 50px;
+  
+  /* Effects */
+  --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --effect-transition-default: all 0.3s ease;
+  --effect-glow-A: 0 0 5px rgba(0, 0, 0, 0.1);
+  --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-background-A);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pageTitleHeader {
+  font-size: 2.5rem;
+  padding: 20px;
+  margin: 20px auto 40px;
+  text-align: center;
+  width: 100%;
+  color: var(--color-text-C);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Form Container */
+.signin-container {
+  background-color: var(--color-background-B);
+  border-radius: 12px;
+  border: 1px solid var(--color-border-A);
+  padding: 40px;
+  box-shadow: var(--effect-box-shadow-default);
+  transition: var(--effect-transition-default);
+  width: 100%;
+  max-width: var(--login-form-max-width);
+  margin: 0 auto;
+}
+
+.signin-container:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.form-group label {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-C);
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  height: var(--login-input-height);
+  font-size: var(--font-size-base);
+  padding: 0 15px;
+  border: 2px solid var(--color-border-A);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--color-text-A);
+  transition: var(--effect-transition-default);
+}
+
+.form-group input:focus {
+  border-color: var(--color-accent-A);
+  box-shadow: var(--effect-glow-B);
+  outline: none;
+}
+
+.form-group input:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #e74c3c;
+  animation: shake 0.3s;
+}
+
+/* Button Styles */
+.btn {
+  padding: 15px 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  font-weight: var(--font-weight-bold);
+  transition: var(--effect-transition-default);
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background-color: var(--color-accent-A);
+  color: var(--color-text-B);
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-hover-A);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 130, 70, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Links */
+.signup-link {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1rem;
+  color: var(--color-text-C);
+  width: 100%;
+  padding: 0 10px;
+}
+
+.signup-link a {
+  text-decoration: none;
+  color: var(--color-accent-A);
+  font-weight: var(--font-weight-bold);
+  transition: var(--effect-transition-default);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.signup-link a:hover {
+  color: var(--color-hover-A);
+  background-color: rgba(255, 130, 70, 0.1);
+}
+
+/* Error Messages */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: none;
+}
+
+.form-group.error input {
+  border-color: #e74c3c;
+}
+
+.form-group.error .error-message {
+  display: block;
+}
+
+/* Loading State */
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 20px 15px;
+  }
+  
+  .pageTitleHeader {
+    font-size: 2rem;
+    padding: 15px;
+    margin: 10px auto 30px;
+  }
+  
+  .signin-container {
+    padding: 30px 25px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group input {
+    height: 45px;
+  }
+  
+  .btn {
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signin-container {
+    padding: 25px 20px;
+  }
+  
+  .pageTitleHeader {
+    font-size: 1.8rem;
+  }
+  
+  .form-group label {
+    font-size: 0.95rem;
+  }
+  
+  .form-group input {
+    height: 42px;
+    font-size: 0.95rem;
+    padding: 0 12px;
+  }
+  
+  .btn {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .signup-link {
+    font-size: 0.9rem;
+    margin-top: 25px;
+  }
+}
+
+/* Password Toggle (Optional Enhancement) */
+.password-toggle {
+  position: relative;
+}
+
+.password-toggle input {
+  padding-right: 45px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-C);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Success Animation */
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.success-pulse {
+  animation: successPulse 0.5s ease;
+}
+
+/* Add to Crooks-Cart-Collectives/styles/sign-in.css */
+
+/* Notifier Modal */
+.notifier {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.notifier.hidden {
+    display: none;
+}
+
+.notifier-content {
+    background: var(--color-background-B);
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+.notifier-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: var(--color-text-C);
+    line-height: 1.5;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+input.error {
+    border-color: #dc3545;
+}
+
+.forgot-password-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot-password-link a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password-link a:hover {
+    color: #FF8246;
+    text-decoration: underline;
+}
+
+.signin-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #FF8246;
+    outline: none;
+}
+
+/* Add these to the existing sign-in.css */
+
+/* Password toggle styles */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover img {
+    opacity: 1;
+}
+
+/* Form container */
+.signin-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #FF8246;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+.form-group input.error {
+    border-color: #dc3545;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: #FF8246;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #e66a2e;
+}
+
+.signup-link,
+.forgot-password-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+.signup-link a,
+.forgot-password-link a {
+    color: #FF8246;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link a:hover,
+.forgot-password-link a:hover {
+    text-decoration: underline;
+}
+
+/* Notifier modal */
+.notifier {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.notifier.hidden {
+    display: none;
+}
+
+.notifier-content {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeScale 0.3s ease;
+}
+
+.notifier-content p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+@keyframes fadeScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/sign-out.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/logout-modal.css */
+
+:root {
+    /* Use the same variables as sign-up.css for consistency */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+}
+
+/* Logout Confirmation Modal - MATCHING SIGN-UP STYLE */
+.logout-modal {
+    position: fixed;
+    inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; */
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
+    backdrop-filter: blur(5px); /* Blur effect like sign-up modal */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.logout-modal.active {
+    display: flex;
+}
+
+.logout-modal-content {
+    background-color: white;
+    padding: 30px 25px;
+    border-radius: 12px; /* Matching sign-up border-radius */
+    box-shadow: var(--effect-box-shadow-default);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeScale 0.3s ease-in-out; /* Match sign-up animation */
+}
+
+/* Animation - EXACTLY matching sign-up modal */
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.logout-modal-icon {
+    margin-bottom: 20px;
+}
+
+.logout-modal-icon svg {
+    width: 70px;
+    height: 70px;
+    stroke: #FF8246; /* Your accent color */
+    stroke-width: 1.8;
+}
+
+.logout-modal h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.logout-modal p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.logout-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.logout-modal-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px; /* Matching sign-up input border-radius */
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--effect-transition-default);
+    flex: 1;
+    max-width: 150px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.btn-cancel:hover {
+    background-color: #d0d0d0;
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.btn-confirm {
+    background-color: #FF8246;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background-color: #e66a2e;
+    box-shadow: var(--effect-glow-B);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logout-modal-content {
+        padding: 25px 20px;
+        width: 85%;
+    }
+    
+    .logout-modal-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .logout-modal h2 {
+        font-size: 22px;
+    }
+    
+    .logout-modal p {
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .logout-modal-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 20px 15px;
+        width: 90%;
+    }
+    
+    .logout-modal-icon svg {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .logout-modal h2 {
+        font-size: 20px;
+    }
+    
+    .logout-modal p {
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+    
+    .logout-modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .logout-modal-btn {
+        max-width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/sign-up.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/sign-up.css */
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --form-group-gap: 20px;
+    --input-height: 50px;
+    --border-radius: 12px;
+    
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
+    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    outline: none;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background-A);
+    color: var(--color-text-A);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pageTitleHeader {
+    font-size: calc(15px + var(--font-size-title));
+    padding: var(--size-header-padding);
+        margin: 20px auto 50px;
+    text-align: center;
+    width: 100%;
+    color: var(--color-text-C);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Form Container */
+.signup-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--form-section-gap);
+    padding: 0 20px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Form Sections - Barangay Style */
+.form-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    margin-bottom: var(--form-section-gap);
+    transition: var(--effect-transition-default);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section:hover {
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: var(--color-text-C);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-accent-A);
+}
+
+/* Form Groups - Barangay Style */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px; /* Reduced from 20px */
+    width: 100%;
+}
+
+.form-group label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text-C);
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    font-size: var(--font-size-base);
+    padding: 0 15px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--color-text-A);
+    transition: var(--effect-transition-default);
+}
+
+/* Address textarea - fixed initial size, auto-expands */
+.form-group textarea#address {
+    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
+    padding: 15px;
+    resize: none;
+    overflow-y: hidden;
+    line-height: 1.5;
+    transition: height 0.2s ease;
+}
+
+.form-group textarea#address.expanding {
+    height: auto;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+    box-shadow: var(--effect-glow-B);
+    outline: none;
+}
+
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #e74c3c;
+    box-shadow: var(--effect-glow-error);
+}
+
+.form-group.error label {
+    color: #e74c3c;
+}
+
+/* Error Messages */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Button Container - Always Stacked */
+.btn-container {
+    display: flex;
+    flex-direction: column; /* always vertical */
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.btn {
+    padding: var(--size-button-padding);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    border-radius: var(--size-button-radius);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    width: 100%; /* Full width when stacked */
+    min-width: unset; /* Remove min-width constraint */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-hover-A);
+    box-shadow: var(--effect-glow-B);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: var(--color-background-C);
+    border: 1px solid;
+    border-color: var(--color-border-A);
+    color: var(--color-text-B);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-background-A);
+    border-color: var(--color-hover-A);
+    color: var(--color-text-A);
+    box-shadow: var(--effect-glow-A);
+}
+
+/* Remove extra spacing from button wrapper */
+.form-section .form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+/* Links Group - Better Spacing */
+.links-group {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-border-A);
+    width: 100%;
+}
+
+.login-link,
+.seller-link {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-text-C);
+}
+
+.login-link a,
+.seller-link a {
+    text-decoration: none;
+    color: var(--color-accent-A);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.login-link a:hover,
+.seller-link a:hover {
+    color: var(--color-hover-A);
+    background-color: rgba(255, 130, 70, 0.1);
+}
+
+/* Notifier Modal - Barangay Style */
+.notifier {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.notifier.hidden {
+    display: none;
+}
+
+.notifier-content {
+    background-color: var(--color-background-B);
+    color: var(--color-text-A);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: var(--effect-box-shadow-default);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeScale 0.3s ease-in-out;
+}
+
+.notifier-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Last Form Section (Contact & Registration) Layout Fix */
+.form-section:last-child {
+    padding-bottom: 25px;
+}
+
+/* Form submitted state - Barangay Style */
+.signup-container.submitted .form-group:has(input:invalid),
+.signup-container.submitted .form-group:has(select:invalid),
+.signup-container.submitted .form-group:has(textarea:invalid) {
+    animation: pulseWarning 0.5s ease-in-out;
+}
+
+@keyframes pulseWarning {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Barangay-style color themes for form sections */
+.form-section {
+    background-color: var(--color-background-B);
+    border-color: var(--color-border-A);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border-color: var(--color-border-A);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+}
+
+/* Responsive Design - Barangay Style Adjustments */
+@media (max-width: 1024px) {
+    .signup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 1.5rem;
+        padding: 15px 10px;
+        margin: 10px auto 30px;
+    }
+    
+    .form-section {
+        padding: 20px;
+        min-width: 100%;
+        margin: 0 0 10px;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-container {
+        margin-top: 15px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        height: 45px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group textarea#address {
+        height: 90px;
+        min-height: 90px;
+    }
+    
+    .links-group {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.9rem;
+        margin: 5px 0;
+    }
+    
+    .signup-container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: 18px 15px;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 18px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-container {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .links-group {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.85rem;
+        margin: 4px 0;
+    }
+}
+
+/* Add these to the existing sign-up.css */
+
+/* Password toggle styles */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover img {
+    opacity: 1;
+}
+
+/* Ensure password fields have proper padding */
+.form-group input[type="password"] {
+    padding-right: 45px;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/terms-and-conditions.css`
+
+**Status:** `FOUND`
+
+```css
+/* ============================================
+   TERMS AND CONDITIONS PAGE STYLES
+   Class naming convention: BEM (Block Element Modifier)
+   Block: terms-page, terms-hero, terms-intro, terms-section, terms-agreement
+============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.terms-page {
+    max-width: 1000px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+/* ===== HERO SECTION ===== */
+.terms-hero {
+    margin-top: 100px;
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.terms-hero__container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.terms-hero__title {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.terms-hero__highlight {
+    color: #ff8246;
+}
+
+.terms-hero__subtitle {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: #666;
+}
+
+/* ===== INTRO SECTION ===== */
+.terms-intro {
+    margin-bottom: 40px;
+}
+
+.terms-intro__card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.terms-intro__text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.terms-intro__effective-date {
+    font-size: 0.95rem;
+    color: #ff8246;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* ===== TERMS SECTIONS ===== */
+.terms-sections {
+    width: 100%;
+}
+
+.terms-section {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.terms-section__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.terms-section__accent {
+    width: 4px;
+    height: 30px;
+    background-color: #ff8246;
+    margin-right: 15px;
+    border-radius: 2px;
+}
+
+.terms-section__title {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+}
+
+.terms-section__body {
+    padding-left: 19px;
+}
+
+.terms-section__body p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.terms-section__list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.terms-section__list-item {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.terms-section__list-item::before {
+    content: "•";
+    color: #ff8246;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.terms-section__important {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #ff8246;
+    margin-bottom: 15px;
+}
+
+/* Contact Details */
+.terms-contact {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-style: normal;
+}
+
+.terms-contact__item {
+    margin-bottom: 8px;
+}
+
+.terms-contact__item:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== AGREEMENT SECTION ===== */
+.terms-agreement {
+    margin-top: 40px;
+}
+
+.terms-agreement__box {
+    background: white;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.terms-agreement__text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 30px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.terms-agreement__actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.terms-agreement__btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.terms-agreement__btn--primary {
+    background-color: #ff8246;
+    color: white;
+}
+
+.terms-agreement__btn--primary:hover {
+    background-color: #e66a2e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+}
+
+.terms-agreement__btn--secondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.terms-agreement__btn--secondary:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .terms-page {
+        margin-top: 80px;
+    }
+    
+    .terms-hero {
+        padding: 40px 20px;
+    }
+    
+    .terms-section__title {
+        font-size: 1.3rem;
+    }
+    
+    .terms-section {
+        padding: 25px 20px;
+    }
+    
+    .terms-section__body {
+        padding-left: 14px;
+    }
+    
+    .terms-agreement__box {
+        padding: 30px 20px;
+    }
+    
+    .terms-agreement__actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .terms-agreement__btn {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-hero {
+        padding: 30px 15px;
+    }
+    
+    .terms-hero__title {
+        font-size: 2rem;
+    }
+    
+    .terms-intro__card {
+        padding: 20px;
+    }
+    
+    .terms-intro__text {
+        font-size: 1rem;
+    }
+    
+    .terms-section__title {
+        font-size: 1.2rem;
+    }
+    
+    .terms-section__accent {
+        height: 25px;
+    }
+    
+    .terms-section {
+        padding: 20px 15px;
+    }
+    
+    .terms-section__body {
+        padding-left: 9px;
+    }
+    
+    .terms-section__body p,
+    .terms-section__list-item {
+        font-size: 0.95rem;
+    }
+    
+    .terms-agreement__box {
+        padding: 25px 15px;
+    }
+    
+    .terms-agreement__text {
+        font-size: 1rem;
+    }
+}
+```
+
+---
 

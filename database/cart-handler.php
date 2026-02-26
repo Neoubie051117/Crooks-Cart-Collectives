@@ -14,12 +14,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$customerId = $_SESSION['customer_id'];
+$customer_id = $_SESSION['customer_id'];
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 switch ($action) {
     case 'add_to_cart':
-        addToCart($customerId);
+        addToCart($customer_id);
         break;
     case 'update':
         updateCartItem();
@@ -28,7 +28,7 @@ switch ($action) {
         removeCartItem();
         break;
     case 'get_count':
-        getCartCount($customerId);
+        getCartCount($customer_id);
         break;
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
@@ -36,88 +36,171 @@ switch ($action) {
 
 function addToCart($customerId) {
     global $connection;
+    
     $productId = $_POST['product_id'] ?? 0;
-    $quantity = $_POST['quantity'] ?? 1;
+    $quantity = (int)($_POST['quantity'] ?? 1);
 
-    if (!$productId) {
-        echo json_encode(['status' => 'error', 'message' => 'Product ID missing']);
+    if (!$productId || $quantity < 1) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid product or quantity']);
         exit;
     }
 
-    // Get cart_id
-    $stmt = $connection->prepare("SELECT cart_id FROM shopping_carts WHERE customer_id = ?");
-    $stmt->execute([$customerId]);
-    $cart = $stmt->fetch();
-    if (!$cart) {
-        // Create cart if missing
-        $stmt = $connection->prepare("INSERT INTO shopping_carts (customer_id) VALUES (?)");
-        $stmt->execute([$customerId]);
-        $cartId = $connection->lastInsertId();
-    } else {
-        $cartId = $cart['cart_id'];
+    try {
+        // Get product and seller info
+        $stmt = $connection->prepare("
+            SELECT p.*, s.seller_id, s.business_name 
+            FROM products p
+            JOIN sellers s ON p.seller_id = s.seller_id
+            WHERE p.product_id = ? AND p.is_active = 1
+        ");
+        $stmt->execute([$productId]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$product) {
+            echo json_encode(['status' => 'error', 'message' => 'Product not found']);
+            exit;
+        }
+
+        // Check stock
+        if ($quantity > $product['stock_quantity']) {
+            echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+            exit;
+        }
+
+        // Check if item already in cart
+        $stmt = $connection->prepare("
+            SELECT cart_id, quantity 
+            FROM carts 
+            WHERE customer_id = ? AND product_id = ?
+        ");
+        $stmt->execute([$customerId, $productId]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existing) {
+            // Update quantity in cart
+            $newQuantity = $existing['quantity'] + $quantity;
+            
+            // Check stock again for new quantity
+            if ($newQuantity > $product['stock_quantity']) {
+                echo json_encode(['status' => 'error', 'message' => 'Cannot add more than available stock']);
+                exit;
+            }
+            
+            $stmt = $connection->prepare("
+                UPDATE carts 
+                SET quantity = ?, updated_at = NOW() 
+                WHERE cart_id = ?
+            ");
+            $stmt->execute([$newQuantity, $existing['cart_id']]);
+        } else {
+            // Insert new cart item
+            $stmt = $connection->prepare("
+                INSERT INTO carts (customer_id, seller_id, product_id, quantity, price_at_time)
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $customerId,
+                $product['seller_id'],
+                $productId,
+                $quantity,
+                $product['price']
+            ]);
+        }
+
+        echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
+        
+    } catch (PDOException $e) {
+        error_log("Add to cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
-
-    // Check if product already in cart
-    $stmt = $connection->prepare("SELECT cart_item_id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?");
-    $stmt->execute([$cartId, $productId]);
-    $existing = $stmt->fetch();
-
-    if ($existing) {
-        // Update quantity
-        $newQty = $existing['quantity'] + $quantity;
-        $stmt = $connection->prepare("UPDATE cart_items SET quantity = ? WHERE cart_item_id = ?");
-        $stmt->execute([$newQty, $existing['cart_item_id']]);
-    } else {
-        // Insert new
-        $stmt = $connection->prepare("INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->execute([$cartId, $productId, $quantity]);
-    }
-
-    echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
 }
 
 function updateCartItem() {
     global $connection;
-    $itemId = $_POST['cart_item_id'] ?? 0;
-    $quantity = $_POST['quantity'] ?? 1;
+    
+    $cartId = $_POST['cart_item_id'] ?? 0;
+    $quantity = (int)($_POST['quantity'] ?? 1);
 
-    if (!$itemId || $quantity < 1) {
+    if (!$cartId || $quantity < 1) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit;
     }
 
-    $stmt = $connection->prepare("UPDATE cart_items SET quantity = ? WHERE cart_item_id = ?");
-    $stmt->execute([$quantity, $itemId]);
+    try {
+        // Get product stock
+        $stmt = $connection->prepare("
+            SELECT p.stock_quantity
+            FROM carts c
+            JOIN products p ON c.product_id = p.product_id
+            WHERE c.cart_id = ?
+        ");
+        $stmt->execute([$cartId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$result) {
+            echo json_encode(['status' => 'error', 'message' => 'Cart item not found']);
+            exit;
+        }
+        
+        if ($quantity > $result['stock_quantity']) {
+            echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+            exit;
+        }
 
-    echo json_encode(['status' => 'success']);
+        $stmt = $connection->prepare("
+            UPDATE carts 
+            SET quantity = ?, updated_at = NOW() 
+            WHERE cart_id = ?
+        ");
+        $stmt->execute([$quantity, $cartId]);
+
+        echo json_encode(['status' => 'success']);
+        
+    } catch (PDOException $e) {
+        error_log("Update cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Update failed']);
+    }
 }
 
 function removeCartItem() {
     global $connection;
-    $itemId = $_POST['cart_item_id'] ?? 0;
+    
+    $cartId = $_POST['cart_item_id'] ?? 0;
 
-    if (!$itemId) {
+    if (!$cartId) {
         echo json_encode(['status' => 'error', 'message' => 'Item ID missing']);
         exit;
     }
 
-    $stmt = $connection->prepare("DELETE FROM cart_items WHERE cart_item_id = ?");
-    $stmt->execute([$itemId]);
+    try {
+        $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ?");
+        $stmt->execute([$cartId]);
 
-    echo json_encode(['status' => 'success']);
+        echo json_encode(['status' => 'success']);
+        
+    } catch (PDOException $e) {
+        error_log("Remove cart error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Remove failed']);
+    }
 }
 
 function getCartCount($customerId) {
     global $connection;
-    $stmt = $connection->prepare("
-        SELECT SUM(quantity) as count 
-        FROM cart_items ci
-        JOIN shopping_carts sc ON ci.cart_id = sc.cart_id
-        WHERE sc.customer_id = ?
-    ");
-    $stmt->execute([$customerId]);
-    $result = $stmt->fetch();
-    $count = $result['count'] ?? 0;
-    echo json_encode(['status' => 'success', 'count' => (int)$count]);
+    
+    try {
+        $stmt = $connection->prepare("
+            SELECT SUM(quantity) as count 
+            FROM carts 
+            WHERE customer_id = ?
+        ");
+        $stmt->execute([$customerId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $count = $result['count'] ?? 0;
+        
+        echo json_encode(['status' => 'success', 'count' => (int)$count]);
+    } catch (PDOException $e) {
+        error_log("Get cart count error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'count' => 0]);
+    }
 }
 ?>
