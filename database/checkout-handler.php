@@ -22,13 +22,12 @@ if (!$user || empty($user['address'])) {
 }
 $shipping_address = $user['address'];
 
-// Begin transaction
 try {
     $connection->beginTransaction();
 
     // Get cart items
     $stmt = $connection->prepare("
-        SELECT c.*, p.price, p.name, p.stock_quantity, p.seller_id
+        SELECT c.*, p.name, p.stock_quantity, p.seller_id
         FROM carts c
         JOIN products p ON c.product_id = p.product_id
         WHERE c.customer_id = ?
@@ -41,14 +40,13 @@ try {
         exit;
     }
 
-    // Validate stock and insert orders
+    // Insert orders
     foreach ($cartItems as $item) {
-        // Final stock check
+        // Final stock check (trigger will also check)
         if ($item['quantity'] > $item['stock_quantity']) {
             throw new Exception("Insufficient stock for {$item['name']}");
         }
         
-        // Insert into orders table
         $orderStmt = $connection->prepare("
             INSERT INTO orders (customer_id, seller_id, product_id, quantity, price_at_time, shipping_address, payment_method)
             VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery')
@@ -61,8 +59,6 @@ try {
             $item['price_at_time'],
             $shipping_address
         ]);
-        
-        // Note: Stock is automatically reduced by the BEFORE INSERT trigger on orders table
     }
 
     // Clear the cart

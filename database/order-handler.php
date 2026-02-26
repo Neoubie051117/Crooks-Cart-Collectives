@@ -56,9 +56,10 @@ function getCustomerOrders() {
                 o.order_date,
                 o.delivered_at,
                 o.cancelled_at,
+                o.cancelled_by,
                 p.name AS product_name,
                 p.image_path,
-                s.business_name,
+                s.business_name AS seller_name,
                 (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_id = o.order_id) AS has_review
             FROM orders o
             JOIN products p ON o.product_id = p.product_id
@@ -94,32 +95,48 @@ function cancelOrderItem() {
     }
     
     try {
+        $connection->beginTransaction();
+        
+        // Get order details first
         $stmt = $connection->prepare("
-            SELECT order_id, status
+            SELECT order_id, status, quantity, product_id
             FROM orders
             WHERE order_id = ? AND customer_id = ?
+            FOR UPDATE
         ");
         $stmt->execute([$order_id, $customer_id]);
         $order = $stmt->fetch();
         
         if (!$order) {
+            $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Order not found']);
             exit;
         }
         
-        if ($order['status'] !== 'ordered') {
-            echo json_encode(['status' => 'error', 'message' => 'Order can only be cancelled when status is ordered']);
+        // Allow cancellation only for pending orders
+        if ($order['status'] !== 'pending') {
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Order can only be cancelled when status is pending']);
             exit;
         }
         
-        $connection->beginTransaction();
-        
+        // Update order status
         $update = $connection->prepare("
             UPDATE orders
-            SET status = 'cancelled', cancelled_at = NOW()
-            WHERE order_id = ?
+            SET status = 'cancelled', 
+                cancelled_by = 'customer',
+                cancelled_at = NOW()
+            WHERE order_id = ? AND customer_id = ?
         ");
-        $update->execute([$order_id]);
+        $update->execute([$order_id, $customer_id]);
+        
+        // Restore stock
+        $restore = $connection->prepare("
+            UPDATE products 
+            SET stock_quantity = stock_quantity + ? 
+            WHERE product_id = ?
+        ");
+        $restore->execute([$order['quantity'], $order['product_id']]);
         
         $connection->commit();
         
@@ -153,7 +170,9 @@ function getSellerOrders() {
                 o.subtotal,
                 o.status,
                 o.shipping_address,
+                o.payment_method,
                 o.order_date,
+                o.cancelled_by,
                 p.name AS product_name,
                 p.image_path,
                 u.first_name,
@@ -197,34 +216,60 @@ function updateItemStatus() {
     }
     
     try {
+        $connection->beginTransaction();
+        
+        // Get order details first
         $stmt = $connection->prepare("
-            SELECT order_id, status
+            SELECT order_id, status, quantity, product_id
             FROM orders
             WHERE order_id = ? AND seller_id = ?
+            FOR UPDATE
         ");
         $stmt->execute([$order_id, $seller_id]);
         $order = $stmt->fetch();
         
         if (!$order) {
+            $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Order not found']);
             exit;
         }
         
-        if ($order['status'] !== 'ordered') {
+        // Only allow status change from pending
+        if ($order['status'] !== 'pending') {
+            $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Order cannot be updated from current status']);
             exit;
         }
         
-        $connection->beginTransaction();
-        
-        $update = $connection->prepare("
-            UPDATE orders
-            SET status = ?, 
-                delivered_at = CASE WHEN ? = 'delivered' THEN NOW() ELSE delivered_at END,
-                cancelled_at = CASE WHEN ? = 'cancelled' THEN NOW() ELSE cancelled_at END
-            WHERE order_id = ?
-        ");
-        $update->execute([$status, $status, $status, $order_id]);
+        if ($status === 'delivered') {
+            // Mark as delivered
+            $update = $connection->prepare("
+                UPDATE orders
+                SET status = 'delivered',
+                    delivered_at = NOW()
+                WHERE order_id = ? AND seller_id = ?
+            ");
+            $update->execute([$order_id, $seller_id]);
+            
+        } else if ($status === 'cancelled') {
+            // Mark as cancelled and restore stock
+            $update = $connection->prepare("
+                UPDATE orders
+                SET status = 'cancelled',
+                    cancelled_by = 'seller',
+                    cancelled_at = NOW()
+                WHERE order_id = ? AND seller_id = ?
+            ");
+            $update->execute([$order_id, $seller_id]);
+            
+            // Restore stock
+            $restore = $connection->prepare("
+                UPDATE products 
+                SET stock_quantity = stock_quantity + ? 
+                WHERE product_id = ?
+            ");
+            $restore->execute([$order['quantity'], $order['product_id']]);
+        }
         
         $connection->commit();
         

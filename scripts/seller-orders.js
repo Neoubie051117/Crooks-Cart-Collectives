@@ -1,14 +1,12 @@
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* UPDATED: Uses database statuses: ordered, delivered, cancelled */
+/* Revised version - removed duplicate subtotal, added cancelled by info */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('sellerOrdersList');
     const filterTabs = document.querySelectorAll('.filter-tab');
 
-    // Modal Elements
     const confirmModal = document.getElementById('confirmModal');
     const confirmTitle = document.getElementById('confirmTitle');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -19,16 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationMessage = document.getElementById('notificationMessage');
     const notificationClose = document.getElementById('notificationClose');
 
-    // State
     let currentAction = null;
     let currentOrderId = null;
     let currentNewStatus = null;
-    let allOrders = []; // Store all orders for filtering
+    let allOrders = [];
 
     // ============= MODAL FUNCTIONS =============
     function showConfirmModal(title, message, onConfirm) {
-        if (!confirmModal || !confirmTitle || !confirmMessage) return;
-        
         confirmTitle.textContent = title;
         confirmMessage.textContent = message;
         confirmModal.style.display = 'flex';
@@ -37,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideConfirmModal() {
-        if (confirmModal) confirmModal.style.display = 'none';
+        confirmModal.style.display = 'none';
         document.body.style.overflow = '';
         currentAction = null;
         currentOrderId = null;
@@ -45,13 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showNotification(message, isError = false) {
-        if (!notificationModal || !notificationMessage) return;
-        
         notificationMessage.textContent = message;
-        const icon = notificationModal.querySelector('.modal-icon svg');
-        if (icon) {
-            icon.style.stroke = isError ? '#dc3545' : '#FF8246';
-        }
         notificationModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
 
@@ -63,11 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideNotificationModal() {
-        if (notificationModal) notificationModal.style.display = 'none';
+        notificationModal.style.display = 'none';
         document.body.style.overflow = '';
     }
 
-    // Close modals when clicking outside
     if (confirmModal) {
         confirmModal.addEventListener('click', (e) => {
             if (e.target === confirmModal) hideConfirmModal();
@@ -97,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Escape key handler
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             hideConfirmModal();
@@ -107,8 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============= LOAD ORDERS =============
     async function loadOrders() {
-        if (!ordersList) return;
-
         ordersList.innerHTML = '<div class="loading">Loading orders...</div>';
 
         try {
@@ -128,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= RENDER ORDERS (FLAT LIST) =============
+    // ============= RENDER ORDERS =============
     function renderOrders(orders, filter) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
@@ -140,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Filter orders based on selected tab
         let filteredOrders = orders;
         if (filter !== 'all') {
             filteredOrders = orders.filter(order => order.status === filter);
@@ -158,9 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const customerName = order.first_name && order.last_name 
                 ? `${escapeHtml(order.first_name)} ${escapeHtml(order.last_name)}`
                 : 'Customer';
-            const status = order.status || 'ordered';
+            const status = order.status || 'pending';
             const statusClass = status.toLowerCase();
             const imagePath = getImagePath(order.image_path);
+            
+            // Determine cancellation text for product details
+            let cancellationText = '';
+            if (order.status === 'cancelled' && order.cancelled_by) {
+                if (order.cancelled_by === 'customer') {
+                    cancellationText = 'Cancelled by Customer';
+                } else if (order.cancelled_by === 'seller') {
+                    cancellationText = 'Cancelled by Seller';
+                }
+            }
+            
+            // Price summary data
+            const total = Number(order.subtotal).toFixed(2); // shipping is free
+            const paymentMethod = order.payment_method || 'Cash on Delivery';
 
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
@@ -176,43 +174,74 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="order-body">
-                        <!-- Customer Details -->
-                        <div class="customer-details">
-                            <p><strong>Customer:</strong> ${customerName}</p>
-                            <p><strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}</p>
-                            <p><strong>Phone:</strong> ${escapeHtml(order.contact_number || 'N/A')}</p>
-                            <p><strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'N/A')}</p>
-                        </div>
-
-                        <!-- Product Details -->
-                        <div class="product-details">
-                            <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
-                                 class="product-thumbnail"
-                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                            
-                            <div class="product-info">
-                                <h4>${escapeHtml(order.product_name)}</h4>
-                                <p>Quantity: ${order.quantity}</p>
-                                <p>Price: ₱${Number(order.price_at_time).toFixed(2)}</p>
-                                <p class="subtotal">Subtotal: ₱${Number(order.subtotal).toFixed(2)}</p>
+                        <!-- Column 1: Product Details (First) -->
+                        <div class="order-product-column">
+                            <div class="product-details-title">Product Details</div>
+                            <div class="product-details">
+                                <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                     class="product-thumbnail"
+                                     onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                                
+                                <div class="product-info">
+                                    <h4>${escapeHtml(order.product_name)}</h4>
+                                    <p>Quantity: ${order.quantity}</p>
+                                    <p>Price: ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                    ${order.status === 'cancelled' && cancellationText ? 
+                                        `<p class="cancelled-info"><strong>${cancellationText}</strong></p>` : 
+                                        ''
+                                    }
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Actions -->
-                        <div class="order-actions">
+
+                        <!-- Column 2: Customer Information (Second) with Payment Method -->
+                        <div class="order-customer-column">
+                            <div class="customer-details-title">Customer Information</div>
+                            <div class="customer-details">
+                                <p><strong>Name:</strong> ${customerName}</p>
+                                <p><strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}</p>
+                                <p><strong>Phone:</strong> ${escapeHtml(order.contact_number || 'N/A')}</p>
+                                <p><strong>Payment:</strong> ${escapeHtml(paymentMethod)}</p>
+                                <p><strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'N/A')}</p>
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Order Summary (Third) - REMOVED SUBTOTAL -->
+                        <div class="order-price-summary">
+                            <div class="price-summary-title">Order Summary</div>
+                            <div class="price-row">
+                                <span>Quantity</span>
+                                <span class="price-value">${order.quantity}</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Price per item</span>
+                                <span class="price-value">₱${Number(order.price_at_time).toFixed(2)}</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Shipping Fee</span>
+                                <span class="price-value">Free</span>
+                            </div>
+                            <div class="price-divider"></div>
+                            <div class="price-row price-total">
+                                <span>Total</span>
+                                <span class="price-value">₱${total}</span>
+                            </div>
+                            
+                            <div class="order-actions">
             `;
 
-            // Only show actions for 'ordered' status
-            if (status === 'ordered') {
+            // Show confirm/cancel buttons only for pending orders
+            if (status === 'pending') {
                 html += `
                     <button class="action-btn complete" data-order-id="${order.order_id}" data-status="delivered">
-                        <span class="btn-text">Mark Delivered</span>
+                        Mark as Delivered
                     </button>
                     <button class="action-btn cancel" data-order-id="${order.order_id}" data-status="cancelled">
-                        <span class="btn-text">Cancel Order</span>
+                        Cancel Order
                     </button>
                 `;
             } else {
+                // Show status badge for non-pending orders
                 html += `
                     <span class="status-badge ${statusClass}">
                         ${status}
@@ -221,6 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             html += `
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -294,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.querySelector(`[data-order-id="${orderId}"]`);
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Updating...</span>';
+            btn.innerHTML = 'Updating...';
         }
 
         try {
@@ -316,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.status === 'success') {
                 showNotification(`Order marked as ${newStatus} successfully!`);
                 
-                // Reload orders after short delay
+                // Reload orders after a short delay
                 setTimeout(() => {
                     const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'all';
                     loadOrders();
@@ -325,9 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Error: ' + (result.message || 'Failed to update status'), true);
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = newStatus === 'delivered' 
-                        ? '<span class="btn-text">Mark Delivered</span>'
-                        : '<span class="btn-text">Cancel Order</span>';
+                    btn.innerHTML = newStatus === 'delivered' ? 'Mark as Delivered' : 'Cancel Order';
                 }
             }
         } catch (error) {
@@ -335,14 +363,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Network error. Please try again.', true);
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = newStatus === 'delivered' 
-                    ? '<span class="btn-text">Mark Delivered</span>'
-                    : '<span class="btn-text">Cancel Order</span>';
+                btn.innerHTML = newStatus === 'delivered' ? 'Mark as Delivered' : 'Cancel Order';
             }
         }
     }
 
-    // ============= FILTER TAB EVENT LISTENERS =============
+    // ============= FILTER TABS =============
     filterTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             filterTabs.forEach(t => t.classList.remove('active'));
@@ -353,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ============= CHECK FOR URL HASH =============
     function checkUrlHash() {
         const hash = window.location.hash;
         if (hash && hash.startsWith('#order-')) {
@@ -370,57 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= INITIAL LOAD =============
     loadOrders();
     checkUrlHash();
 });
-
-// Add some CSS for the refresh button and improved UI
-const style = document.createElement('style');
-style.textContent = `
-    .refresh-btn {
-        background: #FF8246;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 15px;
-        transition: background 0.3s;
-    }
-    
-    .refresh-btn:hover {
-        background: #e66a2c;
-    }
-    
-    .order-item-actions .btn-icon {
-        margin-right: 5px;
-        font-size: 14px;
-    }
-    
-    .order-item-actions .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-    
-    .order-item-actions .status-badge.delivered {
-        background: #d4edda;
-        color: #155724;
-    }
-    
-    .order-item-actions .status-badge.cancelled {
-        background: #f8d7da;
-        color: #721c24;
-    }
-    
-    .status-icon {
-        margin-right: 5px;
-        font-size: 14px;
-    }
-`;
-document.head.appendChild(style);

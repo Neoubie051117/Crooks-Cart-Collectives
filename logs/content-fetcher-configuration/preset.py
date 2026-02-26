@@ -1,6 +1,6 @@
 
 filesToCheck = [
-    # ile Structure
+    #File Structure
     "/logs/requirement/Instructions.md",
     "/logs/output/Project_Structure.md",
 

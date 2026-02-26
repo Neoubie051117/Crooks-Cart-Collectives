@@ -36,7 +36,7 @@ $business_name = $seller['business_name'] ?? 'Your Store';
 
         <div class="filter-tabs" id="filterTabs">
             <span class="filter-tab active" data-filter="all">All Orders</span>
-            <span class="filter-tab" data-filter="ordered">Ordered</span>
+            <span class="filter-tab" data-filter="pending">Pending</span>
             <span class="filter-tab" data-filter="delivered">Delivered</span>
             <span class="filter-tab" data-filter="cancelled">Cancelled</span>
         </div>
@@ -46,6 +46,7 @@ $business_name = $seller['business_name'] ?? 'Your Store';
         </div>
     </main>
 
+    <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
@@ -61,6 +62,7 @@ $business_name = $seller['business_name'] ?? 'Your Store';
         </div>
     </div>
 
+    <!-- Notification Modal -->
     <div id="notificationModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">

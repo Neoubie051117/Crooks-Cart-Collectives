@@ -1,11 +1,23 @@
-[26-Feb-2026 14:49:55 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[26-Feb-2026 14:49:55 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[26-Feb-2026 15:09:56 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
-[26-Feb-2026 15:36:02 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2006-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lance051117","confirm_password":"Lance051117","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
-[26-Feb-2026 15:36:14 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
-[26-Feb-2026 15:47:52 Europe/Berlin] cancelOrderItem error: SQLSTATE[HY000]: General error: 1442 Can't update table 'orders' in stored function/trigger because it is already used by statement which invoked this stored function/trigger
-[26-Feb-2026 15:53:08 Europe/Berlin] Signin attempt for identifier: lance
-[26-Feb-2026 16:05:37 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[26-Feb-2026 16:05:37 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[26-Feb-2026 16:11:20 Europe/Berlin] Signin attempt for identifier: juandelacruz
-[26-Feb-2026 16:12:12 Europe/Berlin] Signin attempt for identifier: kyle
+[26-Feb-2026 17:27:13 Europe/Berlin] cancelOrderItem error: SQLSTATE[HY000]: General error: 1442 Can't update table 'orders' in stored function/trigger because it is already used by statement which invoked this stored function/trigger
+[26-Feb-2026 17:28:32 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[26-Feb-2026 17:28:32 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[26-Feb-2026 17:28:37 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[26-Feb-2026 17:28:37 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[26-Feb-2026 17:30:56 Europe/Berlin] Signin attempt for identifier: Kyle
+[26-Feb-2026 17:31:10 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 17:34:50 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 17:42:54 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 17:43:13 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 17:43:30 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 17:44:00 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 17:44:34 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 17:44:51 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 17:45:40 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 17:46:56 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 17:54:05 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 17:54:25 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 17:58:58 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 18:17:39 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 18:25:14 Europe/Berlin] Signin attempt for identifier: kyle
+[26-Feb-2026 18:25:35 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 18:25:46 Europe/Berlin] Signin attempt for identifier: anna

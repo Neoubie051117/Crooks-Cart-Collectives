@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* UPDATED: Maps database status 'ordered' to display 'Pending'. Styled with orange/black/white. */
+/* Fixed version - shows cancel reason in order-item-status badge, keeps header badge as simple status */
 
 document.addEventListener('DOMContentLoaded', () => {
     // ============= DOM ELEMENTS =============
@@ -49,33 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
             img.alt = 'Star';
             img.style.width = '32px';
             img.style.height = '32px';
-            img.dataset.filled = 'false';
             
             star.appendChild(img);
             starContainer.appendChild(star);
             stars.push(star);
             
-            // Add hover handlers
             star.addEventListener('mouseover', function() {
                 const value = parseInt(this.dataset.value);
                 for (let j = 0; j < stars.length; j++) {
                     const starImg = stars[j].querySelector('img');
-                    if (j < value) {
-                        starImg.src = '../assets/image/icons/star-filled.svg';
-                    } else {
-                        starImg.src = '../assets/image/icons/star-empty.svg';
-                    }
+                    starImg.src = j < value ? '../assets/image/icons/star-filled.svg' : '../assets/image/icons/star-empty.svg';
                 }
             });
             
             star.addEventListener('mouseout', function() {
                 for (let j = 0; j < stars.length; j++) {
                     const starImg = stars[j].querySelector('img');
-                    if (j < currentRating) {
-                        starImg.src = '../assets/image/icons/star-filled.svg';
-                    } else {
-                        starImg.src = '../assets/image/icons/star-empty.svg';
-                    }
+                    starImg.src = j < currentRating ? '../assets/image/icons/star-filled.svg' : '../assets/image/icons/star-empty.svg';
                 }
             });
             
@@ -92,14 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Reset rating form
     function resetRatingForm() {
         currentRating = 0;
         if (ratingValue) ratingValue.value = '';
         if (ratingError) ratingError.textContent = '';
         if (reviewForm) reviewForm.reset();
         
-        // Reset stars
         stars.forEach(star => {
             const img = star.querySelector('img');
             if (img) img.src = '../assets/image/icons/star-empty.svg';
@@ -132,14 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showNotification(message, isError = false) {
         if (notificationMessage) {
             notificationMessage.textContent = message;
-            const icon = notificationModal.querySelector('.modal-icon svg');
-            if (icon) {
-                icon.style.stroke = isError ? '#dc3545' : '#FF8246';
-            }
         }
         showModal(notificationModal);
         
-        // Auto-hide after 3 seconds for success messages
         if (!isError) {
             setTimeout(() => {
                 hideModal(notificationModal);
@@ -168,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= RENDER ORDERS (with status mapping) =============
+    // ============= RENDER ORDERS =============
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
@@ -184,19 +167,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         orders.forEach(order => {
             const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
-            // Map database status to display text
-            let displayStatus;
-            switch (order.status) {
-                case 'ordered':   displayStatus = 'Pending'; break;
-                case 'delivered': displayStatus = 'Delivered'; break;
-                case 'cancelled': displayStatus = 'Cancelled'; break;
-                default:          displayStatus = order.status; // fallback
-            }
-            const statusClass = order.status.toLowerCase(); // use original for CSS class
-            const canCancel = order.status === 'ordered';   // only pending (original ordered) can be cancelled
-            const canReview = order.status === 'delivered' && !order.has_review;
+            const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
+            const statusClass = order.status.toLowerCase(); // pending, delivered, cancelled
             const imagePath = getImagePath(order.image_path);
             
+            // Determine cancellation text for order-item-status - ONLY for cancelled orders
+            let cancellationText = '';
+            if (order.status === 'cancelled' && order.cancelled_by) {
+                if (order.cancelled_by === 'customer') {
+                    cancellationText = 'Cancelled by Customer';
+                } else if (order.cancelled_by === 'seller') {
+                    cancellationText = 'Cancelled by Seller';
+                }
+            }
+            
+            // Price summary data
+            const subtotal = Number(order.subtotal).toFixed(2);
+            const total = Number(order.subtotal).toFixed(2); // shipping is free
+
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
@@ -210,44 +198,67 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="order-body">
-                        <!-- Product Image -->
-                        <div class="order-item-image">
-                            <img src="${imagePath}" alt="${escapeHtml(order.product_name)}"
-                                 onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                        <!-- Column 1: Order Items -->
+                        <div class="order-items-column">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <img src="${imagePath}" alt="${escapeHtml(order.product_name)}"
+                                         class="order-item-image"
+                                         onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                                    <div class="order-item-details">
+                                        <div class="order-item-seller">${escapeHtml(order.seller_name || 'Unknown Seller')}</div>
+                                        <div class="order-item-title">${escapeHtml(order.product_name)}</div>
+                                        <div class="order-item-meta">
+                                            <span class="item-quantity">Qty: ${order.quantity}</span>
+                                            <span class="item-price">₱${Number(order.price_at_time).toFixed(2)}</span>
+                                        </div>
+                                        <div class="order-item-status">
+                                            ${order.status === 'cancelled' && cancellationText ? 
+                                                `<span class="status-badge ${statusClass}">${cancellationText}</span>` : 
+                                                ''
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <!-- Product Details -->
-                        <div class="order-item-details">
-                            <h3 class="product-name">${escapeHtml(order.product_name)}</h3>
-                            <p class="seller-name">Seller: ${escapeHtml(order.business_name || 'Unknown Seller')}</p>
-                            
-                            <div class="order-meta">
-                                <span class="item-quantity">Quantity: ${order.quantity}</span>
-                                <span class="item-price">₱${Number(order.price_at_time).toFixed(2)} each</span>
+
+                        <!-- Column 2: Price Summary -->
+                        <div class="order-price-summary">
+                            <div class="price-summary-title">Order Summary</div>
+                            <div class="price-row">
+                                <span>Quantity</span>
+                                <span class="price-value">${order.quantity}</span>
                             </div>
-                            
-                            <div class="order-subtotal">
-                                Subtotal: <strong>₱${Number(order.subtotal).toFixed(2)}</strong>
+                            <div class="price-row">
+                                <span>Subtotal</span>
+                                <span class="price-value">₱${subtotal}</span>
                             </div>
-                            
-                            <div class="shipping-address">
-                                <strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}
+                            <div class="price-row">
+                                <span>Shipping Fee</span>
+                                <span class="price-value">Free</span>
+                            </div>
+                            <div class="price-divider"></div>
+                            <div class="price-row price-total">
+                                <span>Total</span>
+                                <span class="price-value">₱${total}</span>
                             </div>
                         </div>
-                        
-                        <!-- Actions -->
-                        <div class="order-actions">
+
+                        <!-- Column 3: Shipping + Actions -->
+                        <div class="order-shipping-column">
+                            <div class="order-shipping-location">
+                                <div class="shipping-address-title">Shipping Address</div>
+                                <div class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</div>
+                            </div>
+
+                            <div class="order-item-actions">
             `;
-            
-            // Add action buttons based on original status
-            if (canCancel) {
-                html += `
-                    <button class="action-btn action-btn-cancel" data-order-id="${order.order_id}">
-                        Cancel Item
-                    </button>
-                `;
-            }
-            
+
+            // FIXED: Use 'pending' instead of 'ordered' for cancel button
+            const canCancel = order.status === 'pending';
+            const canReview = order.status === 'delivered' && !order.has_review;
+
             if (canReview) {
                 html += `
                     <button class="action-btn action-btn-review" 
@@ -261,6 +272,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="reviewed-badge">
                         Reviewed
                     </span>
+                `;
+            }
+            
+            if (canCancel) {
+                html += `
+                    <button class="action-btn action-btn-cancel" 
+                            data-order-id="${order.order_id}">
+                        Cancel Order
+                    </button>
                 `;
             }
             
@@ -309,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        // Review buttons
         document.querySelectorAll('.action-btn-review').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -320,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Cancel buttons
         document.querySelectorAll('.action-btn-cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -335,13 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Validate rating
             if (currentRating === 0) {
                 if (ratingError) ratingError.textContent = 'Please select a rating';
                 return;
             }
             
-            // Disable submit button
             if (submitReview) {
                 submitReview.disabled = true;
                 submitReview.textContent = 'Submitting...';
@@ -365,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showNotification('Review submitted successfully!');
                     hideModal(reviewModal);
                     resetRatingForm();
-                    loadOrders(); // Reload orders to update review status
+                    loadOrders();
                 } else {
                     showNotification(result.message || 'Failed to submit review', true);
                 }
@@ -373,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Review error:', error);
                 showNotification('Network error. Please try again.', true);
             } finally {
-                // Re-enable submit button
                 if (submitReview) {
                     submitReview.disabled = false;
                     submitReview.textContent = 'Submit Review';
@@ -406,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result.status === 'success') {
                     showNotification('Order cancelled successfully');
                     hideModal(cancelModal);
-                    loadOrders(); // Reload orders
+                    loadOrders();
                 } else {
                     showNotification(result.message || 'Failed to cancel order', true);
                 }
@@ -415,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Network error. Please try again.', true);
             } finally {
                 confirmCancel.disabled = false;
-                confirmCancel.textContent = 'Yes, Cancel Item';
+                confirmCancel.textContent = 'Yes, Cancel Order';
                 currentCancelOrderId = null;
             }
         });
@@ -442,7 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close modals when clicking outside
     [cancelModal, reviewModal, notificationModal].forEach(modal => {
         if (modal) {
             modal.addEventListener('click', (e) => {
@@ -451,14 +465,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Escape key 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hideAllModals();
     });
 
-    // Initialize star rating
     initStarRating();
-
-    // Load orders on page start
     loadOrders();
 });

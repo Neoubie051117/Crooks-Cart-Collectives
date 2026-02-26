@@ -31,3 +31,9 @@ if customer ordered and didn't cancelled, and seller confirms, then it will be s
 since we cannot simulate tracking like arrive at ware house because this is only a school project
 
 so only three statuses (pending, cancelled, delivered)
+
+and when creating feedbacks, example wrong password put the real error on /database/error_log.txt and just put some reasonable feedback on users end like invalid creadentials please try again
+
+and when revising dbCreation.sql from /database/schema/ don't overcomplicate it, since it's for school purposes, no need for triggers and too much safety nets
+
+only change what's been ask, don't do more or less, you can leave something on suggestion if you overlook something but don't do without permission

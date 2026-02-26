@@ -1,6 +1,6 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- REVISED: Separate carts and orders tables with proper order status handling
+-- SIMPLIFIED - No triggers, let PHP handle everything
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -93,7 +93,7 @@ CREATE TABLE products (
 );
 
 -- =====================================================
--- CARTS TABLE (Separate from orders)
+-- CARTS TABLE
 -- =====================================================
 CREATE TABLE carts (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -114,7 +114,7 @@ CREATE TABLE carts (
 );
 
 -- =====================================================
--- ORDERS TABLE (Fixed with proper status handling)
+-- ORDERS TABLE (Simplified - PHP handles all logic)
 -- =====================================================
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -141,7 +141,6 @@ CREATE TABLE orders (
     
     -- Cancellation tracking
     cancelled_by ENUM('customer', 'seller') NULL,
-    cancellation_reason VARCHAR(255) NULL,
     
     -- Timestamps
     delivered_at TIMESTAMP NULL,
@@ -204,88 +203,6 @@ CREATE TABLE seller_reports (
 CREATE INDEX idx_carts_customer ON carts(customer_id);
 CREATE INDEX idx_orders_customer_status ON orders(customer_id, status, order_date);
 CREATE INDEX idx_orders_seller_status ON orders(seller_id, status, order_date);
-
--- =====================================================
--- TRIGGERS
--- =====================================================
-DELIMITER $$
-
--- Auto-create customer after user signup
-CREATE TRIGGER after_user_insert
-AFTER INSERT ON users
-FOR EACH ROW
-BEGIN
-    INSERT INTO customers (user_id)
-    VALUES (NEW.user_id);
-END$$
-
--- Update seller's total_sales when items are delivered
-CREATE TRIGGER after_order_delivered
-AFTER UPDATE ON orders
-FOR EACH ROW
-BEGIN
-    IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
-        UPDATE sellers s
-        SET s.total_sales = s.total_sales + NEW.subtotal
-        WHERE s.seller_id = NEW.seller_id;
-        
-        UPDATE customers c
-        SET c.total_spent = c.total_spent + NEW.subtotal,
-            c.total_orders = c.total_orders + 1
-        WHERE c.customer_id = NEW.customer_id;
-    END IF;
-END$$
-
--- Update product stock and timestamps when order status changes
-CREATE TRIGGER after_order_status_change
-AFTER UPDATE ON orders
-FOR EACH ROW
-BEGIN
-    -- If changed to delivered (seller confirmed)
-    IF NEW.status = 'delivered' AND OLD.status = 'pending' THEN
-        UPDATE orders 
-        SET delivered_at = NOW() 
-        WHERE order_id = NEW.order_id;
-    END IF;
-    
-    -- If changed to cancelled (by either customer or seller)
-    IF NEW.status = 'cancelled' AND OLD.status = 'pending' THEN
-        -- Restore stock since order was cancelled before delivery
-        UPDATE products 
-        SET stock_quantity = stock_quantity + NEW.quantity 
-        WHERE product_id = NEW.product_id;
-        
-        UPDATE orders 
-        SET cancelled_at = NOW() 
-        WHERE order_id = NEW.order_id;
-    END IF;
-END$$
-
--- When order is placed, update stock
-CREATE TRIGGER before_order_insert
-BEFORE INSERT ON orders
-FOR EACH ROW
-BEGIN
-    DECLARE current_stock INT;
-    
-    -- Get current stock
-    SELECT stock_quantity INTO current_stock 
-    FROM products 
-    WHERE product_id = NEW.product_id;
-    
-    -- Check if sufficient stock
-    IF current_stock < NEW.quantity THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Insufficient stock for this product';
-    END IF;
-    
-    -- Reduce stock
-    UPDATE products 
-    SET stock_quantity = stock_quantity - NEW.quantity 
-    WHERE product_id = NEW.product_id;
-END$$
-
-DELIMITER ;
 
 -- =====================================================
 -- VIEWS for Easy Data Access
