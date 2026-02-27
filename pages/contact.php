@@ -64,7 +64,7 @@ $current_page = 'contact';
             <div class="contact-info__grid">
                 <article class="contact-card">
                     <div class="contact-card__icon">
-                        <img src="../assets/image/icons/order.svg" alt="Location icon"
+                        <img src="../assets/image/icons/building.svg" alt="Location icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3 class="contact-card__title">Our Campus</h3>
@@ -89,7 +89,7 @@ $current_page = 'contact';
 
                 <article class="contact-card">
                     <div class="contact-card__icon">
-                        <img src="../assets/image/icons/cancel.svg" alt="Phone icon"
+                        <img src="../assets/image/icons/contact-us-empty.svg" alt="Phone icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3 class="contact-card__title">School Contact</h3>
@@ -101,7 +101,7 @@ $current_page = 'contact';
 
                 <article class="contact-card">
                     <div class="contact-card__icon">
-                        <img src="../assets/image/icons/chart-line-up.svg" alt="Hours icon"
+                        <img src="../assets/image/icons/time-update.svg" alt="Hours icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3 class="contact-card__title">School Hours</h3>
@@ -175,19 +175,6 @@ $current_page = 'contact';
 
                 <div id="formSuccessMessage" class="contact-form__success" style="display: none;" role="status">
                     <p>Thank you for your message! (This is a demo - no actual email will be sent)</p>
-                </div>
-            </div>
-
-            <div class="map-container">
-                <header class="map-container__header">
-                    <h2 class="map-container__title">Find us on <span class="map-container__highlight">Map</span></h2>
-                </header>
-                <div class="map-container__embed">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.775403455372!2d121.05254331529254!3d14.562667289822337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c979a7e7c1b7%3A0x1e3e1a3b4b4c4d4e!2sArellano%20University%20Andres%20Bonifacio%20Campus!5e0!3m2!1sen!2sph!4v1620000000000!5m2!1sen!2sph"
-                        title="Map showing Arellano University Andres Bonifacio Campus" allowfullscreen=""
-                        loading="lazy">
-                    </iframe>
                 </div>
             </div>
         </section>

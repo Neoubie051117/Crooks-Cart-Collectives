@@ -224,19 +224,17 @@ body {
 
 .terms-agreement__btn--primary:hover {
     background-color: #e66a2e;
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
 }
 
 .terms-agreement__btn--secondary {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: #000000;
+    color: #ffffff;
     border: 1px solid #ddd;
 }
 
 .terms-agreement__btn--secondary:hover {
-    background-color: #e9ecef;
-    transform: translateY(-2px);
+    background-color: #000000;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */

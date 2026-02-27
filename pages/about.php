@@ -10,7 +10,6 @@ $current_page = 'about';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Crooks Cart Collectives</title>
-    <link rel="icon" type="image/png" href="../assets/image/brand/Logo.png">
 
     <script src="../scripts/header.js" defer></script>
     <link rel="stylesheet" href="../styles/header.css">
@@ -68,7 +67,7 @@ $current_page = 'about';
                 <div class="course-card">
                     <h3>ITC 124: Fundamentals of Database Systems</h3>
                     <p class="course-subject">Database Design & Management</p>
-                    <p class="instructor">Instructor: Mr. Louise Vasques</p>
+                    <p class="instructor">Instructor: Mr. Louise Vasquez</p>
                     <p class="course-description">This course covers professional database practices including ER
                         diagramming, normalization (1NF-3NF), entity relationships, and SQL implementation. Students
                         applied these concepts to design and implement the project's database structure.</p>
@@ -105,8 +104,7 @@ $current_page = 'about';
                     </div>
                     <h3>Christian Ahron B. Adviento</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Front-end development, UI design implementation, and documentation
-                        collaboration.</p>
+                    <p class="team-bio">Helped with documentation and gave feedback during meetings.</p>
                 </div>
 
                 <div class="team-card">
@@ -115,7 +113,7 @@ $current_page = 'about';
                     </div>
                     <h3>William G. Arañez</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Database management, SQL implementation, and backend integration.</p>
+                    <p class="team-bio">Assisted in documentation and provided suggestions to the team.</p>
                 </div>
 
                 <div class="team-card">
@@ -124,7 +122,7 @@ $current_page = 'about';
                     </div>
                     <h3>Rylle Javerick S. Bernardino</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Authentication system, session handling, and security implementation.</p>
+                    <p class="team-bio">Worked on documentation and shared feedback with the group.</p>
                 </div>
 
                 <div class="team-card">
@@ -133,7 +131,7 @@ $current_page = 'about';
                     </div>
                     <h3>Charles Symon Kieffer C. Cañoneo</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Product listing, cart functionality, and user interaction features.</p>
+                    <p class="team-bio">Contributed to documentation and cooperated with team members.</p>
                 </div>
 
                 <div class="team-card">
@@ -142,7 +140,7 @@ $current_page = 'about';
                     </div>
                     <h3>Kishiekel C. Fernandez</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">CSS styling, responsive design, and front-end framework integration.</p>
+                    <p class="team-bio">Assisted with documentation and gave input during discussions.</p>
                 </div>
 
                 <div class="team-card">
@@ -151,7 +149,7 @@ $current_page = 'about';
                     </div>
                     <h3>Clark Luis F. Mallo</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Form validation, JavaScript functionality, and client-side scripting.</p>
+                    <p class="team-bio">Helped with documentation and provided feedback to the team.</p>
                 </div>
 
                 <div class="team-card">
@@ -160,7 +158,7 @@ $current_page = 'about';
                     </div>
                     <h3>Christian Ruel G. Mendoza</h3>
                     <p class="team-role">Member</p>
-                    <p class="team-bio">Testing, debugging, technical documentation, and presentation materials.</p>
+                    <p class="team-bio">Worked on documentation and offered suggestions during meetings.</p>
                 </div>
             </div>
 

@@ -132,10 +132,6 @@ function handleSignin() {
             $_SESSION['seller_verified'] = false;
         }
         
-        // Update last login timestamp
-        $stmt = $connection->prepare("UPDATE users SET last_updated = NOW() WHERE user_id = ?");
-        $stmt->execute([$user['user_id']]);
-        
         // Determine redirect
         $redirect = '';
         if (!empty($redirectParam)) {

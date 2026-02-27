@@ -71,6 +71,8 @@ function addProduct($sellerId) {
         $imagePath
     ]);
 
+    // Removed total_products update – column no longer exists
+
     echo json_encode(['status' => 'success', 'message' => 'Product added successfully']);
 }
 
@@ -110,12 +112,10 @@ function updateProduct($sellerId) {
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
             $imagePath = 'database/uploads/products/' . $fileName;
-
-            // Optionally delete old image file (not implemented)
         }
     }
 
-    $query = "UPDATE products SET name=?, category=?, price=?, stock_quantity=?, description=?, last_updated=NOW()";
+    $query = "UPDATE products SET name=?, category=?, price=?, stock_quantity=?, description=?";
     $params = [$_POST['name'], $_POST['category'], $_POST['price'], $_POST['stock_quantity'], $_POST['description']];
 
     if ($imagePath) {
@@ -141,11 +141,13 @@ function deleteProduct($sellerId) {
         exit;
     }
 
-    // Verify ownership and delete (cascade will handle reviews/cart items)
+    // Verify ownership and delete
     $stmt = $connection->prepare("DELETE FROM products WHERE product_id = ? AND seller_id = ?");
     $stmt->execute([$_POST['product_id'], $sellerId]);
 
     if ($stmt->rowCount() > 0) {
+        // Removed total_products update – column no longer exists
+        
         echo json_encode(['status' => 'success', 'message' => 'Product deleted']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);

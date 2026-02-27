@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-27 19:35:52
+**Generated:** 2026-02-27 23:42:50
 **Mode:** all
 
 ```
@@ -12,6 +12,9 @@ Crooks-Cart-Collectives/
 │       ├── brand/
 │       │   └── Logo.png
 │       ├── icons/
+│       │   ├── about-empty.svg
+│       │   ├── about-filled.svg
+│       │   ├── building.svg
 │       │   ├── cancel.svg
 │       │   ├── cart-arrow-downsvg.svg
 │       │   ├── cart-arrow-up.svg
@@ -19,8 +22,13 @@ Crooks-Cart-Collectives/
 │       │   ├── cart-shopping-fast.svg
 │       │   ├── cart-shopping.svg
 │       │   ├── chart-line-up.svg
+│       │   ├── community-general.svg
 │       │   ├── complaint-icon.png
+│       │   ├── contact-us-empty.svg
+│       │   ├── contact-us-filled.svg
+│       │   ├── edit.svg
 │       │   ├── facebook.svg
+│       │   ├── fill-form.svg
 │       │   ├── github.svg
 │       │   ├── hamburger-menu.svg
 │       │   ├── instagram.svg
@@ -30,6 +38,11 @@ Crooks-Cart-Collectives/
 │       │   ├── package.svg
 │       │   ├── password-hide.svg
 │       │   ├── password-unhide.svg
+│       │   ├── people-team.svg
+│       │   ├── profile.svg
+│       │   ├── reset.svg
+│       │   ├── save-empty.svg
+│       │   ├── save-filled.svg
 │       │   ├── seller-product-placeholder.png
 │       │   ├── Showcase1.png
 │       │   ├── Showcase2.png
@@ -37,8 +50,13 @@ Crooks-Cart-Collectives/
 │       │   ├── star-filled.svg
 │       │   ├── submit-picture-icon.png
 │       │   ├── submit-valid-id-icon.png
+│       │   ├── time-update.svg
 │       │   ├── trash.svg
+│       │   ├── update.svg
 │       │   ├── updatesvg.svg
+│       │   ├── user-profile-circle.svg
+│       │   ├── verified-empty.svg
+│       │   ├── verified-filled.svg
 │       │   └── youtube.svg
 │       └── team/
 │           ├── charles-canoneo.png
@@ -80,6 +98,7 @@ Crooks-Cart-Collectives/
 │   │   └── Instructions.md
 │   ├── content-fetcher.py
 │   ├── runner.bat
+│   ├── tempCodeRunnerFile.bat
 │   └── tree-mapper.py
 ├── pages/
 │   ├── about.php
@@ -158,11 +177,11 @@ Crooks-Cart-Collectives/
 | JavaScript Files | 16 |
 | JSON Files | 0 |
 | Text/Markdown | 7 |
-| Image Files | 37 |
-| Other Files | 10 |
+| Image Files | 55 |
+| Other Files | 11 |
 
 **Total Directories:** 14
-**Total Files:** 124
+**Total Files:** 143
 
 ---
 

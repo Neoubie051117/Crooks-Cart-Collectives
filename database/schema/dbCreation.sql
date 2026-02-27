@@ -1,12 +1,12 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- SIMPLIFIED - No triggers, let PHP handle everything
+-- REVISED SCHEMA - Following the requested changes
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
 
 -- =====================================================
--- USERS TABLE (Base table for all users)
+-- USERS TABLE
 -- =====================================================
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,8 +21,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     address VARCHAR(255),
     profile_picture VARCHAR(255),
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -- removed last_updated
 );
 
 -- =====================================================
@@ -36,7 +36,7 @@ CREATE TABLE administrators (
     contact_number VARCHAR(15),
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- renamed from date_created
 );
 
 -- =====================================================
@@ -46,8 +46,7 @@ CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- Removed: total_orders INT DEFAULT 0,
-    -- Removed: total_spent DECIMAL(10, 2) DEFAULT 0.00,
+    -- Removed denormalized fields: total_orders, total_spent
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
         ON DELETE CASCADE
@@ -64,8 +63,9 @@ CREATE TABLE sellers (
     is_verified BOOLEAN DEFAULT FALSE,
     verification_date TIMESTAMP NULL,
     date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    total_products INT DEFAULT 0,
-    total_sales DECIMAL(10, 2) DEFAULT 0.00,
+    -- Consider removing these denormalized fields:
+    -- total_products INT DEFAULT 0,
+    -- total_sales DECIMAL(10, 2) DEFAULT 0.00,
     rating DECIMAL(3, 2) DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
@@ -84,9 +84,10 @@ CREATE TABLE products (
     category VARCHAR(50),
     stock_quantity INT DEFAULT 0,
     image_path VARCHAR(255),
-    is_active BOOLEAN DEFAULT TRUE,
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,  -- KEEP: used in queries
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- KEEP: used for sorting
+    -- removed last_updated
+    
     FOREIGN KEY (seller_id)
         REFERENCES sellers(seller_id)
         ON DELETE CASCADE
@@ -101,9 +102,9 @@ CREATE TABLE carts (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
-    price_at_time DECIMAL(10, 2) NOT NULL,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- keep this
+    -- removed updated_at
     
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
@@ -114,7 +115,7 @@ CREATE TABLE carts (
 );
 
 -- =====================================================
--- ORDERS TABLE (Simplified - PHP handles all logic)
+-- ORDERS TABLE
 -- =====================================================
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -124,8 +125,8 @@ CREATE TABLE orders (
     
     -- Order details
     quantity INT NOT NULL,
-    price_at_time DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price_at_time) STORED,
+    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
+    subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
     
     -- Shipping & payment
     shipping_address VARCHAR(255) NOT NULL,
@@ -133,16 +134,10 @@ CREATE TABLE orders (
     
     -- Order tracking
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM(
-        'pending',      -- Initial state: Order placed, awaiting seller confirmation
-        'delivered',    -- Completed: Seller confirmed the order
-        'cancelled'     -- Cancelled: Either customer cancelled or seller cancelled
-    ) DEFAULT 'pending',
+    status ENUM('pending', 'delivered', 'cancelled') DEFAULT 'pending',
     
-    -- Cancellation tracking
+    -- Cancellation tracking - keep separate, they track different aspects
     cancelled_by ENUM('customer', 'seller') NULL,
-    
-    -- Timestamps
     delivered_at TIMESTAMP NULL,
     cancelled_at TIMESTAMP NULL,
     

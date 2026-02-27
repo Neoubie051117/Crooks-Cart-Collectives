@@ -16,10 +16,10 @@ try {
         SELECT 
             c.cart_id,
             c.quantity,
-            c.price_at_time,
+            c.price,
             p.product_id,
             p.name,
-            p.price,
+            p.price AS current_price,
             p.image_path,
             p.stock_quantity,
             s.business_name,
@@ -34,7 +34,7 @@ try {
     $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($cartItems as $item) {
-        $total += $item['price_at_time'] * $item['quantity'];
+        $total += $item['price'] * $item['quantity'];
     }
 } catch (PDOException $e) {
     error_log("Error fetching cart: " . $e->getMessage());
@@ -76,7 +76,7 @@ try {
                                 $imagePath = '../' . $item['image_path'];
                             }
                         }
-                        $subtotal = $item['price_at_time'] * $item['quantity'];
+                        $subtotal = $item['price'] * $item['quantity'];
                     ?>
                 <div class="cart-item" data-id="<?= $item['cart_id'] ?>">
                     <div class="cart-item-image">
@@ -86,7 +86,7 @@ try {
                     <div class="cart-item-details">
                         <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
                         <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
-                        <p class="cart-item-price">₱<?= number_format($item['price_at_time'], 2) ?></p>
+                        <p class="cart-item-price">₱<?= number_format($item['price'], 2) ?></p>
 
                         <div class="cart-item-controls">
                             <div class="cart-item-quantity">

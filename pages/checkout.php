@@ -10,25 +10,89 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 $customer_id = $_SESSION['customer_id'];
 $user_id = $_SESSION['user_id'];
 
+// Check for single product checkout (Buy Now)
+$singleProductMode = false;
+$singleProduct = null;
 $cartItems = [];
 $total = 0;
-try {
-    $stmt = $connection->prepare("
-        SELECT c.*, p.name, p.price, p.image_path, s.business_name
-        FROM carts c
-        JOIN products p ON c.product_id = p.product_id
-        JOIN sellers s ON p.seller_id = s.seller_id
-        WHERE c.customer_id = ?
-    ");
-    $stmt->execute([$customer_id]);
-    $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($cartItems as $item) {
-        $total += $item['price_at_time'] * $item['quantity'];
+
+if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
+    $singleProductMode = true;
+    $productId = (int)$_GET['product_id'];
+    $quantity = isset($_GET['quantity']) ? (int)$_GET['quantity'] : 1;
+    if ($quantity < 1) $quantity = 1;
+
+    // Fetch product details
+    try {
+        $stmt = $connection->prepare("
+            SELECT p.*, s.business_name, s.seller_id
+            FROM products p
+            JOIN sellers s ON p.seller_id = s.seller_id
+            WHERE p.product_id = ? AND p.is_active = 1
+        ");
+        $stmt->execute([$productId]);
+        $singleProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$singleProduct) {
+            // Invalid product, redirect to products
+            header('Location: products.php');
+            exit;
+        }
+
+        // Check stock
+        if ($quantity > $singleProduct['stock_quantity']) {
+            $_SESSION['checkout_error'] = 'Insufficient stock for selected quantity.';
+            header('Location: product-details.php?id=' . $productId);
+            exit;
+        }
+
+        // Build a single-item cart array for display
+        $cartItems = [
+            [
+                'cart_id' => null,
+                'product_id' => $singleProduct['product_id'],
+                'name' => $singleProduct['name'],
+                'image_path' => $singleProduct['image_path'],
+                'business_name' => $singleProduct['business_name'],
+                'seller_id' => $singleProduct['seller_id'],
+                'quantity' => $quantity,
+                'price' => $singleProduct['price'],
+                'stock_quantity' => $singleProduct['stock_quantity']
+            ]
+        ];
+        $total = $singleProduct['price'] * $quantity;
+    } catch (PDOException $e) {
+        error_log("Checkout single product fetch error: " . $e->getMessage());
+        header('Location: products.php');
+        exit;
     }
-} catch (PDOException $e) {
-    error_log("Checkout cart fetch error: " . $e->getMessage());
+} else {
+    // Normal cart checkout
+    try {
+        $stmt = $connection->prepare("
+            SELECT c.*, p.name, p.image_path, s.business_name
+            FROM carts c
+            JOIN products p ON c.product_id = p.product_id
+            JOIN sellers s ON p.seller_id = s.seller_id
+            WHERE c.customer_id = ?
+        ");
+        $stmt->execute([$customer_id]);
+        $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($cartItems as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+    } catch (PDOException $e) {
+        error_log("Checkout cart fetch error: " . $e->getMessage());
+    }
+
+    if (empty($cartItems)) {
+        header('Location: cart.php');
+        exit;
+    }
 }
 
+// Fetch user shipping address
 $user = [];
 try {
     $stmt = $connection->prepare("SELECT address, first_name, last_name, email, contact_number FROM users WHERE user_id = ?");
@@ -38,10 +102,19 @@ try {
     error_log("Checkout user fetch error: " . $e->getMessage());
 }
 
-if (empty($cartItems)) {
-    header('Location: cart.php');
-    exit;
+// Get safe values for display with null checks
+$fullName = '';
+if (!empty($user['first_name']) && !empty($user['last_name'])) {
+    $fullName = htmlspecialchars($user['first_name'] . ' ' . $user['last_name'], ENT_QUOTES, 'UTF-8');
+} elseif (!empty($user['first_name'])) {
+    $fullName = htmlspecialchars($user['first_name'], ENT_QUOTES, 'UTF-8');
+} elseif (!empty($user['last_name'])) {
+    $fullName = htmlspecialchars($user['last_name'], ENT_QUOTES, 'UTF-8');
 }
+
+$shippingAddress = !empty($user['address']) ? htmlspecialchars($user['address'], ENT_QUOTES, 'UTF-8') : '';
+$userEmail = !empty($user['email']) ? htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') : '';
+$userPhone = !empty($user['contact_number']) ? htmlspecialchars($user['contact_number'], ENT_QUOTES, 'UTF-8') : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,16 +143,19 @@ if (empty($cartItems)) {
                         if (!empty($item['image_path'])) {
                             $imagePath = (strpos($item['image_path'], 'assets/') === 0) ? '../' . $item['image_path'] : '../' . $item['image_path'];
                         }
+                        $itemName = !empty($item['name']) ? htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') : 'Product';
+                        $sellerName = !empty($item['business_name']) ? htmlspecialchars($item['business_name'], ENT_QUOTES, 'UTF-8') : 'Seller';
                     ?>
                     <div class="checkout-item">
-                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
+                        <img src="<?= htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8') ?>" alt="<?= $itemName ?>"
                             class="checkout-item-image"
-                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                            onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
                         <div class="checkout-item-details">
-                            <h3><?= htmlspecialchars($item['name']) ?></h3>
-                            <p>Seller: <?= htmlspecialchars($item['business_name']) ?></p>
-                            <p>Qty: <?= $item['quantity'] ?></p>
-                            <p class="checkout-item-price">₱<?= number_format($item['price'] * $item['quantity'], 2) ?>
+                            <h3><?= $itemName ?></h3>
+                            <p>Seller: <?= $sellerName ?></p>
+                            <p>Qty: <?= (int)$item['quantity'] ?></p>
+                            <p class="checkout-item-price">
+                                ₱<?= number_format((float)($item['price'] * $item['quantity']), 2) ?>
                             </p>
                         </div>
                     </div>
@@ -87,17 +163,17 @@ if (empty($cartItems)) {
                 </div>
                 <div class="checkout-total">
                     <span>Total:</span>
-                    <span class="total-amount">₱<?= number_format($total, 2) ?></span>
+                    <span class="total-amount">₱<?= number_format((float)$total, 2) ?></span>
                 </div>
             </div>
 
             <div class="checkout-info">
                 <h2>Shipping Address</h2>
                 <div class="shipping-details">
-                    <p><strong><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></strong></p>
-                    <p><?= htmlspecialchars($user['address']) ?></p>
-                    <p>Email: <?= htmlspecialchars($user['email']) ?></p>
-                    <p>Phone: <?= htmlspecialchars($user['contact_number']) ?></p>
+                    <p><strong><?= $fullName ?: 'Customer' ?></strong></p>
+                    <p><?= $shippingAddress ?: 'No address on file' ?></p>
+                    <p>Email: <?= $userEmail ?: 'Not provided' ?></p>
+                    <p>Phone: <?= $userPhone ?: 'Not provided' ?></p>
                 </div>
 
                 <h2>Payment Method</h2>
@@ -106,7 +182,7 @@ if (empty($cartItems)) {
                 </div>
 
                 <div class="checkout-actions">
-                    <a href="cart.php" class="btn btn-secondary">Back to Cart</a>
+                    <a href="products.php" class="btn btn-secondary">Back to Shop</a>
                     <button id="placeOrderBtn" class="btn btn-primary">Place Order</button>
                 </div>
             </div>
@@ -117,12 +193,19 @@ if (empty($cartItems)) {
 
     <div id="checkoutNotifier" class="notifier hidden">
         <div class="notifier-content">
-            <img src="../assets/image/icons/mail.svg" alt="Notification"
+            <img src="../assets/image/icons/cart-shopping.svg" alt="Order" class="notifier-icon"
                 style="width: 40px; height: 40px; margin-bottom: 15px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
             <p id="checkoutMessage"></p>
             <button id="checkoutCloseBtn" class="btn btn-primary">OK</button>
         </div>
     </div>
+
+    <input type="hidden" id="singleProductMode" value="<?= $singleProductMode ? '1' : '0' ?>">
+    <?php if ($singleProductMode && $singleProduct): ?>
+    <input type="hidden" id="singleProductId" value="<?= (int)$singleProduct['product_id'] ?>">
+    <input type="hidden" id="singleQuantity" value="<?= (int)$quantity ?>">
+    <input type="hidden" id="singlePrice" value="<?= (float)$singleProduct['price'] ?>">
+    <?php endif; ?>
 
     <script src="../scripts/checkout.js"></script>
 </body>

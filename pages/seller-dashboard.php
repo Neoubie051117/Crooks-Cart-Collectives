@@ -175,7 +175,7 @@ try {
         <div class="recent-activity">
             <h2>
                 Recent Orders
-                <a href="seller-orders.php">View All →</a>
+                <a href="seller-orders.php">View All</a>
             </h2>
             <?php
             if (empty($recentOrders)) {
@@ -193,7 +193,7 @@ try {
                         <?= $order['quantity'] ?>)</p>
                     <small><?= $formattedDate ?></small>
                 </div>
-                <a href="seller-orders.php#order-<?= $order['order_id'] ?>" class="activity-link">View Details →</a>
+                <a href="seller-orders.php#order-<?= $order['order_id'] ?>" class="activity-link">View Details</a>
             </li>
             <?php
                 }

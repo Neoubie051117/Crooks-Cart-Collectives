@@ -105,7 +105,7 @@ try {
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <img src="assets/image/icons/cart-shopping.svg" alt="Shopping cart icon"
+                            <img src="assets/image/icons/people-team.svg" alt="People team icon"
                                 onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
                         </div>
                         <h3>Local Community</h3>
@@ -113,7 +113,7 @@ try {
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <img src="assets/image/icons/package.svg" alt="Verified package icon"
+                            <img src="assets/image/icons/verified-empty.svg" alt="Verified icon"
                                 onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
                         </div>
                         <h3>Verified Sellers</h3>
@@ -121,7 +121,7 @@ try {
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <img src="assets/image/icons/cart-arrow-up.svg" alt="Delivery truck icon"
+                            <img src="assets/image/icons/cart-shopping-fast.svg" alt="Delivery truck icon"
                                 onerror="this.onerror=null; this.src='assets/image/brand/Logo.png';">
                         </div>
                         <h3>Easy Delivery</h3>

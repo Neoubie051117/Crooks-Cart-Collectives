@@ -22,7 +22,7 @@ switch ($action) {
         addToCart($customer_id);
         break;
     case 'update':
-        updateCartItem();
+        updateCartItem($customer_id);
         break;
     case 'remove':
         removeCartItem();
@@ -88,14 +88,14 @@ function addToCart($customerId) {
             
             $stmt = $connection->prepare("
                 UPDATE carts 
-                SET quantity = ?, updated_at = NOW() 
+                SET quantity = ?
                 WHERE cart_id = ?
             ");
             $stmt->execute([$newQuantity, $existing['cart_id']]);
         } else {
-            // Insert new cart item
+            // Insert new cart item - using 'price' instead of 'price_at_time'
             $stmt = $connection->prepare("
-                INSERT INTO carts (customer_id, seller_id, product_id, quantity, price_at_time)
+                INSERT INTO carts (customer_id, seller_id, product_id, quantity, price)
                 VALUES (?, ?, ?, ?, ?)
             ");
             $stmt->execute([
@@ -115,7 +115,7 @@ function addToCart($customerId) {
     }
 }
 
-function updateCartItem() {
+function updateCartItem($customerId) {
     global $connection;
     
     $cartId = $_POST['cart_item_id'] ?? 0;
@@ -127,14 +127,14 @@ function updateCartItem() {
     }
 
     try {
-        // Get product stock
+        // Verify cart item belongs to customer and get product stock
         $stmt = $connection->prepare("
             SELECT p.stock_quantity
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
-            WHERE c.cart_id = ?
+            WHERE c.cart_id = ? AND c.customer_id = ?
         ");
-        $stmt->execute([$cartId]);
+        $stmt->execute([$cartId, $customerId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$result) {
@@ -149,10 +149,10 @@ function updateCartItem() {
 
         $stmt = $connection->prepare("
             UPDATE carts 
-            SET quantity = ?, updated_at = NOW() 
-            WHERE cart_id = ?
+            SET quantity = ?
+            WHERE cart_id = ? AND customer_id = ?
         ");
-        $stmt->execute([$quantity, $cartId]);
+        $stmt->execute([$quantity, $cartId, $customerId]);
 
         echo json_encode(['status' => 'success']);
         

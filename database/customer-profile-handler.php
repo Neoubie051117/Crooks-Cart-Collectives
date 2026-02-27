@@ -131,7 +131,7 @@ function updateProfile($userID) {
     try {
         $connection->beginTransaction();
         
-        $query = "UPDATE users SET " . implode(', ', $setClause) . ", last_updated = NOW() WHERE user_id = ?";
+        $query = "UPDATE users SET " . implode(', ', $setClause) . " WHERE user_id = ?";
         $stmt = $connection->prepare($query);
         $stmt->execute($params);
         

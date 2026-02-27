@@ -90,22 +90,10 @@ try {
         </div>
 
         <div class="dashboard-grid">
-            <!-- Start Shopping Card -->
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <img src="../assets/image/icons/cart-shopping.svg" alt="Shopping cart"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                </div>
-                <h3>Start Shopping</h3>
-                <p>Browse our curated collection of products from verified sellers</p>
-                <a href="products.php" class="btn-primary">Shop Now</a>
-            </div>
-
             <!-- Your Profile Card -->
             <div class="dashboard-card">
                 <div class="card-icon">
-                    <img src="../assets/image/icons/order.svg" alt="Profile"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    <img src="../assets/image/icons/profile.svg" alt="Profile">
                 </div>
                 <h3>Your Profile</h3>
                 <p>Keep your personal information and contact details up to date</p>
@@ -116,8 +104,7 @@ try {
             <!-- SELLER: Show Selling dashboard link -->
             <div class="dashboard-card">
                 <div class="card-icon">
-                    <img src="../assets/image/icons/package.svg" alt="Seller dashboard"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    <img src="../assets/image/icons/fill-form.svg" alt="Seller dashboard">
                 </div>
                 <h3>Selling Dashboard</h3>
                 <p>Manage your products, view orders, and track your sales</p>
@@ -127,8 +114,7 @@ try {
             <!-- CUSTOMER ONLY: Show Become a Seller -->
             <div class="dashboard-card">
                 <div class="card-icon">
-                    <img src="../assets/image/icons/cart-plus.svg" alt="Become a seller"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    <img src="../assets/image/icons/fill-form.svg" alt="Become a seller">
                 </div>
                 <h3>Become a Seller</h3>
                 <p>Start your entrepreneurial journey with our community</p>
@@ -136,33 +122,10 @@ try {
             </div>
             <?php endif; ?>
 
-            <!-- Shopping Cart Card -->
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <img src="../assets/image/icons/cart-arrow-downsvg.svg" alt="Shopping cart"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                </div>
-                <h3>Shopping Cart</h3>
-                <p>Review and manage items ready for purchase</p>
-                <a href="cart.php" class="btn-primary">Go to Cart</a>
-            </div>
-
-            <!-- My Orders Card -->
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <img src="../assets/image/icons/order.svg" alt="Orders"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                </div>
-                <h3>My Orders</h3>
-                <p>Track your order history and delivery status</p>
-                <a href="orders.php" class="btn-primary">View Orders</a>
-            </div>
-
             <!-- About Us Card -->
             <div class="dashboard-card">
                 <div class="card-icon">
-                    <img src="../assets/image/icons/mail.svg" alt="About us"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    <img src="../assets/image/icons/about-empty.svg" alt="About us">
                 </div>
                 <h3>About Us</h3>
                 <p>Learn about our project, mission, and the development team</p>
@@ -172,8 +135,7 @@ try {
             <!-- Contact Us Card -->
             <div class="dashboard-card">
                 <div class="card-icon">
-                    <img src="../assets/image/icons/mail.svg" alt="Contact us"
-                        onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
+                    <img src="../assets/image/icons/contact-us-empty.svg" alt="Contact us">
                 </div>
                 <h3>Contact Us</h3>
                 <p>Get in touch with our team for questions or feedback</p>

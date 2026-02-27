@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4>${escapeHtml(order.product_name)}</h4>
                                     <p><span class="info-label">Seller:</span> ${escapeHtml(order.seller_name || 'Unknown Seller')}</p>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
-                                    <p><span class="info-label">Price:</span> ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>  <!-- changed from price_at_time to price -->
                                 </div>
                             </div>
                         </div>
@@ -298,15 +298,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <textarea class="shipping-edit-textarea" rows="3" style="display: none; width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none; overflow: hidden;">${escapeHtml(order.shipping_address || '')}</textarea>
                                     <div class="shipping-buttons">
                                         <button class="action-btn edit-shipping" data-order-id="${order.order_id}" ${!isEditable ? 'style="display: none;"' : ''}>
-                                            <img src="../assets/image/icons/updatesvg.svg" alt="Edit" class="btn-icon">
+                                            <img src="../assets/image/icons/edit.svg" alt="Edit" class="btn-icon">
                                             <span class="btn-text">Edit</span>
                                         </button>
                                         <button class="action-btn save-shipping" data-order-id="${order.order_id}" style="display: none;">
-                                            <img src="../assets/image/icons/updatesvg.svg" alt="Save" class="btn-icon">
+                                            <img src="../assets/image/icons/save-empty.svg" alt="Save" class="btn-icon">
                                             <span class="btn-text">Save</span>
                                         </button>
                                         <button class="action-btn reset-shipping" data-order-id="${order.order_id}" style="display: none;">
-                                            <img src="../assets/image/icons/order.svg" alt="Reset" class="btn-icon">
+                                            <img src="../assets/image/icons/reset.svg" alt="Reset" class="btn-icon">
                                             <span class="btn-text">Reset</span>
                                         </button>
                                     </div>

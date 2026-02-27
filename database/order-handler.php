@@ -55,7 +55,7 @@ function getCustomerOrders() {
                 o.order_id,
                 o.product_id,
                 o.quantity,
-                o.price_at_time,
+                o.price,
                 o.subtotal,
                 o.status,
                 o.shipping_address,
@@ -168,7 +168,7 @@ function getSellerOrders() {
                 o.customer_id,
                 o.product_id,
                 o.quantity,
-                o.price_at_time,
+                o.price,
                 o.subtotal,
                 o.status,
                 o.shipping_address,
@@ -254,14 +254,7 @@ function updateItemStatus() {
             ");
             $update->execute([$order_id, $seller_id]);
             
-            $updateSales = $connection->prepare("
-                UPDATE sellers 
-                SET total_sales = total_sales + (
-                    SELECT subtotal FROM orders WHERE order_id = ?
-                )
-                WHERE seller_id = ?
-            ");
-            $updateSales->execute([$order_id, $seller_id]);
+            // Removed total_sales update – column no longer exists
             
         } else if ($status === 'cancelled') {
             $update = $connection->prepare("

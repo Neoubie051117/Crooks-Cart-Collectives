@@ -1,44 +1,16 @@
-/* JavaScript File Content */
-// Crooks-Cart-Collectives/scripts/product-details.js
+/* Crooks-Cart-Collectives/scripts/product-details.js */
+/* Redesigned for compact layout with better functionality */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // ===== IMAGE GALLERY FUNCTIONALITY =====
+    'use strict';
+    
+    // ===== DOM ELEMENTS =====
     const mainImage = document.querySelector('.main-product-image');
-    const thumbnails = document.querySelectorAll('.thumbnail');
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    const buyNowBtn = document.querySelector('.buy-now-btn');
     
-    if (thumbnails.length > 0 && mainImage) {
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                // Remove active class from all thumbnails
-                thumbnails.forEach(t => t.classList.remove('active'));
-                
-                // Add active class to clicked thumbnail
-                this.classList.add('active');
-                
-                // Get the image source from the clicked thumbnail
-                const thumbImg = this.querySelector('img');
-                if (thumbImg && thumbImg.src) {
-                    mainImage.src = thumbImg.src;
-                    
-                    // Add a subtle fade effect
-                    mainImage.style.opacity = '0.5';
-                    setTimeout(() => {
-                        mainImage.style.opacity = '1';
-                    }, 100);
-                }
-            });
-        });
-    }
-    
-    // ===== IMAGE ZOOM/VIEW FUNCTIONALITY =====
+    // ===== IMAGE HANDLING =====
     if (mainImage) {
-        // Optional: Add click to view full size
-        mainImage.addEventListener('click', function() {
-            // You could implement a lightbox here
-            // For now, just a simple console log
-            console.log('Image clicked - lightbox could be implemented');
-        });
-        
         // Handle image load errors
         mainImage.addEventListener('error', function() {
             this.src = '../assets/image/icons/PlaceholderAssetProduct.png';
@@ -46,11 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ===== ADD TO CART FUNCTIONALITY =====
-    const addToCartBtn = document.querySelector('.add-to-cart-btn');
-    const buyNowBtn = document.querySelector('.buy-now-btn');
-    
-    // Shared function to show notifications
+    // ===== NOTIFICATION SYSTEM =====
     function showNotification(message, type = 'success') {
         // Remove any existing notification
         const existingNotification = document.querySelector('.product-notification');
@@ -58,36 +26,71 @@ document.addEventListener('DOMContentLoaded', function() {
             existingNotification.remove();
         }
         
+        // Determine icon based on type
+        const iconFile = type === 'success' ? 'cart-shopping.svg' : 'cancel.svg';
+        
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `product-notification ${type}`;
         notification.setAttribute('role', 'alert');
-        notification.innerHTML = `
-            <span class="notification-icon">${type === 'success' ? '✓' : '✗'}</span>
-            <span class="notification-message">${message}</span>
-        `;
+        
+        // Create icon element
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'notification-icon';
+        const iconImg = document.createElement('img');
+        iconImg.src = `../assets/image/icons/${iconFile}`;
+        iconImg.alt = type === 'success' ? 'Success' : 'Error';
+        iconImg.style.width = '20px';
+        iconImg.style.height = '20px';
+        iconSpan.appendChild(iconImg);
+        
+        // Create message element
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'notification-message';
+        messageSpan.textContent = message;
+        
+        notification.appendChild(iconSpan);
+        notification.appendChild(messageSpan);
         
         // Add styles for the notification content
         notification.style.cssText = `
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             position: fixed;
             top: 100px;
             right: 20px;
-            padding: 15px 25px;
-            background: ${type === 'success' ? '#000000' : '#dc3545'};
+            padding: 12px 20px;
+            background: #000000;
             color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 9999;
             animation: slideInRight 0.3s ease;
             font-weight: 500;
-            max-width: 350px;
+            max-width: 300px;
             word-break: break-word;
+            border-left: 4px solid ${type === 'success' ? '#FF8246' : '#FF8246'};
         `;
         
         document.body.appendChild(notification);
+        
+        // Add animation styles if not present
+        if (!document.getElementById('notification-animations')) {
+            const style = document.createElement('style');
+            style.id = 'notification-animations';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
         
         // Remove notification after 3 seconds
         setTimeout(() => {
@@ -95,13 +98,23 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 notification.remove();
             }, 300);
-        }, 5000);
+        }, 3000);
     }
     
-    // Function to handle cart operations
-    async function handleCartAction(productId, action = 'add') {
+    // ===== CART ACTION =====
+    async function handleCartAction(productId) {
         try {
-            const response = await fetch('../database/cart-handler.php', {
+            // Determine correct API path
+            const currentPath = window.location.pathname;
+            let apiPath = '../database/cart-handler.php';
+            
+            if (currentPath.includes('/pages/')) {
+                apiPath = '../database/cart-handler.php';
+            } else {
+                apiPath = 'database/cart-handler.php';
+            }
+            
+            const response = await fetch(apiPath, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -116,9 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             
             if (result.status === 'success') {
-                showNotification('Product added to cart successfully!', 'success');
+                showNotification('Added to cart', 'success');
                 
-                // Update cart count in header if the function exists
+                // Update cart count in header if function exists
                 if (window.HeaderFunctions && typeof window.HeaderFunctions.updateCartCount === 'function') {
                     window.HeaderFunctions.updateCartCount();
                 }
@@ -135,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Add to cart button handler
+    // ===== ADD TO CART BUTTON =====
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -145,16 +158,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Disable button and show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Adding...</span>';
+            this.innerHTML = '<span class="btn-text">Adding...</span>';
             
-            const success = await handleCartAction(productId, 'add');
+            const success = await handleCartAction(productId);
             
-            // Restore button state if not redirecting
             if (!success) {
                 this.disabled = false;
                 this.innerHTML = originalText;
             } else {
-                // Keep disabled briefly to prevent double-click
+                // Re-enable after 2 seconds
                 setTimeout(() => {
                     this.disabled = false;
                     this.innerHTML = originalText;
@@ -163,151 +175,86 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Buy now button handler
+    // ===== BUY NOW BUTTON =====
     if (buyNowBtn) {
-        buyNowBtn.addEventListener('click', async function(e) {
+        buyNowBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
             const productId = this.dataset.productId;
             
-            // Disable button and show loading state
+            // Show loading state
             this.disabled = true;
             const originalText = this.innerHTML;
-            this.innerHTML = '<span class="btn-icon"></span><span class="btn-text">Processing...</span>';
+            this.innerHTML = '<span class="btn-text">Redirecting...</span>';
             
-            const success = await handleCartAction(productId, 'add');
-            
-            if (success) {
-                // Redirect to checkout after a brief delay
-                setTimeout(() => {
-                    window.location.href = 'checkout.php';
-                }, 1000);
-            } else {
-                // Restore button on failure
-                this.disabled = false;
-                this.innerHTML = originalText;
-            }
+            // Redirect to checkout
+            window.location.href = 'checkout.php?product_id=' + productId + '&quantity=1';
         });
     }
     
-    // ===== QUANTITY SELECTOR (if needed) =====
-    // You can add quantity selector functionality here if you implement it
-    
-    // ===== ADD ANIMATION STYLES =====
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-        
-        .product-notification .notification-icon {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        .product-notification .notification-message {
-            flex: 1;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // ===== PAGE LOAD ANIMATIONS =====
-    // Fade in the product details
-    const productGrid = document.querySelector('.product-details-grid');
-    if (productGrid) {
-        productGrid.style.opacity = '0';
-        productGrid.style.transition = 'opacity 0.5s ease';
-        
-        setTimeout(() => {
-            productGrid.style.opacity = '1';
-        }, 100);
-    }
-    
-    // ===== HANDLE RESPONSIVE BEHAVIOR =====
+    // ===== RESPONSIVE HANDLING =====
     function handleResponsiveLayout() {
-        const windowWidth = window.innerWidth;
         const actionButtons = document.querySelector('.product-actions');
+        if (!actionButtons) return;
         
-        if (actionButtons) {
-            if (windowWidth <= 576) {
-                // Mobile layout adjustments
-                actionButtons.style.flexDirection = 'column';
-            } else {
-                // Desktop layout
-                actionButtons.style.flexDirection = 'row';
-            }
+        if (window.innerWidth <= 576) {
+            actionButtons.style.flexDirection = 'column';
+        } else {
+            actionButtons.style.flexDirection = 'row';
         }
     }
     
     // Initial call
     handleResponsiveLayout();
     
-    // Listen for resize events
-    window.addEventListener('resize', debounce(handleResponsiveLayout, 250));
-    
-    // Debounce function to limit resize events
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
+    // Debounced resize handler
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResponsiveLayout, 100);
+    });
     
     // ===== LAZY LOAD IMAGES =====
     if ('loading' in HTMLImageElement.prototype) {
-        // Browser supports native lazy loading
         const images = document.querySelectorAll('img[loading="lazy"]');
         images.forEach(img => {
             img.loading = 'lazy';
         });
-    } else {
-        // Fallback for browsers that don't support lazy loading
-        // You could implement a library like lozad.js here
     }
 });
 
-// Export functions for use in other scripts if needed
+// Export for external use if needed
 window.ProductDetails = {
     showNotification: function(message, type) {
-        // Reuse the notification function
         const notification = document.createElement('div');
         notification.className = `product-notification ${type}`;
-        notification.textContent = message;
         notification.style.cssText = `
             position: fixed;
             top: 100px;
             right: 20px;
-            padding: 15px 25px;
-            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            padding: 12px 20px;
+            background: #000000;
             color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 9999;
-            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #FF8246;
         `;
+        
+        const iconImg = document.createElement('img');
+        iconImg.src = `../assets/image/icons/${type === 'success' ? 'mail.svg' : 'cancel.svg'}`;
+        iconImg.alt = type === 'success' ? 'Success' : 'Error';
+        iconImg.style.width = '20px';
+        iconImg.style.height = '20px';
+        
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        
+        notification.appendChild(iconImg);
+        notification.appendChild(messageSpan);
         document.body.appendChild(notification);
         
         setTimeout(() => {

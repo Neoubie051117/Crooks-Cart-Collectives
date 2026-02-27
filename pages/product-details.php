@@ -5,7 +5,9 @@ require_once('../database/database-connect.php');
 $product_id = $_GET['id'] ?? 0;
 
 $product = [];
+$reviews = [];
 try {
+    // Fetch product details
     $stmt = $connection->prepare("
         SELECT p.*, s.business_name, s.is_verified 
         FROM products p 
@@ -14,6 +16,19 @@ try {
     ");
     $stmt->execute([$product_id]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($product) {
+        // Fetch reviews for this product with user profile and username
+        $reviewStmt = $connection->prepare("
+            SELECT pr.*, u.first_name, u.last_name, u.username, u.profile_picture
+            FROM product_reviews pr
+            JOIN users u ON pr.user_id = u.user_id
+            WHERE pr.product_id = ?
+            ORDER BY pr.date_posted DESC
+        ");
+        $reviewStmt->execute([$product_id]);
+        $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 } catch (PDOException $e) {
     error_log("Error fetching product: " . $e->getMessage());
 }
@@ -81,49 +96,49 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                                 onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
                         </div>
                     </div>
-
-                    <div class="product-thumbnails">
-                        <button class="thumbnail active" aria-label="Main image">
-                            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Thumbnail"
-                                onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
-                        </button>
-                    </div>
                 </div>
 
                 <div class="product-info-column">
-                    <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
+                    <div class="product-info-header">
+                        <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
 
-                    <div class="product-meta">
-                        <span class="product-category"><?php echo htmlspecialchars($product['category']); ?></span>
-                        <span class="product-seller">
-                            Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
-                            <?php if ($product['is_verified']): ?>
-                            <span class="verified-badge">Verified Seller</span>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-
-                    <div class="product-price-wrapper">
-                        <span class="price-label">Price:</span>
-                        <span class="product-price">Php <?php echo number_format($product['price'], 2); ?></span>
-                    </div>
-
-                    <div class="product-availability">
-                        <div
-                            class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
-                            <span class="status-indicator"></span>
-                            <span class="status-text">
-                                <?php if ($product['stock_quantity'] > 0): ?>
-                                In Stock (<?php echo $product['stock_quantity']; ?> available)
-                                <?php else: ?>
-                                Out of Stock
+                        <div class="product-meta">
+                            <span class="product-category"><?php echo htmlspecialchars($product['category']); ?></span>
+                            <span class="product-seller">
+                                Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
+                                <?php if ($product['is_verified']): ?>
+                                <span class="verified-badge">Verified</span>
                                 <?php endif; ?>
                             </span>
                         </div>
                     </div>
 
+                    <div class="product-info-panel">
+                        <div class="info-panel-row">
+                            <div class="info-panel-item price-item">
+                                <span class="info-label">Price</span>
+                                <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
+                            </div>
+
+                            <div class="info-panel-item stock-item">
+                                <span class="info-label">Availability</span>
+                                <div
+                                    class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
+                                    <span class="status-indicator"></span>
+                                    <span class="status-text">
+                                        <?php if ($product['stock_quantity'] > 0): ?>
+                                        <?php echo $product['stock_quantity']; ?> in stock
+                                        <?php else: ?>
+                                        Out of Stock
+                                        <?php endif; ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="product-description">
-                        <h2>Product Description</h2>
+                        <h2>Description</h2>
                         <div class="description-content">
                             <?php echo nl2br(htmlspecialchars($product['description'])); ?>
                         </div>
@@ -149,6 +164,57 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <?php endif; ?>
                     </div>
                 </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <h2 class="reviews-title">Customer Reviews (<?php echo count($reviews); ?>)</h2>
+
+                <?php if (empty($reviews)): ?>
+                <div class="no-reviews-message">
+                    This product has no reviews yet.
+                </div>
+                <?php else: ?>
+                <div class="reviews-list">
+                    <?php foreach ($reviews as $review): ?>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-profile">
+                                <?php if (!empty($review['profile_picture'])): ?>
+                                <img src="<?php echo htmlspecialchars($review['profile_picture']); ?>"
+                                    alt="<?php echo htmlspecialchars($review['first_name']); ?>"
+                                    onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                                <?php else: ?>
+                                <img src="../assets/image/icons/user-profile-circle.svg" alt="Profile">
+                                <?php endif; ?>
+                            </div>
+                            <div class="reviewer-info">
+                                <div class="reviewer-name">
+                                    <?php echo htmlspecialchars($review['first_name'] . ' ' . $review['last_name']); ?>
+                                </div>
+                                <div class="reviewer-username">
+                                    @<?php echo htmlspecialchars($review['username']); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <img src="../assets/image/icons/<?php echo $i <= $review['rating'] ? 'star-filled.svg' : 'star-empty.svg'; ?>"
+                                alt="Star" class="star">
+                            <?php endfor; ?>
+                        </div>
+                        <?php if (!empty($review['comment'])): ?>
+                        <div class="review-comment">
+                            <?php echo nl2br(htmlspecialchars($review['comment'])); ?>
+                        </div>
+                        <?php endif; ?>
+                        <div class="review-date">
+                            <?php echo date('M j, Y', strtotime($review['date_posted'])); ?>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

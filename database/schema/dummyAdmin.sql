@@ -11,7 +11,7 @@ INSERT INTO administrators (
     contact_number, 
     username, 
     password,
-    date_created
+    date_joined  -- renamed from date_created
 ) VALUES
 (
     'Admin', 
@@ -19,7 +19,7 @@ INSERT INTO administrators (
     'admin1@crookscart.com', 
     '+639123456789', 
     'admin1', 
-    '$2y$10$YourHashedPasswordHere1234567890', -- Replace with actual hashed password
+    'admin123',
     NOW()
 ),
 (
@@ -28,17 +28,9 @@ INSERT INTO administrators (
     'admin2@crookscart.com', 
     '+639987654321', 
     'admin2', 
-    '$2y$10$YourHashedPasswordHere0987654321', -- Replace with actual hashed password
+    'admin456',
     NOW()
 );
-
--- Note: For demo purposes with plain text passwords (as per project requirements),
--- you can use these simpler inserts:
-/*
-INSERT INTO administrators (first_name, last_name, email, contact_number, username, password) VALUES
-('Super', 'Admin', 'admin@crookscart.com', '+639123456789', 'admin', 'admin123'),
-('System', 'Administrator', 'sysadmin@crookscart.com', '+639987654321', 'sysadmin', 'admin456');
-*/
 
 -- =========================
 -- VERIFY ADMIN INSERTION

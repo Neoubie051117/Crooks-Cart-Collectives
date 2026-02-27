@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4>${escapeHtml(order.product_name)}</h4>
                                     <p><span class="info-label">Customer:</span> ${customerName}</p>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
-                                    <p><span class="info-label">Price:</span> ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>  <!-- changed from price_at_time to price -->
                                 </div>
                             </div>
                         </div>
