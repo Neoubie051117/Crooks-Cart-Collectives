@@ -204,11 +204,12 @@ body {
 }
 
 .verified-badge {
-    background: #28a745;
+    background: #ff8246;
     color: white;
     padding: 4px 10px;
+    margin: 0 10px 0;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     display: inline-block;
 }
@@ -260,12 +261,12 @@ body {
 }
 
 .in-stock .status-indicator {
-    background: #28a745;
+    background: #ff8246;
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
 }
 
 .out-of-stock .status-indicator {
-    background: #dc3545;
+    background: #000000;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
 }
 
@@ -275,11 +276,11 @@ body {
 }
 
 .in-stock .status-text {
-    color: #28a745;
+    color: #ff8246;
 }
 
 .out-of-stock .status-text {
-    color: #dc3545;
+    color: #000000;
 }
 
 /* Product description */

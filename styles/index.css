@@ -146,9 +146,7 @@
     transition: filter 0.3s ease;
 }
 
-.feature-card:hover .feature-icon img {
-    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
-}
+
 
 .feature-card h3 {
     margin-bottom: 10px;

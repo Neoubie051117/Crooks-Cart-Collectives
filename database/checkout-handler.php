@@ -40,16 +40,26 @@ try {
         exit;
     }
 
-    // Insert orders
+    // Insert orders - FIXED: Explicitly set status to 'pending' (though default should be pending)
     foreach ($cartItems as $item) {
-        // Final stock check (trigger will also check)
+        // Final stock check
         if ($item['quantity'] > $item['stock_quantity']) {
             throw new Exception("Insufficient stock for {$item['name']}");
         }
         
         $orderStmt = $connection->prepare("
-            INSERT INTO orders (customer_id, seller_id, product_id, quantity, price_at_time, shipping_address, payment_method)
-            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery')
+            INSERT INTO orders (
+                customer_id, 
+                seller_id, 
+                product_id, 
+                quantity, 
+                price_at_time, 
+                shipping_address, 
+                payment_method,
+                status,
+                order_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery', 'pending', NOW())
         ");
         $orderStmt->execute([
             $customer_id,

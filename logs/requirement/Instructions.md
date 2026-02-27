@@ -1,39 +1,155 @@
-Review everything first before making any changes.
+# ⚠️ CRITICAL: AI INSTRUCTION ENFORCEMENT ⚠️
 
-Do not use emojis.
+## 🔴 ABSOLUTE MANDATORY RULES - DO NOT IGNORE 🔴
 
-Do not create or hard code vector icons. Use the existing SVG files located in /assets/image/icons.
+**YOU MUST FOLLOW THESE RULES EXACTLY. NO EXCEPTIONS. NO DEVIATIONS.**
 
-Follow the website theme colors strictly: white, orange, and black (from root variables).
+---
 
-All SVG files are black by default, except the footer icons for Facebook, Instagram, and YouTube. When using SVGs, apply the orange color using the root CSS variables instead of modifying the SVG file directly.
+### RULE 001: REVIEW BEFORE CHANGING
+- You MUST review ALL provided files completely before making ANY changes
+- Read through the entire context first
+- Understand the full project structure before modifying anything
+- **FAILURE TO REVIEW FIRST = IGNORING INSTRUCTIONS**
 
-If you modify any file, clearly state its full path in this format:
+---
 
-/foldername/filename
+### RULE 002: NO EMOJIS - STRICTLY FORBIDDEN
+- **YOU ARE ABSOLUTELY FORBIDDEN FROM USING ANY EMOJIS IN CODE, COMMENTS, OR OUTPUT**
+- This includes: 😊 🎉 ✅ ❌ ⚠️ 🔴 🟢 🔵 💰 📦 👤 📅 📋 ✗ ✓ • or ANY other emoji
+- Use only plain text characters: letters, numbers, and standard punctuation
+- Use simple bullet points like "-" or "*" if needed
+- **VIOLATION: Adding ANY emoji = FAILURE TO FOLLOW INSTRUCTIONS**
 
-Rewrite the entire file when making changes. Do not send partial snippets.
+---
 
-All though Password is supposed to hashed I made it use text for demo purposes only, and Im tired copying long hashed when checking front end
-So don't bother wanting to hash it.
-and also if you find files that has cramping all in one file separate it to according files, example if /pages/fileExample.php has all php, html, scripts, css,
-then separate to alocate it and create corresponding file /scripts/fileExample.js and /styles/fileExample.css
+### RULE 003: STRICT COLOR PALETTE - ONLY THREE COLORS ALLOWED
+- **COLORS PERMITTED:** White (#FFFFFF), Orange (#FF8246), and Black (#000000)
+- **NO OTHER COLORS WHATSOEVER** - This means:
+  - NO blues, greens, reds, yellows, purples, grays (except black/white)
+  - NO #28a745 (green), NO #dc3545 (red), NO #007bff (blue)
+  - NO rgba() with colors outside white/orange/black
+  - NO gradients using other colors
+- Backgrounds must be white, black, or orange only
+- Text must be black on light backgrounds, white on dark backgrounds
+- Borders must be black or orange only
+- **VIOLATION: Using ANY color outside white/orange/black = FAILURE**
 
-HOW DOES THE SYSTEM WORKS?
-the user will sign up, and the user is also a customer, and the user can apply to be a seller, now the user can be both a customer and a seller
+---
 
-HOW DO ORDERS WORK?
-customer orders, the status will be pending, since the seller hasn't confirmed order yet, 
-if customer cancels order, status badge will be cancelled
-if seller cancels while customer didnt cancelled, the status will still be cancelled
-if customer ordered and didn't cancelled, and seller confirms, then it will be status delivered
+### RULE 004: MODIFY ONLY REQUESTED FILES
+- Change ONLY the files explicitly mentioned in the request
+- If told "revise seller orders js and css" - ONLY change those two files
+- Do NOT touch other JavaScript files, CSS files, PHP files, or HTML
+- Do NOT add new files
+- Do NOT modify file structure
+- **VIOLATION: Changing unrequested files = FAILURE**
 
-since we cannot simulate tracking like arrive at ware house because this is only a school project
+---
 
-so only three statuses (pending, cancelled, delivered)
+### RULE 005: REWRITE ENTIRE FILES - NO SNIPPETS
+- When modifying a file, you MUST output the COMPLETE file content
+- Do NOT send partial code snippets or diffs
+- The entire file must be shown from start to end
+- Include ALL original code plus your changes
+- **VIOLATION: Sending snippets instead of full files = FAILURE**
 
-and when creating feedbacks, example wrong password put the real error on /database/error_log.txt and just put some reasonable feedback on users end like invalid creadentials please try again
+---
 
-and when revising dbCreation.sql from /database/schema/ don't overcomplicate it, since it's for school purposes, no need for triggers and too much safety nets
+### RULE 006: FILE PATH FORMAT - STRICT REQUIREMENT
+- When outputting any file, you MUST start with:
 
-only change what's been ask, don't do more or less, you can leave something on suggestion if you overlook something but don't do without permission
+- Example: /Crooks-Cart-Collectives/scripts/seller-orders.js
+- Then immediately follow with the file content in a code block
+- **VIOLATION: Missing or incorrect file path format = FAILURE**
+
+---
+
+### RULE 007: USE EXISTING SVG ICONS ONLY
+- NEVER create or hardcode vector icons
+- ONLY use SVG files from `/assets/image/icons/`
+- Do NOT edit SVG files directly
+- Apply orange color to SVGs using CSS filters or root variables
+- For hover effects: ONLY simple icon scaling on divs or cards
+- NO animations that move cards up/down
+- **VIOLATION: Creating new icons or using non-existent icons = FAILURE**
+
+---
+
+### RULE 008: PLAIN TEXT PASSWORDS FOR DEMO
+- Passwords MUST be stored as plain text
+- NO password hashing implementation
+- NO suggesting hashing in comments
+- This is intentional for demo purposes
+- **VIOLATION: Implementing or suggesting hashing = FAILURE**
+
+---
+
+### RULE 009: ORDER STATUSES - EXACTLY THREE
+- Only three statuses allowed: `pending`, `cancelled`, `delivered`
+- NO additional statuses like "processing", "shipped", "completed"
+- NO tracking simulation
+- **VIOLATION: Adding extra statuses = FAILURE**
+
+---
+
+### RULE 010: SIMPLE ERROR MESSAGES ONLY
+- User interface errors: ONLY simple messages like "Invalid credentials. Please try again."
+- Detailed errors go ONLY to `/database/error_log.txt`
+- NO exposing system details to users
+- **VIOLATION: Exposing system errors to users = FAILURE**
+
+---
+
+### RULE 011: DO NOT ADD EXTRA FEATURES
+- Implement ONLY what is explicitly requested
+- If you notice something that needs improvement but wasn't requested:
+- Mention it as a suggestion in a comment
+- Do NOT implement it without permission
+- **VIOLATION: Adding unrequested features = FAILURE**
+
+---
+
+## 📋 CURRENT REQUEST (COPY THIS TO YOUR CONTEXT)
+
+
+---
+
+## ✅ CHECKLIST - VERIFY BEFORE SUBMITTING
+
+Before you output your response, verify ALL of these:
+
+- [ ] Did I review ALL files before changing?
+- [ ] Am I ONLY modifying `/scripts/seller-orders.js` and `/styles/seller-orders.css`?
+- [ ] Did I remove ALL emojis from code and comments?
+- [ ] Did I use ONLY white, orange (#FF8246), and black colors?
+- [ ] Did I output COMPLETE files, not snippets?
+- [ ] Did I include the correct file paths in ## format?
+- [ ] Did I use ONLY existing SVG icons?
+- [ ] Did I avoid adding any new features?
+
+**If ANY checkbox is unchecked, STOP and fix it.**
+
+---
+
+## ⚡ AI REMINDER - READ THIS EVERY TIME ⚡
+
+
+---
+
+## 📌 SUMMARY OF THIS REQUEST
+
+| Aspect | Requirement |
+|--------|-------------|
+| Files to modify | `/scripts/seller-orders.js` and `/styles/seller-orders.css` ONLY |
+| Colors allowed | White (#FFFFFF), Orange (#FF8246), Black (#000000) ONLY |
+| Emojis | ABSOLUTELY FORBIDDEN |
+| Event text | Fix inconsistent sizing, prevent incomplete sentences |
+| Event separation | Make each event a separate statement (customer order, seller sold) |
+| Column depth | Balance colors for more visual depth |
+
+---
+
+**FAILURE TO FOLLOW ANY OF THESE RULES = INCOMPLETE RESPONSE**
+
+**YOU HAVE BEEN WARNED.**

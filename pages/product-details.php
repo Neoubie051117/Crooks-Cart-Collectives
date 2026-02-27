@@ -98,14 +98,14 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <span class="product-seller">
                             Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
                             <?php if ($product['is_verified']): ?>
-                            <span class="verified-badge">✓ Verified Seller</span>
+                            <span class="verified-badge">Verified Seller</span>
                             <?php endif; ?>
                         </span>
                     </div>
 
                     <div class="product-price-wrapper">
                         <span class="price-label">Price:</span>
-                        <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
+                        <span class="product-price">Php <?php echo number_format($product['price'], 2); ?></span>
                     </div>
 
                     <div class="product-availability">
@@ -144,8 +144,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <?php else: ?>
                         <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
                             class="btn btn-primary login-to-purchase-btn">
-                            <img src="../assets/image/icons/cart-shopping.svg" alt="Login to purchase"
-                                style="width: 20px; height: 20px; margin-right: 8px; filter: brightness(0) invert(1);">
                             <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>

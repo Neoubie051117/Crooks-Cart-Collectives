@@ -1,7 +1,9 @@
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Fixed version - shows cancel reason in order-item-status badge, keeps header badge as simple status */
+/* Fixed version with complete event activity showing all status changes */
 
 document.addEventListener('DOMContentLoaded', () => {
+    'use strict';
+
     // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('ordersList');
     
@@ -42,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const star = document.createElement('span');
             star.className = 'star';
             star.dataset.value = i;
-            star.style.cssText = 'cursor: pointer; display: inline-block; width: 32px; height: 32px;';
             
             const img = document.createElement('img');
             img.src = '../assets/image/icons/star-empty.svg';
@@ -130,6 +131,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============= AUTO-RESIZE TEXTAREA =============
+    function autoResizeTextarea(textarea) {
+        if (!textarea) return;
+        
+        textarea.style.height = 'auto';
+        const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+        const minHeight = Math.max(60, lineHeight * 3);
+        const maxHeight = 200;
+        
+        let newHeight = textarea.scrollHeight;
+        newHeight = Math.min(Math.max(newHeight, minHeight), maxHeight);
+        
+        textarea.style.height = newHeight + 'px';
+        
+        if (textarea.scrollHeight > maxHeight) {
+            textarea.style.overflowY = 'auto';
+        } else {
+            textarea.style.overflowY = 'hidden';
+        }
+    }
+
+    // ============= SETUP AUTO-RESIZE FOR ALL EDIT TEXTAREAS =============
+    function setupAutoResize() {
+        document.querySelectorAll('.shipping-edit-textarea').forEach(textarea => {
+            textarea.removeEventListener('input', handleTextareaInput);
+            textarea.addEventListener('input', handleTextareaInput);
+            autoResizeTextarea(textarea);
+        });
+    }
+
+    function handleTextareaInput(e) {
+        autoResizeTextarea(e.target);
+    }
+
     // ============= LOAD ORDERS =============
     async function loadOrders() {
         if (!ordersList) return;
@@ -151,6 +186,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============= FORMAT DATE =============
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return date.toLocaleDateString(undefined, options);
+    }
+
+    // ============= GET IMAGE PATH =============
+    function getImagePath(path) {
+        if (!path) return '../assets/image/icons/package.svg';
+        if (path.startsWith('assets/')) return '../' + path;
+        if (path.startsWith('http')) return path;
+        if (path.startsWith('../')) return path;
+        return '../' + path;
+    }
+
+    // ============= ESCAPE HTML =============
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     // ============= RENDER ORDERS =============
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
@@ -166,25 +231,30 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
 
         orders.forEach(order => {
-            const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
+            const orderDate = formatDate(order.order_date);
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
-            const statusClass = order.status.toLowerCase(); // pending, delivered, cancelled
+            const statusClass = order.status.toLowerCase();
             const imagePath = getImagePath(order.image_path);
             
-            // Determine cancellation text for order-item-status - ONLY for cancelled orders
-            let cancellationText = '';
-            if (order.status === 'cancelled' && order.cancelled_by) {
-                if (order.cancelled_by === 'customer') {
-                    cancellationText = 'Cancelled by Customer';
-                } else if (order.cancelled_by === 'seller') {
-                    cancellationText = 'Cancelled by Seller';
-                }
+            const isEditable = order.status === 'pending';
+            
+            const subtotal = Number(order.subtotal).toFixed(2);
+            const total = Number(order.subtotal).toFixed(2);
+
+            // Build event activity with required messages
+            let eventHtml = '';
+            eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
+                    
+            if (order.status === 'delivered' && order.delivered_at) {
+                const deliveredDate = formatDate(order.delivered_at);
+                eventHtml += `<div class="event-item delivered-event"><span class="event-icon"><img src="../assets/image/icons/package.svg" alt="Item sold" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">Item sold: ${deliveredDate}</span></div>`;
             }
             
-            // Price summary data
-            const subtotal = Number(order.subtotal).toFixed(2);
-            const total = Number(order.subtotal).toFixed(2); // shipping is free
-
+            if (order.status === 'cancelled' && order.cancelled_at) {
+                const cancelledDate = formatDate(order.cancelled_at);
+                const cancelledBy = order.cancelled_by === 'customer' ? 'Customer' : 'Seller';
+                eventHtml += `<div class="event-item cancelled-event"><span class="event-icon"><img src="../assets/image/icons/cancel.svg" alt="Cancelled" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">${cancelledBy} cancelled: ${cancelledDate}</span></div>`;
+            }
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
@@ -198,97 +268,107 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="order-body">
-                        <!-- Column 1: Order Items -->
-                        <div class="order-items-column">
-                            <div class="order-items">
-                                <div class="order-item">
-                                    <img src="${imagePath}" alt="${escapeHtml(order.product_name)}"
-                                         class="order-item-image"
-                                         onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                                    <div class="order-item-details">
-                                        <div class="order-item-seller">${escapeHtml(order.seller_name || 'Unknown Seller')}</div>
-                                        <div class="order-item-title">${escapeHtml(order.product_name)}</div>
-                                        <div class="order-item-meta">
-                                            <span class="item-quantity">Qty: ${order.quantity}</span>
-                                            <span class="item-price">₱${Number(order.price_at_time).toFixed(2)}</span>
-                                        </div>
-                                        <div class="order-item-status">
-                                            ${order.status === 'cancelled' && cancellationText ? 
-                                                `<span class="status-badge ${statusClass}">${cancellationText}</span>` : 
-                                                ''
-                                            }
-                                        </div>
+                        <div class="order-product-column">
+                            <div class="column-title">Product Details</div>
+                            <div class="product-details">
+                                <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                     class="product-thumbnail"
+                                     onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                                <div class="product-info">
+                                    <h4>${escapeHtml(order.product_name)}</h4>
+                                    <p><span class="info-label">Seller:</span> ${escapeHtml(order.seller_name || 'Unknown Seller')}</p>
+                                    <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-event-column">
+                            <div class="column-title">Event Activity</div>
+                            <div class="event-activity-content">
+                                ${eventHtml}
+                            </div>
+                        </div>
+
+                        <div class="order-shipping-column">
+                            <div class="column-title">Shipping Information</div>
+                            <div class="shipping-details" data-order-id="${order.order_id}" data-original="${escapeHtml(order.shipping_address || 'No address provided')}">
+                                <p class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</p>
+                                <div class="shipping-edit-controls" style="${isEditable ? 'display: flex;' : 'display: none;'}">
+                                    <textarea class="shipping-edit-textarea" rows="3" style="display: none; width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none; overflow: hidden;">${escapeHtml(order.shipping_address || '')}</textarea>
+                                    <div class="shipping-buttons">
+                                        <button class="action-btn edit-shipping" data-order-id="${order.order_id}" ${!isEditable ? 'style="display: none;"' : ''}>
+                                            <img src="../assets/image/icons/updatesvg.svg" alt="Edit" class="btn-icon">
+                                            <span class="btn-text">Edit</span>
+                                        </button>
+                                        <button class="action-btn save-shipping" data-order-id="${order.order_id}" style="display: none;">
+                                            <img src="../assets/image/icons/updatesvg.svg" alt="Save" class="btn-icon">
+                                            <span class="btn-text">Save</span>
+                                        </button>
+                                        <button class="action-btn reset-shipping" data-order-id="${order.order_id}" style="display: none;">
+                                            <img src="../assets/image/icons/order.svg" alt="Reset" class="btn-icon">
+                                            <span class="btn-text">Reset</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Column 2: Price Summary -->
                         <div class="order-price-summary">
-                            <div class="price-summary-title">Order Summary</div>
-                            <div class="price-row">
-                                <span>Quantity</span>
-                                <span class="price-value">${order.quantity}</span>
+                            <div class="column-title">Order Summary</div>
+                            <div class="price-summary-details">
+                                <div class="price-row">
+                                    <span>Subtotal</span>
+                                    <span class="price-value">₱${subtotal}</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Shipping</span>
+                                    <span class="price-value free-shipping">Free</span>
+                                </div>
+                                <div class="price-divider"></div>
+                                <div class="price-row price-total">
+                                    <span>Total</span>
+                                    <span class="price-value">₱${total}</span>
+                                </div>
                             </div>
-                            <div class="price-row">
-                                <span>Subtotal</span>
-                                <span class="price-value">₱${subtotal}</span>
-                            </div>
-                            <div class="price-row">
-                                <span>Shipping Fee</span>
-                                <span class="price-value">Free</span>
-                            </div>
-                            <div class="price-divider"></div>
-                            <div class="price-row price-total">
-                                <span>Total</span>
-                                <span class="price-value">₱${total}</span>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Shipping + Actions -->
-                        <div class="order-shipping-column">
-                            <div class="order-shipping-location">
-                                <div class="shipping-address-title">Shipping Address</div>
-                                <div class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</div>
-                            </div>
-
-                            <div class="order-item-actions">
             `;
 
-            // FIXED: Use 'pending' instead of 'ordered' for cancel button
             const canCancel = order.status === 'pending';
             const canReview = order.status === 'delivered' && !order.has_review;
 
             if (canReview) {
                 html += `
-                    <button class="action-btn action-btn-review" 
-                            data-order-id="${order.order_id}" 
-                            data-product-id="${order.product_id}">
-                        Write Review
-                    </button>
+                    <div class="order-actions">
+                        <button class="action-btn review" data-order-id="${order.order_id}" data-product-id="${order.product_id}">
+                            Write Review
+                        </button>
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
-            } else if (order.has_review) {
+            } else if (canCancel) {
                 html += `
-                    <span class="reviewed-badge">
-                        Reviewed
-                    </span>
+                    <div class="order-actions">
+                        <button class="action-btn cancel" data-order-id="${order.order_id}">
+                            Cancel Order
+                        </button>
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
-            }
-            
-            if (canCancel) {
+            } else {
                 html += `
-                    <button class="action-btn action-btn-cancel" 
-                            data-order-id="${order.order_id}">
-                        Cancel Order
-                    </button>
+                    <div class="order-actions">
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
             }
             
             html += `
-                            <a href="product-details.php?id=${order.product_id}" 
-                               class="action-btn action-btn-view">
-                                View Product
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -297,39 +377,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ordersList.innerHTML = html;
         attachEventListeners();
+        setupAutoResize();
     }
 
-    // ============= HELPER FUNCTIONS =============
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        return date.toLocaleDateString(undefined, options);
-    }
-    
-    function getImagePath(path) {
-        if (!path) return '../assets/image/icons/package.svg';
-        if (path.startsWith('assets/')) return '../' + path;
-        if (path.startsWith('http')) return path;
-        if (path.startsWith('../')) return path;
-        return '../' + path;
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+    // ============= FETCH DEFAULT ADDRESS =============
+    async function fetchDefaultAddress() {
+        try {
+            const response = await fetch('../database/order-handler.php?action=get_default_address');
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                return result.address;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching default address:', error);
+            return null;
+        }
     }
 
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        document.querySelectorAll('.action-btn-review').forEach(btn => {
+        document.querySelectorAll('.action-btn.review').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (reviewOrderId) reviewOrderId.value = btn.dataset.orderId;
@@ -339,11 +409,139 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        document.querySelectorAll('.action-btn-cancel').forEach(btn => {
+        document.querySelectorAll('.action-btn.cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 currentCancelOrderId = btn.dataset.orderId;
                 showModal(cancelModal);
+            });
+        });
+
+        document.querySelectorAll('.action-btn.edit-shipping').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = btn.dataset.orderId;
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const editBtn = shippingColumn.querySelector('.edit-shipping');
+                const saveBtn = shippingColumn.querySelector('.save-shipping');
+                const resetBtn = shippingColumn.querySelector('.reset-shipping');
+                
+                if (addressText && textarea && editBtn && saveBtn && resetBtn) {
+                    addressText.style.display = 'none';
+                    textarea.style.display = 'block';
+                    editBtn.style.display = 'none';
+                    saveBtn.style.display = 'inline-flex';
+                    resetBtn.style.display = 'inline-flex';
+                    
+                    textarea.focus();
+                    autoResizeTextarea(textarea);
+                }
+            });
+        });
+
+        document.querySelectorAll('.action-btn.save-shipping').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const orderId = btn.dataset.orderId;
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const editBtn = shippingColumn.querySelector('.edit-shipping');
+                const saveBtn = shippingColumn.querySelector('.save-shipping');
+                const resetBtn = shippingColumn.querySelector('.reset-shipping');
+                
+                if (!textarea || !addressText) return;
+                
+                const newAddress = textarea.value.trim();
+                
+                if (!newAddress) {
+                    showNotification('Shipping address cannot be empty', true);
+                    return;
+                }
+                
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="btn-text">Saving...</span>';
+                btn.disabled = true;
+                
+                try {
+                    const formData = new URLSearchParams();
+                    formData.append('action', 'update_shipping');
+                    formData.append('order_id', orderId);
+                    formData.append('shipping_address', newAddress);
+                    
+                    const response = await fetch('../database/order-handler.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        addressText.textContent = newAddress;
+                        addressText.style.display = 'block';
+                        textarea.style.display = 'none';
+                        editBtn.style.display = 'inline-flex';
+                        saveBtn.style.display = 'none';
+                        resetBtn.style.display = 'none';
+                        
+                        shippingColumn.dataset.original = newAddress;
+                        
+                        showNotification('Shipping address updated successfully');
+                    } else {
+                        showNotification(result.message || 'Failed to update address', true);
+                        textarea.value = addressText.textContent;
+                        addressText.style.display = 'block';
+                        textarea.style.display = 'none';
+                        editBtn.style.display = 'inline-flex';
+                        saveBtn.style.display = 'none';
+                        resetBtn.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Update shipping error:', error);
+                    showNotification('Network error. Please try again.', true);
+                    textarea.value = addressText.textContent;
+                    addressText.style.display = 'block';
+                    textarea.style.display = 'none';
+                    editBtn.style.display = 'inline-flex';
+                    saveBtn.style.display = 'none';
+                    resetBtn.style.display = 'none';
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        });
+
+        document.querySelectorAll('.action-btn.reset-shipping').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const originalAddress = shippingColumn.dataset.original;
+                
+                if (!textarea) return;
+                
+                textarea.value = originalAddress;
+                autoResizeTextarea(textarea);
+                
+                const originalBtnText = btn.innerHTML;
+                btn.innerHTML = '<span class="btn-text">Reset!</span>';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalBtnText;
+                    btn.disabled = false;
+                }, 500);
             });
         });
     }
@@ -430,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Network error. Please try again.', true);
             } finally {
                 confirmCancel.disabled = false;
-                confirmCancel.textContent = 'Yes, Cancel Order';
+                confirmCancel.textContent = 'Confirm';
                 currentCancelOrderId = null;
             }
         });
@@ -467,6 +665,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hideAllModals();
+    });
+
+    window.addEventListener('resize', () => {
+        setupAutoResize();
     });
 
     initStarRating();

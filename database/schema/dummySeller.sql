@@ -7,96 +7,96 @@ USE crooks_cart_collectives;
 INSERT INTO users (
 first_name, last_name, email, username, password, address
 ) VALUES
-('Mark', 'Santos', 'mark@Sellerdummy.com', 'mark', '123', 'Manila'),
-('Jessa', 'Reyes', 'jessa@Sellerdummy.com', 'jessa', '123', 'Cebu'),
-('Kyle', 'Lopez', 'kyle@Sellerdummy.com', 'kyle', '123', 'Davao'),
-('Anna', 'Cruz', 'anna@Sellerdummy.com', 'anna', '123', 'Baguio'),
-('Leo', 'Garcia', 'leo@Sellerdummy.com', 'leo', '123', 'Iloilo');
+('Aling', 'Bebang', 'aling.bebang@Sellerdummy.com', 'alingbebang', '123', '123 Market Ave., Purok 5, Tambakan 2, Brgy. San Miguel, Pasig City'),
+('Totoy', 'Bibo', 'totoy.bibo@Sellerdummy.com', 'totoybibo', '123', '45 Mabini St., Purok 3, Brgy. Guadalupe, Cebu City'),
+('El', 'Bimbo', 'el.bimbo@Sellerdummy.com', 'thelastelbimby', '123', '78 Rizal Ave., Purok 7, Brgy. Buhangin, Davao City'),
+('Pure', 'Foods', 'pure.foods@Sellerdummy.com', 'hotdog', '123', '22 Session Rd., Purok 12, Brgy. Aurora Hill, Baguio City'),
+('Lebron', 'James', 'lebron.james@Sellerdummy.com', 'ninja', '123', '15 Delgado St., Purok 2, Brgy. Jaro, Iloilo City');
 
 -- =========================
 -- MAKE THEM SELLERS
 -- =========================
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Mark Tech Store', TRUE FROM users WHERE username = 'mark';
+SELECT user_id, 'Aling Bebang''s Tiangge', TRUE FROM users WHERE username = 'alingbebang';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Jessa Gaming Hub', TRUE FROM users WHERE username = 'jessa';
+SELECT user_id, 'Totoy Bibo Bargains', TRUE FROM users WHERE username = 'totoybibo';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Kyle Gadget Zone', TRUE FROM users WHERE username = 'kyle';
+SELECT user_id, 'El Bimbo''s Ukay-Ukay', TRUE FROM users WHERE username = 'thelastelbimby';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Anna Digital Shop', TRUE FROM users WHERE username = 'anna';
+SELECT user_id, 'Pure Foods Paninda', TRUE FROM users WHERE username = 'hotdog';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Leo Tech Corner', TRUE FROM users WHERE username = 'leo';
+SELECT user_id, 'Ninja''s Hidden Treasures', TRUE FROM users WHERE username = 'ninja';
 
 -- =========================
--- INSERT 2 PRODUCTS PER SELLER
+-- INSERT 2 PRODUCTS PER SELLER WITH BUDGET PRICES
 -- =========================
 
--- MARK
+-- ALING BEBANG - Budget items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Wireless Mouse', '2.4G Wireless Mouse', 599.00, 'Accessories', 25,
+SELECT s.seller_id, 'Second Hand Cellphone', 'Lumang cellphone pero gumagana pa - good for kids', 350.00, 'budget', 8,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'mark';
+WHERE u.username = 'alingbebang';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Mechanical Keyboard', 'RGB Mechanical Keyboard', 2499.00, 'Accessories', 15,
+SELECT s.seller_id, 'Used School Bag', 'Medyo luma pero matibay pa', 120.00, 'cheap', 15,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'mark';
+WHERE u.username = 'alingbebang';
 
--- JESSA
+-- TOTOY BIBO - Cheap items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Chair Pro', 'Ergonomic Gaming Chair', 8999.00, 'Furniture', 10,
+SELECT s.seller_id, 'Lumang T-shirt Bundle', '3 pcs used shirts - iba-ibang sizes', 150.00, 'cheap', 20,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'jessa';
-
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Desk', 'Spacious Gaming Desk', 6999.00, 'Furniture', 8,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'jessa';
-
--- KYLE
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'USB Hub', '4 Port USB Hub', 499.00, 'Electronics', 30,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'kyle';
+WHERE u.username = 'totoybibo';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'External SSD 1TB', 'High Speed External SSD', 5499.00, 'Electronics', 12,
+SELECT s.seller_id, 'Second Hand Sapatos', 'Gently used rubber shoes', 250.00, 'second hand', 12,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'kyle';
+WHERE u.username = 'totoybibo';
 
--- ANNA
+-- EL BIMBO - Second hand items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Smart Watch', 'Fitness Smart Watch', 2999.00, 'Wearables', 18,
+SELECT s.seller_id, 'Ukay Jacket', 'Winter jacket from Korea', 180.00, 'second hand', 10,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'anna';
-
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Bluetooth Earbuds', 'Wireless Bluetooth Earbuds', 1999.00, 'Wearables', 22,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'anna';
-
--- LEO
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'VR Headset', 'Virtual Reality Headset', 15999.00, 'Electronics', 6,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'leo';
+WHERE u.username = 'thelastelbimby';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Monitor 144Hz', '27 inch 144Hz Monitor', 12999.00, 'Electronics', 9,
+SELECT s.seller_id, 'Vintage Maong Pants', 'Maong pants - straight cut', 120.00, 'cheap', 18,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'leo';
+WHERE u.username = 'thelastelbimby';
+
+-- PURE FOODS (HOTDOG) - Budget food items
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Tuyo (Dried Fish)', 'Isang kilo - perfect for breakfast', 80.00, 'budget', 25,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'hotdog';
+
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Itlog na Maalat', 'Maalat na itlog with kamatis', 15.00, 'cheap', 50,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'hotdog';
+
+-- LEBRON JAMES (NINJA) - Second hand gadgets
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Used Nokia Phone', 'Lumang Nokia - 3310 style', 200.00, 'second hand', 6,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'ninja';
+
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Second Hand Charger', 'Universal charger - gumagana pa', 50.00, 'budget', 30,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'ninja';

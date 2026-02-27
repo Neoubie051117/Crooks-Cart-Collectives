@@ -25,7 +25,9 @@ $customer_id = $_SESSION['customer_id'];
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <h1 class="page-title">My Orders</h1>
+        <div class="customer-header">
+            <h1 class="page-title">My Orders</h1>
+        </div>
         <div id="ordersList" class="orders-list">
             <div class="loading">Loading orders...</div>
         </div>
@@ -80,8 +82,8 @@ $customer_id = $_SESSION['customer_id'];
             <h2 class="modal-title">Cancel Order</h2>
             <p class="modal-message">Are you sure you want to cancel this order? This action cannot be undone.</p>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-cancel" id="cancelCancel">No, Keep It</button>
-                <button class="modal-btn modal-btn-confirm" id="confirmCancel">Yes, Cancel Order</button>
+                <button class="modal-btn modal-btn-cancel" id="cancelCancel">No</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmCancel">Confirm</button>
             </div>
         </div>
     </div>

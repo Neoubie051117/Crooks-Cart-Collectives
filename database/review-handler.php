@@ -56,7 +56,7 @@ try {
         exit;
     }
 
-    // Insert review
+    // Insert review - is_edited and last_edited columns removed
     $stmt = $connection->prepare("
         INSERT INTO product_reviews (product_id, user_id, order_id, rating, comment, date_posted)
         VALUES (?, ?, ?, ?, ?, NOW())

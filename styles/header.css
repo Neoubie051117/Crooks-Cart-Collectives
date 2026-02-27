@@ -148,7 +148,7 @@ html {
 /* Button Styles */
 .social-button {
   background: var(--color-accent-A);
-  color: var(--color-text-A);
+  color: var(--color-text-B);
   padding: var(--size-button-padding);
   border-radius: var(--size-button-radius);
   text-decoration: none;

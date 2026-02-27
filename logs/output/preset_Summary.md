@@ -2,7 +2,7 @@
 
 **Preset:** preset
 
-**Generated:** 2026-02-27 01:12:24
+**Generated:** 2026-02-27 19:35:54
 
 ---
 
@@ -11,45 +11,161 @@
 **Status:** `FOUND`
 
 ```markdown
-Review everything first before making any changes.
+# ⚠️ CRITICAL: AI INSTRUCTION ENFORCEMENT ⚠️
 
-Do not use emojis.
+## 🔴 ABSOLUTE MANDATORY RULES - DO NOT IGNORE 🔴
 
-Do not create or hard code vector icons. Use the existing SVG files located in /assets/image/icons.
+**YOU MUST FOLLOW THESE RULES EXACTLY. NO EXCEPTIONS. NO DEVIATIONS.**
 
-Follow the website theme colors strictly: white, orange, and black (from root variables).
+---
 
-All SVG files are black by default, except the footer icons for Facebook, Instagram, and YouTube. When using SVGs, apply the orange color using the root CSS variables instead of modifying the SVG file directly.
+### RULE 001: REVIEW BEFORE CHANGING
+- You MUST review ALL provided files completely before making ANY changes
+- Read through the entire context first
+- Understand the full project structure before modifying anything
+- **FAILURE TO REVIEW FIRST = IGNORING INSTRUCTIONS**
 
-If you modify any file, clearly state its full path in this format:
+---
 
-/foldername/filename
+### RULE 002: NO EMOJIS - STRICTLY FORBIDDEN
+- **YOU ARE ABSOLUTELY FORBIDDEN FROM USING ANY EMOJIS IN CODE, COMMENTS, OR OUTPUT**
+- This includes: 😊 🎉 ✅ ❌ ⚠️ 🔴 🟢 🔵 💰 📦 👤 📅 📋 ✗ ✓ • or ANY other emoji
+- Use only plain text characters: letters, numbers, and standard punctuation
+- Use simple bullet points like "-" or "*" if needed
+- **VIOLATION: Adding ANY emoji = FAILURE TO FOLLOW INSTRUCTIONS**
 
-Rewrite the entire file when making changes. Do not send partial snippets.
+---
 
-All though Password is supposed to hashed I made it use text for demo purposes only, and Im tired copying long hashed when checking front end
-So don't bother wanting to hash it.
-and also if you find files that has cramping all in one file separate it to according files, example if /pages/fileExample.php has all php, html, scripts, css,
-then separate to alocate it and create corresponding file /scripts/fileExample.js and /styles/fileExample.css
+### RULE 003: STRICT COLOR PALETTE - ONLY THREE COLORS ALLOWED
+- **COLORS PERMITTED:** White (#FFFFFF), Orange (#FF8246), and Black (#000000)
+- **NO OTHER COLORS WHATSOEVER** - This means:
+  - NO blues, greens, reds, yellows, purples, grays (except black/white)
+  - NO #28a745 (green), NO #dc3545 (red), NO #007bff (blue)
+  - NO rgba() with colors outside white/orange/black
+  - NO gradients using other colors
+- Backgrounds must be white, black, or orange only
+- Text must be black on light backgrounds, white on dark backgrounds
+- Borders must be black or orange only
+- **VIOLATION: Using ANY color outside white/orange/black = FAILURE**
 
-HOW DOES THE SYSTEM WORKS?
-the user will sign up, and the user is also a customer, and the user can apply to be a seller, now the user can be both a customer and a seller
+---
 
-HOW DO ORDERS WORK?
-customer orders, the status will be pending, since the seller hasn't confirmed order yet, 
-if customer cancels order, status badge will be cancelled
-if seller cancels while customer didnt cancelled, the status will still be cancelled
-if customer ordered and didn't cancelled, and seller confirms, then it will be status delivered
+### RULE 004: MODIFY ONLY REQUESTED FILES
+- Change ONLY the files explicitly mentioned in the request
+- If told "revise seller orders js and css" - ONLY change those two files
+- Do NOT touch other JavaScript files, CSS files, PHP files, or HTML
+- Do NOT add new files
+- Do NOT modify file structure
+- **VIOLATION: Changing unrequested files = FAILURE**
 
-since we cannot simulate tracking like arrive at ware house because this is only a school project
+---
 
-so only three statuses (pending, cancelled, delivered)
+### RULE 005: REWRITE ENTIRE FILES - NO SNIPPETS
+- When modifying a file, you MUST output the COMPLETE file content
+- Do NOT send partial code snippets or diffs
+- The entire file must be shown from start to end
+- Include ALL original code plus your changes
+- **VIOLATION: Sending snippets instead of full files = FAILURE**
 
-and when creating feedbacks, example wrong password put the real error on /database/error_log.txt and just put some reasonable feedback on users end like invalid creadentials please try again
+---
 
-and when revising dbCreation.sql from /database/schema/ don't overcomplicate it, since it's for school purposes, no need for triggers and too much safety nets
+### RULE 006: FILE PATH FORMAT - STRICT REQUIREMENT
+- When outputting any file, you MUST start with:
 
-only change what's been ask, don't do more or less, you can leave something on suggestion if you overlook something but don't do without permission
+- Example: /Crooks-Cart-Collectives/scripts/seller-orders.js
+- Then immediately follow with the file content in a code block
+- **VIOLATION: Missing or incorrect file path format = FAILURE**
+
+---
+
+### RULE 007: USE EXISTING SVG ICONS ONLY
+- NEVER create or hardcode vector icons
+- ONLY use SVG files from `/assets/image/icons/`
+- Do NOT edit SVG files directly
+- Apply orange color to SVGs using CSS filters or root variables
+- For hover effects: ONLY simple icon scaling on divs or cards
+- NO animations that move cards up/down
+- **VIOLATION: Creating new icons or using non-existent icons = FAILURE**
+
+---
+
+### RULE 008: PLAIN TEXT PASSWORDS FOR DEMO
+- Passwords MUST be stored as plain text
+- NO password hashing implementation
+- NO suggesting hashing in comments
+- This is intentional for demo purposes
+- **VIOLATION: Implementing or suggesting hashing = FAILURE**
+
+---
+
+### RULE 009: ORDER STATUSES - EXACTLY THREE
+- Only three statuses allowed: `pending`, `cancelled`, `delivered`
+- NO additional statuses like "processing", "shipped", "completed"
+- NO tracking simulation
+- **VIOLATION: Adding extra statuses = FAILURE**
+
+---
+
+### RULE 010: SIMPLE ERROR MESSAGES ONLY
+- User interface errors: ONLY simple messages like "Invalid credentials. Please try again."
+- Detailed errors go ONLY to `/database/error_log.txt`
+- NO exposing system details to users
+- **VIOLATION: Exposing system errors to users = FAILURE**
+
+---
+
+### RULE 011: DO NOT ADD EXTRA FEATURES
+- Implement ONLY what is explicitly requested
+- If you notice something that needs improvement but wasn't requested:
+- Mention it as a suggestion in a comment
+- Do NOT implement it without permission
+- **VIOLATION: Adding unrequested features = FAILURE**
+
+---
+
+## 📋 CURRENT REQUEST (COPY THIS TO YOUR CONTEXT)
+
+
+---
+
+## ✅ CHECKLIST - VERIFY BEFORE SUBMITTING
+
+Before you output your response, verify ALL of these:
+
+- [ ] Did I review ALL files before changing?
+- [ ] Am I ONLY modifying `/scripts/seller-orders.js` and `/styles/seller-orders.css`?
+- [ ] Did I remove ALL emojis from code and comments?
+- [ ] Did I use ONLY white, orange (#FF8246), and black colors?
+- [ ] Did I output COMPLETE files, not snippets?
+- [ ] Did I include the correct file paths in ## format?
+- [ ] Did I use ONLY existing SVG icons?
+- [ ] Did I avoid adding any new features?
+
+**If ANY checkbox is unchecked, STOP and fix it.**
+
+---
+
+## ⚡ AI REMINDER - READ THIS EVERY TIME ⚡
+
+
+---
+
+## 📌 SUMMARY OF THIS REQUEST
+
+| Aspect | Requirement |
+|--------|-------------|
+| Files to modify | `/scripts/seller-orders.js` and `/styles/seller-orders.css` ONLY |
+| Colors allowed | White (#FFFFFF), Orange (#FF8246), Black (#000000) ONLY |
+| Emojis | ABSOLUTELY FORBIDDEN |
+| Event text | Fix inconsistent sizing, prevent incomplete sentences |
+| Event separation | Make each event a separate statement (customer order, seller sold) |
+| Column depth | Balance colors for more visual depth |
+
+---
+
+**FAILURE TO FOLLOW ANY OF THESE RULES = INCOMPLETE RESPONSE**
+
+**YOU HAVE BEEN WARNED.**
 ```
 
 ---
@@ -62,7 +178,7 @@ only change what's been ask, don't do more or less, you can leave something on s
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-27 01:12:23
+**Generated:** 2026-02-27 19:35:52
 **Mode:** all
 
 ```
@@ -791,99 +907,99 @@ USE crooks_cart_collectives;
 INSERT INTO users (
 first_name, last_name, email, username, password, address
 ) VALUES
-('Mark', 'Santos', 'mark@Sellerdummy.com', 'mark', '123', 'Manila'),
-('Jessa', 'Reyes', 'jessa@Sellerdummy.com', 'jessa', '123', 'Cebu'),
-('Kyle', 'Lopez', 'kyle@Sellerdummy.com', 'kyle', '123', 'Davao'),
-('Anna', 'Cruz', 'anna@Sellerdummy.com', 'anna', '123', 'Baguio'),
-('Leo', 'Garcia', 'leo@Sellerdummy.com', 'leo', '123', 'Iloilo');
+('Aling', 'Bebang', 'aling.bebang@Sellerdummy.com', 'alingbebang', '123', '123 Market Ave., Purok 5, Tambakan 2, Brgy. San Miguel, Pasig City'),
+('Totoy', 'Bibo', 'totoy.bibo@Sellerdummy.com', 'totoybibo', '123', '45 Mabini St., Purok 3, Brgy. Guadalupe, Cebu City'),
+('El', 'Bimbo', 'el.bimbo@Sellerdummy.com', 'thelastelbimby', '123', '78 Rizal Ave., Purok 7, Brgy. Buhangin, Davao City'),
+('Pure', 'Foods', 'pure.foods@Sellerdummy.com', 'hotdog', '123', '22 Session Rd., Purok 12, Brgy. Aurora Hill, Baguio City'),
+('Lebron', 'James', 'lebron.james@Sellerdummy.com', 'ninja', '123', '15 Delgado St., Purok 2, Brgy. Jaro, Iloilo City');
 
 -- =========================
 -- MAKE THEM SELLERS
 -- =========================
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Mark Tech Store', TRUE FROM users WHERE username = 'mark';
+SELECT user_id, 'Aling Bebang''s Tiangge', TRUE FROM users WHERE username = 'alingbebang';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Jessa Gaming Hub', TRUE FROM users WHERE username = 'jessa';
+SELECT user_id, 'Totoy Bibo Bargains', TRUE FROM users WHERE username = 'totoybibo';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Kyle Gadget Zone', TRUE FROM users WHERE username = 'kyle';
+SELECT user_id, 'El Bimbo''s Ukay-Ukay', TRUE FROM users WHERE username = 'thelastelbimby';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Anna Digital Shop', TRUE FROM users WHERE username = 'anna';
+SELECT user_id, 'Pure Foods Paninda', TRUE FROM users WHERE username = 'hotdog';
 
 INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Leo Tech Corner', TRUE FROM users WHERE username = 'leo';
+SELECT user_id, 'Ninja''s Hidden Treasures', TRUE FROM users WHERE username = 'ninja';
 
 -- =========================
--- INSERT 2 PRODUCTS PER SELLER
+-- INSERT 2 PRODUCTS PER SELLER WITH BUDGET PRICES
 -- =========================
 
--- MARK
+-- ALING BEBANG - Budget items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Wireless Mouse', '2.4G Wireless Mouse', 599.00, 'Accessories', 25,
+SELECT s.seller_id, 'Second Hand Cellphone', 'Lumang cellphone pero gumagana pa - good for kids', 350.00, 'budget', 8,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'mark';
+WHERE u.username = 'alingbebang';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Mechanical Keyboard', 'RGB Mechanical Keyboard', 2499.00, 'Accessories', 15,
+SELECT s.seller_id, 'Used School Bag', 'Medyo luma pero matibay pa', 120.00, 'cheap', 15,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'mark';
+WHERE u.username = 'alingbebang';
 
--- JESSA
+-- TOTOY BIBO - Cheap items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Chair Pro', 'Ergonomic Gaming Chair', 8999.00, 'Furniture', 10,
+SELECT s.seller_id, 'Lumang T-shirt Bundle', '3 pcs used shirts - iba-ibang sizes', 150.00, 'cheap', 20,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'jessa';
-
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Desk', 'Spacious Gaming Desk', 6999.00, 'Furniture', 8,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'jessa';
-
--- KYLE
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'USB Hub', '4 Port USB Hub', 499.00, 'Electronics', 30,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'kyle';
+WHERE u.username = 'totoybibo';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'External SSD 1TB', 'High Speed External SSD', 5499.00, 'Electronics', 12,
+SELECT s.seller_id, 'Second Hand Sapatos', 'Gently used rubber shoes', 250.00, 'second hand', 12,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'kyle';
+WHERE u.username = 'totoybibo';
 
--- ANNA
+-- EL BIMBO - Second hand items
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Smart Watch', 'Fitness Smart Watch', 2999.00, 'Wearables', 18,
+SELECT s.seller_id, 'Ukay Jacket', 'Winter jacket from Korea', 180.00, 'second hand', 10,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'anna';
-
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Bluetooth Earbuds', 'Wireless Bluetooth Earbuds', 1999.00, 'Wearables', 22,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'anna';
-
--- LEO
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'VR Headset', 'Virtual Reality Headset', 15999.00, 'Electronics', 6,
-'assets/image/icons/seller-product-placeholder.png'
-FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'leo';
+WHERE u.username = 'thelastelbimby';
 
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Gaming Monitor 144Hz', '27 inch 144Hz Monitor', 12999.00, 'Electronics', 9,
+SELECT s.seller_id, 'Vintage Maong Pants', 'Maong pants - straight cut', 120.00, 'cheap', 18,
 'assets/image/icons/seller-product-placeholder.png'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'leo';
+WHERE u.username = 'thelastelbimby';
+
+-- PURE FOODS (HOTDOG) - Budget food items
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Tuyo (Dried Fish)', 'Isang kilo - perfect for breakfast', 80.00, 'budget', 25,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'hotdog';
+
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Itlog na Maalat', 'Maalat na itlog with kamatis', 15.00, 'cheap', 50,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'hotdog';
+
+-- LEBRON JAMES (NINJA) - Second hand gadgets
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Used Nokia Phone', 'Lumang Nokia - 3310 style', 200.00, 'second hand', 6,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'ninja';
+
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
+SELECT s.seller_id, 'Second Hand Charger', 'Universal charger - gumagana pa', 50.00, 'budget', 30,
+'assets/image/icons/seller-product-placeholder.png'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'ninja';
 ```
 
 ---
@@ -2076,16 +2192,26 @@ try {
         exit;
     }
 
-    // Insert orders
+    // Insert orders - FIXED: Explicitly set status to 'pending' (though default should be pending)
     foreach ($cartItems as $item) {
-        // Final stock check (trigger will also check)
+        // Final stock check
         if ($item['quantity'] > $item['stock_quantity']) {
             throw new Exception("Insufficient stock for {$item['name']}");
         }
         
         $orderStmt = $connection->prepare("
-            INSERT INTO orders (customer_id, seller_id, product_id, quantity, price_at_time, shipping_address, payment_method)
-            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery')
+            INSERT INTO orders (
+                customer_id, 
+                seller_id, 
+                product_id, 
+                quantity, 
+                price_at_time, 
+                shipping_address, 
+                payment_method,
+                status,
+                order_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery', 'pending', NOW())
         ");
         $orderStmt->execute([
             $customer_id,
@@ -2155,6 +2281,12 @@ switch ($action) {
     case 'update_item_status':
         updateItemStatus();
         break;
+    case 'update_shipping':
+        updateShippingAddress();
+        break;
+    case 'get_default_address':
+        getDefaultAddress();
+        break;
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 }
@@ -2223,7 +2355,6 @@ function cancelOrderItem() {
     try {
         $connection->beginTransaction();
         
-        // Get order details first
         $stmt = $connection->prepare("
             SELECT order_id, status, quantity, product_id
             FROM orders
@@ -2239,14 +2370,12 @@ function cancelOrderItem() {
             exit;
         }
         
-        // Allow cancellation only for pending orders
         if ($order['status'] !== 'pending') {
             $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Order can only be cancelled when status is pending']);
             exit;
         }
         
-        // Update order status
         $update = $connection->prepare("
             UPDATE orders
             SET status = 'cancelled', 
@@ -2256,7 +2385,6 @@ function cancelOrderItem() {
         ");
         $update->execute([$order_id, $customer_id]);
         
-        // Restore stock
         $restore = $connection->prepare("
             UPDATE products 
             SET stock_quantity = stock_quantity + ? 
@@ -2298,17 +2426,21 @@ function getSellerOrders() {
                 o.shipping_address,
                 o.payment_method,
                 o.order_date,
+                o.delivered_at,
+                o.cancelled_at,
                 o.cancelled_by,
                 p.name AS product_name,
                 p.image_path,
                 u.first_name,
                 u.last_name,
                 u.email,
-                u.contact_number
+                u.contact_number,
+                s.business_name
             FROM orders o
             JOIN products p ON o.product_id = p.product_id
             JOIN customers c ON o.customer_id = c.customer_id
             JOIN users u ON c.user_id = u.user_id
+            JOIN sellers s ON o.seller_id = s.seller_id
             WHERE o.seller_id = ?
             ORDER BY o.order_date DESC
         ");
@@ -2344,7 +2476,6 @@ function updateItemStatus() {
     try {
         $connection->beginTransaction();
         
-        // Get order details first
         $stmt = $connection->prepare("
             SELECT order_id, status, quantity, product_id
             FROM orders
@@ -2360,7 +2491,6 @@ function updateItemStatus() {
             exit;
         }
         
-        // Only allow status change from pending
         if ($order['status'] !== 'pending') {
             $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Order cannot be updated from current status']);
@@ -2368,7 +2498,6 @@ function updateItemStatus() {
         }
         
         if ($status === 'delivered') {
-            // Mark as delivered
             $update = $connection->prepare("
                 UPDATE orders
                 SET status = 'delivered',
@@ -2377,8 +2506,16 @@ function updateItemStatus() {
             ");
             $update->execute([$order_id, $seller_id]);
             
+            $updateSales = $connection->prepare("
+                UPDATE sellers 
+                SET total_sales = total_sales + (
+                    SELECT subtotal FROM orders WHERE order_id = ?
+                )
+                WHERE seller_id = ?
+            ");
+            $updateSales->execute([$order_id, $seller_id]);
+            
         } else if ($status === 'cancelled') {
-            // Mark as cancelled and restore stock
             $update = $connection->prepare("
                 UPDATE orders
                 SET status = 'cancelled',
@@ -2388,7 +2525,6 @@ function updateItemStatus() {
             ");
             $update->execute([$order_id, $seller_id]);
             
-            // Restore stock
             $restore = $connection->prepare("
                 UPDATE products 
                 SET stock_quantity = stock_quantity + ? 
@@ -2399,12 +2535,107 @@ function updateItemStatus() {
         
         $connection->commit();
         
-        echo json_encode(['status' => 'success', 'message' => 'Order status updated']);
+        echo json_encode(['status' => 'success', 'message' => 'Order status updated to ' . $status]);
         
     } catch (Exception $e) {
         $connection->rollBack();
         error_log("updateItemStatus error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Failed to update status']);
+    }
+}
+
+function updateShippingAddress() {
+    global $connection;
+    
+    if (!isset($_SESSION['customer_id'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Not a customer']);
+        exit;
+    }
+    
+    $customer_id = $_SESSION['customer_id'];
+    $order_id = $_POST['order_id'] ?? 0;
+    $shipping_address = trim($_POST['shipping_address'] ?? '');
+    
+    if (!$order_id || empty($shipping_address)) {
+        echo json_encode(['status' => 'error', 'message' => 'Order ID and shipping address required']);
+        exit;
+    }
+    
+    if (strlen($shipping_address) < 5) {
+        echo json_encode(['status' => 'error', 'message' => 'Shipping address must be at least 5 characters']);
+        exit;
+    }
+    
+    try {
+        $connection->beginTransaction();
+        
+        $stmt = $connection->prepare("
+            SELECT order_id, status
+            FROM orders
+            WHERE order_id = ? AND customer_id = ?
+            FOR UPDATE
+        ");
+        $stmt->execute([$order_id, $customer_id]);
+        $order = $stmt->fetch();
+        
+        if (!$order) {
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Order not found']);
+            exit;
+        }
+        
+        if ($order['status'] !== 'pending') {
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Shipping address can only be updated for pending orders']);
+            exit;
+        }
+        
+        $update = $connection->prepare("
+            UPDATE orders
+            SET shipping_address = ?
+            WHERE order_id = ? AND customer_id = ?
+        ");
+        $update->execute([$shipping_address, $order_id, $customer_id]);
+        
+        $connection->commit();
+        
+        echo json_encode(['status' => 'success', 'message' => 'Shipping address updated successfully']);
+        
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("updateShippingAddress error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update shipping address']);
+    }
+}
+
+function getDefaultAddress() {
+    global $connection;
+    
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
+        exit;
+    }
+    
+    $user_id = $_SESSION['user_id'];
+    
+    try {
+        $stmt = $connection->prepare("
+            SELECT address 
+            FROM users 
+            WHERE user_id = ?
+        ");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user && !empty($user['address'])) {
+            echo json_encode(['status' => 'success', 'address' => $user['address']]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No default address found']);
+        }
+        
+    } catch (Exception $e) {
+        error_log("getDefaultAddress error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Failed to fetch default address']);
     }
 }
 ?>
@@ -2736,25 +2967,51 @@ function logError($message, $context = []) {
 **Status:** `FOUND`
 
 ```text
-[26-Feb-2026 17:27:13 Europe/Berlin] cancelOrderItem error: SQLSTATE[HY000]: General error: 1442 Can't update table 'orders' in stored function/trigger because it is already used by statement which invoked this stored function/trigger
-[26-Feb-2026 17:28:32 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[26-Feb-2026 17:28:32 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[26-Feb-2026 17:28:37 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
-[26-Feb-2026 17:28:37 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[26-Feb-2026 17:30:56 Europe/Berlin] Signin attempt for identifier: Kyle
-[26-Feb-2026 17:31:10 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
-[26-Feb-2026 17:34:50 Europe/Berlin] Signin attempt for identifier: anna
-[26-Feb-2026 17:42:54 Europe/Berlin] Signin attempt for identifier: jessa
-[26-Feb-2026 17:43:13 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
-[26-Feb-2026 17:43:30 Europe/Berlin] Signin attempt for identifier: anna
-[26-Feb-2026 17:44:00 Europe/Berlin] Signin attempt for identifier: jessa
-[26-Feb-2026 17:44:34 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
-[26-Feb-2026 17:44:51 Europe/Berlin] Signin attempt for identifier: anna
-[26-Feb-2026 17:45:40 Europe/Berlin] Signin attempt for identifier: jessa
-[26-Feb-2026 17:46:56 Europe/Berlin] Signin attempt for identifier: jessa
-[26-Feb-2026 17:54:05 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
-[26-Feb-2026 17:54:25 Europe/Berlin] Signin attempt for identifier: anna
-[26-Feb-2026 17:58:58 Europe/Berlin] Signin attempt for identifier: jessa
+[26-Feb-2026 21:36:00 Europe/Berlin] Signin attempt for identifier: kyle
+[26-Feb-2026 21:36:09 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 21:36:21 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 22:28:10 Europe/Berlin] Signin attempt for identifier: kyle
+[26-Feb-2026 22:28:20 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 22:28:26 Europe/Berlin] Signin attempt for identifier: anna
+[26-Feb-2026 22:32:07 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[26-Feb-2026 22:32:07 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[26-Feb-2026 22:32:13 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [1049] Unknown database 'crooks_cart_collectives'
+[26-Feb-2026 22:32:13 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[26-Feb-2026 22:43:36 Europe/Berlin] Signin attempt for identifier: ninja
+[26-Feb-2026 22:44:02 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[26-Feb-2026 22:44:16 Europe/Berlin] Signin attempt for identifier: hotdog
+[26-Feb-2026 22:44:48 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 05:13:21 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 05:13:38 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 05:19:49 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 05:20:38 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 05:21:11 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 05:21:29 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 05:21:50 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 05:22:10 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 05:29:31 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 05:54:45 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2005-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"test051117T","confirm_password":"test051117T","contact_number":"+639942822928","address":"Purok 5 Tambakan 2\r\nBarangay San Miguel"}
+[27-Feb-2026 05:55:33 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2005-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lancewasd01","confirm_password":"Lancewasd01","contact_number":"+639942822928","address":"testa"}
+[27-Feb-2026 05:55:38 Europe/Berlin] Signup attempt: {"action":"signup","first_name":"Lance","middle_name":"","last_name":"Madelar","birthdate":"2005-11-17","gender":"Male","email":"LNM136743110147172005@gmail.com","username":"lance","password":"Lancewasd01","confirm_password":"Lancewasd01","contact_number":"+639942822928","address":"testa"}
+[27-Feb-2026 05:57:23 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 07:04:52 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 07:05:05 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 07:08:41 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 07:16:13 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 07:21:09 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 08:06:40 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 08:09:35 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 08:09:36 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 08:10:33 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 08:13:52 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 08:14:24 Europe/Berlin] Signin attempt for identifier: alingbebang
+[27-Feb-2026 09:36:01 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 09:40:51 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 09:40:57 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 09:46:55 Europe/Berlin] Signin attempt for identifier: totoybibo
+[27-Feb-2026 09:54:20 Europe/Berlin] Signin attempt for identifier: ninja
+[27-Feb-2026 09:55:12 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
+[27-Feb-2026 09:55:27 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 100
 ```
 
 ---
@@ -4542,14 +4799,14 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <span class="product-seller">
                             Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
                             <?php if ($product['is_verified']): ?>
-                            <span class="verified-badge">✓ Verified Seller</span>
+                            <span class="verified-badge">Verified Seller</span>
                             <?php endif; ?>
                         </span>
                     </div>
 
                     <div class="product-price-wrapper">
                         <span class="price-label">Price:</span>
-                        <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
+                        <span class="product-price">Php <?php echo number_format($product['price'], 2); ?></span>
                     </div>
 
                     <div class="product-availability">
@@ -4588,8 +4845,6 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <?php else: ?>
                         <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
                             class="btn btn-primary login-to-purchase-btn">
-                            <img src="../assets/image/icons/cart-shopping.svg" alt="Login to purchase"
-                                style="width: 20px; height: 20px; margin-right: 8px; filter: brightness(0) invert(1);">
                             <span class="btn-text">Login to Purchase</span>
                         </a>
                         <?php endif; ?>
@@ -4782,7 +5037,9 @@ $customer_id = $_SESSION['customer_id'];
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <h1 class="page-title">My Orders</h1>
+        <div class="customer-header">
+            <h1 class="page-title">My Orders</h1>
+        </div>
         <div id="ordersList" class="orders-list">
             <div class="loading">Loading orders...</div>
         </div>
@@ -4837,8 +5094,8 @@ $customer_id = $_SESSION['customer_id'];
             <h2 class="modal-title">Cancel Order</h2>
             <p class="modal-message">Are you sure you want to cancel this order? This action cannot be undone.</p>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-cancel" id="cancelCancel">No, Keep It</button>
-                <button class="modal-btn modal-btn-confirm" id="confirmCancel">Yes, Cancel Order</button>
+                <button class="modal-btn modal-btn-cancel" id="cancelCancel">No</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmCancel">Confirm</button>
             </div>
         </div>
     </div>
@@ -8772,9 +9029,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ```javascript
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Fixed version - shows cancel reason in order-item-status badge, keeps header badge as simple status */
+/* Fixed version with complete event activity showing all status changes */
 
 document.addEventListener('DOMContentLoaded', () => {
+    'use strict';
+
     // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('ordersList');
     
@@ -8815,7 +9074,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const star = document.createElement('span');
             star.className = 'star';
             star.dataset.value = i;
-            star.style.cssText = 'cursor: pointer; display: inline-block; width: 32px; height: 32px;';
             
             const img = document.createElement('img');
             img.src = '../assets/image/icons/star-empty.svg';
@@ -8903,6 +9161,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============= AUTO-RESIZE TEXTAREA =============
+    function autoResizeTextarea(textarea) {
+        if (!textarea) return;
+        
+        textarea.style.height = 'auto';
+        const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+        const minHeight = Math.max(60, lineHeight * 3);
+        const maxHeight = 200;
+        
+        let newHeight = textarea.scrollHeight;
+        newHeight = Math.min(Math.max(newHeight, minHeight), maxHeight);
+        
+        textarea.style.height = newHeight + 'px';
+        
+        if (textarea.scrollHeight > maxHeight) {
+            textarea.style.overflowY = 'auto';
+        } else {
+            textarea.style.overflowY = 'hidden';
+        }
+    }
+
+    // ============= SETUP AUTO-RESIZE FOR ALL EDIT TEXTAREAS =============
+    function setupAutoResize() {
+        document.querySelectorAll('.shipping-edit-textarea').forEach(textarea => {
+            textarea.removeEventListener('input', handleTextareaInput);
+            textarea.addEventListener('input', handleTextareaInput);
+            autoResizeTextarea(textarea);
+        });
+    }
+
+    function handleTextareaInput(e) {
+        autoResizeTextarea(e.target);
+    }
+
     // ============= LOAD ORDERS =============
     async function loadOrders() {
         if (!ordersList) return;
@@ -8924,6 +9216,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============= FORMAT DATE =============
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return date.toLocaleDateString(undefined, options);
+    }
+
+    // ============= GET IMAGE PATH =============
+    function getImagePath(path) {
+        if (!path) return '../assets/image/icons/package.svg';
+        if (path.startsWith('assets/')) return '../' + path;
+        if (path.startsWith('http')) return path;
+        if (path.startsWith('../')) return path;
+        return '../' + path;
+    }
+
+    // ============= ESCAPE HTML =============
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     // ============= RENDER ORDERS =============
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
@@ -8939,25 +9261,30 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
 
         orders.forEach(order => {
-            const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
+            const orderDate = formatDate(order.order_date);
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
-            const statusClass = order.status.toLowerCase(); // pending, delivered, cancelled
+            const statusClass = order.status.toLowerCase();
             const imagePath = getImagePath(order.image_path);
             
-            // Determine cancellation text for order-item-status
-            let cancellationText = '';
-            if (order.status === 'cancelled' && order.cancelled_by) {
-                if (order.cancelled_by === 'customer') {
-                    cancellationText = 'Cancelled by Customer';
-                } else if (order.cancelled_by === 'seller') {
-                    cancellationText = 'Cancelled by Seller';
-                }
+            const isEditable = order.status === 'pending';
+            
+            const subtotal = Number(order.subtotal).toFixed(2);
+            const total = Number(order.subtotal).toFixed(2);
+
+            // Build event activity with required messages
+            let eventHtml = '';
+            eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
+                    
+            if (order.status === 'delivered' && order.delivered_at) {
+                const deliveredDate = formatDate(order.delivered_at);
+                eventHtml += `<div class="event-item delivered-event"><span class="event-icon"><img src="../assets/image/icons/package.svg" alt="Item sold" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">Item sold: ${deliveredDate}</span></div>`;
             }
             
-            // Price summary data
-            const subtotal = Number(order.subtotal).toFixed(2);
-            const total = Number(order.subtotal).toFixed(2); // shipping is free
-
+            if (order.status === 'cancelled' && order.cancelled_at) {
+                const cancelledDate = formatDate(order.cancelled_at);
+                const cancelledBy = order.cancelled_by === 'customer' ? 'Customer' : 'Seller';
+                eventHtml += `<div class="event-item cancelled-event"><span class="event-icon"><img src="../assets/image/icons/cancel.svg" alt="Cancelled" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">${cancelledBy} cancelled: ${cancelledDate}</span></div>`;
+            }
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
@@ -8971,97 +9298,107 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="order-body">
-                        <!-- Column 1: Order Items -->
-                        <div class="order-items-column">
-                            <div class="order-items">
-                                <div class="order-item">
-                                    <img src="${imagePath}" alt="${escapeHtml(order.product_name)}"
-                                         class="order-item-image"
-                                         onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                                    <div class="order-item-details">
-                                        <div class="order-item-seller">${escapeHtml(order.seller_name || 'Unknown Seller')}</div>
-                                        <div class="order-item-title">${escapeHtml(order.product_name)}</div>
-                                        <div class="order-item-meta">
-                                            <span class="item-quantity">Qty: ${order.quantity}</span>
-                                            <span class="item-price">₱${Number(order.price_at_time).toFixed(2)}</span>
-                                        </div>
-                                        <div class="order-item-status">
-                                            ${order.status === 'cancelled' && cancellationText ? 
-                                                `<span class="status-badge ${statusClass}">${cancellationText}</span>` : 
-                                                `<span class="status-badge ${statusClass}">${displayStatus}</span>`
-                                            }
-                                        </div>
+                        <div class="order-product-column">
+                            <div class="column-title">Product Details</div>
+                            <div class="product-details">
+                                <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                     class="product-thumbnail"
+                                     onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                                <div class="product-info">
+                                    <h4>${escapeHtml(order.product_name)}</h4>
+                                    <p><span class="info-label">Seller:</span> ${escapeHtml(order.seller_name || 'Unknown Seller')}</p>
+                                    <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-event-column">
+                            <div class="column-title">Event Activity</div>
+                            <div class="event-activity-content">
+                                ${eventHtml}
+                            </div>
+                        </div>
+
+                        <div class="order-shipping-column">
+                            <div class="column-title">Shipping Information</div>
+                            <div class="shipping-details" data-order-id="${order.order_id}" data-original="${escapeHtml(order.shipping_address || 'No address provided')}">
+                                <p class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</p>
+                                <div class="shipping-edit-controls" style="${isEditable ? 'display: flex;' : 'display: none;'}">
+                                    <textarea class="shipping-edit-textarea" rows="3" style="display: none; width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none; overflow: hidden;">${escapeHtml(order.shipping_address || '')}</textarea>
+                                    <div class="shipping-buttons">
+                                        <button class="action-btn edit-shipping" data-order-id="${order.order_id}" ${!isEditable ? 'style="display: none;"' : ''}>
+                                            <img src="../assets/image/icons/updatesvg.svg" alt="Edit" class="btn-icon">
+                                            <span class="btn-text">Edit</span>
+                                        </button>
+                                        <button class="action-btn save-shipping" data-order-id="${order.order_id}" style="display: none;">
+                                            <img src="../assets/image/icons/updatesvg.svg" alt="Save" class="btn-icon">
+                                            <span class="btn-text">Save</span>
+                                        </button>
+                                        <button class="action-btn reset-shipping" data-order-id="${order.order_id}" style="display: none;">
+                                            <img src="../assets/image/icons/order.svg" alt="Reset" class="btn-icon">
+                                            <span class="btn-text">Reset</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Column 2: Price Summary -->
                         <div class="order-price-summary">
-                            <div class="price-summary-title">Order Summary</div>
-                            <div class="price-row">
-                                <span>Quantity</span>
-                                <span class="price-value">${order.quantity}</span>
+                            <div class="column-title">Order Summary</div>
+                            <div class="price-summary-details">
+                                <div class="price-row">
+                                    <span>Subtotal</span>
+                                    <span class="price-value">₱${subtotal}</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Shipping</span>
+                                    <span class="price-value free-shipping">Free</span>
+                                </div>
+                                <div class="price-divider"></div>
+                                <div class="price-row price-total">
+                                    <span>Total</span>
+                                    <span class="price-value">₱${total}</span>
+                                </div>
                             </div>
-                            <div class="price-row">
-                                <span>Subtotal</span>
-                                <span class="price-value">₱${subtotal}</span>
-                            </div>
-                            <div class="price-row">
-                                <span>Shipping Fee</span>
-                                <span class="price-value">Free</span>
-                            </div>
-                            <div class="price-divider"></div>
-                            <div class="price-row price-total">
-                                <span>Total</span>
-                                <span class="price-value">₱${total}</span>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Shipping + Actions -->
-                        <div class="order-shipping-column">
-                            <div class="order-shipping-location">
-                                <div class="shipping-address-title">Shipping Address</div>
-                                <div class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</div>
-                            </div>
-
-                            <div class="order-item-actions">
             `;
 
-            // FIXED: Use 'pending' instead of 'ordered' for cancel button
             const canCancel = order.status === 'pending';
             const canReview = order.status === 'delivered' && !order.has_review;
 
             if (canReview) {
                 html += `
-                    <button class="action-btn action-btn-review" 
-                            data-order-id="${order.order_id}" 
-                            data-product-id="${order.product_id}">
-                        Write Review
-                    </button>
+                    <div class="order-actions">
+                        <button class="action-btn review" data-order-id="${order.order_id}" data-product-id="${order.product_id}">
+                            Write Review
+                        </button>
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
-            } else if (order.has_review) {
+            } else if (canCancel) {
                 html += `
-                    <span class="reviewed-badge">
-                        Reviewed
-                    </span>
+                    <div class="order-actions">
+                        <button class="action-btn cancel" data-order-id="${order.order_id}">
+                            Cancel Order
+                        </button>
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
-            }
-            
-            if (canCancel) {
+            } else {
                 html += `
-                    <button class="action-btn action-btn-cancel" 
-                            data-order-id="${order.order_id}">
-                        Cancel Order
-                    </button>
+                    <div class="order-actions">
+                        <a href="product-details.php?id=${order.product_id}" class="action-btn view">
+                            View Product
+                        </a>
+                    </div>
                 `;
             }
             
             html += `
-                            <a href="product-details.php?id=${order.product_id}" 
-                               class="action-btn action-btn-view">
-                                View Product
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -9070,39 +9407,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ordersList.innerHTML = html;
         attachEventListeners();
+        setupAutoResize();
     }
 
-    // ============= HELPER FUNCTIONS =============
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        return date.toLocaleDateString(undefined, options);
-    }
-    
-    function getImagePath(path) {
-        if (!path) return '../assets/image/icons/package.svg';
-        if (path.startsWith('assets/')) return '../' + path;
-        if (path.startsWith('http')) return path;
-        if (path.startsWith('../')) return path;
-        return '../' + path;
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+    // ============= FETCH DEFAULT ADDRESS =============
+    async function fetchDefaultAddress() {
+        try {
+            const response = await fetch('../database/order-handler.php?action=get_default_address');
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                return result.address;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching default address:', error);
+            return null;
+        }
     }
 
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        document.querySelectorAll('.action-btn-review').forEach(btn => {
+        document.querySelectorAll('.action-btn.review').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (reviewOrderId) reviewOrderId.value = btn.dataset.orderId;
@@ -9112,11 +9439,139 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        document.querySelectorAll('.action-btn-cancel').forEach(btn => {
+        document.querySelectorAll('.action-btn.cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 currentCancelOrderId = btn.dataset.orderId;
                 showModal(cancelModal);
+            });
+        });
+
+        document.querySelectorAll('.action-btn.edit-shipping').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = btn.dataset.orderId;
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const editBtn = shippingColumn.querySelector('.edit-shipping');
+                const saveBtn = shippingColumn.querySelector('.save-shipping');
+                const resetBtn = shippingColumn.querySelector('.reset-shipping');
+                
+                if (addressText && textarea && editBtn && saveBtn && resetBtn) {
+                    addressText.style.display = 'none';
+                    textarea.style.display = 'block';
+                    editBtn.style.display = 'none';
+                    saveBtn.style.display = 'inline-flex';
+                    resetBtn.style.display = 'inline-flex';
+                    
+                    textarea.focus();
+                    autoResizeTextarea(textarea);
+                }
+            });
+        });
+
+        document.querySelectorAll('.action-btn.save-shipping').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const orderId = btn.dataset.orderId;
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const editBtn = shippingColumn.querySelector('.edit-shipping');
+                const saveBtn = shippingColumn.querySelector('.save-shipping');
+                const resetBtn = shippingColumn.querySelector('.reset-shipping');
+                
+                if (!textarea || !addressText) return;
+                
+                const newAddress = textarea.value.trim();
+                
+                if (!newAddress) {
+                    showNotification('Shipping address cannot be empty', true);
+                    return;
+                }
+                
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="btn-text">Saving...</span>';
+                btn.disabled = true;
+                
+                try {
+                    const formData = new URLSearchParams();
+                    formData.append('action', 'update_shipping');
+                    formData.append('order_id', orderId);
+                    formData.append('shipping_address', newAddress);
+                    
+                    const response = await fetch('../database/order-handler.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        addressText.textContent = newAddress;
+                        addressText.style.display = 'block';
+                        textarea.style.display = 'none';
+                        editBtn.style.display = 'inline-flex';
+                        saveBtn.style.display = 'none';
+                        resetBtn.style.display = 'none';
+                        
+                        shippingColumn.dataset.original = newAddress;
+                        
+                        showNotification('Shipping address updated successfully');
+                    } else {
+                        showNotification(result.message || 'Failed to update address', true);
+                        textarea.value = addressText.textContent;
+                        addressText.style.display = 'block';
+                        textarea.style.display = 'none';
+                        editBtn.style.display = 'inline-flex';
+                        saveBtn.style.display = 'none';
+                        resetBtn.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Update shipping error:', error);
+                    showNotification('Network error. Please try again.', true);
+                    textarea.value = addressText.textContent;
+                    addressText.style.display = 'block';
+                    textarea.style.display = 'none';
+                    editBtn.style.display = 'inline-flex';
+                    saveBtn.style.display = 'none';
+                    resetBtn.style.display = 'none';
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        });
+
+        document.querySelectorAll('.action-btn.reset-shipping').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const shippingColumn = btn.closest('.shipping-details');
+                if (!shippingColumn) return;
+                
+                const textarea = shippingColumn.querySelector('.shipping-edit-textarea');
+                const addressText = shippingColumn.querySelector('.shipping-address-text');
+                const originalAddress = shippingColumn.dataset.original;
+                
+                if (!textarea) return;
+                
+                textarea.value = originalAddress;
+                autoResizeTextarea(textarea);
+                
+                const originalBtnText = btn.innerHTML;
+                btn.innerHTML = '<span class="btn-text">Reset!</span>';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalBtnText;
+                    btn.disabled = false;
+                }, 500);
             });
         });
     }
@@ -9203,7 +9658,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Network error. Please try again.', true);
             } finally {
                 confirmCancel.disabled = false;
-                confirmCancel.textContent = 'Yes, Cancel Order';
+                confirmCancel.textContent = 'Confirm';
                 currentCancelOrderId = null;
             }
         });
@@ -9242,6 +9697,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') hideAllModals();
     });
 
+    window.addEventListener('resize', () => {
+        setupAutoResize();
+    });
+
     initStarRating();
     loadOrders();
 });
@@ -9255,261 +9714,115 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ```javascript
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* Fixed version - product details first, customer info with payment method */
+/* Based on orders.js structure – maintains CSS compatibility, fetches seller orders, adds deliver/cancel actions */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
+    // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('sellerOrdersList');
     const filterTabs = document.querySelectorAll('.filter-tab');
-
+    
+    // Confirmation Modal Elements (seller version)
     const confirmModal = document.getElementById('confirmModal');
     const confirmTitle = document.getElementById('confirmTitle');
     const confirmMessage = document.getElementById('confirmMessage');
     const cancelAction = document.getElementById('cancelAction');
     const confirmAction = document.getElementById('confirmAction');
-
+    
+    // Notification Modal Elements
     const notificationModal = document.getElementById('notificationModal');
     const notificationMessage = document.getElementById('notificationMessage');
     const notificationClose = document.getElementById('notificationClose');
-
-    let currentAction = null;
+    
+    // State
+    let currentAction = null;          // 'delivered' or 'cancelled'
     let currentOrderId = null;
-    let currentNewStatus = null;
+    let currentFilter = 'all';
     let allOrders = [];
 
     // ============= MODAL FUNCTIONS =============
-    function showConfirmModal(title, message, onConfirm) {
-        confirmTitle.textContent = title;
-        confirmMessage.textContent = message;
-        confirmModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        currentAction = onConfirm;
+    function showModal(modal) {
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
     }
-
-    function hideConfirmModal() {
-        confirmModal.style.display = 'none';
-        document.body.style.overflow = '';
+    
+    function hideModal(modal) {
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+    
+    function hideAllModals() {
+        hideModal(confirmModal);
+        hideModal(notificationModal);
         currentAction = null;
         currentOrderId = null;
-        currentNewStatus = null;
     }
-
+    
     function showNotification(message, isError = false) {
-        notificationMessage.textContent = message;
-        notificationModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
+        if (notificationMessage) {
+            notificationMessage.textContent = message;
+        }
+        showModal(notificationModal);
+        
         if (!isError) {
             setTimeout(() => {
-                hideNotificationModal();
+                hideModal(notificationModal);
             }, 3000);
         }
     }
 
-    function hideNotificationModal() {
-        notificationModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-
-    if (confirmModal) {
-        confirmModal.addEventListener('click', (e) => {
-            if (e.target === confirmModal) hideConfirmModal();
-        });
-    }
-
-    if (notificationModal) {
-        notificationModal.addEventListener('click', (e) => {
-            if (e.target === notificationModal) hideNotificationModal();
-        });
-    }
-
-    if (notificationClose) {
-        notificationClose.addEventListener('click', hideNotificationModal);
-    }
-
-    if (cancelAction) {
-        cancelAction.addEventListener('click', hideConfirmModal);
-    }
-
-    if (confirmAction) {
-        confirmAction.addEventListener('click', () => {
-            if (currentAction) {
-                currentAction();
+    // ============= FILTER FUNCTIONS =============
+    function setActiveFilter(filter) {
+        filterTabs.forEach(tab => {
+            const tabFilter = tab.dataset.filter;
+            if (tabFilter === filter) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
             }
-            hideConfirmModal();
         });
     }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            hideConfirmModal();
-            hideNotificationModal();
+    function filterOrders(filter) {
+        currentFilter = filter;
+        setActiveFilter(filter);
+        
+        if (filter === 'all') {
+            renderOrders(allOrders);
+        } else {
+            const filtered = allOrders.filter(order => order.status === filter);
+            renderOrders(filtered);
         }
-    });
+    }
 
     // ============= LOAD ORDERS =============
     async function loadOrders() {
+        if (!ordersList) return;
+        
         ordersList.innerHTML = '<div class="loading">Loading orders...</div>';
-
+        
         try {
             const response = await fetch('../database/order-handler.php?action=get_seller_orders');
             const result = await response.json();
-
+            
             if (result.status === 'success') {
-                allOrders = result.data || [];
-                const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'all';
-                renderOrders(allOrders, activeFilter);
+                allOrders = result.data;
+                filterOrders(currentFilter);
             } else {
                 ordersList.innerHTML = '<div class="empty-orders"><p>Failed to load orders. Please try again.</p></div>';
             }
         } catch (error) {
-            console.error('Error loading seller orders:', error);
+            console.error('Error loading orders:', error);
             ordersList.innerHTML = '<div class="empty-orders"><p>Network error. Please check your connection.</p></div>';
         }
     }
 
-    // ============= RENDER ORDERS =============
-    function renderOrders(orders, filter) {
-        if (!orders || orders.length === 0) {
-            ordersList.innerHTML = `
-                <div class="empty-orders">
-                    <p>No orders yet.</p>
-                    <a href="seller-products.php" class="btn-primary">Manage Products</a>
-                </div>
-            `;
-            return;
-        }
-
-        let filteredOrders = orders;
-        if (filter !== 'all') {
-            filteredOrders = orders.filter(order => order.status === filter);
-        }
-
-        if (filteredOrders.length === 0) {
-            ordersList.innerHTML = `<div class="empty-orders"><p>No ${filter} orders found.</p></div>`;
-            return;
-        }
-
-        let html = '';
-
-        filteredOrders.forEach(order => {
-            const orderDate = order.order_date ? formatDate(order.order_date) : 'Date unavailable';
-            const customerName = order.first_name && order.last_name 
-                ? `${escapeHtml(order.first_name)} ${escapeHtml(order.last_name)}`
-                : 'Customer';
-            const status = order.status || 'pending';
-            const statusClass = status.toLowerCase();
-            const imagePath = getImagePath(order.image_path);
-            
-            // Price summary data
-            const subtotal = Number(order.subtotal).toFixed(2);
-            const total = Number(order.subtotal).toFixed(2); // shipping is free
-            const paymentMethod = order.payment_method || 'Cash on Delivery';
-
-            html += `
-                <div class="order-card" data-order-id="${order.order_id}">
-                    <div class="order-header">
-                        <div class="order-header-left">
-                            <span class="order-id">Order #${order.order_id}</span>
-                            <span class="order-date">${orderDate}</span>
-                        </div>
-                        <div class="order-header-right">
-                            <span class="customer-info">${customerName}</span>
-                            <span class="order-status-badge ${statusClass}">${status}</span>
-                        </div>
-                    </div>
-
-                    <div class="order-body">
-                        <!-- Column 1: Product Details (First) -->
-                        <div class="order-product-column">
-                            <div class="product-details-title">Product Details</div>
-                            <div class="product-details">
-                                <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
-                                     class="product-thumbnail"
-                                     onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                                
-                                <div class="product-info">
-                                    <h4>${escapeHtml(order.product_name)}</h4>
-                                    <p>Quantity: ${order.quantity}</p>
-                                    <p>Price: ₱${Number(order.price_at_time).toFixed(2)}</p>
-                                    <p class="subtotal">Subtotal: ₱${subtotal}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Column 2: Customer Information (Second) with Payment Method -->
-                        <div class="order-customer-column">
-                            <div class="customer-details-title">Customer Information</div>
-                            <div class="customer-details">
-                                <p><strong>Name:</strong> ${customerName}</p>
-                                <p><strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}</p>
-                                <p><strong>Phone:</strong> ${escapeHtml(order.contact_number || 'N/A')}</p>
-                                <p><strong>Payment:</strong> ${escapeHtml(paymentMethod)}</p>
-                                <p><strong>Ship to:</strong> ${escapeHtml(order.shipping_address || 'N/A')}</p>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Price Summary (Third) -->
-                        <div class="order-price-summary">
-                            <div class="price-summary-title">Order Summary</div>
-                            <div class="price-row">
-                                <span>Quantity</span>
-                                <span class="price-value">${order.quantity}</span>
-                            </div>
-                            <div class="price-row">
-                                <span>Price per item</span>
-                                <span class="price-value">₱${Number(order.price_at_time).toFixed(2)}</span>
-                            </div>
-                            <div class="price-row">
-                                <span>Subtotal</span>
-                                <span class="price-value">₱${subtotal}</span>
-                            </div>
-                            <div class="price-row">
-                                <span>Shipping Fee</span>
-                                <span class="price-value">Free</span>
-                            </div>
-                            <div class="price-divider"></div>
-                            <div class="price-row price-total">
-                                <span>Total</span>
-                                <span class="price-value">₱${total}</span>
-                            </div>
-                            
-                            <div class="order-actions">
-            `;
-
-            // Show confirm/cancel buttons only for pending orders
-            if (status === 'pending') {
-                html += `
-                    <button class="action-btn complete" data-order-id="${order.order_id}" data-status="delivered">
-                        Mark as Delivered
-                    </button>
-                    <button class="action-btn cancel" data-order-id="${order.order_id}" data-status="cancelled">
-                        Cancel Order
-                    </button>
-                `;
-            } else {
-                // Show status badge for non-pending orders
-                html += `
-                    <span class="status-badge ${statusClass}">
-                        ${status}
-                    </span>
-                `;
-            }
-
-            html += `
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-
-        ordersList.innerHTML = html;
-        attachEventListeners();
-    }
-
-    // ============= HELPER FUNCTIONS =============
+    // ============= FORMAT DATE =============
     function formatDate(dateString) {
         const date = new Date(dateString);
         const options = { 
@@ -9522,6 +9835,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
+    // ============= GET IMAGE PATH =============
     function getImagePath(path) {
         if (!path) return '../assets/image/icons/package.svg';
         if (path.startsWith('assets/')) return '../' + path;
@@ -9530,6 +9844,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return '../' + path;
     }
 
+    // ============= ESCAPE HTML =============
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -9537,114 +9852,276 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
+    // ============= RENDER ORDERS =============
+    function renderOrders(orders) {
+        if (!orders || orders.length === 0) {
+            ordersList.innerHTML = `
+                <div class="empty-orders">
+                    <p>No orders found.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+
+        orders.forEach(order => {
+            const orderDate = formatDate(order.order_date);
+            const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
+            const statusClass = order.status.toLowerCase();
+            const imagePath = getImagePath(order.image_path);
+            
+            const customerName = `${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')}`.trim() || 'Customer';
+            
+            const subtotal = Number(order.subtotal).toFixed(2);
+            const total = Number(order.subtotal).toFixed(2);
+
+            // Build event activity – includes placed, delivered, cancelled timestamps
+            let eventHtml = '';
+            eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
+
+            if (order.status === 'delivered' && order.delivered_at) {
+                const deliveredDate = formatDate(order.delivered_at);
+                eventHtml += `<div class="event-item delivered-event"><span class="event-icon"><img src="../assets/image/icons/package.svg" alt="Item sold" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">Item sold: ${deliveredDate}</span></div>`;
+            }
+
+            if (order.status === 'cancelled' && order.cancelled_at) {
+                const cancelledDate = formatDate(order.cancelled_at);
+                const cancelledBy = order.cancelled_by === 'customer' ? 'Customer' : 'Seller';
+                eventHtml += `<div class="event-item cancelled-event"><span class="event-icon"><img src="../assets/image/icons/cancel.svg" alt="Cancelled" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">${cancelledBy} cancelled: ${cancelledDate}</span></div>`;
+            }
+           // Shipping column
+            const shippingHtml = `
+                <div class="order-shipping-column">
+                    <div class="column-title">Customer Details</div>
+                    <div class="shipping-details">
+                        <p class="customer-name">
+                            <strong>Name:</strong> ${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')}
+                        </p>
+                        <p class="shipping-address-text">
+                            <strong>Address:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}
+                        </p>
+                        <p class="customer-contact">
+                            <strong>Contact:</strong> ${escapeHtml(order.contact_number || 'N/A')}
+                        </p>
+                        <p class="customer-email">
+                            <strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}
+                        </p>
+                        <!-- Edit controls hidden (not needed for seller) -->
+                        <div class="shipping-edit-controls" style="display: none;">
+                            <textarea class="shipping-edit-textarea" style="display: none;">${escapeHtml(order.shipping_address || '')}</textarea>
+                            <div class="shipping-buttons">
+                                <button class="action-btn edit-shipping" style="display: none;">Edit</button>
+                                <button class="action-btn save-shipping" style="display: none;">Save</button>
+                                <button class="action-btn reset-shipping" style="display: none;">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Start order card
+            html += `
+                <div class="order-card" data-order-id="${order.order_id}">
+                    <div class="order-header">
+                        <div class="order-header-left">
+                            <span class="order-id">Order #${order.order_id}</span>
+                            <span class="order-date">${orderDate}</span>
+                        </div>
+                        <div class="order-header-right">
+                            <span class="order-status-badge ${statusClass}">${displayStatus}</span>
+                        </div>
+                    </div>
+
+                    <div class="order-body">
+                        <div class="order-product-column">
+                            <div class="column-title">Product Details</div>
+                            <div class="product-details">
+                                <img src="${imagePath}" alt="${escapeHtml(order.product_name)}" 
+                                     class="product-thumbnail"
+                                     onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                                <div class="product-info">
+                                    <h4>${escapeHtml(order.product_name)}</h4>
+                                    <p><span class="info-label">Customer:</span> ${customerName}</p>
+                                    <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price_at_time).toFixed(2)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-event-column">
+                            <div class="column-title">Event Activity</div>
+                            <div class="event-activity-content">
+                                ${eventHtml}
+                            </div>
+                        </div>
+
+                        ${shippingHtml}
+
+                        <div class="order-price-summary">
+                            <div class="column-title">Order Summary</div>
+                            <div class="price-summary-details">
+                                <div class="price-row">
+                                    <span>Subtotal</span>
+                                    <span class="price-value">₱${subtotal}</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Shipping</span>
+                                    <span class="price-value free-shipping">Free</span>
+                                </div>
+                                <div class="price-divider"></div>
+                                <div class="price-row price-total">
+                                    <span>Total</span>
+                                    <span class="price-value">₱${total}</span>
+                                </div>
+                            </div>
+            `;
+
+            // Action buttons – only shown for pending orders
+            if (order.status === 'pending') {
+                html += `
+                    <div class="order-actions">
+                        <button class="action-btn complete" data-order-id="${order.order_id}">
+                            Mark as Delivered
+                        </button>
+                        <button class="action-btn cancel" data-order-id="${order.order_id}">
+                            Cancel Order
+                        </button>
+                    </div>
+                `;
+            }
+            // For non-pending orders, no actions are displayed at all
+            
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        ordersList.innerHTML = html;
+        attachEventListeners();
+    }
+
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        document.querySelectorAll('.action-btn.complete, .action-btn.cancel').forEach(btn => {
+        // Deliver button (class "complete" now)
+        document.querySelectorAll('.action-btn.complete').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                
                 const orderId = btn.dataset.orderId;
-                const newStatus = btn.dataset.status;
-
-                if (!orderId || !newStatus) return;
-
+                
+                currentAction = 'delivered';
                 currentOrderId = orderId;
-                currentNewStatus = newStatus;
-
-                let title = 'Update Order Status';
-                let message = `Are you sure you want to mark this order as ${newStatus}?`;
-
-                if (newStatus === 'cancelled') {
-                    title = 'Cancel Order';
-                    message = 'Are you sure you want to cancel this order? This action cannot be undone and will restore product stock.';
-                } else if (newStatus === 'delivered') {
-                    title = 'Mark as Delivered';
-                    message = 'Confirm that this order has been delivered to the customer. This will allow the customer to leave a review.';
-                }
-
-                showConfirmModal(title, message, () => handleStatusUpdate(orderId, newStatus));
+                
+                if (confirmTitle) confirmTitle.textContent = 'Confirm Delivery';
+                if (confirmMessage) confirmMessage.textContent = 'Mark this order as delivered? This action cannot be undone.';
+                
+                showModal(confirmModal);
+            });
+        });
+        
+        // Cancel button
+        document.querySelectorAll('.action-btn.cancel').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = btn.dataset.orderId;
+                
+                currentAction = 'cancelled';
+                currentOrderId = orderId;
+                
+                if (confirmTitle) confirmTitle.textContent = 'Cancel Order';
+                if (confirmMessage) confirmMessage.textContent = 'Are you sure you want to cancel this order? This will restore stock quantity.';
+                
+                showModal(confirmModal);
             });
         });
     }
 
-    // ============= HANDLE STATUS UPDATE =============
-    async function handleStatusUpdate(orderId, newStatus) {
-        const btn = document.querySelector(`[data-order-id="${orderId}"]`);
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = 'Updating...';
+    // ============= UPDATE ORDER STATUS =============
+    async function updateOrderStatus() {
+        if (!currentOrderId || !currentAction) return;
+        
+        if (confirmAction) {
+            confirmAction.disabled = true;
+            confirmAction.textContent = 'Processing...';
         }
-
+        
         try {
             const formData = new URLSearchParams();
             formData.append('action', 'update_item_status');
-            formData.append('order_id', orderId);
-            formData.append('status', newStatus);
-
+            formData.append('order_id', currentOrderId);
+            formData.append('status', currentAction);
+            
             const response = await fetch('../database/order-handler.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData
             });
-
+            
             const result = await response.json();
-
+            
             if (result.status === 'success') {
-                showNotification(`Order marked as ${newStatus} successfully!`);
-                
-                // Reload orders after a short delay
-                setTimeout(() => {
-                    const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'all';
-                    loadOrders();
-                }, 1500);
+                showNotification(`Order marked as ${currentAction} successfully`);
+                hideModal(confirmModal);
+                loadOrders(); // refresh list
             } else {
-                showNotification('Error: ' + (result.message || 'Failed to update status'), true);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = newStatus === 'delivered' ? 'Mark as Delivered' : 'Cancel Order';
-                }
+                showNotification(result.message || 'Failed to update order', true);
             }
         } catch (error) {
-            console.error('Status update error:', error);
+            console.error('Update status error:', error);
             showNotification('Network error. Please try again.', true);
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = newStatus === 'delivered' ? 'Mark as Delivered' : 'Cancel Order';
+        } finally {
+            if (confirmAction) {
+                confirmAction.disabled = false;
+                confirmAction.textContent = 'Confirm';
             }
+            currentAction = null;
+            currentOrderId = null;
         }
     }
 
-    // ============= FILTER TABS =============
+    // ============= FILTER TAB CLICK HANDLERS =============
     filterTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            filterTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
             const filter = tab.dataset.filter;
-            renderOrders(allOrders, filter);
+            filterOrders(filter);
         });
     });
 
-    function checkUrlHash() {
-        const hash = window.location.hash;
-        if (hash && hash.startsWith('#order-')) {
-            setTimeout(() => {
-                const element = document.getElementById(hash.substring(1));
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                    element.style.backgroundColor = '#fff3e0';
-                    setTimeout(() => {
-                        element.style.backgroundColor = '';
-                    }, 2000);
-                }
-            }, 500);
-        }
+    // ============= MODAL CLOSE HANDLERS =============
+    if (cancelAction) {
+        cancelAction.addEventListener('click', () => {
+            hideModal(confirmModal);
+            currentAction = null;
+            currentOrderId = null;
+        });
     }
 
+    if (confirmAction) {
+        confirmAction.addEventListener('click', updateOrderStatus);
+    }
+
+    if (notificationClose) {
+        notificationClose.addEventListener('click', () => {
+            hideModal(notificationModal);
+        });
+    }
+
+    [confirmModal, notificationModal].forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) hideModal(modal);
+            });
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideAllModals();
+    });
+
+    // ============= INITIAL LOAD =============
     loadOrders();
-    checkUrlHash();
 });
 ```
 
@@ -9692,5808 +10169,13 @@ function initQuickActions() {
 
 ---
 
-## File: `Crooks-Cart-Collectives/styles/about.css`
-
-**Status:** `FOUND`
-
-```css
-/* About Page Styles - Professional & Minimalist */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== PAGE HEADER ===== */
-.page-header {
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-top: 100px; /*negative value to pull from header, positive to push towards header*/
-    margin-bottom: 50px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.header-content h1 {
-    font-size: clamp(2.5rem, 8vw, 3.2rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.header-content h1 span {
-    color: #ff8246;
-}
-
-.header-content p {
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    color: #666;
-}
-
-/* ===== PROJECT OVERVIEW ===== */
-.overview-section {
-    margin-bottom: 60px;
-}
-
-.overview-container {
-    background: white;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.overview-content h2 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 25px;
-    font-weight: 600;
-}
-
-.overview-content h2 span {
-    color: #ff8246;
-}
-
-.overview-content p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 20px;
-}
-
-.overview-content strong {
-    color: #333;
-    font-weight: 600;
-}
-
-/* ===== COURSES SECTION ===== */
-.courses-section {
-    margin-bottom: 60px;
-}
-
-.courses-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-.course-card {
-    background: white;
-    border-radius: 12px;
-    padding: 35px 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.course-card h3 {
-    font-size: 1.6rem;
-    color: #333;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.course-subject {
-    font-size: 1.1rem;
-    color: #ff8246;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.instructor {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.course-description {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #555;
-}
-
-/* ===== TEAM SECTION ===== */
-.team-section {
-    margin-bottom: 60px;
-    text-align: center;
-}
-
-.team-section h2 {
-    font-size: 2.2rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.team-section h2 span {
-    color: #ff8246;
-}
-
-.team-subtitle {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 40px;
-}
-
-/* Lead Developer - Full Width Container */
-.lead-container {
-    width: 100%;
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-}
-
-/* Lead Card - Matches the full width of the members grid */
-.lead-card {
-    display: flex;
-    flex-direction: column; /* Column layout for centered content */
-    align-items: center;
-    justify-content: center;
-    gap: 25px;
-    background: white;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border-left: 4px solid #ff8246;
-    text-align: center;
-    width: 100%;
-    max-width: 100%; /* Take full width of its container */
-}
-
-/* For desktop, match the grid container width */
-@media (min-width: 1025px) {
-    .lead-card {
-        max-width: calc(100% - 40px); /* Account for padding */
-        margin: 0 auto;
-    }
-}
-
-.lead-card .team-image {
-    width: 200px; /* Larger for lead card */
-    height: 200px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid #ff8246;
-    flex-shrink: 0;
-    margin: 0 auto;
-}
-
-.lead-card .team-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.lead-card .team-info {
-    flex: 1;
-    width: 100%;
-    max-width: 800px; /* Limit text width for readability */
-    margin: 0 auto;
-}
-
-.lead-card h3 {
-    font-size: 2.2rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.lead-card .team-role {
-    font-size: 1.3rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 20px;
-}
-
-.lead-card .team-bio {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-}
-
-/* Team Members Grid */
-.members-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-bottom: 25px;
-    width: 100%;
-}
-
-/* Center the last child in desktop view */
-@media (min-width: 1025px) {
-    .members-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Force 3 columns on desktop */
-    }
-    
-    .members-grid .team-card:last-child {
-        grid-column: 2 / 3; /* Place last child in the middle column */
-        justify-self: center;
-        width: 100%;
-    }
-}
-
-.team-card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.team-card .team-image {
-    width: 130px;
-    height: 130px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #ff8246;
-}
-
-.team-card .team-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.team-card h3 {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-.team-card .team-role {
-    font-size: 1rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-.team-card .team-bio {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #666;
-    flex-grow: 1;
-}
-
-.team-note {
-    margin-top: 30px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    color: #666;
-    font-style: italic;
-    font-size: 1rem;
-}
-
-/* ===== PROJECT CRITERIA ===== */
-.criteria-section {
-    background: white;
-    border-radius: 12px;
-    padding: 50px 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 40px;
-}
-
-.criteria-section h2 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 35px;
-    text-align: center;
-    font-weight: 600;
-}
-
-.criteria-section h2 span {
-    color: #ff8246;
-}
-
-.criteria-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-bottom: 30px;
-}
-
-.criteria-item {
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-}
-
-.criteria-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.criteria-weight {
-    display: inline-block;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #ff8246;
-    margin-bottom: 10px;
-}
-
-.criteria-item h4 {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.criteria-item p {
-    font-size: 0.95rem;
-    color: #666;
-    line-height: 1.5;
-}
-
-.criteria-total {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #333;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
-/* Desktop */
-@media (min-width: 1025px) {
-    .lead-card {
-        max-width: 100%; /* Full width of container */
-    }
-    
-    .lead-card .team-info {
-        max-width: 800px;
-    }
-    
-    .members-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* Tablet */
-@media (max-width: 1024px) and (min-width: 769px) {
-    .lead-card {
-        max-width: 100%;
-        padding: 35px 30px;
-    }
-    
-    .lead-card .team-image {
-        width: 180px;
-        height: 180px;
-    }
-    
-    .lead-card h3 {
-        font-size: 2rem;
-    }
-    
-    .lead-card .team-info {
-        max-width: 600px;
-    }
-    
-    .courses-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .criteria-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    /* For tablets, last child centered in a 2-column grid */
-    .members-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .members-grid .team-card:last-child {
-        grid-column: 1 / -1;
-        justify-self: center;
-        width: 50%;
-        min-width: 280px;
-    }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-    }
-    
-    .page-header {
-        padding: 40px 15px;
-    }
-    
-    .overview-container {
-        padding: 30px 20px;
-    }
-    
-    .overview-content h2 {
-        font-size: 1.8rem;
-    }
-    
-    .overview-content p {
-        font-size: 1rem;
-    }
-    
-    .courses-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .course-card {
-        padding: 25px 20px;
-    }
-    
-    .course-card h3 {
-        font-size: 1.4rem;
-    }
-    
-    /* Lead card - full width on mobile */
-    .lead-card {
-        max-width: 100%;
-        padding: 30px 20px;
-    }
-    
-    .lead-card .team-image {
-        width: 160px;
-        height: 160px;
-        border-width: 3px;
-    }
-    
-    .lead-card h3 {
-        font-size: 1.8rem;
-    }
-    
-    .lead-card .team-role {
-        font-size: 1.2rem;
-    }
-    
-    .lead-card .team-bio {
-        font-size: 1rem;
-    }
-    
-    .lead-card .team-info {
-        max-width: 100%;
-    }
-    
-    .members-grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-    }
-    
-    .members-grid .team-card:last-child {
-        grid-column: auto; /* Reset for mobile */
-        width: 100%;
-    }
-    
-    .team-card .team-image {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .criteria-section {
-        padding: 35px 20px;
-    }
-    
-    .criteria-section h2 {
-        font-size: 1.8rem;
-    }
-    
-    .criteria-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-}
-
-/* Small Mobile */
-@media (max-width: 480px) {
-    .page-header {
-        padding: 30px 15px;
-    }
-    
-    .header-content h1 {
-        font-size: 2rem;
-    }
-    
-    .overview-container {
-        padding: 25px 15px;
-    }
-    
-    .overview-content h2 {
-        font-size: 1.6rem;
-    }
-    
-    .lead-card {
-        padding: 25px 15px;
-    }
-    
-    .lead-card .team-image {
-        width: 140px;
-        height: 140px;
-    }
-    
-    .lead-card h3 {
-        font-size: 1.6rem;
-    }
-    
-    .lead-card .team-role {
-        font-size: 1.1rem;
-    }
-    
-    .team-card {
-        padding: 25px 15px;
-    }
-    
-    .team-card .team-image {
-        width: 110px;
-        height: 110px;
-    }
-    
-    .criteria-section {
-        padding: 30px 15px;
-    }
-    
-    .criteria-section h2 {
-        font-size: 1.6rem;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/cart.css`
-
-**Status:** `FOUND`
-
-```css
-/* Crooks-Cart-Collectives/styles/cart.css */
-/* Using only CSS variables from header.css */
-
-/* ===== CART CONTAINER ===== */
-.cart-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.cart-title {
-    font-size: 2.2rem;
-    color: var(--color-text-C);
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--color-accent-A);
-}
-
-/* ===== EMPTY CART ===== */
-.empty-cart {
-    text-align: center;
-    padding: 60px 20px;
-    background: var(--color-background-B);
-    border-radius: 12px;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.empty-cart-message {
-    font-size: 1.2rem;
-    color: var(--color-text-C);
-    margin-bottom: 25px;
-}
-
-/* ===== CART ITEMS LIST ===== */
-.cart-items {
-    margin-bottom: 30px;
-}
-
-.cart-item {
-    display: flex;
-    gap: 25px;
-    padding: 25px;
-    margin-bottom: 20px;
-    background: var(--color-background-B);
-    border-radius: 12px;
-    border: 1px solid var(--color-border-A);
-    box-shadow: var(--effect-box-shadow-default);
-    transition: var(--effect-transition-default);
-}
-
-.cart-item:hover {
-    box-shadow: var(--effect-glow-A);
-    transform: translateY(-2px);
-}
-
-/* Image container */
-.cart-item-image {
-    flex-shrink: 0;
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--color-background-B);
-    border: 1px solid var(--color-border-A);
-}
-
-.cart-item-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Details section */
-.cart-item-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.cart-item-title {
-    font-size: 1.3rem;
-    color: var(--color-text-C);
-    margin: 0;
-}
-
-.cart-item-seller {
-    font-size: 0.95rem;
-    color: var(--color-text-C);
-    margin: 0;
-}
-
-.cart-item-price {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-accent-A);
-    margin: 0;
-}
-
-/* Controls row (quantity + remove + subtotal) */
-.cart-item-controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 5px;
-}
-
-.cart-item-quantity {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.quantity-input {
-    width: 80px;
-    height: 40px;
-    padding: 0 10px;
-    border: 2px solid var(--color-border-A);
-    border-radius: 6px;
-    font-size: 1rem;
-    text-align: center;
-    transition: var(--effect-transition-default);
-}
-
-.quantity-input:focus {
-    border-color: var(--color-accent-A);
-    box-shadow: var(--effect-glow-A);
-    outline: none;
-}
-
-.quantity-input:disabled {
-    background-color: var(--color-background-B);
-    cursor: not-allowed;
-}
-
-.remove-btn {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    background-color: var(--color-border-A);
-    color: var(--color-text-B);
-    border: none;
-    border-radius: 6px;
-    transition: var(--effect-transition-default);
-}
-
-.remove-btn:hover {
-    background-color: var(--color-background-C);
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.item-subtotal {
-    font-size: 1rem;
-    color: var(--color-text-A);
-    margin: 0;
-}
-
-.subtotal-amount {
-    font-weight: 700;
-    color: var(--color-text-C);
-}
-
-/* ===== CART SUMMARY ===== */
-.cart-summary {
-    margin-top: 30px;
-    padding: 25px;
-    background: var(--color-background-B);
-    border-radius: 12px;
-    border: 1px solid var(--color-border-A);
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.cart-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--color-border-A);
-    font-size: 1.5rem;
-}
-
-.total-label {
-    font-weight: 600;
-    color: var(--color-text-C);
-}
-
-.total-amount {
-    font-weight: 700;
-    color: var(--color-accent-A);
-}
-
-.cart-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-}
-
-.btn {
-    padding: 14px 28px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--effect-transition-default);
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-}
-
-.btn-primary:hover {
-    background-color: var(--color-hover-A);
-    transform: translateY(-2px);
-    box-shadow: var(--effect-glow-B);
-}
-
-.btn-secondary {
-    background-color: var(--color-background-C);
-    color: var(--color-text-B);
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-border-A);
-    transform: translateY(-2px);
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-/* Checkout uses primary style, so no separate class needed */
-
-/* ===== TEMPORARY MESSAGES ===== */
-.cart-message {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 8px;
-    color: var(--color-text-B);
-    font-weight: 500;
-    z-index: 9999;
-    animation: slideIn 0.3s ease;
-    box-shadow: var(--effect-glow-A);
-}
-
-.cart-message.error {
-    background-color: var(--color-background-C);
-}
-
-.cart-message.success {
-    background-color: var(--color-accent-A);
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 992px) {
-    .cart-item {
-        padding: 20px;
-        gap: 20px;
-    }
-    
-    .cart-item-image {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .cart-item-title {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .cart-item {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .cart-item-image {
-        width: 100%;
-        height: 200px;
-        margin-bottom: 5px;
-    }
-    
-    .cart-item-image img {
-        object-fit: contain;
-    }
-    
-    .cart-item-controls {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    
-    .cart-item-quantity {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .quantity-input {
-        width: 100px;
-    }
-    
-    .cart-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-    
-    .cart-total {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .cart-title {
-        font-size: 1.8rem;
-    }
-    
-    .cart-item {
-        padding: 15px;
-    }
-    
-    .cart-item-title {
-        font-size: 1.1rem;
-    }
-    
-    .cart-item-price {
-        font-size: 1rem;
-    }
-    
-    .quantity-input {
-        width: 70px;
-        height: 36px;
-    }
-    
-    .remove-btn {
-        padding: 8px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .cart-summary {
-        padding: 20px;
-    }
-    
-    .cart-total {
-        font-size: 1.2rem;
-    }
-}
-
-/* Screen reader only */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-/* ===== NOTIFICATION MODAL FOR CART ===== */
-/* Modal styles matching your logout modal */
-
-.cart-notifier-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.cart-notifier-modal.active {
-    display: flex;
-}
-
-.cart-notifier-content {
-    background-color: white;
-    padding: 35px 30px;
-    border-radius: 16px;
-    box-shadow: var(--effect-box-shadow-default, 0 4px 20px rgba(0, 0, 0, 0.15));
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.cart-notifier-icon {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.cart-notifier-icon svg {
-    width: 70px;
-    height: 70px;
-    display: block;
-    margin: 0 auto;
-}
-
-.cart-notifier-content h3 {
-    color: var(--color-text-C, #333);
-    font-size: 24px;
-    margin-bottom: 12px;
-    font-weight: 600;
-    text-align: center;
-    width: 100%;
-}
-
-.cart-notifier-content p {
-    color: var(--color-text-A, #666);
-    font-size: 16px;
-    margin-bottom: 30px;
-    line-height: 1.6;
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.cart-notifier-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 5px;
-}
-
-.cart-notifier-btn {
-    padding: 14px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex: 0 1 auto;
-    min-width: 120px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cart-notifier-btn.continue-btn {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-.cart-notifier-btn.continue-btn:hover {
-    background-color: #d0d0d0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.cart-notifier-btn.view-cart-btn {
-    background-color: var(--color-accent-A, #FF8246);
-    color: white;
-}
-
-.cart-notifier-btn.view-cart-btn:hover {
-    background-color: var(--color-hover-A, #e66a2e);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.4);
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Confirmation Modal Specific */
-#confirmRemoveModal .cart-notifier-content {
-    padding: 35px 30px;
-}
-
-#confirmRemoveModal .cart-notifier-icon svg {
-    stroke: var(--color-accent-A, #FF8246);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .cart-notifier-content {
-        padding: 30px 25px;
-        width: 85%;
-    }
-    
-    .cart-notifier-content h3 {
-        font-size: 22px;
-    }
-    
-    .cart-notifier-content p {
-        font-size: 15px;
-        max-width: 280px;
-    }
-    
-    .cart-notifier-btn {
-        padding: 12px 20px;
-        min-width: 110px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .cart-notifier-content {
-        padding: 28px 20px;
-        width: 90%;
-    }
-    
-    .cart-notifier-icon svg {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .cart-notifier-content h3 {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-    
-    .cart-notifier-content p {
-        font-size: 14px;
-        margin-bottom: 25px;
-        max-width: 250px;
-    }
-    
-    .cart-notifier-actions {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .cart-notifier-btn {
-        width: 100%;
-        max-width: 200px;
-        padding: 14px 20px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 375px) {
-    .cart-notifier-content {
-        padding: 25px 15px;
-    }
-    
-    .cart-notifier-content p {
-        font-size: 13px;
-        max-width: 220px;
-    }
-    
-    .cart-notifier-btn {
-        padding: 12px 16px;
-        max-width: 180px;
-        font-size: 13px;
-    }
-}
-
-/* Optional: Temporary message fallback (kept for backward compatibility) */
-.cart-message {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 9999;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    text-align: center;
-}
-
-.cart-message.error {
-    background-color: #dc3545;
-}
-
-.cart-message.success {
-    background-color: #28a745;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Add these to the existing cart.css file */
-
-/* Loading state for cart items */
-.cart-item.loading {
-    opacity: 0.6;
-    pointer-events: none;
-    position: relative;
-}
-
-.cart-item.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(255, 130, 70, 0.3);
-    border-top-color: #FF8246;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Cart notifier modal styles */
-.cart-notifier-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.cart-notifier-modal.active {
-    display: flex;
-}
-
-.cart-notifier-content {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    animation: slideUp 0.3s ease;
-}
-
-.cart-notifier-icon {
-    margin-bottom: 20px;
-}
-
-.cart-notifier-icon img {
-    width: 60px;
-    height: 60px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.cart-notifier-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 25px;
-    justify-content: center;
-}
-
-.cart-notifier-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.cart-notifier-btn.continue-btn {
-    background: #f8f9fa;
-    color: #333;
-}
-
-.cart-notifier-btn.continue-btn:hover {
-    background: #e9ecef;
-}
-
-.cart-notifier-btn.view-cart-btn {
-    background: #FF8246;
-    color: white;
-}
-
-.cart-notifier-btn.view-cart-btn:hover {
-    background: #e66a2c;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Remove button disabled state */
-.remove-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Quantity input disabled state */
-.quantity-input:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #f5f5f5;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/checkout.css`
-
-**Status:** `FOUND`
-
-```css
-/* Checkout Page Styles */
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-.checkout-title {
-    font-size: 2.2rem;
-    color: #333;
-    margin-bottom: 30px;
-    border-bottom: 3px solid #FF8246;
-    padding-bottom: 10px;
-}
-
-.checkout-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
-
-.checkout-summary,
-.checkout-info {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.checkout-summary h2,
-.checkout-info h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: #333;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
-}
-
-.checkout-items {
-    margin-bottom: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.checkout-item {
-    display: flex;
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.checkout-item:last-child {
-    border-bottom: none;
-}
-
-.checkout-item-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-
-.checkout-item-details {
-    flex: 1;
-}
-
-.checkout-item-details h3 {
-    font-size: 1rem;
-    margin: 0 0 5px 0;
-    color: #333;
-}
-
-.checkout-item-details p {
-    margin: 2px 0;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.checkout-item-price {
-    font-weight: 600;
-    color: #FF8246 !important;
-    margin-top: 5px !important;
-}
-
-.checkout-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.3rem;
-    font-weight: 600;
-    padding-top: 20px;
-    border-top: 2px solid #f0f0f0;
-}
-
-.total-amount {
-    color: #FF8246;
-}
-
-.shipping-details p {
-    margin: 5px 0;
-    color: #555;
-}
-
-.payment-method {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-}
-
-.checkout-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    flex: 1;
-}
-
-.btn-primary {
-    background: #FF8246;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #e66a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255,130,70,0.3);
-}
-
-.btn-secondary {
-    background: #212529;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #000;
-}
-
-/* Notifier */
-.notifier {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    backdrop-filter: blur(5px);
-}
-.notifier.hidden { display: none; }
-.notifier-content {
-    background: white;
-    padding: 30px 40px;
-    border-radius: 12px;
-    max-width: 400px;
-    text-align: center;
-    animation: fadeScale 0.3s;
-}
-@keyframes fadeScale {
-    from { opacity: 0; transform: scale(0.85); }
-    to { opacity: 1; transform: scale(1); }
-}
-.notifier-content p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .checkout-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    .checkout-actions {
-        flex-direction: column;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/contact.css`
-
-**Status:** `FOUND`
-
-```css
-/* ============================================
-   CONTACT PAGE STYLES
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.contact-page {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.contact-hero {
-    margin-top: 100px;
-    position: relative;
-    width: 100%;
-    height: 35vh;
-    min-height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 12px;
-    margin-bottom: 60px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.contact-hero__container {
-    width: 100%;
-    padding: 0 20px;
-}
-
-.contact-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.contact-hero__highlight {
-    color: #ff8246;
-}
-
-.contact-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== CONTACT INFO GRID ===== */
-.contact-info {
-    margin-bottom: 60px;
-}
-
-.contact-info__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 25px;
-}
-
-.contact-card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
-}
-
-.contact-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.contact-card__icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 15px;
-}
-
-.contact-card__icon img {
-    width: 32px;
-    height: 32px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-.contact-card:hover .contact-card__icon img {
-    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
-}
-
-.contact-card__title {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.contact-card__details {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #666;
-    font-style: normal;
-}
-
-/* ===== CONTACT INTERACTION SECTION ===== */
-.contact-interaction {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-bottom: 60px;
-}
-
-.contact-form-container {
-    flex: 1.2;
-    min-width: 350px;
-    background: white;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.contact-form__header {
-    margin-bottom: 30px;
-}
-
-.contact-form__title {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.contact-form__highlight {
-    color: #ff8246;
-}
-
-.contact-form__subtitle {
-    font-size: 1rem;
-    color: #666;
-}
-
-.contact-form {
-    width: 100%;
-}
-
-.contact-form__row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.contact-form__group {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-}
-
-.contact-form__group--full {
-    width: 100%;
-    flex: 0 0 100%;
-}
-
-.contact-form__label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-    font-size: 0.95rem;
-}
-
-.contact-form__input,
-.contact-form__select,
-.contact-form__textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-    background-color: white;
-    font-family: inherit;
-}
-
-.contact-form__input:focus,
-.contact-form__select:focus,
-.contact-form__textarea:focus {
-    border-color: #ff8246;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-.contact-form__input.error,
-.contact-form__select.error,
-.contact-form__textarea.error {
-    border-color: #dc3545;
-}
-
-.contact-form__error {
-    color: #dc3545;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-.contact-form__actions {
-    margin-top: 20px;
-}
-
-.contact-form__submit-btn {
-    display: inline-block;
-    padding: 14px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    background-color: #ff8246;
-    color: white;
-    width: 100%;
-    border: none;
-}
-
-.contact-form__submit-btn:hover {
-    background-color: #e66a2e;
-}
-
-.contact-form__submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.contact-form__success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    padding: 15px;
-    border-radius: 6px;
-    margin-top: 20px;
-    border-left: 3px solid #2e7d32;
-}
-
-.map-container {
-    flex: 0.8;
-    min-width: 300px;
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.map-container__header {
-    margin-bottom: 20px;
-}
-
-.map-container__title {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.map-container__highlight {
-    color: #ff8246;
-}
-
-.map-container__embed {
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.map-container__embed iframe {
-    display: block;
-    width: 100%;
-    height: 400px;
-    border: 0;
-}
-
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.modal--hidden {
-    display: none;
-}
-
-.modal__content {
-    background: white;
-    border-radius: 10px;
-    padding: 30px 40px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: modalFadeIn 0.3s ease-out;
-}
-
-.modal__message {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.modal__close-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: #ff8246;
-    color: white;
-}
-
-.modal__close-btn:hover {
-    background-color: #e66a2e;
-}
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 768px) {
-    .contact-page {
-        margin-top: 80px;
-    }
-    
-    .contact-hero {
-        height: 30vh;
-        min-height: 250px;
-    }
-    
-    .contact-form-container,
-    .map-container {
-        padding: 30px 20px;
-    }
-    
-    .contact-form__row {
-        flex-direction: column;
-        gap: 0;
-    }
-    
-    .contact-form__group {
-        min-width: 100%;
-    }
-    
-    .map-container__embed iframe {
-        height: 350px;
-    }
-}
-
-@media (max-width: 480px) {
-    .contact-hero {
-        height: 25vh;
-        min-height: 200px;
-    }
-    
-    .contact-hero__title {
-        font-size: 2rem;
-    }
-    
-    .contact-form-container {
-        padding: 20px 15px;
-    }
-    
-    .contact-form__title {
-        font-size: 1.8rem;
-    }
-    
-    .map-container {
-        padding: 20px;
-    }
-    
-    .map-container__title {
-        font-size: 1.8rem;
-    }
-    
-    .map-container__embed iframe {
-        height: 300px;
-    }
-    
-    .contact-card {
-        padding: 25px 15px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/customer-dashboard.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== DASHBOARD LAYOUT ===== */
-.content {
-    max-width: 1200px;
-    margin: 80px auto 20px;
-    padding: 20px;
-    min-height: calc(100vh - 200px);
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== WELCOME SECTION ===== */
-.welcome-section {
-    background: linear-gradient(135deg, #f2f4f6 0%, #ffffff 100%);
-    padding: 50px 40px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    border: 1px solid #363940;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.welcome-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #ff8246, #e8693d);
-}
-
-.welcome-section h1 {
-    font-size: 2.2rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-}
-
-.welcome-section h1 span {
-    color: #ff8246;
-}
-
-.welcome-section p {
-    font-size: 1.1rem;
-    color: #000000;
-    opacity: 0.8;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* ===== DASHBOARD GRID ===== */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== DASHBOARD CARDS ===== */
-.dashboard-card {
-    background: #f2f4f6;
-    border-radius: 12px;
-    padding: 30px 25px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    text-align: center;
-    transition: box-shadow 0.3s ease-in-out;
-    border: 1px solid #363940;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.dashboard-card:hover {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    border-color: #ff8246;
-}
-
-.dashboard-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.dashboard-card:hover::after {
-    transform: scaleX(1);
-}
-
-.dashboard-card h3 {
-    font-size: 1.4rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.dashboard-card h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 2px;
-    background: #ff8246;
-    transition: width 0.3s ease;
-}
-
-.dashboard-card:hover h3::after {
-    width: 80px;
-}
-
-.dashboard-card p {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 25px;
-    line-height: 1.6;
-    flex-grow: 1;
-    opacity: 0.8;
-}
-
-.card-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 12px;
-}
-
-.card-icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-.dashboard-card:hover .card-icon img {
-    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
-}
-
-/* ===== BUTTON STYLES ===== */
-.btn-primary {
-    display: inline-block;
-    background: #ff8246;
-    color: #ffffff;
-    padding: 12px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1rem;
-    transition: background-color 0.3s ease-in-out;
-    border: 2px solid transparent;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: auto;
-    align-self: center;
-    min-width: 140px;
-    box-sizing: border-box;
-}
-
-.btn-primary:hover {
-    background: #e8693d;
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (min-width: 1200px) {
-    .content {
-        margin-top: 100px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .welcome-section h1 {
-        font-size: 2.5rem;
-    }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .content {
-        margin-top: 70px;
-        padding: 15px;
-    }
-    
-    .welcome-section {
-        padding: 40px 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 2rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 767px) {
-    body {
-        overflow-x: hidden;
-    }
-    
-    .content {
-        margin-top: 60px;
-        padding: 15px;
-        max-width: 100%;
-    }
-    
-    .welcome-section {
-        padding: 30px 20px;
-        margin-bottom: 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.8rem;
-    }
-    
-    .welcome-section p {
-        font-size: 1rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        width: 100%;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-        max-width: 100%;
-        margin: 0 auto;
-        width: 100%;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-primary {
-        padding: 10px 25px;
-        min-width: 120px;
-        font-size: 0.95rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 55px;
-        padding: 12px;
-    }
-    
-    .welcome-section {
-        padding: 25px 15px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.5rem;
-    }
-    
-    .welcome-section p {
-        font-size: 0.95rem;
-    }
-    
-    .dashboard-card {
-        padding: 20px 15px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-    
-    .dashboard-card p {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-    }
-    
-    .btn-primary {
-        padding: 10px 20px;
-        min-width: 110px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .content {
-        margin-top: 50px;
-        padding: 10px;
-    }
-    
-    .welcome-section {
-        padding: 20px 12px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.3rem;
-    }
-    
-    .dashboard-card {
-        padding: 18px 12px;
-    }
-    
-    .btn-primary {
-        padding: 8px 16px;
-        min-width: 100px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .content {
-        margin-top: 50px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .welcome-section {
-        padding: 20px;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dashboard-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
-}
-
-.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
-.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
-.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
-.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
-.dashboard-card:nth-child(7) { animation-delay: 0.7s; }
-
-@media print {
-    .btn-primary {
-        display: none;
-    }
-    
-    .dashboard-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/footer.css`
-
-**Status:** `FOUND`
-
-```css
-.footer {
-  background-color: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-top: 2px solid var(--color-border-A);
-  width: 100vw !important;
-  max-width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  left: 0;
-  margin: 0 !important;
-}
-
-.footer-upper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--size-navigation-gap);
-  margin: 0;
-  color: var(--color-text-B);
-}
-
-.queries {
-  max-width: 50%;
-  color: var(--color-text-A);
-}
-
-.queries h2 {
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-}
-
-.queries span {
-  color: var(--color-accent-A);
-}
-
-.socials {
-  display: flex;
-  gap: var(--size-navigation-gap);
-}
-
-.socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-}
-
-.socials a img {
-  width:  40px;
-  height: 40px;
-}
-
-.footer-lower {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px 0;
-  font-size: var(--font-size-base);
-  margin-top: 20px;
-  border-top: 2px solid var(--color-border-A);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.mail-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  color: var(--color-text-A);
-}
-
-.mail-button img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0);
-}
-
-.policy-links {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  padding: 5px 0;
-}
-
-.policy-links a {
-  color: var(--color-text-A);
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.policy-links a:hover {
-  color: var(--color-accent-A);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .policy-links {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .footer-lower {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mail-button {
-    margin-bottom: 10px;
-  }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/header.css`
-
-**Status:** `FOUND`
-
-```css
-/* CSS File Content */
-:root {
-  /* Sizes & Spacing */
-  --size-logo-height: 40px;
-  --size-button-padding: 10px 20px;
-  --size-button-radius: 5px;
-  --size-navigation-gap: 30px;
-  --size-header-padding: 15px 40px;
-  --size-mobile-menu-max-width: 270px;
-
-  /* Color Palette - Light Theme */
-  --color-background-A: #e4eaf2;        /* body background */
-  --color-background-B: #f2f4f6;        /* header background */
-  --color-background-C: #000000;  
-  --color-linear-gradient-A: #a49bf8, #b8b9fa, #dbd5fd, #43c9fb;      /* mobile menu bg or secondary light bg */
-  --color-text-A: #000000;              /* main text */
-  --color-text-B: #ffffff;              /* button text on orange */
-  --color-text-C: #1e2e2f;
-  --color-accent-A: #ff8246;            /* primary orange */
-  --color-hover-A: #e8693d;             /* hover orange variant */
-  --color-border-A: #363940;            /* border */
-
-  /* Effects */
-  --effect-glow-A: 0 0 10px rgba(0, 0, 0, 0.2);                /* soft shadow */
-  --effect-glow-B: 0 0 10px rgba(211, 94, 53, 0.7);            /* orange glow */
-  --effect-box-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);  /* lighter shadow */
-  --effect-transition-default: all 0.3s ease-in-out;
-
-  /* Typography */
-  --font-family-base: Arial, sans-serif;
-  --font-size-base: 16px;
-  --font-size-title: 22px;
-  --font-weight-bold: 400;
-}
-
-/* Global Styles */
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background-color: var(--color-background-A);
-  color: var(--color-text-A);
-  font-family: var(--font-family-base);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-/* Scrollbar Removal */
-html {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Header Styles */
-.header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-bottom: 2px solid var(--color-border-A);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-sizing: border-box;
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  max-width: 100%;
-}
-
-.header-logo img {
-  height: var(--size-logo-height);
-  width: auto;
-}
-
-.title {
-  color: var(--color-text-A);
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.title span {
-  color: var(--color-accent-A);
-}
-
-/* Navigation Styles */
-.nav-container {
-  display: flex;
-  align-items: center;
-  gap: var(--size-navigation-gap);
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.nav-bar {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  overflow: hidden;
-}
-
-/* Desktop Navigation Link Styles */
-.nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  transition: var(--effect-transition-default);
-  white-space: nowrap;
-  position: relative;
-  padding: 5px 0;
-}
-
-.nav-link:hover, 
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Desktop hover underline effect */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-accent-A);
-  transition: var(--effect-transition-default);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 100%;
-}
-
-/* Button Styles */
-.social-button {
-  background: var(--color-accent-A);
-  color: var(--color-text-A);
-  padding: var(--size-button-padding);
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-}
-
-.social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Mobile Menu Styles */
-.hamburger-menu {
-  display: none;
-  cursor: pointer;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  z-index: 1001;
-}
-
-.hamburger-icon {
-  width: 30px;
-  height: 30px;
-  transition: var(--effect-transition-default);
-}
-
-.mobile-nav {
-    position: fixed;
-    top: 80px;
-    right: 0;
-    width: 50%;
-    max-width: var(--size-mobile-menu-max-width);
-    text-align: center;
-    height: calc(100vh - 80px);
-    background-color: var(--color-background-B);
-    z-index: 1000;
-    transform: translateX(100%); /* This is the key - hidden off-screen */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 20px;
-    overflow-y: auto;
-    border-left: 2px solid var(--color-border-A);
-    border-radius: 15px 0 0 15px;
-    box-shadow: none;
-    visibility: visible;
-    opacity: 1;
-}
-
-.mobile-nav.open {
-    transform: translateX(0) !important; /* ensure it overrides any leftover inline */
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
-}
-/* Mobile Navigation Link Styles - RESTORED ORIGINAL HOVER EFFECT */
-.mobile-nav .nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: 16px;
-  padding: 15px 10px; /* Increased padding for better touch targets */
-  position: relative;
-  transition: var(--effect-transition-default);
-  border-bottom: 1px solid var(--color-border-A);
-  display: block; /* Make it block level for full width */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* RESTORED: Underline hover effect for mobile nav - properly aligned */
-.mobile-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; /* Adjusted to sit right on the border */
-  left: 10px; /* Start after padding */
-  right: 10px; /* End before padding */
-  width: calc(100% - 20px); /* Full width minus left/right padding */
-  height: 2px;
-  background: var(--color-accent-A);
-  transform: scaleX(0);
-  transition: transform 0.3s ease-in-out;
-  transform-origin: left;
-}
-
-.mobile-nav .nav-link:hover::after,
-.mobile-nav .nav-link.active::after {
-  transform: scaleX(1);
-}
-
-.mobile-nav .nav-link:hover,
-.mobile-nav .nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Special styling for the social button in mobile nav */
-.mobile-nav .social-button {
-  margin-top: 20px;
-  background-color: var(--color-accent-A);
-  color: var(--color-text-A);
-  padding: 15px 10px; /* Match nav link padding */
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-  text-align: center;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Remove the after element for social button */
-.mobile-nav .social-button::after {
-  display: none;
-}
-
-.mobile-nav .social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Backdrop for mobile menu */
-.menu-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.menu-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Cart count badge */
-.cart-count {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: var(--color-accent-A);
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 50%;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Responsive Design */
-@media (max-width: 1005px) {
-  .hamburger-menu {
-    display: block;
-  }
-  
-  .nav-container {
-    display: none;
-  }
-  
-  .header-logo {
-    gap: 5px;
-  }
-  
-  .title {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-bar {
-    padding: 12px 25px;
-  }
-  
-  .title {
-    font-size: 18px;
-  }
-  
-  .mobile-nav {
-    width: 65%;
-    top: 70px;
-    height: calc(100vh - 70px);
-  }
-  
-  /* Adjust underline for smaller screens */
-  .mobile-nav .nav-link::after {
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-@media (max-width: 480px) {
-  .header-bar {
-    padding: 10px 20px;
-  }
-  
-  .title {
-    font-size: 16px;
-  }
-  
-  .mobile-nav {
-    width: 80%;
-    top: 65px;
-    height: calc(100vh - 65px);
-    padding: 15px;
-  }
-  
-  .mobile-nav .nav-link {
-    padding: 12px 10px;
-  }
-  
-  /* Adjust underline for mobile */
-  .mobile-nav .nav-link::after {
-    bottom: -1px;
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-/* Animation Enhancements */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-in-out forwards;
-}
-
-.fade-out {
-  opacity: 1;
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.header-bar.header-delay,
-.mobile-nav.header-delay {
-  transition: none !important;
-}
-
-/* Fix for active link in desktop navigation */
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-.nav-link.active::after {
-  width: 100%;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/index.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== RESET & BASE STYLES ===== */
-.content {
-    margin-top: 100px;
-}
-
-/* ===== SHOWCASE SECTION ===== */
-.showcase-section {
-    position: relative;
-    height: 70vh;
-    overflow: hidden;
-    margin-top: 70px;
-    margin-bottom: 40px;
-}
-
-.showcase-slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.showcase-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: top center;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.showcase-slide.active {
-    opacity: 1;
-}
-
-.showcase-content {
-    position: absolute;
-    bottom: 20%;
-    left: 10%;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    max-width: 600px;
-}
-
-.showcase-content h1 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-}
-
-.showcase-content p {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-}
-
-.showcase-button {
-    display: inline-block;
-    padding: 15px 40px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.showcase-button:hover {
-    background-color: #e8693d;
-}
-
-.slider-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.slider-controls button {
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.slider-controls button:hover {
-    background: #ff8246;
-}
-
-/* ===== FEATURES SECTION ===== */
-.features-section {
-    padding: 40px 0;
-    background-color: #f2f4f6;
-    margin-bottom: 20px;
-}
-
-.features-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.features-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.feature-card {
-    text-align: center;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-.feature-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.feature-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.feature-icon img {
-    width: 48px;
-    height: 48px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-.feature-card:hover .feature-icon img {
-    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(700%) hue-rotate(335deg) brightness(100%) contrast(100%);
-}
-
-.feature-card h3 {
-    margin-bottom: 10px;
-    color: #1e2e2f;
-    font-size: 1.2rem;
-}
-
-.feature-card p {
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* ===== FEATURED PRODUCTS SECTION ===== */
-.featured-products-section {
-    padding: 30px 0;
-}
-
-.products-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.featured-products-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-    padding: 0 10px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.product-image-container {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background-color: #f5f5f5;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.product-info {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-title {
-    margin: 0 0 8px 0;
-    font-size: 1.1rem;
-    color: #1e2e2f;
-    line-height: 1.4;
-    min-height: 2.8em;
-    overflow: hidden;
-    display: -webkit-box;
-    --webkit-line-clamp: 2;
-    --webkit-box-orient: vertical;
-}
-
-.product-price {
-    color: #ff8246;
-    font-weight: 400;
-    font-size: 1.3rem;
-    margin: 8px 0;
-}
-
-.product-seller {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 5px 0 12px 0;
-}
-
-.view-product-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
-    margin-top: auto;
-    font-size: 0.9rem;
-}
-
-.view-product-btn:hover {
-    background-color: #e8693d;
-}
-
-.no-products-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 30px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.no-products-message p {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.become-seller-link {
-    color: #ff8246;
-    text-decoration: none;
-    font-weight: 400;
-}
-
-.become-seller-link:hover {
-    text-decoration: underline;
-}
-
-.view-all-products-btn {
-    display: block;
-    width: fit-content;
-    margin: 20px auto 0;
-    padding: 12px 35px;
-    background-color: #ff8246;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.view-all-products-btn:hover {
-    background-color: #e8693d;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 70px;
-    }
-    
-    .showcase-section {
-        height: 60vh;
-        margin-top: -70px;
-        margin-bottom: 30px;
-    }
-    
-    .showcase-content {
-        left: 5%;
-        max-width: 90%;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1.2rem;
-    }
-    
-    .features-section {
-        padding: 30px 0;
-        margin-bottom: 15px;
-    }
-    
-    .features-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .featured-products-section {
-        padding: 20px 0;
-    }
-    
-    .featured-products-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    }
-    
-    .product-image-container {
-        height: 180px;
-    }
-    
-    .view-all-products-btn {
-        margin: 15px auto 0;
-        padding: 10px 30px;
-    }
-}
-
-@media (max-width: 480px) {
-    .content {
-        margin-top: 60px;
-    }
-    
-    .showcase-section {
-        height: 50vh;
-        margin-top: -60px;
-        margin-bottom: 20px;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1rem;
-    }
-    
-    .showcase-button {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-    
-    .features-section h2,
-    .featured-products-section h2 {
-        font-size: 1.8rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: 1fr;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .view-all-products-btn {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .showcase-slide {
-        background-position: center center;
-    }
-}
-
-.features-section {
-    position: relative;
-}
-
-.features-section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/orders.css`
-
-**Status:** `FOUND`
-
-```css
-/* Crooks-Cart-Collectives/styles/orders.css */
-/* Fixed version - colored status badges */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.content {
-    max-width: 1400px;
-    margin: 80px auto 20px;
-    padding: 0 20px;
-}
-
-.page-title {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 3px solid #FF8246;
-    font-weight: 600;
-}
-
-.orders-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* ===== ORDER CARD ===== */
-.order-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    border: 1px solid #eef2f6;
-}
-
-.order-header {
-    padding: 12px 16px;
-    background: #f8fafc;
-    border-bottom: 1px solid #eef2f6;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.order-header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.order-id {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #1a1e24;
-}
-
-.order-date {
-    color: #000000;
-    font-size: 0.85rem;
-    background: #e9ecef;
-    padding: 3px 10px;
-    border-radius: 30px;
-}
-
-.order-header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-/* Status badge colors */
-.order-status-badge {
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    width: 120px;
-    text-align: center;
-}
-
-.order-status-badge.pending {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.order-status-badge.delivered {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.order-status-badge.cancelled {
-    background: #000000;
-    color: #ffffff;
-    opacity: 0.8;
-}
-
-/* ===== ORDER BODY (three columns) ===== */
-.order-body {
-    display: grid;
-    grid-template-columns: 1.2fr 220px 280px;
-    gap: 0;
-}
-
-.order-items-column {
-    background: #ffffff;
-    padding: 16px;
-    border-right: 1px solid #eef2f6;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.order-price-summary {
-    background: #f8fafc;
-    padding: 16px;
-    border-right: 1px solid #eef2f6;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.order-shipping-column {
-    background: #f8fafc;
-    padding: 16px;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.order-items {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    flex: 1;
-}
-
-.order-item {
-    display: flex;
-    gap: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.order-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.order-item-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-    background: white;
-    flex-shrink: 0;
-}
-
-.order-item-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.order-item-seller {
-    font-weight: 700;
-    color: #FF8246;
-    font-size: 1rem;
-    margin-bottom: 4px;
-    letter-spacing: 0.3px;
-}
-
-.order-item-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1a1e24;
-    margin-bottom: 6px;
-    line-height: 1.3;
-}
-
-.order-item-meta {
-    display: flex;
-    gap: 20px;
-    font-size: 0.95rem;
-    color: #6c757d;
-}
-
-.item-quantity {
-    font-weight: 500;
-}
-
-.item-price {
-    font-weight: 600;
-    color: #FF8246;
-}
-
-/* Item status badge colors */
-.status-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.status-badge.pending {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.status-badge.delivered {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.status-badge.cancelled {
-    background: #000000;
-    color: #ffffff;
-
-    opacity: 0.8;
-}
-
-/* Price summary column */
-.price-summary-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #212529;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-    color: #495057;
-}
-
-.price-row.price-total {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #212529;
-    margin-top: 5px;
-}
-
-.price-value {
-    font-weight: 600;
-    color: #212529;
-}
-
-.price-total .price-value {
-    color: #FF8246;
-    font-size: 1.2rem;
-}
-
-.price-divider {
-    height: 1px;
-    background: #dee2e6;
-    margin: 12px 0;
-}
-
-/* Shipping column */
-.shipping-address-title {
-    font-weight: 600;
-    color: #212529;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-}
-
-.shipping-address-text {
-    color: #6c757d;
-    line-height: 1.5;
-    font-size: 0.9rem;
-    word-break: break-word;
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    margin-bottom: 15px;
-}
-
-.order-item-actions {
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid #e9ecef;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.action-btn {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    transition: background-color 0.2s ease;
-}
-
-.action-btn-view {
-    background: #FF8246;
-    color: white;
-}
-
-.action-btn-view:hover {
-    background: #e66a2e;
-}
-
-.action-btn-cancel {
-    background: #000000;
-    color: white;
-}
-
-.action-btn-cancel:hover {
-    background: #333333;
-}
-
-.action-btn-review {
-    background: #000000;
-    color: white;
-}
-
-.action-btn-review:hover {
-    background: #333333;
-}
-
-.reviewed-badge {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    background: #000000;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: center;
-    opacity: 0.8;
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-orders {
-    text-align: center;
-    padding: 40px 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.empty-orders p {
-    font-size: 1.1rem;
-    color: #6c757d;
-    margin-bottom: 15px;
-}
-
-.empty-orders .btn-primary {
-    display: inline-block;
-    padding: 10px 30px;
-    background: #FF8246;
-    color: white;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
-}
-
-.empty-orders .btn-primary:hover {
-    background: #e66a2e;
-}
-
-/* ===== LOADING ===== */
-.loading {
-    text-align: center;
-    padding: 30px;
-    color: #6c757d;
-    font-size: 1rem;
-}
-
-/* ===== MODAL STYLES ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.modal-icon {
-    margin-bottom: 15px;
-}
-
-.modal-icon img {
-    width: 50px;
-    height: 50px;
-}
-
-.modal-title {
-    color: #333;
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.modal-message {
-    color: #666;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    flex: 1;
-    max-width: 120px;
-}
-
-.modal-btn-cancel {
-    background: #e9ecef;
-    color: #495057;
-}
-
-.modal-btn-cancel:hover {
-    background: #dee2e6;
-}
-
-.modal-btn-confirm {
-    background: #FF8246;
-    color: white;
-}
-
-.modal-btn-confirm:hover {
-    background: #e66a2e;
-}
-
-/* ===== FORM STYLES (for review modal) ===== */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
-    font-size: 0.95rem;
-}
-
-.form-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    resize: vertical;
-    font-family: inherit;
-}
-
-.form-textarea:focus {
-    outline: none;
-    border-color: #FF8246;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-/* ===== STAR RATING ===== */
-.star-rating {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    margin: 15px 0;
-}
-
-.star {
-    cursor: pointer;
-    position: relative;
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-}
-
-.star img {
-    width: 32px;
-    height: 32px;
-    transition: filter 0.2s ease;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1100px) {
-    .order-body {
-        grid-template-columns: 1.1fr 200px 260px;
-    }
-}
-
-@media (max-width: 1000px) {
-    .order-body {
-        grid-template-columns: 1fr 180px 240px;
-    }
-}
-
-@media (max-width: 900px) {
-    .order-body {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-    .order-items-column {
-        border-right: none;
-        border-bottom: 1px solid #eef2f6;
-    }
-    .order-price-summary {
-        border-right: none;
-        border-bottom: 1px solid #eef2f6;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        padding: 0 15px;
-        margin-top: 70px;
-    }
-    .page-title {
-        font-size: 1.6rem;
-    }
-    .order-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .order-header-right {
-        width: 100%;
-        justify-content: space-between;
-    }
-}
-
-@media (max-width: 576px) {
-    .order-item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .order-item-image {
-        width: 100px;
-        height: 100px;
-    }
-    .order-item-meta {
-        justify-content: center;
-    }
-    .modal-actions {
-        flex-direction: column;
-    }
-    .modal-btn {
-        max-width: 100%;
-    }
-}
-
-/* Package icon colour */
-img[src*="package.svg"] {
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/privacy-policy.css`
-
-**Status:** `FOUND`
-
-```css
-/* ============================================
-   PRIVACY POLICY PAGE STYLES
-   Class naming convention: BEM (Block Element Modifier)
-   Block: privacy-policy-page, policy-hero, policy-intro, policy-section
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.privacy-policy-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.policy-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.policy-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.policy-hero__highlight {
-    color: #ff8246;
-}
-
-.policy-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.policy-intro {
-    margin-bottom: 40px;
-}
-
-.policy-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-intro__last-updated {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== POLICY SECTIONS ===== */
-.policy-sections {
-    width: 100%;
-}
-
-.policy-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.policy-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.policy-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.policy-section__body {
-    padding-left: 19px; /* Aligns with accent line */
-}
-
-.policy-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.policy-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.policy-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.policy-section__note {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    font-style: italic;
-    color: #666;
-}
-
-.policy-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.policy-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.policy-contact__item {
-    margin-bottom: 8px;
-}
-
-.policy-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .privacy-policy-page {
-        margin-top: 80px;
-    }
-    
-    .policy-hero {
-        padding: 40px 20px;
-    }
-    
-    .policy-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .policy-section {
-        padding: 25px 20px;
-    }
-    
-    .policy-section__body {
-        padding-left: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .policy-hero {
-        padding: 30px 15px;
-    }
-    
-    .policy-hero__title {
-        font-size: 2rem;
-    }
-    
-    .policy-intro__card {
-        padding: 20px;
-    }
-    
-    .policy-intro__text {
-        font-size: 1rem;
-    }
-    
-    .policy-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .policy-section__accent {
-        height: 25px;
-    }
-    
-    .policy-section {
-        padding: 20px 15px;
-    }
-    
-    .policy-section__body {
-        padding-left: 9px;
-    }
-    
-    .policy-section__body p,
-    .policy-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .policy-contact {
-        padding: 15px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/product-details.css`
-
-**Status:** `FOUND`
-
-```css
-/* CSS File Content */
-/* Crooks-Cart-Collectives/styles/product-details.css */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-    line-height: 1.6;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    min-height: calc(100vh - 140px);
-}
-
-.product-details-wrapper {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    padding: 30px;
-}
-
-/* ===== BREADCRUMB NAVIGATION ===== */
-.breadcrumb {
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.breadcrumb-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.breadcrumb-item {
-    font-size: 14px;
-    color: #6c757d;
-}
-
-.breadcrumb-item:not(:last-child)::after {
-    content: '/';
-    margin-left: 8px;
-    color: #adb5bd;
-}
-
-.breadcrumb-item a {
-    color: #FF8246;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.breadcrumb-item a:hover {
-    color: #e66a2e;
-    text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-    color: #212529;
-    font-weight: 500;
-}
-
-/* ===== PRODUCT DETAILS GRID ===== */
-.product-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
-
-/* ===== IMAGE COLUMN - IMPROVED RESPONSIVE HANDLING ===== */
-.product-image-column {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.product-image-container {
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.main-image-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%; /* Creates a perfect square aspect ratio */
-    background: #f8f9fa;
-}
-
-.main-product-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Ensures the whole image is visible without cropping */
-    padding: 15px; /* Adds some breathing room */
-    transition: transform 0.3s ease;
-}
-
-.main-product-image:hover {
-    transform: scale(1.05);
-}
-
-/* Thumbnail gallery */
-.product-thumbnails {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.thumbnail {
-    width: 60px;
-    height: 60px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 4px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    overflow: hidden;
-}
-
-.thumbnail:hover {
-    border-color: #FF8246;
-    transform: translateY(-2px);
-}
-
-.thumbnail.active {
-    border-color: #FF8246;
-    box-shadow: 0 0 0 2px rgba(255, 130, 70, 0.2);
-}
-
-.thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-/* ===== INFO COLUMN ===== */
-.product-info-column {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.product-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #212529;
-    line-height: 1.2;
-    margin: 0;
-    word-break: break-word;
-}
-
-/* Product meta information */
-.product-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 5px;
-}
-
-.product-category {
-    background: #f0f0f0;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 14px;
-    color: #495057;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-}
-
-.product-seller {
-    font-size: 15px;
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.product-seller strong {
-    color: #212529;
-    font-weight: 700;
-}
-
-.verified-badge {
-    background: #28a745;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* Price section */
-.product-price-wrapper {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin: 10px 0;
-    padding: 20px 0;
-    border-top: 2px solid #e9ecef;
-    border-bottom: 2px solid #e9ecef;
-}
-
-.price-label {
-    font-size: 16px;
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.product-price {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #FF8246;
-    line-height: 1;
-}
-
-/* Stock status */
-.product-availability {
-    margin: 5px 0;
-}
-
-.stock-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    width: fit-content;
-}
-
-.status-indicator {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.in-stock .status-indicator {
-    background: #28a745;
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
-}
-
-.out-of-stock .status-indicator {
-    background: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
-}
-
-.status-text {
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.in-stock .status-text {
-    color: #28a745;
-}
-
-.out-of-stock .status-text {
-    color: #dc3545;
-}
-
-/* Product description */
-.product-description {
-    margin: 10px 0;
-}
-
-.product-description h2 {
-    font-size: 1.3rem;
-    color: #212529;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.description-content {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #495057;
-    white-space: pre-line;
-    word-break: break-word;
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-/* Action buttons - IMPROVED DESKTOP STYLING */
-.product-actions {
-    display: flex;
-    gap: 15px;
-    margin: 20px 0;
-    width: 100%;
-}
-
-.btn {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px 24px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    min-width: 200px;
-    max-width: 250px; /* Prevents buttons from getting too wide on large screens */
-    white-space: nowrap;
-}
-
-.btn-icon {
-    font-size: 1.2rem;
-}
-
-.btn-primary {
-    background: #FF8246;
-    color: white;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.2);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: #e66a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 130, 70, 0.3);
-}
-
-.btn-secondary {
-    background: #212529;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background: #000000;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-/* Login button - matches primary style */
-.login-to-purchase-btn {
-    background: #212529;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
-    margin: 0 auto;
-}
-
-.login-to-purchase-btn:hover {
-    background: #000000;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Product highlights */
-.product-highlights {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e9ecef;
-}
-
-.highlight-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 5px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.highlight-icon {
-    font-size: 1.5rem;
-}
-
-.highlight-text {
-    font-size: 0.9rem;
-    color: #6c757d;
-    line-height: 1.4;
-}
-
-/* ===== NOTIFICATION STYLES ===== */
-.product-notification {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 9999;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    max-width: 350px;
-}
-
-.product-notification.success {
-    background: #28a745;
-}
-
-.product-notification.error {
-    background: #dc3545;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
-/* Desktop - Large */
-@media (min-width: 1200px) {
-    .product-details-wrapper {
-        padding: 40px;
-    }
-    
-    .product-title {
-        font-size: 2.2rem;
-    }
-    
-    .product-price {
-        font-size: 2.8rem;
-    }
-    
-    .btn {
-        padding: 18px 28px;
-        font-size: 1.2rem;
-    }
-}
-
-/* Desktop - Medium / Tablet Landscape */
-@media (max-width: 992px) {
-    .product-details-grid {
-        gap: 30px;
-    }
-    
-    .product-title {
-        font-size: 1.8rem;
-    }
-    
-    .product-price {
-        font-size: 2.2rem;
-    }
-    
-    .product-highlights {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .btn {
-        min-width: 180px;
-        padding: 14px 20px;
-        font-size: 1rem;
-    }
-}
-
-/* Tablet Portrait */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 0 15px;
-    }
-    
-    .product-details-wrapper {
-        padding: 20px;
-    }
-    
-    .product-details-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-    
-    .product-image-column {
-        max-width: 500px;
-        margin: 0 auto;
-        width: 100%;
-    }
-    
-    .main-image-wrapper {
-        padding-bottom: 100%; /* Maintain square aspect ratio */
-    }
-    
-    .product-title {
-        font-size: 1.8rem;
-    }
-    
-    .product-price-wrapper {
-        padding: 15px 0;
-    }
-    
-    .product-price {
-        font-size: 2.2rem;
-    }
-    
-    .product-actions {
-        justify-content: center;
-    }
-    
-    .btn {
-        min-width: 160px;
-        padding: 14px 18px;
-    }
-    
-    .product-highlights {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-    }
-    
-    .highlight-item {
-        padding: 8px 5px;
-    }
-    
-    .highlight-text {
-        font-size: 0.85rem;
-    }
-}
-
-/* Mobile Large */
-@media (max-width: 576px) {
-    .content {
-        margin-top: 70px;
-        padding: 0 12px;
-    }
-    
-    .product-details-wrapper {
-        padding: 15px;
-    }
-    
-    .product-title {
-        font-size: 1.5rem;
-    }
-    
-    .product-price {
-        font-size: 2rem;
-    }
-    
-    .product-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .product-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .btn {
-        width: 100%;
-        max-width: none;
-        min-width: 0;
-        padding: 14px 16px;
-        white-space: normal;
-        word-break: break-word;
-    }
-    
-    .product-highlights {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .highlight-item {
-        flex-direction: row;
-        justify-content: flex-start;
-        text-align: left;
-        padding: 12px;
-    }
-    
-    .highlight-icon {
-        font-size: 1.2rem;
-        width: 24px;
-    }
-    
-    .breadcrumb-list {
-        font-size: 13px;
-    }
-}
-
-/* Mobile Small */
-@media (max-width: 375px) {
-    .content {
-        padding: 0 10px;
-    }
-    
-    .product-details-wrapper {
-        padding: 12px;
-    }
-    
-    .product-title {
-        font-size: 1.3rem;
-    }
-    
-    .product-price {
-        font-size: 1.8rem;
-    }
-    
-    .product-category {
-        font-size: 12px;
-        padding: 4px 10px;
-    }
-    
-    .product-seller {
-        font-size: 13px;
-    }
-    
-    .verified-badge {
-        font-size: 11px;
-        padding: 3px 8px;
-    }
-    
-    .description-content {
-        padding: 15px;
-        font-size: 0.95rem;
-    }
-    
-    .btn {
-        padding: 12px 14px;
-        font-size: 0.95rem;
-    }
-    
-    .btn-icon {
-        font-size: 1rem;
-    }
-    
-    .stock-status {
-        padding: 6px 10px;
-    }
-    
-    .status-text {
-        font-size: 13px;
-    }
-    
-    .thumbnail {
-        width: 50px;
-        height: 50px;
-    }
-}
-
-/* Handle orientation changes on mobile */
-@media (max-height: 600px) and (orientation: landscape) {
-    .product-details-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .product-image-column {
-        max-width: 350px;
-    }
-    
-    .main-image-wrapper {
-        padding-bottom: 75%; /* Slightly shorter in landscape */
-    }
-}
-
-/* Print styles */
-@media print {
-    .product-actions,
-    .product-highlights,
-    .breadcrumb {
-        display: none;
-    }
-    
-    .product-details-wrapper {
-        box-shadow: none;
-        padding: 0;
-    }
-    
-    .main-product-image {
-        max-height: 400px;
-        object-fit: contain;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/products.css`
-
-**Status:** `FOUND`
-
-```css
-/* products.css */
-.content {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.pageTitleHeader {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 30px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #FF8246;
-}
-
-/* Pagination Styles */
-.pagination-container {
-    margin: 40px 0;
-    text-align: center;
-}
-
-.pagination {
-    display: inline-flex;
-    gap: 5px;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.pagination-item {
-    display: inline-block;
-    min-width: 40px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    padding: 0 5px;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #333;
-    background: #f5f5f5;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.pagination-item:hover:not(.disabled):not(.active) {
-    background: #FF8246;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.pagination-item.active {
-    background: #FF8246;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(255, 130, 70, 0.3);
-}
-
-.pagination-item.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: #e0e0e0;
-}
-
-.pagination-ellipsis {
-    padding: 0 10px;
-    color: #666;
-}
-
-/* Responsive pagination */
-@media (max-width: 768px) {
-    .pagination {
-        gap: 3px;
-    }
-    
-    .pagination-item {
-        min-width: 35px;
-        height: 35px;
-        line-height: 35px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .pagination {
-        gap: 2px;
-    }
-    
-    .pagination-item {
-        min-width: 30px;
-        height: 30px;
-        line-height: 30px;
-        font-size: 12px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 24px;
-    }
-}
-
-/* Products Grid */
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-    padding: 20px 0;
-}
-
-.product-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-    background: white;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-}
-
-.product-info {
-    padding: 15px;
-}
-
-.product-title {
-    font-size: 16px;
-    margin: 0 0 10px 0;
-    color: #333;
-    line-height: 1.3;
-    height: 2.6em;
-    overflow: hidden;
-}
-
-.product-price {
-    font-size: 18px;
-    font-weight: bold;
-    color: #FF8246;
-    margin: 0 0 5px 0;
-}
-
-.product-seller {
-    font-size: 14px;
-    color: #666;
-    margin: 0 0 10px 0;
-}
-
-.view-product-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #FF8246;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: background 0.3s;
-    border: none;
-    cursor: pointer;
-}
-
-.view-product-btn:hover {
-    background: #e66a2e;
-}
-
-.no-products {
-    text-align: center;
-    padding: 50px 20px;
-    color: #666;
-    background: #f9f9f9;
-    border-radius: 8px;
-    margin: 20px 0;
-}
-
-.no-products p {
-    margin: 10px 0;
-    font-size: 16px;
-}
-
-.no-products a {
-    color: #FF8246;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.no-products a:hover {
-    text-decoration: underline;
-}
-
-/* Loading state */
-.products-loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-.products-loading::after {
-    content: 'Loading products...';
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* Filter and Sort Controls */
-.products-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.products-controls select,
-.products-controls input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.products-controls input[type="search"] {
-    min-width: 200px;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/profile.css`
-
-**Status:** `FOUND`
-
-```css
-/* Crooks-Cart-Collectives/styles/profile.css */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
-}
-
-.content {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-.pageTitleHeader {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 40px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid #FF8246;
-    position: relative;
-}
-
-.pageTitleHeader::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 3px;
-    background-color: #FF8246;
-}
-
-.profile-container {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    margin-bottom: 40px;
-}
-
-.form-section {
-    margin-bottom: 40px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #eee;
-}
-
-.form-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.form-section h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 25px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-@media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #555;
-    font-size: 0.95rem;
-}
-
-.form-group label::after {
-    content: attr(data-required);
-    color: #ff4444;
-    margin-left: 4px;
-}
-
-.form-group input[type="text"],
-.form-group input[type="tel"],
-.form-group input[type="date"],
-.form-group input[type="email"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #FF8246;
-    background-color: white;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-.form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-    border-color: #ff4444;
-    background-color: #fff5f5;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-    font-family: inherit;
-}
-
-.form-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 16px;
-    padding-right: 40px;
-}
-
-.error-message {
-    color: #ff4444;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    display: none;
-}
-
-.error-message.show {
-    display: block;
-}
-
-.btn-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 40px;
-    justify-content: center;
-}
-
-.btn {
-    padding: 14px 32px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: #FF8246;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #e66a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.btn-secondary {
-    background-color: #000;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Phone number formatting hints */
-.phone-hint {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Success/Error messages */
-.message {
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    display: none;
-}
-
-.message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    display: block;
-}
-
-.message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    display: block;
-}
-
-/* Loading state */
-.loading {
-    position: relative;
-    pointer-events: none;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Profile completeness indicator */
-.profile-completeness {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
-}
-
-.progress-bar {
-    height: 10px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-
-.progress-fill {
-    height: 100%;
-    background-color: #FF8246;
-    border-radius: 5px;
-    transition: width 0.5s ease;
-}
-
-.completeness-text {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.completeness-text span {
-    font-weight: 600;
-    color: #333;
-}
-
-.completeness-text .percentage {
-    color: #FF8246;
-    font-size: 1.1rem;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/report-seller.css`
-
-**Status:** `FOUND`
-
-```css
-/* Complaint Page Styles */
-.page-title {
-    text-align: center;
-    margin: 30px 0;
-    color: #333;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.complaints-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.complaint-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 25px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.complaint-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.complaint-header {
-    background: linear-gradient(135deg, #a49bf8 0%, #43c9fb 100%);
-    padding: 20px;
-    color: white;
-    position: relative;
-}
-
-.complaint-about {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.complaint-author {
-    margin-top: 10px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    opacity: 0.9;
-}
-
-.complaint-date {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
-
-.complaint-body {
-    padding: 25px;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #444;
-    border-left: 5px solid #43c9fb;
-}
-
-.no-complaints, .error-message {
-    text-align: center;
-    padding: 40px;
-    font-size: 1.3rem;
-    color: #666;
-    background: #f9f9f9;
-    border-radius: 10px;
-    margin: 30px 0;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .complaint-header {
-        padding: 15px;
-    }
-    
-    .complaint-about {
-        font-size: 1.3rem;
-    }
-    
-    .complaint-date {
-        position: static;
-        margin-top: 10px;
-        display: inline-block;
-    }
-}
-
-/* Floating Button */
-.floating-complaint-button {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: none;
-    box-shadow: var(--effect-box-shadow-default);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    z-index: 1001;
-    transition: background-color 0.3s;
-}
-
-.floating-complaint-button:hover {
-    background-color: var(--color-hover-A);
-}
-
-.floating-complaint-button img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-/* Modal Styles */
-.complaint-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.complaint-modal {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: var(--effect-box-shadow-default);
-    position: relative;
-}
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #777;
-    transition: color 0.3s;
-}
-
-.close-button:hover {
-    color: #333;
-}
-
-/* Form Styles */
-.complaint-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.complaint-form label {
-    font-weight: 600;
-    color: #444;
-}
-
-.complaint-form input,
-.complaint-form textarea {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.complaint-form input:focus,
-.complaint-form textarea:focus {
-    outline: none;
-    border-color: #43c9fb;
-    box-shadow: 0 0 0 2px rgba(67, 201, 251, 0.2);
-}
-
-.complaint-form textarea {
-    resize: none; /* Disable resizing */
-    min-height: 150px;
-}
-
-.form-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.submit-button, .cancel-button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.submit-button {
-    background-color: var(--color-accent-A);
-    color: white;
-}
-
-.submit-button:hover {
-    background-color: var(--color-hover-A);
-    box-shadow: var(--effect-glow-B);
-}
-
-.cancel-button {
-    background-color: #f0f0f0;
-    color: #666;
-    border: 1px solid #ddd;
-}
-
-.cancel-button:hover {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-/* Blur effect for background */
-.blurred-background > *:not(.complaint-overlay):not(script) {
-    filter: blur(4px);
-    pointer-events: none;
-}
-```
-
----
-
 ## File: `Crooks-Cart-Collectives/styles/seller-orders.css`
 
 **Status:** `FOUND`
 
 ```css
 /* Crooks-Cart-Collectives/styles/seller-orders.css */
-/* Fixed version - product details first, then customer info, then order summary */
+/* Revised with full-width layout, no animations, consistent column titles */
 
 * {
     margin: 0;
@@ -15502,7 +10184,8 @@ body {
 }
 
 .content {
-    max-width: 1400px;
+    width: 100%;
+    max-width: 100%;
     margin: 100px auto 40px;
     padding: 0 20px;
 }
@@ -15514,11 +10197,14 @@ body {
     margin-bottom: 30px;
     flex-wrap: wrap;
     gap: 15px;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .page-title {
     font-size: 2rem;
-    color: #333;
+    color: #000000;
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: none;
@@ -15529,50 +10215,61 @@ body {
     gap: 10px;
     margin-bottom: 30px;
     flex-wrap: wrap;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .filter-tab {
-    padding: 8px 16px;
-    background: #f0f0f0;
-    border-radius: 20px;
+    padding: 8px 20px;
+    background: #ffffff;
+    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.2s;
     font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+    color: #000000;
 }
 
 .filter-tab.active {
     background: #FF8246;
-    color: white;
+    color: #ffffff;
+    border-color: #FF8246;
 }
 
 .filter-tab:hover:not(.active) {
-    background: #e0e0e0;
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
 }
 
 .seller-orders-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ===== ORDER CARD ===== */
 .order-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
     overflow: hidden;
-    border: 1px solid #eef2f6;
+    width: 100%;
 }
 
 .order-header {
-    padding: 12px 16px;
-    background: #f8fafc;
-    border-bottom: 1px solid #eef2f6;
+    padding: 15px 20px;
+    background: #f8f8f8;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .order-header-left {
@@ -15585,13 +10282,16 @@ body {
 .order-id {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #1a1e24;
+    color: #000000;
+    background: #f0f0f0;
+    padding: 4px 12px;
+    border-radius: 20px;
 }
 
 .order-date {
-    color: #666;
+    color: #000000;
     font-size: 0.85rem;
-    background: #e9ecef;
+    background: #e0e0e0;
     padding: 3px 10px;
     border-radius: 30px;
 }
@@ -15603,17 +10303,16 @@ body {
     flex-wrap: wrap;
 }
 
-/* Customer info badge */
 .customer-info {
     font-weight: 500;
-    color: #333;
-    background: rgba(255, 130, 70, 0.1);
+    color: #000000;
+    background: #f0f0f0;
     padding: 4px 12px;
     border-radius: 30px;
     font-size: 0.9rem;
 }
 
-/* Status badge colors - matching customer orders */
+/* Status badge colors */
 .order-status-badge {
     padding: 4px 12px;
     border-radius: 30px;
@@ -15623,55 +10322,69 @@ body {
     letter-spacing: 0.5px;
     min-width: 100px;
     text-align: center;
+    border: 1px solid transparent;
 }
 
 .order-status-badge.pending {
     background: #FF8246;
     color: #ffffff;
+    border-color: #FF8246;
 }
 
 .order-status-badge.delivered {
     background: #000000;
     color: #ffffff;
+    border-color: #000000;
 }
 
 .order-status-badge.cancelled {
     background: #000000;
     color: #ffffff;
     opacity: 0.8;
+    border-color: #000000;
 }
 
-/* ===== ORDER BODY (three columns) ===== */
+/* ===== ORDER BODY - FULL WIDTH GRID ===== */
 .order-body {
     display: grid;
-    grid-template-columns: 1.2fr 280px 220px;
+    grid-template-columns: 1.2fr 1.2fr 1.4fr 1fr;
     gap: 0;
+    background: #ffffff;
+    width: 100%;
+}
+
+/* Column Titles - consistent max-width underline for all */
+.order-product-column .column-title,
+.order-event-column .column-title,
+.order-shipping-column .column-title,
+.order-price-summary .column-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #FF8246;
+    display: block;
+    max-width: 100%;
 }
 
 /* Column 1: Product Details */
 .order-product-column {
     background: #ffffff;
-    padding: 16px;
-    border-right: 1px solid #eef2f6;
+    padding: 20px;
     min-height: 100%;
-}
-
-.product-details-title {
-    font-weight: 600;
-    color: #212529;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #FF8246;
+    width: 100%;
+    border-right: 1px solid #f0f0f0;
 }
 
 .product-details {
     display: flex;
     gap: 15px;
-    background: #f8fafc;
-    border-radius: 8px;
+    background: #f9f9f9;
+    border-radius: 10px;
     padding: 15px;
-    border: 1px solid #eef2f6;
-    margin-bottom: 15px;
+    border: 1px solid #f0f0f0;
+    width: 100%;
 }
 
 .product-thumbnail {
@@ -15679,9 +10392,9 @@ body {
     height: 80px;
     object-fit: cover;
     border-radius: 8px;
-    border: 1px solid #dee2e6;
     background: white;
     flex-shrink: 0;
+    border: 1px solid #f0f0f0;
 }
 
 .product-thumbnail[src*="package.svg"] {
@@ -15690,97 +10403,185 @@ body {
 
 .product-info {
     flex: 1;
+    width: 100%;
 }
 
 .product-info h4 {
     font-size: 1rem;
     font-weight: 600;
-    color: #212529;
-    margin-bottom: 5px;
+    color: #000000;
+    margin-bottom: 8px;
 }
 
 .product-info p {
     font-size: 0.9rem;
-    color: #6c757d;
-    margin: 2px 0;
+    color: #000000;
+    margin: 4px 0;
+    opacity: 0.8;
 }
 
-.product-info .subtotal {
-    font-weight: 600;
-    color: #FF8246 !important;
-    margin-top: 5px !important;
+.info-label {
+    font-weight: 500;
+    color: #000000;
+    margin-right: 5px;
+    opacity: 0.9;
 }
 
-/* Column 2: Customer Information */
-.order-customer-column {
-    background: #f8fafc;
-    padding: 16px;
-    border-right: 1px solid #eef2f6;
-    min-height: 100%;
-}
-
-.customer-details-title {
-    font-weight: 600;
-    color: #212529;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.customer-details {
+/* Column 2: Event Activity */
+.order-event-column {
     background: #ffffff;
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid #eef2f6;
+    padding: 20px;
+    min-height: 100%;
+    width: 100%;
+    border-right: 1px solid #f0f0f0;
 }
 
-.customer-details p {
-    margin: 8px 0;
+.event-activity-content {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    width: 100%;
+}
+
+.event-item.customer-event {
+    background: #fff0e8;
+    border-color: #FF8246;
+}
+
+.event-item.cancelled-event {
+    background: #f0f0f0;
+    border-color: #000000;
+}
+
+.event-item.delivered-event {
+    background: #f0f0f0;
+    border-color: #000000;
+}
+.event-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    color: #000000;
+}
+
+.event-text {
+    flex: 1;
     font-size: 0.95rem;
-    color: #495057;
+    line-height: 1.5;
+    color: #000000;
     word-break: break-word;
 }
 
-.customer-details strong {
-    color: #212529;
+/* Column 3: Shipping */
+.order-shipping-column {
+    background: #ffffff;
+    padding: 20px;
+    min-height: 100%;
+    width: 100%;
+    border-right: 1px solid #f0f0f0;
+}
+
+/* Shipping details container - styled to match other content boxes */
+.shipping-details {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #f0f0f0;
+    width: 100%;
+}
+
+.shipping-details p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #000000;
+    word-break: break-word;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.shipping-details p:last-child {
+    border-bottom: none;
+}
+
+.shipping-details strong {
+    color: #000000;
     min-width: 70px;
     display: inline-block;
 }
 
-/* Column 3: Price Summary */
-.order-price-summary {
-    background: #ffffff;
-    padding: 16px;
-    min-height: 100%;
+.shipping-address-text {
+    font-weight: 500;
 }
 
-.price-summary-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #212529;
+.customer-contact,
+.customer-email {
+    opacity: 0.9;
+}
+
+/* Column 4: Price Summary */
+.order-price-summary {
+    background: #f9f9f9;
+    padding: 20px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.price-summary-details {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #f0f0f0;
     margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #FF8246;
+    width: 100%;
 }
 
 .price-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 0.95rem;
-    color: #495057;
+    color: #000000;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.price-row:last-child {
+    border-bottom: none;
 }
 
 .price-row.price-total {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #212529;
+    color: #000000;
     margin-top: 5px;
+    padding-top: 10px;
 }
 
 .price-value {
     font-weight: 600;
-    color: #212529;
+    color: #000000;
+}
+
+.free-shipping {
+    color: #000000;
+    font-weight: 600;
 }
 
 .price-total .price-value {
@@ -15790,126 +10591,112 @@ body {
 
 .price-divider {
     height: 1px;
-    background: #dee2e6;
+    background: #e0e0e0;
     margin: 12px 0;
 }
 
-/* Order actions - buttons */
+/* Order actions - only shown for pending orders */
 .order-actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-top: 15px;
+    gap: 10px;
+    margin-top: auto;
 }
 
 .action-btn {
     display: block;
     width: 100%;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     text-align: center;
-    transition: background-color 0.2s ease;
+    letter-spacing: 0.3px;
 }
 
 .action-btn.complete {
+    color: #ffffff;
     background: #FF8246;
-    color: white;
-}
-
-.action-btn.complete:hover:not(:disabled) {
-    background: #e66a2e;
+    border-color: #FF8246;
 }
 
 .action-btn.cancel {
     background: #000000;
-    color: white;
-}
-
-.action-btn.cancel:hover:not(:disabled) {
-    background: #333333;
+    color: #ffffff;
 }
 
 .action-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: #f0f0f0;
+    color: #666666;
+    border-color: #cccccc;
 }
 
-.status-badge {
+.action-disabled {
     display: block;
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    padding: 12px;
+    background: #f0f0f0;
+    color: #666666;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
     text-align: center;
-    background: #e9ecef;
-    color: #495057;
-}
-
-.status-badge.pending {
-    background: #FF8246;
-    color: white;
-}
-
-.status-badge.delivered {
-    background: #000000;
-    color: white;
-}
-
-.status-badge.cancelled {
-    background: #000000;
-    color: white;
-    opacity: 0.8;
+    font-size: 0.9rem;
 }
 
 /* Empty state */
 .empty-orders {
     text-align: center;
     padding: 60px 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .empty-orders p {
     font-size: 1.1rem;
-    color: #6c757d;
-    margin-bottom: 15px;
+    color: #000000;
+    margin-bottom: 20px;
+    opacity: 0.8;
 }
 
 .empty-orders .btn-primary {
-    display: inline-block;
-    padding: 10px 30px;
+    display: block;
+    padding: 12px 35px;
     background: #FF8246;
-    color: white;
+    color: #000000;
     text-decoration: none;
     border-radius: 30px;
     font-weight: 600;
-    transition: background-color 0.2s;
+    border: 1px solid #FF8246;
 }
 
 .empty-orders .btn-primary:hover {
-    background: #e66a2e;
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
 }
 
 .loading {
     text-align: center;
-    padding: 30px;
-    color: #6c757d;
+    padding: 40px;
+    color: #000000;
     font-size: 1rem;
+    opacity: 0.7;
 }
 
 /* ===== MODAL STYLES ===== */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.5);
     display: none;
     align-items: center;
     justify-content: center;
@@ -15917,111 +10704,161 @@ body {
 }
 
 .modal-content {
-    background: white;
-    padding: 25px;
+    background: #ffffff;
+    padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
     max-width: 400px;
     width: 90%;
     text-align: center;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
 
 .modal-icon {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .modal-icon img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
 }
 
 .modal-title {
-    color: #333;
-    font-size: 1.3rem;
+    color: #000000;
+    font-size: 1.4rem;
     margin-bottom: 10px;
     font-weight: 600;
 }
 
 .modal-message {
-    color: #666;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
+    color: #000000;
+    font-size: 1rem;
+    margin-bottom: 25px;
     line-height: 1.5;
+    opacity: 0.8;
 }
 
 .modal-actions {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
 }
 
 .modal-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
+    padding: 12px 25px;
+    border: 1px solid transparent;
+    border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
     flex: 1;
-    max-width: 120px;
+    max-width: 130px;
 }
 
 .modal-btn-cancel {
-    background: #e9ecef;
-    color: #495057;
+    background: #000000;
+    color: #ffffff;
 }
 
 .modal-btn-cancel:hover {
-    background: #dee2e6;
+    background: #000000;
+    color: #ffffff;
 }
 
 .modal-btn-confirm {
     background: #FF8246;
-    color: white;
-}
-
-.modal-btn-confirm:hover {
-    background: #e66a2e;
+    color: #ffffff;
+    border-color: #FF8246;
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 1400px) {
+    .order-body {
+        grid-template-columns: 1.2fr 1.1fr 1.3fr 1fr;
+    }
+}
+
+@media (max-width: 1300px) {
+    .order-body {
+        grid-template-columns: 1.1fr 1fr 1.2fr 0.9fr;
+    }
+}
+
+@media (max-width: 1200px) {
+    .order-body {
+        grid-template-columns: 1fr 0.9fr 1.1fr 0.8fr;
+    }
+    
+    .event-text {
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 1100px) {
     .order-body {
-        grid-template-columns: 1.1fr 240px 200px;
+        grid-template-columns: 1fr 0.9fr 1fr 0.8fr;
+    }
+    
+    .product-details {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .product-thumbnail {
+        margin-bottom: 10px;
+    }
+    
+    .event-text {
+        font-size: 0.85rem;
     }
 }
 
 @media (max-width: 1000px) {
     .order-body {
-        grid-template-columns: 1fr 200px 180px;
-    }
-}
-
-@media (max-width: 900px) {
-    .order-body {
         grid-template-columns: 1fr;
         gap: 0;
     }
+    
     .order-product-column {
         border-right: none;
-        border-bottom: 1px solid #eef2f6;
+        border-bottom: 1px solid #f0f0f0;
     }
-    .order-customer-column {
+    
+    .order-event-column {
         border-right: none;
-        border-bottom: 1px solid #eef2f6;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .order-shipping-column {
+        border-right: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .product-details {
+        flex-direction: row;
+        text-align: left;
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .product-thumbnail {
+        margin-bottom: 0;
+    }
+    
+    .event-activity-content {
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .shipping-details {
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .price-summary-details {
+        max-width: 100%;
+        margin: 0;
     }
 }
 
@@ -16030,28 +10867,49 @@ body {
         margin-top: 80px;
         padding: 0 15px;
     }
+    
     .page-title {
         font-size: 1.6rem;
     }
+    
     .order-header {
         flex-direction: column;
         align-items: flex-start;
     }
+    
     .order-header-right {
         width: 100%;
         justify-content: space-between;
     }
+    
     .product-details {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
+    
     .product-thumbnail {
         width: 100px;
         height: 100px;
+        margin-bottom: 10px;
     }
+    
     .order-actions {
         flex-direction: column;
+    }
+    
+    .event-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .event-icon {
+        margin-bottom: 5px;
+    }
+    
+    .event-text {
+        font-size: 0.9rem;
     }
 }
 
@@ -16059,2413 +10917,42 @@ body {
     .modal-actions {
         flex-direction: column;
     }
+    
     .modal-btn {
         max-width: 100%;
     }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/seller-registration.css`
-
-**Status:** `FOUND`
-
-```css
-:root {
-  /* Sizes */
-  --seller-form-max-width: 600px;
-  --seller-input-height: 50px;
-  --section-spacing: 35px;
-  
-  /* Effects */
-  --effect-box-shadow-default: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --effect-transition-default: all 0.3s ease;
-  --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family-base);
-  background-color: var(--color-background-A);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.pageTitleHeader {
-  font-size: 2.5rem;
-  padding: 20px;
-  margin: 20px auto 40px;
-  text-align: center;
-  width: 100%;
-  color: var(--color-text-C);
-  font-weight: var(--font-weight-bold);
-}
-
-/* Form Container */
-.seller-container {
-  background-color: var(--color-background-B);
-  border-radius: 12px;
-  border: 1px solid var(--color-border-A);
-  padding: 40px;
-  box-shadow: var(--effect-box-shadow-default);
-  transition: var(--effect-transition-default);
-  width: 100%;
-  max-width: var(--seller-form-max-width);
-  margin: 0 auto;
-}
-
-.seller-container:hover {
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-/* Form Sections */
-.form-section {
-  margin-bottom: var(--section-spacing);
-  padding-bottom: var(--section-spacing);
-  border-bottom: 2px solid var(--color-border-A);
-}
-
-.form-section:last-of-type {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.form-section h3 {
-  font-size: 1.5rem;
-  color: var(--color-text-C);
-  margin-bottom: 25px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--color-accent-A);
-  display: inline-block;
-}
-
-/* Form Groups */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 25px;
-  width: 100%;
-}
-
-.form-group label {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text-C);
-  margin-bottom: 5px;
-}
-
-.form-group input[type="text"] {
-  width: 100%;
-  height: var(--seller-input-height);
-  font-size: var(--font-size-base);
-  padding: 0 15px;
-  border: 2px solid var(--color-border-A);
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: var(--color-text-A);
-  transition: var(--effect-transition-default);
-}
-
-.form-group input[type="text"]:focus {
-  border-color: var(--color-accent-A);
-  box-shadow: var(--effect-glow-B);
-  outline: none;
-}
-
-/* File Upload */
-.file-upload-container {
-  border: 2px dashed var(--color-border-A);
-  border-radius: 8px;
-  padding: 25px;
-  text-align: center;
-  transition: var(--effect-transition-default);
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.file-upload-container:hover {
-  border-color: var(--color-accent-A);
-  background-color: rgba(255, 130, 70, 0.05);
-}
-
-.file-upload-container.dragover {
-  border-color: var(--color-accent-A);
-  background-color: rgba(255, 130, 70, 0.1);
-  transform: scale(1.02);
-}
-
-.file-input-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 15px;
-}
-
-.file-input-wrapper input[type="file"] {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
-.file-upload-label {
-  display: inline-block;
-  padding: 12px 25px;
-  background-color: var(--color-accent-A);
-  color: var(--color-text-B);
-  border-radius: 8px;
-  font-weight: var(--font-weight-bold);
-  cursor: pointer;
-  transition: var(--effect-transition-default);
-}
-
-.file-upload-label:hover {
-  background-color: var(--color-hover-A);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.file-name {
-  font-size: 0.9rem;
-  color: var(--color-text-C);
-  margin-top: 10px;
-  word-break: break-all;
-}
-
-.file-name::before {
-  content: '📄 ';
-}
-
-.help-text {
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: 10px;
-  line-height: 1.5;
-}
-
-/* Agreement Box */
-.agreement-box {
-  background-color: rgba(0, 0, 0, 0.02);
-  border-radius: 8px;
-  padding: 25px;
-  border-left: 4px solid var(--color-accent-A);
-}
-
-.agreement-box p {
-  font-size: 1.1rem;
-  color: var(--color-text-C);
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.agreement-box ul {
-  list-style: none;
-  padding-left: 20px;
-  margin-bottom: 25px;
-}
-
-.agreement-box li {
-  margin-bottom: 10px;
-  color: var(--color-text-A);
-  position: relative;
-  padding-left: 25px;
-}
-
-.agreement-box li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--color-accent-A);
-  font-weight: bold;
-}
-
-/* Checkbox */
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: var(--color-text-C);
-  padding: 15px;
-  background: white;
-  border-radius: 8px;
-  border: 2px solid var(--color-border-A);
-  transition: var(--effect-transition-default);
-}
-
-.checkbox:hover {
-  border-color: var(--color-accent-A);
-  background-color: rgba(255, 130, 70, 0.05);
-}
-
-.checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: var(--color-accent-A);
-}
-
-.checkbox span {
-  font-weight: 600;
-}
-
-/* Button Container */
-.btn-container {
-  display: flex;
-  gap: 15px;
-  margin-top: 40px;
-  margin-bottom: 20px;
-}
-
-.btn {
-  padding: 16px 35px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  flex: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-primary {
-  background-color: var(--color-accent-A);
-  color: var(--color-text-B);
-}
-
-.btn-primary:hover {
-  background-color: var(--color-hover-A);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 130, 70, 0.4);
-}
-
-.btn-primary:active {
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background-color: var(--color-background-C);
-  color: var(--color-text-B);
-  border: 2px solid var(--color-border-A);
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-background-A);
-  color: var(--color-text-A);
-  border-color: var(--color-accent-A);
-  transform: translateY(-3px);
-}
-
-/* File Preview */
-.file-preview {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.file-preview img {
-  max-width: 100%;
-  max-height: 200px;
-  border-radius: 8px;
-  border: 2px solid var(--color-border-A);
-  box-shadow: var(--effect-box-shadow-default);
-}
-
-/* Loading State */
-.btn.loading {
-  position: relative;
-  color: transparent;
-}
-
-.btn.loading::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.btn-secondary.loading::after {
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--color-text-A);
-}
-
-/* Animations */
-@keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.form-section {
-  animation: fadeIn 0.5s ease forwards;
-}
-
-.form-section:nth-child(2) {
-  animation-delay: 0.1s;
-}
-
-/* Validation */
-.form-group.error .file-upload-container {
-  border-color: #e74c3c;
-  animation: shake 0.3s;
-}
-
-.form-group.error .checkbox {
-  border-color: #e74c3c;
-}
-
-.error-message {
-  color: #e74c3c;
-  font-size: 0.9rem;
-  margin-top: 8px;
-  display: none;
-}
-
-.form-group.error .error-message {
-  display: block;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .content {
-    padding: 20px 15px;
-  }
-  
-  .pageTitleHeader {
-    font-size: 2rem;
-    padding: 15px;
-    margin: 10px auto 30px;
-  }
-  
-  .seller-container {
-    padding: 30px 25px;
-  }
-  
-  .form-section h3 {
-    font-size: 1.3rem;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .file-upload-container {
-    padding: 20px;
-  }
-  
-  .agreement-box {
-    padding: 20px;
-  }
-  
-  .btn {
-    padding: 14px 25px;
-    font-size: 1rem;
-  }
-  
-  .btn-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .seller-container {
-    padding: 25px 20px;
-  }
-  
-  .pageTitleHeader {
-    font-size: 1.8rem;
-  }
-  
-  .form-section {
-    margin-bottom: 30px;
-    padding-bottom: 30px;
-  }
-  
-  .form-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    font-size: 1rem;
-  }
-  
-  .form-group input[type="text"] {
-    height: 45px;
-    font-size: 0.95rem;
-    padding: 0 12px;
-  }
-  
-  .agreement-box p {
-    font-size: 1rem;
-  }
-  
-  .checkbox {
-    padding: 12px;
-    font-size: 0.95rem;
-  }
-  
-  .btn {
-    padding: 14px;
-    font-size: 0.95rem;
-  }
-  
-  .help-text {
-    font-size: 0.85rem;
-  }
-}
-
-/* Success Message */
-.success-message {
-  background-color: rgba(46, 204, 113, 0.1);
-  border: 2px solid #2ecc71;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 20px;
-  text-align: center;
-  animation: fadeIn 0.5s ease;
-}
-
-.success-message p {
-  color: #27ae60;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.success-message::before {
-  content: '✅ ';
-  font-size: 1.5rem;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/seller-dashboard.css`
-
-**Status:** `FOUND`
-
-```css
-
-/* Main Content Layout */
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-/* Welcome Section */
-.welcome-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    padding: 40px 30px;
-    border-radius: 16px;
-    margin-bottom: 40px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e9ecef;
-}
-.welcome-section h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-.welcome-section h1 span {
-    color: #FF8246;
-}
-.welcome-section p {
-    font-size: 1.1rem;
-    color: #666;
-    margin: 0;
-}
-/* Stats Grid */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 25px;
-    margin-bottom: 40px;
-}
-.stat-card {
-    background: white;
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eef2f6;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #FF8246, #FFA500);
-}
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.stat-icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: transform 0.3s ease;
-}
-.stat-card:hover .stat-icon img {
-    transform: scale(1.1);
-}
-.stat-number {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #FF8246;
-    line-height: 1.2;
-    margin-bottom: 5px;
-}
-.stat-label {
-    font-size: 1rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-.stat-subtext {
-    font-size: 0.9rem;
-    color: #adb5bd;
-    margin-top: 10px;
-}
-/* Quick Actions */
-.quick-actions {
-    margin-bottom: 40px;
-}
-.quick-actions h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-.actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-}
-.action-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eef2f6;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-.action-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #FF8246;
-}
-.action-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.action-icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: transform 0.3s ease;
-}
-.action-card:hover .action-icon img {
-    transform: scale(1.1);
-}
-.action-card h3 {
-    font-size: 1.3rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-.action-card p {
-    font-size: 0.95rem;
-    color: #6c757d;
-    margin-bottom: 0;
-    line-height: 1.5;
-}
-/* Recent Activity */
-.recent-activity {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eef2f6;
-}
-.recent-activity h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.recent-activity h2 a {
-    font-size: 0.95rem;
-    color: #FF8246;
-    text-decoration: none;
-    font-weight: 500;
-}
-.recent-activity h2 a:hover {
-    text-decoration: underline;
-}
-.activity-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.activity-item {
-    display: flex;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #eef2f6;
-}
-.activity-item:last-child {
-    border-bottom: none;
-}
-.activity-status {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 15px;
-}
-.activity-status.ordered {
-    background: #007bff;
-}
-.activity-status.delivered {
-    background: #28a745;
-}
-.activity-status.cancelled {
-    background: #dc3545;
-}
-.activity-details {
-    flex: 1;
-}
-.activity-details p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: #495057;
-}
-.activity-details small {
-    font-size: 0.8rem;
-    color: #adb5bd;
-}
-.activity-link {
-    color: #FF8246;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-/* Responsive */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-    }
-    .welcome-section {
-        padding: 30px 20px;
-    }
-    .welcome-section h1 {
-        font-size: 1.8rem;
-    }
-    .stat-number {
-        font-size: 1.8rem;
-    }
-    .actions-grid {
-        grid-template-columns: 1fr;
-    }
-}
-@media (max-width: 480px) {
-    .welcome-section {
-        padding: 25px 15px;
-    }
-    .welcome-section h1 {
-        font-size: 1.5rem;
-    }
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    .action-card {
-        padding: 25px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/sign-in.css`
-
-**Status:** `FOUND`
-
-```css
-:root {
-  /* Sizes */
-  --login-form-max-width: 400px;
-  --login-input-height: 50px;
-  
-  /* Effects */
-  --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --effect-transition-default: all 0.3s ease;
-  --effect-glow-A: 0 0 5px rgba(0, 0, 0, 0.1);
-  --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family-base);
-  background-color: var(--color-background-A);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.pageTitleHeader {
-  font-size: 2.5rem;
-  padding: 20px;
-  margin: 20px auto 40px;
-  text-align: center;
-  width: 100%;
-  color: var(--color-text-C);
-  font-weight: var(--font-weight-bold);
-}
-
-/* Form Container */
-.signin-container {
-  background-color: var(--color-background-B);
-  border-radius: 12px;
-  border: 1px solid var(--color-border-A);
-  padding: 40px;
-  box-shadow: var(--effect-box-shadow-default);
-  transition: var(--effect-transition-default);
-  width: 100%;
-  max-width: var(--login-form-max-width);
-  margin: 0 auto;
-}
-
-.signin-container:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-/* Form Groups */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 25px;
-  width: 100%;
-}
-
-.form-group label {
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--color-text-C);
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  width: 100%;
-  height: var(--login-input-height);
-  font-size: var(--font-size-base);
-  padding: 0 15px;
-  border: 2px solid var(--color-border-A);
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: var(--color-text-A);
-  transition: var(--effect-transition-default);
-}
-
-.form-group input:focus {
-  border-color: var(--color-accent-A);
-  box-shadow: var(--effect-glow-B);
-  outline: none;
-}
-
-.form-group input:invalid:not(:focus):not(:placeholder-shown) {
-  border-color: #e74c3c;
-  animation: shake 0.3s;
-}
-
-/* Button Styles */
-.btn {
-  padding: 15px 30px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  width: 100%;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn-primary {
-  background-color: var(--color-accent-A);
-  color: var(--color-text-B);
-  margin-top: 10px;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-hover-A);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255, 130, 70, 0.4);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-/* Links */
-.signup-link {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 1rem;
-  color: var(--color-text-C);
-  width: 100%;
-  padding: 0 10px;
-}
-
-.signup-link a {
-  text-decoration: none;
-  color: var(--color-accent-A);
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  padding: 5px 10px;
-  border-radius: 4px;
-}
-
-.signup-link a:hover {
-  color: var(--color-hover-A);
-  background-color: rgba(255, 130, 70, 0.1);
-}
-
-/* Error Messages */
-.error-message {
-  color: #e74c3c;
-  font-size: 0.9rem;
-  margin-top: 5px;
-  display: none;
-}
-
-.form-group.error input {
-  border-color: #e74c3c;
-}
-
-.form-group.error .error-message {
-  display: block;
-}
-
-/* Loading State */
-.btn.loading {
-  position: relative;
-  color: transparent;
-}
-
-.btn.loading::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-/* Animations */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-@keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .content {
-    padding: 20px 15px;
-  }
-  
-  .pageTitleHeader {
-    font-size: 2rem;
-    padding: 15px;
-    margin: 10px auto 30px;
-  }
-  
-  .signin-container {
-    padding: 30px 25px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group input {
-    height: 45px;
-  }
-  
-  .btn {
-    padding: 14px 20px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .signin-container {
-    padding: 25px 20px;
-  }
-  
-  .pageTitleHeader {
-    font-size: 1.8rem;
-  }
-  
-  .form-group label {
-    font-size: 0.95rem;
-  }
-  
-  .form-group input {
-    height: 42px;
-    font-size: 0.95rem;
-    padding: 0 12px;
-  }
-  
-  .btn {
-    padding: 12px;
-    font-size: 0.95rem;
-  }
-  
-  .signup-link {
-    font-size: 0.9rem;
-    margin-top: 25px;
-  }
-}
-
-/* Password Toggle (Optional Enhancement) */
-.password-toggle {
-  position: relative;
-}
-
-.password-toggle input {
-  padding-right: 45px;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-C);
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.toggle-password:hover {
-  opacity: 1;
-}
-
-/* Success Animation */
-@keyframes successPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.success-pulse {
-  animation: successPulse 0.5s ease;
-}
-
-/* Add to Crooks-Cart-Collectives/styles/sign-in.css */
-
-/* Notifier Modal */
-.notifier {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    backdrop-filter: blur(5px);
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background: var(--color-background-B);
-    border-radius: 12px;
-    padding: 40px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.3s ease-out;
-}
-
-.notifier-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    color: var(--color-text-C);
-    line-height: 1.5;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 14px;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-input.error {
-    border-color: #dc3545;
-}
-
-.forgot-password-link {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.forgot-password-link a {
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.forgot-password-link a:hover {
-    color: #FF8246;
-    text-decoration: underline;
-}
-
-.signin-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 30px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    border-color: #FF8246;
-    outline: none;
-}
-
-/* Add these to the existing sign-in.css */
-
-/* Password toggle styles */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    padding: 0;
-    z-index: 2;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* Form container */
-.signin-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: #FF8246;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-.form-group input.error {
-    border-color: #dc3545;
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: #FF8246;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-    background: #e66a2e;
-}
-
-.signup-link,
-.forgot-password-link {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.95rem;
-}
-
-.signup-link a,
-.forgot-password-link a {
-    color: #FF8246;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.signup-link a:hover,
-.forgot-password-link a:hover {
-    text-decoration: underline;
-}
-
-/* Notifier modal */
-.notifier {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background: white;
-    padding: 30px 40px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease;
-}
-
-.notifier-content p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-@keyframes fadeScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/sign-out.css`
-
-**Status:** `FOUND`
-
-```css
-/* Crooks-Cart-Collectives/styles/logout-modal.css */
-
-:root {
-    /* Use the same variables as sign-up.css for consistency */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-/* Logout Confirmation Modal - MATCHING SIGN-UP STYLE */
-.logout-modal {
-    position: fixed;
-    inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; */
-    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
-    backdrop-filter: blur(5px); /* Blur effect like sign-up modal */
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.logout-modal.active {
-    display: flex;
-}
-
-.logout-modal-content {
-    background-color: white;
-    padding: 30px 25px;
-    border-radius: 12px; /* Matching sign-up border-radius */
-    box-shadow: var(--effect-box-shadow-default);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease-in-out; /* Match sign-up animation */
-}
-
-/* Animation - EXACTLY matching sign-up modal */
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.logout-modal-icon {
-    margin-bottom: 20px;
-}
-
-.logout-modal-icon svg {
-    width: 70px;
-    height: 70px;
-    stroke: #FF8246; /* Your accent color */
-    stroke-width: 1.8;
-}
-
-.logout-modal h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.logout-modal p {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.logout-modal-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.logout-modal-btn {
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px; /* Matching sign-up input border-radius */
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--effect-transition-default);
-    flex: 1;
-    max-width: 150px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn-cancel {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-.btn-cancel:hover {
-    background-color: #d0d0d0;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.btn-confirm {
-    background-color: #FF8246;
-    color: white;
-}
-
-.btn-confirm:hover {
-    background-color: #e66a2e;
-    box-shadow: var(--effect-glow-B);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .logout-modal-content {
-        padding: 25px 20px;
-        width: 85%;
+    
+    .order-status-badge {
+        min-width: 80px;
+        font-size: 0.7rem;
     }
     
-    .logout-modal-icon svg {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 22px;
-    }
-    
-    .logout-modal p {
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .logout-modal-btn {
-        padding: 10px 20px;
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .logout-modal-content {
-        padding: 20px 15px;
-        width: 90%;
-    }
-    
-    .logout-modal-icon svg {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 20px;
-    }
-    
-    .logout-modal p {
-        font-size: 14px;
-        margin-bottom: 18px;
-    }
-    
-    .logout-modal-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .logout-modal-btn {
-        max-width: 100%;
-        padding: 12px;
-        font-size: 14px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/sign-up.css`
-
-**Status:** `FOUND`
-
-```css
-/* Crooks-Cart-Collectives/styles/sign-up.css */
-
-:root {
-    /* Form Layout */
-    --form-section-gap: 30px;
-    --form-group-gap: 20px;
-    --input-height: 50px;
-    --border-radius: 12px;
-    
-    /* Effects */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
-    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    outline: none;
-}
-
-body {
-    font-family: var(--font-family-base);
-    background-color: var(--color-background-A);
-    color: var(--color-text-A);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-::-webkit-scrollbar {
-    display: none;
-}
-
-.content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.pageTitleHeader {
-    font-size: calc(15px + var(--font-size-title));
-    padding: var(--size-header-padding);
-        margin: 20px auto 50px;
-    text-align: center;
-    width: 100%;
-    color: var(--color-text-C);
-    font-weight: var(--font-weight-bold);
-}
-
-/* Form Container */
-.signup-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--form-section-gap);
-    padding: 0 20px;
-    width: 100%;
-    max-width: 100%;
-}
-
-/* Form Sections - Barangay Style */
-.form-section {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    padding: 25px 30px;
-    border-radius: var(--border-radius);
-    border: 1px solid;
-    margin-bottom: var(--form-section-gap);
-    transition: var(--effect-transition-default);
-    display: flex;
-    flex-direction: column;
-}
-
-.form-section:hover {
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.form-section h3 {
-    font-size: 1.5rem;
-    color: var(--color-text-C);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--color-accent-A);
-}
-
-/* Form Groups - Barangay Style */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px; /* Reduced from 20px */
-    width: 100%;
-}
-
-.form-group label {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--color-text-C);
-    margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    height: var(--input-height);
-    font-size: var(--font-size-base);
-    padding: 0 15px;
-    border: 1px solid;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: var(--color-text-A);
-    transition: var(--effect-transition-default);
-}
-
-/* Address textarea - fixed initial size, auto-expands */
-.form-group textarea#address {
-    height: 100px;
-    min-height: 100px;
-    max-height: 300px;
-    padding: 15px;
-    resize: none;
-    overflow-y: hidden;
-    line-height: 1.5;
-    transition: height 0.2s ease;
-}
-
-.form-group textarea#address.expanding {
-    height: auto;
-    min-height: 100px;
-    overflow-y: auto;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-    box-shadow: var(--effect-glow-B);
-    outline: none;
-}
-
-.form-group.error input,
-.form-group.error select,
-.form-group.error textarea {
-    border-color: #e74c3c;
-    box-shadow: var(--effect-glow-error);
-}
-
-.form-group.error label {
-    color: #e74c3c;
-}
-
-/* Error Messages */
-.error-message {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-/* Button Container - Always Stacked */
-.btn-container {
-    display: flex;
-    flex-direction: column; /* always vertical */
-    justify-content: center;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    width: 100%;
-}
-
-.btn {
-    padding: var(--size-button-padding);
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    border-radius: var(--size-button-radius);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    width: 100%; /* Full width when stacked */
-    min-width: unset; /* Remove min-width constraint */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background-color: var(--color-hover-A);
-    box-shadow: var(--effect-glow-B);
-}
-
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-secondary {
-    background-color: var(--color-background-C);
-    border: 1px solid;
-    border-color: var(--color-border-A);
-    color: var(--color-text-B);
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-background-A);
-    border-color: var(--color-hover-A);
-    color: var(--color-text-A);
-    box-shadow: var(--effect-glow-A);
-}
-
-/* Remove extra spacing from button wrapper */
-.form-section .form-group:last-of-type {
-    margin-bottom: 10px;
-}
-
-/* Links Group - Better Spacing */
-.links-group {
-    text-align: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--color-border-A);
-    width: 100%;
-}
-
-.login-link,
-.seller-link {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--color-text-C);
-}
-
-.login-link a,
-.seller-link a {
-    text-decoration: none;
-    color: var(--color-accent-A);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.login-link a:hover,
-.seller-link a:hover {
-    color: var(--color-hover-A);
-    background-color: rgba(255, 130, 70, 0.1);
-}
-
-/* Notifier Modal - Barangay Style */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background-color: var(--color-background-B);
-    color: var(--color-text-A);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: var(--effect-box-shadow-default);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-.notifier-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Last Form Section (Contact & Registration) Layout Fix */
-.form-section:last-child {
-    padding-bottom: 25px;
-}
-
-/* Form submitted state - Barangay Style */
-.signup-container.submitted .form-group:has(input:invalid),
-.signup-container.submitted .form-group:has(select:invalid),
-.signup-container.submitted .form-group:has(textarea:invalid) {
-    animation: pulseWarning 0.5s ease-in-out;
-}
-
-@keyframes pulseWarning {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-/* Barangay-style color themes for form sections */
-.form-section {
-    background-color: var(--color-background-B);
-    border-color: var(--color-border-A);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    border-color: var(--color-border-A);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-}
-
-/* Responsive Design - Barangay Style Adjustments */
-@media (max-width: 1024px) {
-    .signup-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .form-section {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        padding: 20px 15px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 1.5rem;
-        padding: 15px 10px;
-        margin: 10px auto 30px;
-    }
-    
-    .form-section {
-        padding: 20px;
-        min-width: 100%;
-        margin: 0 0 10px;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 20px;
-    }
-    
-    .form-section h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-container {
-        margin-top: 15px;
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 14px;
-        font-size: 1rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-        height: 45px;
-        font-size: 0.95rem;
-    }
-    
-    .form-group textarea#address {
-        height: 90px;
-        min-height: 90px;
-    }
-    
-    .links-group {
-        margin-top: 12px;
-        padding-top: 12px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.9rem;
-        margin: 5px 0;
-    }
-    
-    .signup-container {
-        padding: 0 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-section {
-        padding: 18px 15px;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 18px;
-    }
-    
-    .btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
-    
-    .btn-container {
-        gap: 8px;
-        margin-top: 12px;
-    }
-    
-    .links-group {
-        margin-top: 10px;
-        padding-top: 10px;
-    }
-    
-    .login-link,
-    .seller-link {
+    .event-text {
         font-size: 0.85rem;
-        margin: 4px 0;
-    }
-}
-
-/* Add these to the existing sign-up.css */
-
-/* Password toggle styles */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    padding: 0;
-    z-index: 2;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* Ensure password fields have proper padding */
-.form-group input[type="password"] {
-    padding-right: 45px;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/styles/terms-and-conditions.css`
-
-**Status:** `FOUND`
-
-```css
-/* ============================================
-   TERMS AND CONDITIONS PAGE STYLES
-   Class naming convention: BEM (Block Element Modifier)
-   Block: terms-page, terms-hero, terms-intro, terms-section, terms-agreement
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.terms-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.terms-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.terms-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.terms-hero__highlight {
-    color: #ff8246;
-}
-
-.terms-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.terms-intro {
-    margin-bottom: 40px;
-}
-
-.terms-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-intro__effective-date {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== TERMS SECTIONS ===== */
-.terms-sections {
-    width: 100%;
-}
-
-.terms-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.terms-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.terms-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.terms-section__body {
-    padding-left: 19px;
-}
-
-.terms-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.terms-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.terms-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.terms-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.terms-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.terms-contact__item {
-    margin-bottom: 8px;
-}
-
-.terms-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== AGREEMENT SECTION ===== */
-.terms-agreement {
-    margin-top: 40px;
-}
-
-.terms-agreement__box {
-    background: white;
-    border-radius: 10px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-.terms-agreement__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 30px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.terms-agreement__actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.terms-agreement__btn {
-    display: inline-block;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-}
-
-.terms-agreement__btn--primary {
-    background-color: #ff8246;
-    color: white;
-}
-
-.terms-agreement__btn--primary:hover {
-    background-color: #e66a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.terms-agreement__btn--secondary {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 1px solid #ddd;
-}
-
-.terms-agreement__btn--secondary:hover {
-    background-color: #e9ecef;
-    transform: translateY(-2px);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .terms-page {
-        margin-top: 80px;
+        line-height: 1.4;
     }
     
-    .terms-hero {
-        padding: 40px 20px;
-    }
-    
-    .terms-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .terms-section {
-        padding: 25px 20px;
-    }
-    
-    .terms-section__body {
-        padding-left: 14px;
-    }
-    
-    .terms-agreement__box {
-        padding: 30px 20px;
-    }
-    
-    .terms-agreement__actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .terms-agreement__btn {
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
+    .shipping-details p {
+        font-size: 0.85rem;
     }
 }
 
-@media (max-width: 480px) {
-    .terms-hero {
-        padding: 30px 15px;
+/* Extra small devices */
+@media (max-width: 375px) {
+    .event-text {
+        font-size: 0.8rem;
     }
     
-    .terms-hero__title {
-        font-size: 2rem;
+    .product-info h4 {
+        font-size: 0.9rem;
     }
     
-    .terms-intro__card {
-        padding: 20px;
+    .product-info p {
+        font-size: 0.8rem;
     }
     
-    .terms-intro__text {
-        font-size: 1rem;
-    }
-    
-    .terms-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .terms-section__accent {
-        height: 25px;
-    }
-    
-    .terms-section {
-        padding: 20px 15px;
-    }
-    
-    .terms-section__body {
-        padding-left: 9px;
-    }
-    
-    .terms-section__body p,
-    .terms-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .terms-agreement__box {
-        padding: 25px 15px;
-    }
-    
-    .terms-agreement__text {
-        font-size: 1rem;
+    .price-row {
+        font-size: 0.85rem;
     }
 }
 ```

@@ -46,8 +46,8 @@ CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    total_orders INT DEFAULT 0,
-    total_spent DECIMAL(10, 2) DEFAULT 0.00,
+    -- Removed: total_orders INT DEFAULT 0,
+    -- Removed: total_spent DECIMAL(10, 2) DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
         ON DELETE CASCADE
@@ -165,13 +165,10 @@ CREATE TABLE product_reviews (
     rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_edited BOOLEAN DEFAULT FALSE,
-    last_edited TIMESTAMP NULL,
-    
+    -- is_edited and last_edited removed
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-    
     INDEX idx_product_reviews (product_id, rating),
     INDEX idx_user_reviews (user_id)
 );
