@@ -2,7 +2,7 @@
 
 **Preset:** linux-path
 
-**Generated:** 2026-02-28 21:30:11
+**Generated:** 2026-02-28 23:37:31
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-28 21:30:08
+**Generated:** 2026-02-28 23:37:30
 **Mode:** all
 
 ```
@@ -1657,12 +1657,19 @@ function handleProfileUpdate($userId) {
         $stmt->execute([$userId]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Return success with data - NO COMMENTS, just pure JSON
+        // Generate URL for profile picture using data-storage-handler
+        $profilePictureUrl = null;
+        if (!empty($userData['profile_picture'])) {
+            $profilePictureUrl = getFileUrl($userData['profile_picture']);
+        }
+        
+        // Return success with data
         echo json_encode([
             'status' => 'success',
             'message' => 'Profile updated successfully',
             'data' => $userData,
-            'profile_picture' => $userData['profile_picture'] ?? null
+            'profile_picture' => $userData['profile_picture'] ?? null,
+            'profile_picture_url' => $profilePictureUrl
         ]);
         
     } catch (Exception $e) {
@@ -2916,6 +2923,14 @@ function logError($message, $context = []) {
 
 ```text
 [28-Feb-2026 14:29:18 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 14:35:24 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 16:24:06 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
+[28-Feb-2026 16:24:06 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[28-Feb-2026 16:24:06 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[28-Feb-2026 16:25:59 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 16:26:17 Europe/Berlin] Signin attempt for identifier: alingbebang
+[28-Feb-2026 16:27:37 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 16:27:56 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
 ```
 
 ---
@@ -2926,7 +2941,16 @@ function logError($message, $context = []) {
 
 ```php
 <?php
-// data-storage-handler.php - NO COMMENTS AT TOP
+// data-storage-handler.php - Handles all file operations including serving files
+
+/**
+ * Process file upload and return result array
+ * 
+ * @param string $type 'profile' or 'valid_id'
+ * @param int $userId User ID
+ * @param array $file $_FILES['file'] array
+ * @return array ['status' => 'success'|'error', 'message' => string, 'path' => string (if success)]
+ */
 function processFileUpload($type, $userId, $file) {
     
     if (empty($type) || empty($userId) || !is_numeric($userId)) {
@@ -3001,7 +3025,126 @@ function processFileUpload($type, $userId, $file) {
     ];
 }
 
+/**
+ * Get the full server path for a stored file
+ * 
+ * @param string $relativePath Path relative to project root
+ * @return string Full server path to the file
+ */
+function getStoragePath($relativePath) {
+    if (empty($relativePath)) {
+        return null;
+    }
+    return dirname(__DIR__, 2) . '/' . $relativePath;
+}
+
+/**
+ * Check if a file exists in storage
+ * 
+ * @param string $relativePath Path relative to project root
+ * @return bool True if file exists
+ */
+function storageFileExists($relativePath) {
+    if (empty($relativePath)) {
+        return false;
+    }
+    
+    $fullPath = getStoragePath($relativePath);
+    return file_exists($fullPath);
+}
+
+/**
+ * Get the URL to access a file (using a script to serve files from outside web root)
+ * 
+ * @param string $relativePath Path relative to project root (e.g., 'Crooks-Data-Storage/users/1/profile/profile.jpg')
+ * @return string URL to access the file
+ */
+function getFileUrl($relativePath) {
+    if (empty($relativePath)) {
+        return '';
+    }
+    
+    // For files in assets folder (already web accessible)
+    if (strpos($relativePath, 'assets/') === 0) {
+        return '../' . $relativePath;
+    }
+    
+    // For files in Crooks-Data-Storage, use this same file as a server
+    if (strpos($relativePath, 'Crooks-Data-Storage/') === 0) {
+        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($relativePath);
+    }
+    
+    // For any other path
+    return '../' . $relativePath;
+}
+
+/**
+ * Serve a file from storage (outputs file directly)
+ * 
+ * @param string $relativePath Path relative to project root
+ */
+function serveFile($relativePath) {
+    if (empty($relativePath)) {
+        http_response_code(400);
+        die('File path required');
+    }
+    
+    // Security: Prevent directory traversal
+    $relativePath = str_replace(['../', '..\\', './', '.\\'], '', $relativePath);
+    
+    // Ensure path starts with Crooks-Data-Storage/
+    if (strpos($relativePath, 'Crooks-Data-Storage/') !== 0) {
+        http_response_code(403);
+        die('Invalid file path');
+    }
+    
+    $fullPath = getStoragePath($relativePath);
+    
+    if (!$fullPath || !file_exists($fullPath)) {
+        http_response_code(404);
+        die('File not found');
+    }
+    
+    $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+    
+    $contentTypes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'svg' => 'image/svg+xml',
+        'pdf' => 'application/pdf'
+    ];
+    
+    $contentType = $contentTypes[$extension] ?? 'application/octet-stream';
+    header('Content-Type: ' . $contentType);
+    header('Content-Length: ' . filesize($fullPath));
+    header('Cache-Control: public, max-age=86400'); // Cache for 1 day
+    
+    readfile($fullPath);
+    exit;
+}
+
+// Handle direct requests to this file
 if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    // Check for serve action
+    $action = $_GET['action'] ?? $_POST['action'] ?? '';
+    
+    if ($action === 'serve') {
+        // Serve file - require login for security
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(403);
+            die('Access denied');
+        }
+        
+        $path = $_GET['path'] ?? '';
+        serveFile($path);
+        exit;
+    }
+    
+    // Default file upload handling
     header('Content-Type: application/json');
     
     error_reporting(E_ALL);
@@ -5466,22 +5609,14 @@ try {
     $error = "Unable to load profile data. Please try again later.";
 }
 
-// Helper to get profile picture path
-function getProfilePicturePath($picture) {
+// Helper to get profile picture URL using data-storage-handler
+function getProfilePictureUrl($picture) {
     if (empty($picture)) {
         return '../assets/image/icons/user-profile-circle.svg';
     }
     
-    // For files stored outside web root, we need a different approach
-    // For now, let's check if the file exists in the storage location
-    if (strpos($picture, 'Crooks-Data-Storage/') === 0) {
-        // Since we can't directly access outside web root, use a fallback
-        // In a production environment, you'd have a script to serve these files
-        // For development/testing, you might temporarily copy files to web root
-        return '../assets/image/icons/user-profile-circle.svg';
-    }
-    
-    return '../' . $picture;
+    // Use the data-storage-handler's getFileUrl function
+    return getFileUrl($picture);
 }
 ?>
 <!DOCTYPE html>
@@ -5520,7 +5655,7 @@ function getProfilePicturePath($picture) {
             <div class="profile-picture-section">
                 <div class="profile-picture-wrapper">
                     <img id="profilePicturePreview" 
-                         src="<?php echo getProfilePicturePath($user['profile_picture'] ?? ''); ?>" 
+                         src="<?php echo getProfilePictureUrl($user['profile_picture'] ?? ''); ?>" 
                          alt="Profile Picture"
                          onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
                 </div>
@@ -10353,23 +10488,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
 
-            // First check if response is ok
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Get response text first for debugging
-            const responseText = await response.text();
-            console.log('Response text:', responseText); // Debug log
-
-            // Try to parse JSON
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (e) {
-                console.error('JSON parse error:', e, 'Response was:', responseText);
-                throw new Error('Server returned invalid JSON. Check console for details.');
-            }
+            const result = await response.json();
 
             if (result.status === 'success') {
                 showModal('Profile updated successfully!');

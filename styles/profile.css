@@ -1,6 +1,3 @@
-/* Crooks-Cart-Collectives/styles/profile.css */
-/* Redesigned to match sign-up.css layout with three columns and centered profile picture */
-
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +5,6 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #f2f4f6;
     color: #000000;
     line-height: 1.5;
@@ -17,16 +13,7 @@ body {
 .content {
     max-width: 1200px;
     margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-.pageTitleHeader {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #000000;
-    margin-bottom: 40px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid #FF8246;
+    padding: 30px 0 20px;
 }
 
 /* Form Container */
@@ -35,98 +22,11 @@ body {
     flex-direction: column;
     gap: 30px;
     width: 100%;
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-/* Profile Picture Section (centered) */
-.profile-picture-section {
-    text-align: center;
-    padding: 20px 0;
-    background: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.profile-picture-wrapper {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 15px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #FF8246;
-    background: #f0f0f0;
-}
-
-.profile-picture-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.profile-name h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.profile-picture-upload {
-    margin-top: 15px;
-}
-
-.file-upload-label {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #000000;
-    color: #ffffff;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid #000000;
-}
-
-.file-upload-label:hover {
-    background-color: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.profile-picture-upload input[type="file"] {
-    display: none;
-}
-
-.file-name {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #000000;
-    word-break: break-all;
-}
-
-.help-text {
-    font-size: 0.85rem;
-    color: #666666;
-    margin-top: 8px;
-}
-
-/* Three columns - equal height fix */
-.profile-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    width: 100%;
-}
-
-/* Each column becomes a flex container so its content can stretch */
-.profile-columns > * {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-/* Form Sections (inside columns) */
+/* Form Sections - stacked vertically */
 .form-section {
     background: #ffffff;
     border: 1px solid #000000;
@@ -134,9 +34,6 @@ body {
     padding: 30px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease;
-    flex: 1; /* take full height of parent column */
-    display: flex;
-    flex-direction: column;
 }
 
 .form-section:hover {
@@ -146,67 +43,250 @@ body {
 .form-section h3 {
     font-size: 1.5rem;
     color: #000000;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid #FF8246;
 }
 
-/* Form Groups */
-.form-group {
-    margin-bottom: 20px;
+/* Account info section needs to position buttons at bottom */
+.account-info-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+/* PROFILE STACKED CONTAINER - Stack vertically and center */
+.profile-stacked-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Profile Picture Wrapper */
+.profile-picture-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-picture-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #FF8246;
+    background: #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Name Single Line - first name + last name on one line */
+.profile-name-single-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
     width: 100%;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
+.display-full-name {
+    font-size: 2rem;
     font-weight: 600;
     color: #000000;
-    font-size: 0.95rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
 }
 
+/* Choose button container - centered */
+.choose-button-container {
+    margin-top: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Choose photo button - centered */
+.btn-choose-photo {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.3px;
+    padding: 10px 24px;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    text-align: center;
+    border: 1px solid #000000;
+    white-space: nowrap;
+}
+
+.btn-choose-photo:hover {
+    background-color: #333333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile picture upload (hidden file input) */
+.profile-picture-upload {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.file-upload-label {
+    display: none;
+}
+
+.profile-picture-upload input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #000000;
+    word-break: break-all;
+    text-align: left;
+    opacity: 0.7;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: #666666;
+    margin-top: 4px;
+    text-align: left;
+}
+
+/* Fields row - for multiple fields in one line */
+.fields-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* Add labels above inputs */
+.with-labels {
+    margin-top: 10px;
+}
+
+.field-label {
+    display: block;
+    color: #000000;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+/* Balanced row - for birthdate and gender to share space equally */
+.balanced-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* Half field - exactly 50% minus half the gap */
+.half-field {
+    flex: 1 1 calc(50% - 7.5px);
+    min-width: 0;
+}
+
+/* Info row - for account info items */
+.info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Flex field - grows/shrinks based on content */
+.flex-field {
+    flex: 1 1 auto;
+    min-width: 120px;
+}
+
+/* Full width field */
+.full-width {
+    width: 100%;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 0;
+}
+
+/* Input styles - ORIGINAL STYLING for enabled/disabled states */
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group select,
 .form-group textarea {
     width: 100%;
-    height: 50px;
-    padding: 0 15px;
+    height: 42px;
+    padding: 0 12px;
     border: 1px solid #000000;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
     background-color: #ffffff;
     color: #000000;
     transition: all 0.3s ease;
 }
 
+/* Make date input consistent */
+.form-group input[type="date"] {
+    font-family: inherit;
+}
+
 .form-group textarea {
-    height: 120px;
-    padding: 12px 15px;
+    height: 80px;
+    padding: 8px 12px;
     resize: vertical;
     font-family: inherit;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+/* FOCUS STATE - for when inputs are enabled and being edited */
+.form-group input:not(:disabled):focus,
+.form-group select:not(:disabled):focus,
+.form-group textarea:not(:disabled):focus {
     border-color: #FF8246;
     outline: none;
     box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
 }
 
-.form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-    border-color: #FF8246;
-    background-color: #fff0e8;
+/* DISABLED STATE - matches the info-value style from account info */
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background-color: #f9f9f9;
+    border-color: #e0e0e0;
+    color: #000000;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Make placeholder text in disabled fields lighter */
+.form-group input:disabled::placeholder,
+.form-group select:disabled::placeholder,
+.form-group textarea:disabled::placeholder {
+    color: #999999;
+    opacity: 1;
 }
 
 .error-message {
     color: #FF8246;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    min-height: 20px;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    min-height: 18px;
     display: none;
 }
 
@@ -214,63 +294,52 @@ body {
     display: block;
 }
 
-/* Disabled fields styling */
-.form-group input:disabled,
-.form-group select:disabled,
-.form-group textarea:disabled {
-    background-color: #f5f5f5;
-    color: #666666;
-    border-color: #cccccc;
-    cursor: not-allowed;
-}
-
-/* Info Group (for non-editable fields) */
+/* Info Group - for account info */
 .info-group {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
+    flex: 1 1 0;
+    min-width: 150px;
 }
 
 .info-group label {
     display: block;
-    font-weight: 600;
     color: #000000;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     opacity: 0.8;
+    text-align: left;
 }
 
 .info-value {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #000000;
     word-break: break-word;
     background: #f9f9f9;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
 }
 
+/* Info note - centered */
 .info-note {
     margin-top: 10px;
-    font-size: 0.9rem;
+    margin-bottom: 25px;
     color: #666666;
     font-style: italic;
-    text-align: right;
+    text-align: center;
 }
 
-/* Profile actions inside shipping column - full width with equal buttons */
+/* Profile actions - equal width buttons at bottom of account info */
 .profile-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    width: 100%;                /* ensure container fills column width */
+    gap: 15px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 20px;
 }
 
-/* Buttons inside profile-actions - equal width and fill available space */
 .profile-actions .btn {
-    flex: 1 1 0;                /* both buttons take equal width, grow and shrink */
-    min-width: 0;               /* override any min-width */
-    padding: 12px 0;            /* consistent padding, horizontal auto */
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 0;
     text-align: center;
 }
 
@@ -283,7 +352,6 @@ body {
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
@@ -294,7 +362,6 @@ body {
 
 .btn-primary:hover:not(:disabled) {
     background-color: #e66a2e;
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
 }
 
@@ -306,7 +373,6 @@ body {
 
 .btn-secondary:hover:not(:disabled) {
     background-color: #333333;
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -319,7 +385,7 @@ body {
 
 /* Messages */
 .message {
-    padding: 15px;
+    padding: 12px;
     border-radius: 6px;
     margin-bottom: 20px;
     display: none;
@@ -413,54 +479,111 @@ body {
     }
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-    .profile-columns {
-        grid-template-columns: 1fr 1fr;
+/* ========== DESKTOP VIEW ========== */
+@media (min-width: 769px) {
+    .profile-picture-wrapper img {
+        width: 150px;
+        height: 150px;
     }
-    .shipping-info-column {
-        grid-column: span 2;
+    
+    .display-full-name {
+        font-size: 2rem;
+    }
+    
+    .btn-choose-photo {
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        border-radius: 40px;
     }
 }
 
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
+/* ========== TABLET VIEW ========== */
+@media (min-width: 577px) and (max-width: 768px) {
+    .profile-picture-wrapper img {
+        width: 160px;
+        height: 160px;
     }
-    .pageTitleHeader {
+    
+    .display-full-name {
         font-size: 2rem;
     }
-    .profile-columns {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    
+    .btn-choose-photo {
+        padding: 10px 28px;
+        font-size: 1rem;
+        border-radius: 30px;
     }
-    .shipping-info-column {
-        grid-column: auto;
+}
+
+/* ========== MOBILE VIEW ========== */
+@media (max-width: 576px) {
+    .profile-picture-wrapper img {
+        width: 140px;
+        height: 140px;
     }
-    .form-section {
-        padding: 20px;
+    
+    .display-full-name {
+        font-size: 1.8rem;
+        white-space: normal;
+        word-break: break-word;
     }
-    .form-section h3 {
-        font-size: 1.3rem;
+    
+    .btn-choose-photo {
+        padding: 10px 24px;
+        font-size: 1rem;
+        border-radius: 30px;
     }
+    
+    /* Form fields stack vertically */
+    .fields-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .flex-field {
+        width: 100%;
+    }
+    
+    .balanced-row {
+        flex-direction: column;
+    }
+    
+    .half-field {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .info-group {
+        width: 100%;
+    }
+    
     .profile-actions {
-        flex-direction: column;  /* stacked in mobile */
+        flex-direction: column;
         gap: 10px;
     }
+    
     .profile-actions .btn {
         width: 100%;
     }
 }
 
-@media (max-width: 480px) {
-    .pageTitleHeader {
-        font-size: 1.8rem;
+/* ========== SMALL MOBILE VIEW ========== */
+@media (max-width: 375px) {
+    .profile-picture-wrapper img {
+        width: 120px;
+        height: 120px;
     }
-    .form-section {
-        padding: 15px;
+    
+    .display-full-name {
+        font-size: 1.5rem;
     }
-    .btn {
-        padding: 10px 20px;
-        font-size: 0.95rem;
+    
+    .btn-choose-photo {
+        padding: 8px 20px;
+        font-size: 0.9rem;
     }
-}
+} 

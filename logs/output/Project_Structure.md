@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-28 21:30:08
+**Generated:** 2026-03-01 01:56:07
 **Mode:** all
 
 ```
@@ -91,19 +91,20 @@ Crooks-Cart-Collectives/
 │   ├── backend/
 │   ├── content-fetcher-configuration/
 │   │   ├── linux-path.py
-│   │   └── preset.py
+│   │   ├── specific-filesToShow.py
+│   │   └── windows-preset.py
 │   ├── output/
 │   │   ├── 0.0.17.md
 │   │   ├── Project_Structure.md
 │   │   ├── linux-path_Summary.md
-│   │   └── preset_Summary.md
+│   │   ├── preset_Summary.md
+│   │   └── specific-filesToShow_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
 │   ├── content-fetcher.py
 │   ├── runner.bat
 │   ├── runner.sh
-│   ├── tempCodeRunnerFile.bat
 │   └── tree-mapper.py
 ├── pages/
 │   ├── about.php
@@ -182,12 +183,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 21 |
 | JavaScript Files | 17 |
 | JSON Files | 0 |
-| Text/Markdown | 8 |
+| Text/Markdown | 9 |
 | Image Files | 55 |
 | Other Files | 13 |
 
 **Total Directories:** 15
-**Total Files:** 148
+**Total Files:** 149
 
 ---
 

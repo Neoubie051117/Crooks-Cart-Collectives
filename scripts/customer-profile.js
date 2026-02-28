@@ -1,4 +1,4 @@
-// customer-profile.js
+// customer-profile.js - Fixed for edit functionality with left preview
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -7,14 +7,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const editBtn = document.getElementById('editCancelBtn');
     const saveBtn = document.getElementById('saveProfileBtn');
     const profileForm = document.getElementById('profileForm');
-    const editableInputs = profileForm.querySelectorAll('input:not([type="hidden"]):not([disabled]), select, textarea');
+    
+    // Get ALL editable fields in Personal Info section
+    const editableInputs = document.querySelectorAll(
+        '.personal-info-section input:not([type="hidden"]):not([type="file"]), ' +
+        '.personal-info-section select, ' +
+        '.personal-info-section textarea'
+    );
+    
     const profilePicUpload = document.getElementById('profilePictureUpload');
+    const chooseButtonContainer = document.getElementById('chooseButtonContainer');
+    const triggerFileUpload = document.getElementById('triggerFileUpload');
     const profilePicInput = document.getElementById('profile_picture');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
     const profilePicPreview = document.getElementById('profilePicturePreview');
     const modal = document.getElementById('feedbackModal');
     const modalMessage = document.getElementById('modalMessage');
     const modalClose = document.getElementById('modalCloseBtn');
+
+    // Form fields for validation
+    const firstNameInput = document.getElementById('first_name');
+    const lastNameInput = document.getElementById('last_name');
+    const addressInput = document.getElementById('address');
+
+    console.log('Editable inputs found:', editableInputs.length);
 
     // State
     let isEditMode = false;
@@ -31,7 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
     }
 
-    modalClose.addEventListener('click', hideModal);
+    if (modalClose) {
+        modalClose.addEventListener('click', hideModal);
+    }
+    
     window.addEventListener('click', function(e) {
         if (e.target === modal) hideModal();
     });
@@ -40,7 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function storeOriginalValues() {
         originalValues = {};
         editableInputs.forEach(input => {
-            originalValues[input.id] = input.value;
+            if (input.id) {
+                originalValues[input.id] = input.value;
+            }
         });
         if (profilePicPreview) {
             originalValues.profile_picture = profilePicPreview.src;
@@ -49,25 +70,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enable edit mode
     function enableEditMode() {
+        console.log('Enabling edit mode');
         isEditMode = true;
         editBtn.textContent = 'Cancel';
         saveBtn.disabled = false;
-        profilePicUpload.style.display = 'block';
-        document.querySelectorAll('.personal-info-column input, .personal-info-column select, .shipping-info-column textarea').forEach(field => {
+        if (profilePicUpload) {
+            profilePicUpload.style.display = 'block';
+        }
+        if (chooseButtonContainer) {
+            chooseButtonContainer.style.display = 'flex';  // CHANGED: from 'block' to 'flex'
+        }
+        editableInputs.forEach(field => {
             field.disabled = false;
+            console.log('Enabling field:', field.id || 'unnamed field');
         });
         pictureChanged = false;
     }
 
     // Disable edit mode
     function disableEditMode(restore = true) {
+        console.log('Disabling edit mode, restore:', restore);
         isEditMode = false;
         editBtn.textContent = 'Edit';
         saveBtn.disabled = true;
-        profilePicUpload.style.display = 'none';
-        profilePicInput.value = '';
-        fileNameDisplay.textContent = '';
-        document.querySelectorAll('.personal-info-column input, .personal-info-column select, .shipping-info-column textarea').forEach(field => {
+        if (profilePicUpload) {
+            profilePicUpload.style.display = 'none';
+        }
+        if (chooseButtonContainer) {
+            chooseButtonContainer.style.display = 'none';
+        }
+        if (profilePicInput) {
+            profilePicInput.value = '';
+        }
+        if (fileNameDisplay) {
+            fileNameDisplay.textContent = '';
+        }
+        editableInputs.forEach(field => {
             field.disabled = true;
         });
         
@@ -78,94 +116,125 @@ document.addEventListener('DOMContentLoaded', function() {
                     field.value = originalValues[id];
                 }
             }
-            if (originalValues.profile_picture) {
+            if (originalValues.profile_picture && profilePicPreview) {
                 profilePicPreview.src = originalValues.profile_picture;
             }
         }
         pictureChanged = false;
     }
 
+    // Trigger file upload from the Choose button
+    if (triggerFileUpload && profilePicInput) {
+        triggerFileUpload.addEventListener('click', function() {
+            profilePicInput.click();
+        });
+    }
+
     // File input change
-    profilePicInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            fileNameDisplay.textContent = file.name;
-            pictureChanged = true;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                profilePicPreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            fileNameDisplay.textContent = '';
-            pictureChanged = false;
-        }
-    });
+    if (profilePicInput) {
+        profilePicInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+                pictureChanged = true;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (profilePicPreview) {
+                        profilePicPreview.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = '';
+                }
+                pictureChanged = false;
+            }
+        });
+    }
 
     // Edit/Cancel button
-    editBtn.addEventListener('click', function() {
-        if (!isEditMode) {
-            storeOriginalValues();
-            enableEditMode();
-        } else {
-            disableEditMode(true);
-        }
-    });
+    if (editBtn) {
+        editBtn.addEventListener('click', function() {
+            console.log('Edit/Cancel clicked, isEditMode:', isEditMode);
+            if (!isEditMode) {
+                storeOriginalValues();
+                enableEditMode();
+            } else {
+                disableEditMode(true);
+            }
+        });
+    }
 
     // Save button
-    saveBtn.addEventListener('click', async function() {
-        // Validation
-        const firstName = document.getElementById('first_name').value.trim();
-        const lastName = document.getElementById('last_name').value.trim();
-        const address = document.getElementById('address').value.trim();
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async function() {
+            console.log('Save clicked');
+            
+            // Validation
+            const firstName = firstNameInput ? firstNameInput.value.trim() : '';
+            const lastName = lastNameInput ? lastNameInput.value.trim() : '';
+            const address = addressInput ? addressInput.value.trim() : '';
 
-        if (!firstName || !lastName || !address) {
-            showModal('First name, last name, and address are required.');
-            return;
-        }
-
-        // Disable button
-        saveBtn.disabled = true;
-        const originalText = saveBtn.textContent;
-        saveBtn.textContent = 'Saving...';
-
-        const formData = new FormData(profileForm);
-
-        try {
-            const response = await fetch('../database/customer-profile-handler.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (!firstName || !lastName || !address) {
+                showModal('First name, last name, and address are required.');
+                return;
             }
 
-            const result = await response.json();
+            // Disable button
+            saveBtn.disabled = true;
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
 
-            if (result.status === 'success') {
-                showModal('Profile updated successfully!');
-                
-                if (pictureChanged) {
-                    // Refresh page after 2 seconds
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    disableEditMode(false);
+            const formData = new FormData(profileForm);
+
+            try {
+                const response = await fetch('../database/customer-profile-handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            } else {
-                showModal(result.message || 'Update failed. Please try again.');
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showModal('Profile updated successfully!');
+                    
+                    // Add 1 second delay before handling
+                    setTimeout(() => {
+                        // If picture was changed, force a full page reload
+                        if (pictureChanged) {
+                            window.location.reload(true);
+                        } else {
+                            // For text-only updates, just exit edit mode
+                            disableEditMode(false);
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = originalText;
+                        }
+                    }, 1000);
+                    
+                    // If no picture change, we'll handle it in the setTimeout above
+                    if (!pictureChanged) {
+                        return;
+                    }
+                } else {
+                    showModal(result.message || 'Update failed. Please try again.');
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showModal('Network error. Please check your connection and try again.');
                 saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
             }
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            showModal('Network error. Please check your connection and try again.');
-            saveBtn.disabled = false;
-        } finally {
-            saveBtn.textContent = originalText;
-        }
-    });
+        });
+    }
 
     // Initial store
     storeOriginalValues();

@@ -51,7 +51,6 @@ function getProfilePictureUrl($picture) {
     <?php include_once('header.php'); ?>
 
     <div class="content">
-        <div class="pageTitleHeader">Edit Your Profile</div>
 
         <?php if (isset($error)): ?>
         <div class="message error" style="display: block; margin-bottom: 20px;">
@@ -68,57 +67,69 @@ function getProfilePictureUrl($picture) {
             <div id="successMessage" class="message success" style="display: none;"></div>
             <div id="errorMessage" class="message error" style="display: none;"></div>
 
-            <!-- Profile Picture Section -->
-            <div class="profile-picture-section">
-                <div class="profile-picture-wrapper">
-                    <img id="profilePicturePreview" 
-                         src="<?php echo getProfilePictureUrl($user['profile_picture'] ?? ''); ?>" 
-                         alt="Profile Picture"
-                         onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+            <!-- Personal Info Section with Profile Preview -->
+            <div class="form-section personal-info-section">
+                <h3>Profile Information</h3>
+                
+                <!-- PROFILE CONTAINER - Stacked and Centered -->
+                <div class="profile-stacked-container">
+                    <!-- Profile Picture -->
+                    <div class="profile-picture-wrapper">
+                        <img id="profilePicturePreview" 
+                             src="<?php echo getProfilePictureUrl($user['profile_picture'] ?? ''); ?>" 
+                             alt="Profile Picture"
+                             onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                        
+                        <div class="profile-picture-upload" id="profilePictureUpload" style="display: none;">
+                            <label for="profile_picture" class="file-upload-label">Choose Photo to Upload</label>
+                            <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                            <div class="file-name" id="fileNameDisplay"></div>
+                            <div class="help-text">Max 2MB. JPG, PNG, GIF.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Name (one line - first name + last name) -->
+                    <div class="profile-name-single-line">
+                        <span class="display-full-name"><?php echo htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars($user['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                    </div>
+                    
+                    <!-- Choose button container - centered below name -->
+                    <div class="choose-button-container" id="chooseButtonContainer" style="display: none;">
+                        <button type="button" class="btn-choose-photo" id="triggerFileUpload">Choose Photo to Upload</button>
+                    </div>
                 </div>
-                <div class="profile-name">
-                    <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-                </div>
-                <div class="profile-picture-upload" id="profilePictureUpload" style="display: none;">
-                    <label for="profile_picture" class="file-upload-label">Choose New Picture</label>
-                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-                    <div class="file-name" id="fileNameDisplay"></div>
-                    <div class="help-text">Max 2MB. JPG, PNG, GIF.</div>
-                </div>
-            </div>
 
-            <!-- Three‑column layout -->
-            <div class="profile-columns">
-                <!-- Column 1: Personal Information -->
-                <div class="form-section personal-info-column">
-                    <h3>Personal Information</h3>
-
-                    <div class="form-group">
-                        <label for="first_name">First Name *</label>
+                <!-- Name fields with labels -->
+                <div class="fields-row with-labels">
+                    <div class="form-group flex-field">
+                        <label for="first_name" class="field-label">First name</label>
                         <input type="text" id="first_name" name="first_name" required
                                value="<?php echo htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your first name" maxlength="50" disabled>
+                               placeholder="First name" maxlength="50" disabled>
                         <div class="error-message" id="firstNameError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="middle_name">Middle Name</label>
+                    <div class="form-group flex-field">
+                        <label for="middle_name" class="field-label">Middle name</label>
                         <input type="text" id="middle_name" name="middle_name"
                                value="<?php echo htmlspecialchars($user['middle_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your middle name (optional)" maxlength="50" disabled>
+                               placeholder="Middle name" maxlength="50" disabled>
                         <div class="error-message" id="middleNameError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="last_name">Last Name *</label>
+                    <div class="form-group flex-field">
+                        <label for="last_name" class="field-label">Last name</label>
                         <input type="text" id="last_name" name="last_name" required
                                value="<?php echo htmlspecialchars($user['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your last name" maxlength="50" disabled>
+                               placeholder="Last name" maxlength="50" disabled>
                         <div class="error-message" id="lastNameError"></div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="birthdate">Birthdate</label>
+                <!-- Birthdate and Gender with labels -->
+                <div class="fields-row balanced-row with-labels">
+                    <div class="form-group half-field">
+                        <label for="birthdate" class="field-label">Birthdate</label>
                         <input type="date" id="birthdate" name="birthdate"
                                value="<?php echo htmlspecialchars($user['birthdate'] ?? ''); ?>"
                                max="<?php echo date('Y-m-d', strtotime('-13 years')); ?>"
@@ -126,10 +137,10 @@ function getProfilePictureUrl($picture) {
                         <div class="error-message" id="birthdateError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
+                    <div class="form-group half-field">
+                        <label for="gender" class="field-label">Gender</label>
                         <select id="gender" name="gender" disabled>
-                            <option value="">Select Gender (Optional)</option>
+                            <option value="">Select Gender</option>
                             <option value="Male" <?php echo ($user['gender'] ?? '') == 'Male' ? 'selected' : ''; ?>>Male</option>
                             <option value="Female" <?php echo ($user['gender'] ?? '') == 'Female' ? 'selected' : ''; ?>>Female</option>
                             <option value="Other" <?php echo ($user['gender'] ?? '') == 'Other' ? 'selected' : ''; ?>>Other</option>
@@ -138,45 +149,43 @@ function getProfilePictureUrl($picture) {
                     </div>
                 </div>
 
-                <!-- Column 2: Account Information -->
-                <div class="form-section account-info-column">
-                    <h3>Account Information</h3>
+                <!-- Address with label -->
+                <div class="form-group full-width with-label">
+                    <label for="address" class="field-label">Address</label>
+                    <textarea id="address" name="address" required rows="3"
+                              placeholder="Enter your complete address"
+                              maxlength="255" disabled><?php echo htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+            </div>
 
+            <!-- Account Info Section with buttons at bottom -->
+            <div class="form-section account-info-section">
+                <h3>Account Information</h3>
+
+                <div class="info-row">
                     <div class="info-group">
-                        <label>Email Address</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <label>Email</label>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
 
                     <div class="info-group">
                         <label>Username</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
 
                     <div class="info-group">
-                        <label>Contact Number</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <label>Contact num</label>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
-
-                    <div class="info-note">These details cannot be changed.</div>
                 </div>
 
-                <!-- Column 3: Shipping Information -->
-                <div class="form-section shipping-info-column">
-                    <h3>Shipping Information</h3>
+                <div class="info-note centered">These details cannot be changed.</div>
 
-                    <div class="form-group">
-                        <label for="address">Address *</label>
-                        <textarea id="address" name="address" required rows="4"
-                                  placeholder="Enter your complete shipping address"
-                                  maxlength="255" disabled><?php echo htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-                        <div class="error-message" id="addressError"></div>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="profile-actions">
-                        <button type="button" id="editCancelBtn" class="btn btn-secondary">Edit</button>
-                        <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
-                    </div>
+                <!-- Buttons inside Account Info column at bottom -->
+                <div class="profile-actions">
+                    <button type="button" id="editCancelBtn" class="btn btn-secondary">Edit</button>
+                    <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
                 </div>
             </div>
         </form>
