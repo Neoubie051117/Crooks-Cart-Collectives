@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const birthdateField = document.getElementById('birthdate');
     const addressField = document.getElementById('address');
     
-    // Password toggle elements
     const togglePassword = document.getElementById('togglePassword');
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
     const passwordIcon = document.getElementById('passwordIcon');
@@ -24,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let isModalOpen = false;
     let isSubmitting = false;
+    let isFormatting = false;
 
-    // ============= PASSWORD TOGGLE FUNCTIONALITY =============
     if (togglePassword && passwordField && passwordIcon) {
         togglePassword.addEventListener('click', function() {
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ============= NOTIFIER FUNCTIONS =============
     function showNotifier(message) {
         if (isModalOpen) return;
         modalMessage.textContent = message;
@@ -74,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) closeNotifier();
     });
 
-    // ============= VALIDATION FUNCTIONS =============
     function highlightField(field, highlight = true) {
         if (!field) return;
         if (highlight) {
@@ -94,9 +91,65 @@ document.addEventListener('DOMContentLoaded', () => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    function formatPhilippineNumber(input) {
+        if (isFormatting) return;
+        isFormatting = true;
+        
+        let value = input.value.replace(/\D/g, '');
+        
+        if (value.startsWith('63') && value.length <= 12) {
+            if (value.length > 2) {
+                let formatted = '+63';
+                if (value.length > 5) {
+                    formatted += ' ' + value.substring(2, 5);
+                } else {
+                    formatted += ' ' + value.substring(2);
+                }
+                if (value.length > 8) {
+                    formatted += ' ' + value.substring(5, 8);
+                }
+                if (value.length > 11) {
+                    formatted += ' ' + value.substring(8, 12);
+                }
+                input.value = formatted;
+            }
+        } else if (value.startsWith('0') && value.length <= 11) {
+            if (value.length > 4) {
+                let formatted = value.substring(0, 4) + ' ' + value.substring(4, 7);
+                if (value.length > 7) {
+                    formatted += ' ' + value.substring(7, 11);
+                }
+                input.value = formatted;
+            } else {
+                input.value = value;
+            }
+        } else if (value.startsWith('9') && value.length <= 10) {
+            value = '0' + value;
+            if (value.length > 4) {
+                let formatted = value.substring(0, 4) + ' ' + value.substring(4, 7);
+                if (value.length > 7) {
+                    formatted += ' ' + value.substring(7, 11);
+                }
+                input.value = formatted;
+            } else {
+                input.value = value;
+            }
+        } else {
+            input.value = value;
+        }
+        
+        setTimeout(() => {
+            isFormatting = false;
+        }, 10);
+    }
+
     function isPhoneValid(phone) {
-        const cleaned = phone.replace(/[^0-9+]/g, '');
-        return /^(09|\+639|639)\d{9}$/.test(cleaned) || /^0\d{10}$/.test(cleaned);
+        const cleaned = phone.replace(/\D/g, '');
+        return (cleaned.length === 11 && cleaned.startsWith('09')) ||
+               (cleaned.length === 12 && cleaned.startsWith('63')) ||
+               (cleaned.length === 10 && cleaned.startsWith('9')) ||
+               (cleaned.length === 13 && cleaned.startsWith('063')) ||
+               (cleaned.length === 13 && cleaned.startsWith('639'));
     }
 
     function calculateAge(birthdate) {
@@ -137,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return { valid: true, message: '' };
     }
 
-    // ============= REAL-TIME VALIDATION (for visual feedback only) =============
     passwordField.addEventListener('input', () => {
         highlightField(passwordField, false);
     });
@@ -150,20 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
         highlightField(usernameField, false);
     });
 
-    // ============= PHONE NUMBER FORMATTING =============
-    contactField.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        
-        if (value.startsWith('63') && value.length === 12) {
-            e.target.value = '+63' + value.substring(2);
-        } else if (value.startsWith('09') && value.length === 11) {
-            e.target.value = value.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
-        } else if (value.startsWith('9') && value.length === 10) {
-            e.target.value = '09' + value.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
+    contactField.addEventListener('input', function(e) {
+        formatPhilippineNumber(this);
+    });
+
+    contactField.addEventListener('blur', function() {
+        if (this.value && !isPhoneValid(this.value)) {
+            highlightField(this, true);
+        } else {
+            highlightField(this, false);
         }
     });
 
-    // ============= FORM SUBMISSION =============
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -171,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         resetHighlights();
         
-        // Validate required fields
         const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
         let isValid = true;
         let missing = [];
@@ -193,21 +242,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Validate email
         if (!isEmailValid(emailField.value)) {
             highlightField(emailField);
             showNotifier('Please enter a valid email address.');
             return;
         }
         
-        // Validate phone
         if (!isPhoneValid(contactField.value)) {
             highlightField(contactField);
-            showNotifier('Please enter a valid Philippine phone number (e.g., 09123456789).');
+            showNotifier('Please enter a valid Philippine phone number (e.g., 0912 345 6789 or +63 912 345 6789).');
             return;
         }
         
-        // Validate username
         const usernameValidation = validateUsername(usernameField.value);
         if (!usernameValidation.valid) {
             highlightField(usernameField);
@@ -215,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Validate password
         const passwordValidation = validatePassword(passwordField.value);
         if (!passwordValidation.valid) {
             highlightField(passwordField);
@@ -223,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Check if passwords match
         if (passwordField.value !== confirmPasswordField.value) {
             highlightField(passwordField);
             highlightField(confirmPasswordField);
@@ -231,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Validate age
         if (birthdateField.value) {
             const age = calculateAge(birthdateField.value);
             if (age < 13) {
@@ -245,14 +288,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Validate address
         if (addressField.value.length < 5) {
             highlightField(addressField);
             showNotifier('Please enter a valid address.');
             return;
         }
         
-        // Show loading state
         isSubmitting = true;
         const originalText = submitButton.textContent;
         submitButton.textContent = 'Creating Account...';
@@ -275,10 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = result.redirect;
                 }, delayTime);
             } else {
-                // Log the actual error for debugging
                 console.error('Signup error details:', result);
                 
-                // Handle specific error messages
                 if (result.message === 'duplicate-email') {
                     highlightField(emailField);
                     showNotifier('Email already exists. Please use a different email.');
@@ -315,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showNotifier('Please enter a valid email address.');
                 } else if (result.message === 'invalid-contact') {
                     highlightField(contactField);
-                    showNotifier('Please enter a valid Philippine phone number.');
+                    showNotifier('Please enter a valid Philippine phone number (e.g., 0912 345 6789 or +63 912 345 6789).');
                 } else if (result.message === 'underage') {
                     highlightField(birthdateField);
                     showNotifier('You must be at least 13 years old to register.');
@@ -337,14 +376,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Signup error:', error);
             showNotifier('Network error. Please check your connection and try again.');
         } finally {
-            // Reset button state
             isSubmitting = false;
             submitButton.textContent = originalText;
             submitButton.disabled = false;
         }
     });
 
-    // ============= CLEAR FORM =============
     if (clearButton) {
         clearButton.addEventListener('click', () => {
             form.reset();

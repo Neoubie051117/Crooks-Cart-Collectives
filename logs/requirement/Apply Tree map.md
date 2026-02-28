@@ -1,1 +1,1 @@
-if there's missing on python filesToCheck, put that file in said directory, only bother to check /databases/, /pages/ and /styles/
+if there's missing on python filesToCheck that is in tree, put that filestoCheck, only bother to check /databases/, /pages/ and /styles/

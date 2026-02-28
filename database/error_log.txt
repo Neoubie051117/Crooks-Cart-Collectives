@@ -1,11 +1,2 @@
-[27-Feb-2026 16:00:05 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 159
-[27-Feb-2026 16:02:15 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\Repository\Crooks-Cart-Collectives\pages\checkout.php on line 159
-[27-Feb-2026 16:31:02 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 16:43:48 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 16:46:47 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 16:49:56 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 16:49:59 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 16:50:55 Europe/Berlin] Signin attempt for identifier: LNM136743110147172005@gmail.com
-[27-Feb-2026 16:50:55 Europe/Berlin] Password mismatch for user: LNM136743110147172005@gmail.com
-[27-Feb-2026 17:02:33 Europe/Berlin] Signin attempt for identifier: a
-[27-Feb-2026 17:02:46 Europe/Berlin] Signin attempt for identifier: lance
+[28-Feb-2026 14:29:18 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 14:35:24 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg

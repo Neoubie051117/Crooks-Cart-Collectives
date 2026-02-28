@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/styles/seller-orders.css */
-/* Revised with full-width layout, no animations, consistent column titles */
+/* Revised with smooth modal animation and empty state from products.css */
 
 * {
     margin: 0;
@@ -53,18 +53,13 @@
     font-weight: 500;
     border: 1px solid #e0e0e0;
     color: #000000;
+    transition: all 0.3s ease;
 }
 
 .filter-tab.active {
     background: #FF8246;
     color: #ffffff;
     border-color: #FF8246;
-}
-
-.filter-tab:hover:not(.active) {
-    background: #000000;
-    color: #ffffff;
-    border-color: #000000;
 }
 
 .seller-orders-list {
@@ -74,6 +69,39 @@
     max-width: 1800px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* ===== EMPTY STATE (copied from products.css) ===== */
+.empty-orders {
+    text-align: center;
+    padding: 50px 20px;
+    color: #666;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.empty-orders p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.empty-orders .btn-primary {
+    display: inline-block;
+    padding: 12px 35px;
+    background: #FF8246;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    border: 1px solid #FF8246;
+    transition: all 0.3s ease;
+}
+
+.empty-orders .btn-primary:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
 }
 
 /* ===== ORDER CARD ===== */
@@ -472,42 +500,6 @@
     font-size: 0.9rem;
 }
 
-/* Empty state */
-.empty-orders {
-    text-align: center;
-    padding: 60px 20px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.empty-orders p {
-    font-size: 1.1rem;
-    color: #000000;
-    margin-bottom: 20px;
-    opacity: 0.8;
-}
-
-.empty-orders .btn-primary {
-    display: block;
-    padding: 12px 35px;
-    background: #FF8246;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    border: 1px solid #FF8246;
-}
-
-.empty-orders .btn-primary:hover {
-    background: #000000;
-    color: #ffffff;
-    border-color: #000000;
-}
-
 .loading {
     text-align: center;
     padding: 40px;
@@ -525,6 +517,7 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    backdrop-filter: blur(5px);
 }
 
 .modal-content {
@@ -535,6 +528,8 @@
     max-width: 400px;
     width: 90%;
     text-align: center;
+    animation: modalFadeIn 0.3s ease-out;
+    transform-origin: center;
 }
 
 .modal-icon {
@@ -593,6 +588,17 @@
     background: #FF8246;
     color: #ffffff;
     border-color: #FF8246;
+}
+
+@keyframes modalFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* ===== RESPONSIVE ===== */

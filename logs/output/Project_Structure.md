@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-27 23:42:50
+**Generated:** 2026-02-28 21:30:08
 **Mode:** all
 
 ```
@@ -12,6 +12,8 @@ Crooks-Cart-Collectives/
 │       ├── brand/
 │       │   └── Logo.png
 │       ├── icons/
+│       │   ├── Showcase1.png
+│       │   ├── Showcase2.png
 │       │   ├── about-empty.svg
 │       │   ├── about-filled.svg
 │       │   ├── building.svg
@@ -44,8 +46,6 @@ Crooks-Cart-Collectives/
 │       │   ├── save-empty.svg
 │       │   ├── save-filled.svg
 │       │   ├── seller-product-placeholder.png
-│       │   ├── Showcase1.png
-│       │   ├── Showcase2.png
 │       │   ├── star-empty.svg
 │       │   ├── star-filled.svg
 │       │   ├── submit-picture-icon.png
@@ -76,6 +76,7 @@ Crooks-Cart-Collectives/
 │   ├── cart-handler.php
 │   ├── checkout-handler.php
 │   ├── customer-profile-handler.php
+│   ├── data-storage-handler.php
 │   ├── database-connect.php
 │   ├── error_log.txt
 │   ├── order-handler.php
@@ -87,17 +88,21 @@ Crooks-Cart-Collectives/
 │   ├── sign-up-handler.php
 │   └── validation.php
 ├── logs/
+│   ├── backend/
 │   ├── content-fetcher-configuration/
+│   │   ├── linux-path.py
 │   │   └── preset.py
 │   ├── output/
 │   │   ├── 0.0.17.md
-│   │   ├── preset_Summary.md
-│   │   └── Project_Structure.md
+│   │   ├── Project_Structure.md
+│   │   ├── linux-path_Summary.md
+│   │   └── preset_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
 │   ├── content-fetcher.py
 │   ├── runner.bat
+│   ├── runner.sh
 │   ├── tempCodeRunnerFile.bat
 │   └── tree-mapper.py
 ├── pages/
@@ -127,6 +132,7 @@ Crooks-Cart-Collectives/
 │   ├── central-link-navigation.js
 │   ├── checkout.js
 │   ├── contact.js
+│   ├── customer-profile.js
 │   ├── error-handler.js
 │   ├── header.js
 │   ├── index.js
@@ -162,9 +168,9 @@ Crooks-Cart-Collectives/
 │   ├── sign-up.css
 │   └── terms-and-conditions.css
 ├── .gitignore
-├── index.php
 ├── LICENSE
-└── README.md
+├── README.md
+└── index.php
 ```
 
 ## Summary
@@ -172,16 +178,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 34 |
+| PHP Files | 35 |
 | CSS Files | 21 |
-| JavaScript Files | 16 |
+| JavaScript Files | 17 |
 | JSON Files | 0 |
-| Text/Markdown | 7 |
+| Text/Markdown | 8 |
 | Image Files | 55 |
-| Other Files | 11 |
+| Other Files | 13 |
 
-**Total Directories:** 14
-**Total Files:** 143
+**Total Directories:** 15
+**Total Files:** 148
 
 ---
 

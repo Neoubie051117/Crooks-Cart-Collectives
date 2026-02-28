@@ -25,15 +25,35 @@ if ($action !== 'signup') {
 
 handleSignup();
 
-function normalizePhoneNumber($phone) {
-    $phone = preg_replace('/[^0-9+]/', '', $phone);
-    if (preg_match('/^09(\d{9})$/', $phone, $matches)) {
-        return '+63' . $matches[1];
-    } elseif (preg_match('/^639(\d{9})$/', $phone, $matches)) {
-        return '+63' . $matches[1];
-    } elseif (preg_match('/^\+63(\d{9})$/', $phone, $matches)) {
-        return '+63' . $matches[1];
+function formatPhoneForDisplay($phone) {
+    $cleaned = preg_replace('/[^0-9]/', '', $phone);
+    if (strlen($cleaned) === 11 && substr($cleaned, 0, 2) === '09') {
+        return substr($cleaned, 0, 4) . ' ' . substr($cleaned, 4, 3) . ' ' . substr($cleaned, 7, 4);
+    } elseif (strlen($cleaned) === 12 && substr($cleaned, 0, 2) === '63') {
+        return '0' . substr($cleaned, 2, 3) . ' ' . substr($cleaned, 5, 3) . ' ' . substr($cleaned, 8, 4);
     }
+    return $phone;
+}
+
+function formatPhoneForStorage($phone) {
+    $cleaned = preg_replace('/[^0-9]/', '', $phone);
+    
+    if (strlen($cleaned) === 11 && substr($cleaned, 0, 2) === '09') {
+        return $cleaned;
+    }
+    
+    if (strlen($cleaned) === 12 && substr($cleaned, 0, 2) === '63') {
+        return '0' . substr($cleaned, 2);
+    }
+    
+    if (strlen($cleaned) === 13 && substr($cleaned, 0, 3) === '063') {
+        return '0' . substr($cleaned, 3);
+    }
+    
+    if (strlen($cleaned) === 13 && substr($cleaned, 0, 3) === '639') {
+        return '0' . substr($cleaned, 2);
+    }
+    
     return $phone;
 }
 
@@ -92,7 +112,6 @@ function handleSignup() {
         exit;
     }
     
-    // Check username
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
     $stmt->execute([$username]);
     if ($stmt->fetchColumn() > 0) {
@@ -100,7 +119,6 @@ function handleSignup() {
         exit;
     }
     
-    // Check email
     $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetchColumn() > 0) {
@@ -109,19 +127,18 @@ function handleSignup() {
     }
     
     $contact_number = trim($_POST['contact_number']);
-    $normalized_contact = normalizePhoneNumber($contact_number);
+    $storage_contact = formatPhoneForStorage($contact_number);
     
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE contact_number = ?");
-    $stmt->execute([$normalized_contact]);
-    if ($stmt->fetchColumn() > 0) {
-        echo json_encode(['status' => 'error', 'message' => 'duplicate-contact']);
+    $cleaned_contact = preg_replace('/[^0-9]/', '', $contact_number);
+    if (!preg_match('/^09\d{9}$/', $storage_contact) && !preg_match('/^0\d{10}$/', $cleaned_contact)) {
+        echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
         exit;
     }
     
-    $cleaned_contact = preg_replace('/[^0-9+]/', '', $contact_number);
-    if (!preg_match('/^(09|\+639|639)\d{9}$/', $cleaned_contact) && 
-        !preg_match('/^0\d{10}$/', $cleaned_contact)) {
-        echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
+    $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE contact_number = ?");
+    $stmt->execute([$storage_contact]);
+    if ($stmt->fetchColumn() > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'duplicate-contact']);
         exit;
     }
     
@@ -151,7 +168,7 @@ function handleSignup() {
         ':password' => $password,
         ':birthdate' => $_POST['birthdate'],
         ':gender' => $_POST['gender'],
-        ':contact_number' => $normalized_contact,
+        ':contact_number' => $storage_contact,
         ':address' => htmlspecialchars(trim($_POST['address']), ENT_QUOTES, 'UTF-8')
     ];
     
@@ -170,7 +187,6 @@ function handleSignup() {
         
         $userID = $connection->lastInsertId();
         
-        // Check if customer record already exists (shouldn't, but just in case)
         $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
         $stmt->execute([$userID]);
         if (!$stmt->fetch()) {
@@ -180,11 +196,14 @@ function handleSignup() {
         
         $connection->commit();
         
+        $display_contact = formatPhoneForDisplay($storage_contact);
+        
         echo json_encode([
             'status' => 'success',
             'message' => 'Account created successfully! Please sign in.',
             'redirect' => '../pages/sign-in.php',
-            'delay' => 5000
+            'delay' => 5000,
+            'formatted_phone' => $display_contact
         ]);
         
     } catch (PDOException $e) {

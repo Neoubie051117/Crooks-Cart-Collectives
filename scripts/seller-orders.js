@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* Based on orders.js structure – maintains CSS compatibility, fetches seller orders, adds deliver/cancel actions */
+/* Revised with 1 second delay on status update for smooth UX */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4>${escapeHtml(order.product_name)}</h4>
                                     <p><span class="info-label">Customer:</span> ${customerName}</p>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
-                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>  <!-- changed from price_at_time to price -->
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>
                                 </div>
                             </div>
                         </div>
@@ -349,7 +349,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.status === 'success') {
                 showNotification(`Order marked as ${currentAction} successfully`);
                 hideModal(confirmModal);
-                loadOrders(); // refresh list
+                
+                // 1 second delay before reloading orders
+                setTimeout(() => {
+                    loadOrders(); // refresh list
+                }, 1000);
             } else {
                 showNotification(result.message || 'Failed to update order', true);
             }
