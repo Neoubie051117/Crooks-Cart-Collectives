@@ -42,38 +42,52 @@ function addProduct($sellerId) {
         }
     }
 
-    // Handle image upload
-    $imagePath = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . '/uploads/products/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-
-        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $fileName = time() . '_' . $sellerId . '.' . $extension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-            $imagePath = 'database/uploads/products/' . $fileName;
+    try {
+        $connection->beginTransaction();
+        
+        // Insert product first to get product_id
+        $stmt = $connection->prepare("
+            INSERT INTO products (seller_id, name, category, price, stock_quantity, description, date_added)
+            VALUES (?, ?, ?, ?, ?, ?, NOW())
+        ");
+        $stmt->execute([
+            $sellerId,
+            $_POST['name'],
+            $_POST['category'],
+            $_POST['price'],
+            $_POST['stock_quantity'],
+            $_POST['description']
+        ]);
+        
+        $productId = $connection->lastInsertId();
+        
+        // Handle image uploads
+        $mediaPath = null;
+        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+            require_once(__DIR__ . '/data-storage-handler.php');
+            $uploadResult = processProductMediaUpload($productId, $_FILES['images']);
+            
+            if ($uploadResult['status'] === 'success' && isset($uploadResult['media_path'])) {
+                $mediaPath = $uploadResult['media_path'];
+                
+                // Update product with media path
+                $stmt = $connection->prepare("UPDATE products SET media_path = ? WHERE product_id = ?");
+                $stmt->execute([$mediaPath, $productId]);
+            } else {
+                $connection->rollBack();
+                echo json_encode(['status' => 'error', 'message' => $uploadResult['message']]);
+                exit;
+            }
         }
+        
+        $connection->commit();
+        echo json_encode(['status' => 'success', 'message' => 'Product added successfully']);
+        
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("Add product error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Failed to add product']);
     }
-
-    $stmt = $connection->prepare("
-        INSERT INTO products (seller_id, name, category, price, stock_quantity, description, image_path, date_added)
-        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    ");
-    $stmt->execute([
-        $sellerId,
-        $_POST['name'],
-        $_POST['category'],
-        $_POST['price'],
-        $_POST['stock_quantity'],
-        $_POST['description'],
-        $imagePath
-    ]);
-
-    // Removed total_products update – column no longer exists
-
-    echo json_encode(['status' => 'success', 'message' => 'Product added successfully']);
 }
 
 function updateProduct($sellerId) {
@@ -100,37 +114,54 @@ function updateProduct($sellerId) {
         }
     }
 
-    // Handle image upload (optional)
-    $imagePath = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . '/uploads/products/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+    try {
+        $connection->beginTransaction();
+        
+        // Update product details
+        $stmt = $connection->prepare("
+            UPDATE products 
+            SET name=?, category=?, price=?, stock_quantity=?, description=?
+            WHERE product_id=? AND seller_id=?
+        ");
+        $stmt->execute([
+            $_POST['name'],
+            $_POST['category'],
+            $_POST['price'],
+            $_POST['stock_quantity'],
+            $_POST['description'],
+            $_POST['product_id'],
+            $sellerId
+        ]);
 
-        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $fileName = time() . '_' . $sellerId . '.' . $extension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-            $imagePath = 'database/uploads/products/' . $fileName;
+        // Handle image uploads if new files are provided
+        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+            require_once(__DIR__ . '/data-storage-handler.php');
+            
+            // Delete old media
+            deleteProductMedia($_POST['product_id']);
+            
+            // Upload new media
+            $uploadResult = processProductMediaUpload($_POST['product_id'], $_FILES['images']);
+            
+            if ($uploadResult['status'] === 'success' && isset($uploadResult['media_path'])) {
+                // Update media path
+                $stmt = $connection->prepare("UPDATE products SET media_path = ? WHERE product_id = ?");
+                $stmt->execute([$uploadResult['media_path'], $_POST['product_id']]);
+            } else {
+                $connection->rollBack();
+                echo json_encode(['status' => 'error', 'message' => $uploadResult['message']]);
+                exit;
+            }
         }
+        
+        $connection->commit();
+        echo json_encode(['status' => 'success', 'message' => 'Product updated successfully']);
+        
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("Update product error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update product']);
     }
-
-    $query = "UPDATE products SET name=?, category=?, price=?, stock_quantity=?, description=?";
-    $params = [$_POST['name'], $_POST['category'], $_POST['price'], $_POST['stock_quantity'], $_POST['description']];
-
-    if ($imagePath) {
-        $query .= ", image_path=?";
-        $params[] = $imagePath;
-    }
-
-    $query .= " WHERE product_id=? AND seller_id=?";
-    $params[] = $_POST['product_id'];
-    $params[] = $sellerId;
-
-    $stmt = $connection->prepare($query);
-    $stmt->execute($params);
-
-    echo json_encode(['status' => 'success', 'message' => 'Product updated successfully']);
 }
 
 function deleteProduct($sellerId) {
@@ -141,16 +172,28 @@ function deleteProduct($sellerId) {
         exit;
     }
 
-    // Verify ownership and delete
-    $stmt = $connection->prepare("DELETE FROM products WHERE product_id = ? AND seller_id = ?");
-    $stmt->execute([$_POST['product_id'], $sellerId]);
-
-    if ($stmt->rowCount() > 0) {
-        // Removed total_products update – column no longer exists
+    try {
+        $connection->beginTransaction();
         
-        echo json_encode(['status' => 'success', 'message' => 'Product deleted']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
+        // Verify ownership and delete
+        $stmt = $connection->prepare("DELETE FROM products WHERE product_id = ? AND seller_id = ?");
+        $stmt->execute([$_POST['product_id'], $sellerId]);
+
+        if ($stmt->rowCount() > 0) {
+            // Delete media files
+            require_once(__DIR__ . '/data-storage-handler.php');
+            deleteProductMedia($_POST['product_id']);
+            
+            $connection->commit();
+            echo json_encode(['status' => 'success', 'message' => 'Product deleted']);
+        } else {
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
+        }
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("Delete product error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Failed to delete product']);
     }
 }
 ?>

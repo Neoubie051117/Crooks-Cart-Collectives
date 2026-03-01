@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 $product_id = $_GET['id'] ?? 0;
 
@@ -16,7 +17,7 @@ try {
     ");
     $stmt->execute([$product_id]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     if ($product) {
         // Fetch reviews for this product with user profile and username
         $reviewStmt = $connection->prepare("
@@ -38,31 +39,38 @@ if (!$product) {
     exit;
 }
 
-function getProductImagePath($image_path) {
-    if (empty($image_path)) {
-        return '../assets/image/icons/PlaceholderAssetProduct.png';
+// Determine media files
+$mediaDir = $product['media_path'] ?? '';
+$videoUrl = '';
+$thumbnailUrls = [];
+
+if (!empty($mediaDir)) {
+    $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+    if (is_dir($fullDir)) {
+        // Video first (video_1.*)
+        $videoFiles = glob($fullDir . 'video_1.*');
+        if (!empty($videoFiles)) {
+            $videoFile = basename($videoFiles[0]);
+            $videoUrl = getFileUrl($mediaDir . $videoFile);
+        }
+        // Thumbnails (thumbnail_1.* to thumbnail_5.*)
+        for ($i = 1; $i <= 5; $i++) {
+            $thumbFiles = glob($fullDir . 'thumbnail_' . $i . '.*');
+            if (!empty($thumbFiles)) {
+                $thumbFile = basename($thumbFiles[0]);
+                $thumbnailUrls[] = getFileUrl($mediaDir . $thumbFile);
+            }
+        }
     }
-    
-    if (filter_var($image_path, FILTER_VALIDATE_URL)) {
-        return $image_path;
-    }
-    
-    if (strpos($image_path, 'assets/') === 0) {
-        return '../' . $image_path;
-    }
-    
-    if (strpos($image_path, '/') === false) {
-        return '../assets/image/icons/' . $image_path;
-    }
-    
-    return '../' . $image_path;
 }
 
-$imagePath = getProductImagePath($product['image_path'] ?? '');
+// Fallback if no thumbnails
+if (empty($thumbnailUrls)) {
+    $thumbnailUrls[] = '../assets/image/icons/PlaceholderAssetProduct.png';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,102 +79,104 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
     <link rel="stylesheet" href="../styles/product-details.css">
     <link rel="stylesheet" href="../styles/footer.css">
 </head>
-
 <body>
     <?php include_once('header.php'); ?>
 
     <div class="content">
         <div class="product-details-wrapper">
-            <nav class="breadcrumb" aria-label="breadcrumb">
-                <ol class="breadcrumb-list">
-                    <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="products.php">Products</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        <?php echo htmlspecialchars($product['name']); ?></li>
-                </ol>
-            </nav>
-
+            <!-- REVISED LAYOUT: [IMAGE COLUMN] [PRODUCT INFO COLUMN] - Like seller-new-product -->
             <div class="product-details-grid">
-                <div class="product-image-column">
-                    <div class="product-image-container">
-                        <div class="main-image-wrapper">
-                            <img src="<?php echo htmlspecialchars($imagePath); ?>"
-                                alt="<?php echo htmlspecialchars($product['name']); ?>" class="main-product-image"
-                                loading="lazy"
-                                onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                <!-- IMAGE COLUMN - Right side now (hoverable, thumbnail gallery) -->
+                <div class="product-image-column right-column">
+                    <!-- Main Preview Box (hoverable) -->
+                    <div class="preview-box" id="mainPreviewBox">
+                        <div class="preview-placeholder" id="previewPlaceholder" style="<?php echo !empty($thumbnailUrls[0]) ? 'display: none;' : ''; ?>">
+                            <img src="../assets/image/icons/package.svg" alt="Product image">
+                            <span>Product image</span>
                         </div>
+                        <div class="preview-image" id="previewImage" style="<?php echo !empty($thumbnailUrls[0]) ? 'background-image: url(' . $thumbnailUrls[0] . '); display: block;' : 'display: none;'; ?>"></div>
                     </div>
+
+                    <!-- Thumbnail Navigation (like seller-new-product) -->
+                    <?php if (count($thumbnailUrls) > 0): ?>
+                    <div class="thumbnail-navigation" id="thumbnailNavigation">
+                        <?php foreach ($thumbnailUrls as $index => $url): ?>
+                        <button type="button" class="thumbnail-image-btn <?php echo $index === 0 ? 'active' : ''; ?>" data-index="<?php echo $index; ?>" style="background-image: url('<?php echo $url; ?>');">
+                        </button>
+                        <?php endforeach; ?>
+                        <!-- Fill remaining slots with empty placeholders if less than 5 -->
+                        <?php for ($i = count($thumbnailUrls); $i < 5; $i++): ?>
+                        <button type="button" class="thumbnail-image-btn empty-slot" data-index="<?php echo $i; ?>">
+                            <img src="../assets/image/icons/package.svg" alt="Empty slot" class="thumbnail-image">
+                        </button>
+                        <?php endfor; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <div class="product-info-column">
-                    <div class="product-info-header">
+                <!-- PRODUCT INFO COLUMN - Left side now -->
+                <div class="product-info-column left-column">
+                    <div class="info-section">
                         <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
 
                         <div class="product-meta">
                             <span class="product-category"><?php echo htmlspecialchars($product['category']); ?></span>
                             <span class="product-seller">
-                                Sold by: <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
+                                by <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
                                 <?php if ($product['is_verified']): ?>
                                 <span class="verified-badge">Verified</span>
                                 <?php endif; ?>
                             </span>
                         </div>
-                    </div>
 
-                    <div class="product-info-panel">
-                        <div class="info-panel-row">
-                            <div class="info-panel-item price-item">
-                                <span class="info-label">Price</span>
-                                <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
-                            </div>
+                        <div class="product-price-container">
+                            <span class="price-label">Price</span>
+                            <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
+                        </div>
 
-                            <div class="info-panel-item stock-item">
-                                <span class="info-label">Availability</span>
-                                <div
-                                    class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
-                                    <span class="status-indicator"></span>
-                                    <span class="status-text">
-                                        <?php if ($product['stock_quantity'] > 0): ?>
-                                        <?php echo $product['stock_quantity']; ?> in stock
-                                        <?php else: ?>
-                                        Out of Stock
-                                        <?php endif; ?>
-                                    </span>
-                                </div>
+                        <div class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
+                            <span class="status-indicator"></span>
+                            <span class="status-text">
+                                <?php if ($product['stock_quantity'] > 0): ?>
+                                <?php echo $product['stock_quantity']; ?> in stock
+                                <?php else: ?>
+                                Out of Stock
+                                <?php endif; ?>
+                            </span>
+                        </div>
+
+                        <div class="product-description">
+                            <h2>Description</h2>
+                            <div class="description-content">
+                                <?php echo nl2br(htmlspecialchars($product['description'])); ?>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="product-description">
-                        <h2>Description</h2>
-                        <div class="description-content">
-                            <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                        <!-- Action buttons inside info column -->
+                        <div class="product-actions">
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                            <button class="btn btn-primary add-to-cart-btn"
+                                    data-product-id="<?php echo $product['product_id']; ?>"
+                                    <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
+                                <span class="btn-text">Add to Cart</span>
+                            </button>
+                            <button class="btn btn-secondary buy-now-btn"
+                                    data-product-id="<?php echo $product['product_id']; ?>"
+                                    <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
+                                <span class="btn-text">Buy Now</span>
+                            </button>
+                            <?php else: ?>
+                            <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
+                               class="btn btn-primary login-to-purchase-btn">
+                                <span class="btn-text">Login to Purchase</span>
+                            </a>
+                            <?php endif; ?>
                         </div>
-                    </div>
-
-                    <div class="product-actions">
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                        <button class="btn btn-primary add-to-cart-btn"
-                            data-product-id="<?php echo $product['product_id']; ?>"
-                            <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            <span class="btn-text">Add to Cart</span>
-                        </button>
-                        <button class="btn btn-secondary buy-now-btn"
-                            data-product-id="<?php echo $product['product_id']; ?>"
-                            <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
-                            <span class="btn-text">Buy Now</span>
-                        </button>
-                        <?php else: ?>
-                        <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
-                            class="btn btn-primary login-to-purchase-btn">
-                            <span class="btn-text">Login to Purchase</span>
-                        </a>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            <!-- Reviews Section -->
+            <!-- Reviews Section (full width below) -->
             <div class="reviews-section">
                 <h2 class="reviews-title">Customer Reviews (<?php echo count($reviews); ?>)</h2>
 
@@ -182,8 +192,8 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                             <div class="reviewer-profile">
                                 <?php if (!empty($review['profile_picture'])): ?>
                                 <img src="<?php echo htmlspecialchars($review['profile_picture']); ?>"
-                                    alt="<?php echo htmlspecialchars($review['first_name']); ?>"
-                                    onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                                     alt="<?php echo htmlspecialchars($review['first_name']); ?>"
+                                     onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
                                 <?php else: ?>
                                 <img src="../assets/image/icons/user-profile-circle.svg" alt="Profile">
                                 <?php endif; ?>
@@ -200,7 +210,7 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
                         <div class="review-rating">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <img src="../assets/image/icons/<?php echo $i <= $review['rating'] ? 'star-filled.svg' : 'star-empty.svg'; ?>"
-                                alt="Star" class="star">
+                                 alt="Star" class="star">
                             <?php endfor; ?>
                         </div>
                         <?php if (!empty($review['comment'])): ?>
@@ -223,5 +233,4 @@ $imagePath = getProductImagePath($product['image_path'] ?? '');
 
     <script src="../scripts/product-details.js"></script>
 </body>
-
 </html>

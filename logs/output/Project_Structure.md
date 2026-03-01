@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-01 20:08:13
+**Generated:** 2026-03-02 06:21:18
 **Mode:** all
 
 ```
@@ -16,6 +16,9 @@ Crooks-Cart-Collectives/
 │       │   ├── Showcase2.png
 │       │   ├── about-empty.svg
 │       │   ├── about-filled.svg
+│       │   ├── add-circle-empty.svg
+│       │   ├── add-to-queue.svg
+│       │   ├── add.svg
 │       │   ├── building.svg
 │       │   ├── cancel.svg
 │       │   ├── cart-arrow-downsvg.svg
@@ -58,15 +61,17 @@ Crooks-Cart-Collectives/
 │       │   ├── verified-empty.svg
 │       │   ├── verified-filled.svg
 │       │   └── youtube.svg
-│       └── team/
-│           ├── charles-canoneo.png
-│           ├── christian-adviento.png
-│           ├── christian-mendoza.png
-│           ├── clark-mallo.png
-│           ├── kishiekel-fernandez.png
-│           ├── lance-madelar.png
-│           ├── rylle-bernardino.png
-│           └── william-aranez.png
+│       ├── team/
+│       │   ├── charles-canoneo.png
+│       │   ├── christian-adviento.png
+│       │   ├── christian-mendoza.png
+│       │   ├── clark-mallo.jpg
+│       │   ├── clark-mallo.png
+│       │   ├── kishiekel-fernandez.png
+│       │   ├── lance-madelar.png
+│       │   ├── rylle-bernardino.png
+│       │   └── william-aranez.png
+│       └── Logo.png
 ├── database/
 │   ├── schema/
 │   │   ├── dbCreation.sql
@@ -84,6 +89,7 @@ Crooks-Cart-Collectives/
 │   ├── report-seller-handler.php
 │   ├── review-handler.php
 │   ├── seller-fill-form-handler.php
+│   ├── seller-new-product-handler.php
 │   ├── sign-in-handler.php
 │   ├── sign-out-handler.php
 │   ├── sign-up-handler.php
@@ -92,7 +98,6 @@ Crooks-Cart-Collectives/
 │   ├── backend/
 │   ├── content-fetcher-configuration/
 │   │   ├── linux-path.py
-│   │   ├── specific-filesToShow.py
 │   │   └── windows-preset.py
 │   ├── output/
 │   │   ├── 0.0.17.md
@@ -112,25 +117,23 @@ Crooks-Cart-Collectives/
 │   ├── contact.php
 │   ├── customer-dashboard.php
 │   ├── customer-profile.php
-│   ├── error_log.txt
 │   ├── footer.php
 │   ├── header.php
 │   ├── orders.php
 │   ├── privacy-policy.php
 │   ├── product-details.php
-│   ├── products.php
+│   ├── product.php
 │   ├── report-seller.php
-│   ├── seller-add-product.php
 │   ├── seller-dashboard.php
 │   ├── seller-fill-form.php
+│   ├── seller-manage-product.php
+│   ├── seller-new-product.php
 │   ├── seller-orders.php
-│   ├── seller-products.php
 │   ├── sign-in.php
 │   ├── sign-up.php
 │   └── terms-and-conditions.php
 ├── scripts/
 │   ├── cart.js
-│   ├── central-link-navigation.js
 │   ├── checkout.js
 │   ├── contact.js
 │   ├── customer-profile.js
@@ -139,9 +142,12 @@ Crooks-Cart-Collectives/
 │   ├── index.js
 │   ├── orders.js
 │   ├── product-details.js
+│   ├── product.js
 │   ├── report-seller.js
 │   ├── seller-dashboard.js
 │   ├── seller-fill-form.js
+│   ├── seller-manage-product.js
+│   ├── seller-new-product.js
 │   ├── seller-orders.js
 │   ├── showcase-slider.js
 │   ├── sign-in.js
@@ -159,10 +165,12 @@ Crooks-Cart-Collectives/
 │   ├── orders.css
 │   ├── privacy-policy.css
 │   ├── product-details.css
-│   ├── products.css
+│   ├── product.css
 │   ├── profile.css
 │   ├── report-seller.css
 │   ├── seller-dashboard.css
+│   ├── seller-manage-product.css
+│   ├── seller-new-product.css
 │   ├── seller-orders.css
 │   ├── seller-registration.css
 │   ├── sign-in.css
@@ -180,16 +188,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 36 |
-| CSS Files | 21 |
-| JavaScript Files | 18 |
+| PHP Files | 37 |
+| CSS Files | 23 |
+| JavaScript Files | 20 |
 | JSON Files | 0 |
-| Text/Markdown | 8 |
-| Image Files | 55 |
-| Other Files | 13 |
+| Text/Markdown | 7 |
+| Image Files | 60 |
+| Other Files | 12 |
 
 **Total Directories:** 15
-**Total Files:** 150
+**Total Files:** 158
 
 ---
 

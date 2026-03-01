@@ -1,20 +1,110 @@
 /* Crooks-Cart-Collectives/scripts/product-details.js */
-/* Redesigned for compact layout with better functionality */
+/* Revised with seller-new-product style hover preview and thumbnail navigation */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     
     // ===== DOM ELEMENTS =====
-    const mainImage = document.querySelector('.main-product-image');
+    const mainPreviewBox = document.getElementById('mainPreviewBox');
+    const previewPlaceholder = document.getElementById('previewPlaceholder');
+    const previewImage = document.getElementById('previewImage');
+    const thumbnailButtons = document.querySelectorAll('.thumbnail-image-btn');
+    
+    // FIXED: Select buttons by their actual classes
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
     const buyNowBtn = document.querySelector('.buy-now-btn');
     
+    // Debug: Log if buttons are found
+    console.log('Add to cart button found:', addToCartBtn);
+    console.log('Buy now button found:', buyNowBtn);
+    
+    // ===== STATE =====
+    let currentIndex = 0;
+    let hoveredIndex = -1;
+    const thumbnailUrls = [];
+    
+    // Collect thumbnail URLs from buttons
+    thumbnailButtons.forEach(btn => {
+        const bgImage = btn.style.backgroundImage;
+        if (bgImage && bgImage !== 'none') {
+            const url = bgImage.slice(5, -2); // Remove url(" and ")
+            thumbnailUrls.push(url);
+        } else {
+            thumbnailUrls.push(null);
+        }
+    });
+    
+    // ===== THUMBNAIL NAVIGATION =====
+    function setPreviewFromIndex(index) {
+        if (!previewImage || !previewPlaceholder) return;
+        
+        if (thumbnailUrls[index]) {
+            previewImage.style.backgroundImage = `url('${thumbnailUrls[index]}')`;
+            previewImage.style.display = 'block';
+            previewPlaceholder.style.display = 'none';
+        } else {
+            previewImage.style.display = 'none';
+            previewPlaceholder.style.display = 'flex';
+        }
+    }
+    
+    function updateActiveThumbnail(index) {
+        thumbnailButtons.forEach((btn, i) => {
+            if (i === index) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    
+    // Mouse enter for hover preview
+    thumbnailButtons.forEach((btn, index) => {
+        btn.addEventListener('mouseenter', function() {
+            if (thumbnailUrls[index]) {
+                hoveredIndex = index;
+                setPreviewFromIndex(index);
+                
+                // Add hover class
+                btn.classList.add('hover');
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            btn.classList.remove('hover');
+            
+            if (hoveredIndex !== -1) {
+                hoveredIndex = -1;
+                // Return to current index
+                setPreviewFromIndex(currentIndex);
+                updateActiveThumbnail(currentIndex);
+            }
+        });
+        
+        btn.addEventListener('click', function() {
+            if (thumbnailUrls[index]) {
+                currentIndex = index;
+                setPreviewFromIndex(index);
+                updateActiveThumbnail(index);
+                hoveredIndex = -1;
+            }
+        });
+    });
+    
     // ===== IMAGE HANDLING =====
-    if (mainImage) {
-        // Handle image load errors
-        mainImage.addEventListener('error', function() {
-            this.src = '../assets/image/icons/PlaceholderAssetProduct.png';
-            this.alt = 'Product image unavailable';
+    if (mainPreviewBox) {
+        // Handle image load errors for background images
+        const tempImg = new Image();
+        thumbnailUrls.forEach((url, index) => {
+            if (url) {
+                tempImg.src = url;
+                tempImg.onerror = function() {
+                    thumbnailUrls[index] = null;
+                    if (index === currentIndex) {
+                        setPreviewFromIndex(currentIndex);
+                    }
+                };
+            }
         });
     }
     
@@ -114,6 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 apiPath = 'database/cart-handler.php';
             }
             
+            console.log('Sending to cart:', productId); // Debug log
+            
             const response = await fetch(apiPath, {
                 method: 'POST',
                 headers: {
@@ -127,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const result = await response.json();
+            console.log('Cart response:', result); // Debug log
             
             if (result.status === 'success') {
                 showNotification('Added to cart', 'success');
@@ -152,8 +245,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const productId = this.dataset.productId;
+            console.log('Add to cart clicked for product:', productId); // Debug log
             
             // Disable button and show loading state
             this.disabled = true;
@@ -173,14 +268,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 2000);
             }
         });
+    } else {
+        console.error('Add to cart button not found in DOM');
     }
     
     // ===== BUY NOW BUTTON =====
     if (buyNowBtn) {
         buyNowBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const productId = this.dataset.productId;
+            console.log('Buy now clicked for product:', productId); // Debug log
             
             // Show loading state
             this.disabled = true;
@@ -190,6 +289,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Redirect to checkout
             window.location.href = 'checkout.php?product_id=' + productId + '&quantity=1';
         });
+    } else {
+        console.error('Buy now button not found in DOM');
     }
     
     // ===== RESPONSIVE HANDLING =====
@@ -213,14 +314,6 @@ document.addEventListener('DOMContentLoaded', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(handleResponsiveLayout, 100);
     });
-    
-    // ===== LAZY LOAD IMAGES =====
-    if ('loading' in HTMLImageElement.prototype) {
-        const images = document.querySelectorAll('img[loading="lazy"]');
-        images.forEach(img => {
-            img.loading = 'lazy';
-        });
-    }
 });
 
 // Export for external use if needed

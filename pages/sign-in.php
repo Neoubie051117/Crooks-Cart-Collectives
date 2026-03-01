@@ -40,13 +40,13 @@ $redirect = $_GET['redirect'] ?? '';
             <?php endif; ?>
 
             <div class="form-group">
-                <label for="identifier">Email or Username*</label>
+                <label for="identifier">Email or Username</label>
                 <input type="text" id="identifier" name="identifier" required autocomplete="username">
                 <div class="error-message" id="identifierError"></div>
             </div>
 
             <div class="form-group">
-                <label for="password">Password*</label>
+                <label for="password">Password</label>
                 <div class="password-wrapper">
                     <input type="password" id="password" name="password" required autocomplete="current-password">
                     <button type="button" class="password-toggle" id="togglePassword" tabindex="-1"

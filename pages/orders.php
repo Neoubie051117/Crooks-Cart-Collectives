@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
     header('Location: sign-in.php');
@@ -66,7 +67,7 @@ $customer_id = $_SESSION['customer_id'];
 
                 <div class="modal-actions">
                     <button type="button" class="modal-btn modal-btn-cancel" id="cancelReview">Cancel</button>
-                    <button type="submit" class="modal-btn modal-btn-confirm" id="submitReview">Submit Review</button>
+                    <button type="submit" class="modal-btn modal-btn-confirm" id="submitReview">Submit</button>
                 </div>
             </form>
         </div>

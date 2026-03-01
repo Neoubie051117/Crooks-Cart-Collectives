@@ -1,23 +1,33 @@
 /* Crooks-Cart-Collectives/scripts/cart.js */
-/* Shopping Cart JavaScript */
+/* Shopping Cart JavaScript - Fixed version */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
-    // ============= UTILITY FUNCTIONS =============
+    console.log('Cart.js loaded'); // Debug log
+
+    // ===== UTILITY FUNCTIONS =====
     function showMessage(message, type = 'error') {
+        // Remove any existing message
+        const existingMsg = document.querySelector('.cart-message');
+        if (existingMsg) existingMsg.remove();
+
         const msgDiv = document.createElement('div');
         msgDiv.className = `cart-message ${type}`;
         msgDiv.textContent = message;
         document.body.appendChild(msgDiv);
 
         setTimeout(() => {
-            msgDiv.remove();
+            if (msgDiv.parentNode) msgDiv.remove();
         }, 3000);
     }
 
     function showConfirmation(title, message) {
         return new Promise((resolve) => {
+            // Remove any existing modal
+            const existingModal = document.querySelector('.cart-notifier-modal');
+            if (existingModal) existingModal.remove();
+
             const modal = document.createElement('div');
             modal.className = 'cart-notifier-modal active';
             modal.id = 'confirmModal';
@@ -26,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="cart-notifier-icon">
                         <img src="../assets/image/icons/trash.svg" 
                              alt="Delete" 
-                             style="width: 60px; height: 60px;"
+                             style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);"
                              onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                     </div>
                     <h3>${title}</h3>
@@ -40,15 +50,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(modal);
 
             function cleanup() {
-                modal.remove();
+                if (modal.parentNode) modal.remove();
             }
 
-            document.getElementById('cancelAction').addEventListener('click', () => {
+            document.getElementById('cancelAction').addEventListener('click', (e) => {
+                e.preventDefault();
                 cleanup();
                 resolve(false);
             });
 
-            document.getElementById('confirmAction').addEventListener('click', () => {
+            document.getElementById('confirmAction').addEventListener('click', (e) => {
+                e.preventDefault();
                 cleanup();
                 resolve(true);
             });
@@ -75,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ============= QUANTITY INPUT HANDLERS =============
+    // ===== QUANTITY INPUT HANDLERS =====
     document.querySelectorAll('.quantity-input').forEach(input => {
         let timeoutId;
 
@@ -111,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             this.disabled = true;
             const cartItem = this.closest('.cart-item');
-            cartItem.classList.add('loading');
+            if (cartItem) cartItem.classList.add('loading');
 
             try {
                 const response = await fetch('../database/cart-handler.php', {
@@ -127,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
+                console.log('Update response:', result); // Debug log
 
                 if (result.status === 'success') {
                     const priceText = cartItem.querySelector('.cart-item-price').textContent;
@@ -134,13 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newSubtotal = price * quantity;
 
                     const subtotalSpan = cartItem.querySelector('.subtotal-amount');
-                    subtotalSpan.textContent = '₱' + newSubtotal.toFixed(2);
+                    if (subtotalSpan) {
+                        subtotalSpan.textContent = '₱' + newSubtotal.toFixed(2);
+                    }
 
                     let newTotal = 0;
                     document.querySelectorAll('.subtotal-amount').forEach(span => {
                         newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
                     });
-                    document.getElementById('cartTotal').textContent = '₱' + newTotal.toFixed(2);
+                    
+                    const totalElement = document.getElementById('cartTotal');
+                    if (totalElement) {
+                        totalElement.textContent = '₱' + newTotal.toFixed(2);
+                    }
 
                     this.defaultValue = quantity;
                     showMessage('Cart updated successfully', 'success');
@@ -154,21 +173,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 showMessage('Network error. Please try again.', 'error');
             } finally {
                 this.disabled = false;
-                cartItem.classList.remove('loading');
+                if (cartItem) cartItem.classList.remove('loading');
             }
         });
 
         input.addEventListener('keypress', (e) => {
             if (!/^\d+$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && 
-                e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
                 e.preventDefault();
             }
         });
     });
 
-    // ============= REMOVE BUTTON HANDLERS =============
+    // ===== REMOVE BUTTON HANDLERS =====
     document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', async function() {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
             const confirmed = await showConfirmation(
                 'Confirm Removal',
                 'Are you sure you want to remove this item from your cart?'
@@ -182,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.disabled = true;
             const originalText = this.textContent;
             this.textContent = 'Removing...';
-            cartItem.classList.add('loading');
+            if (cartItem) cartItem.classList.add('loading');
 
             try {
                 const response = await fetch('../database/cart-handler.php', {
@@ -197,49 +218,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
+                console.log('Remove response:', result); // Debug log
 
                 if (result.status === 'success') {
-                    cartItem.style.transition = 'opacity 0.3s ease';
-                    cartItem.style.opacity = '0';
+                    if (cartItem) {
+                        cartItem.style.transition = 'opacity 0.3s ease';
+                        cartItem.style.opacity = '0';
 
-                    setTimeout(() => {
-                        cartItem.remove();
+                        setTimeout(() => {
+                            if (cartItem.parentNode) cartItem.remove();
 
-                        let newTotal = 0;
-                        document.querySelectorAll('.subtotal-amount').forEach(span => {
-                            newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
-                        });
+                            let newTotal = 0;
+                            document.querySelectorAll('.subtotal-amount').forEach(span => {
+                                newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
+                            });
 
-                        const totalElement = document.getElementById('cartTotal');
-                        if (totalElement) {
-                            totalElement.textContent = '₱' + newTotal.toFixed(2);
-                        }
+                            const totalElement = document.getElementById('cartTotal');
+                            if (totalElement) {
+                                totalElement.textContent = '₱' + newTotal.toFixed(2);
+                            }
 
-                        showMessage('Item removed from cart', 'success');
-                        updateHeaderCartCount();
+                            showMessage('Item removed from cart', 'success');
+                            updateHeaderCartCount();
 
-                        if (document.querySelectorAll('.cart-item').length === 0) {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        }
-                    }, 300);
+                            if (document.querySelectorAll('.cart-item').length === 0) {
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            }
+                        }, 300);
+                    }
                 } else {
                     showMessage(result.message || 'Error removing item', 'error');
                     this.disabled = false;
                     this.textContent = originalText;
-                    cartItem.classList.remove('loading');
+                    if (cartItem) cartItem.classList.remove('loading');
                 }
             } catch (error) {
                 console.error('Remove error:', error);
                 showMessage('Network error. Please try again.', 'error');
                 this.disabled = false;
                 this.textContent = originalText;
-                cartItem.classList.remove('loading');
+                if (cartItem) cartItem.classList.remove('loading');
             }
         });
     });
 
     // Update cart count on page load
     updateHeaderCartCount();
+    console.log('Cart.js initialization complete'); // Debug log
 });

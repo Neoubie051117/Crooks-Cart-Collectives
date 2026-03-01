@@ -1,5 +1,6 @@
 /* Crooks-Cart-Collectives/styles/orders.css */
 /* Fixed version: review textarea now fixed-size, auto-resize removed, matches shipping details behavior */
+/* Fixed modal actions: buttons now 50/50 width in container */
 
 * {
     margin: 0;
@@ -649,6 +650,7 @@
     display: flex;
     gap: 15px;
     justify-content: center;
+    width: 100%;
 }
 
 .modal-btn {
@@ -658,20 +660,31 @@
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    flex: 1;
-    max-width: 130px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
-.modal-btn-cancel{
+.modal-btn-cancel {
     background: #000000;
     color: #ffffff;
+    border-color: #000000;
+}
+
+.modal-btn-cancel:hover {
+    background: #333333;
 }
 
 .modal-btn-confirm {
     background: #FF8246;
     color: #ffffff;
     border-color: #FF8246;
+}
+
+.modal-btn-confirm:hover {
+    background: #e66a2e;
 }
 
 /* ===== FORM STYLES (for review modal) ===== */
@@ -694,11 +707,9 @@
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     font-size: 0.95rem;
-    /* FIXED: resize set to none to match shipping details behavior */
     resize: none;
     font-family: inherit;
     background: #fafafa;
-    /* FIXED: fixed height to match container size, responsive to container width */
     height: 120px;
     overflow-y: auto;
 }
@@ -866,10 +877,11 @@
     
     .modal-actions {
         flex-direction: column;
+        gap: 10px;
     }
     
     .modal-btn {
-        max-width: 100%;
+        width: 100%;
     }
 }
 

@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Fixed version with complete event activity showing all status changes */
+/* Fixed version with proper image fetching for thumbnail 1 */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -199,13 +199,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
-    // ============= GET IMAGE PATH =============
-    function getImagePath(path) {
-        if (!path) return '../assets/image/icons/package.svg';
-        if (path.startsWith('assets/')) return '../' + path;
-        if (path.startsWith('http')) return path;
-        if (path.startsWith('../')) return path;
-        return '../' + path;
+    // ============= FIXED: GET IMAGE PATH FOR THUMBNAIL 1 =============
+    function getProductImageUrl(mediaPath) {
+        if (!mediaPath) {
+            return '../assets/image/icons/package.svg';
+        }
+        
+        // If it's already a URL with data-storage-handler, use it as is
+        if (mediaPath.includes('data-storage-handler.php')) {
+            return mediaPath;
+        }
+        
+        // Check if it's a media directory path (from products table)
+        if (mediaPath.includes('/media/')) {
+            // Ensure trailing slash
+            const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
+            // Use the data-storage-handler to serve thumbnail 1
+            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
+        }
+        
+        // Direct file path
+        if (mediaPath.startsWith('assets/')) {
+            return '../' + mediaPath;
+        }
+        
+        if (mediaPath.startsWith('http')) {
+            return mediaPath;
+        }
+        
+        if (mediaPath.startsWith('../')) {
+            return mediaPath;
+        }
+        
+        return '../' + mediaPath;
     }
 
     // ============= ESCAPE HTML =============
@@ -222,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ordersList.innerHTML = `
                 <div class="empty-orders">
                     <p>You haven't placed any orders yet.</p>
-                    <a href="products.php" class="btn-primary">Start Shopping</a>
+                    <a href="product.php" class="btn-primary">Start Shopping</a>
                 </div>
             `;
             return;
@@ -234,7 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const orderDate = formatDate(order.order_date);
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
             const statusClass = order.status.toLowerCase();
-            const imagePath = getImagePath(order.image_path);
+            
+            // FIXED: Use the new function to get image URL
+            const imagePath = getProductImageUrl(order.image_path);
             
             const isEditable = order.status === 'pending';
             
@@ -589,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 if (submitReview) {
                     submitReview.disabled = false;
-                    submitReview.textContent = 'Submit Review';
+                    submitReview.textContent = 'Submit';
                 }
             }
         });

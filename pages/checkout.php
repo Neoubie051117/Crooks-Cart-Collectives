@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
     header('Location: sign-in.php');
@@ -35,7 +36,7 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
 
         if (!$singleProduct) {
             // Invalid product, redirect to products
-            header('Location: products.php');
+            header('Location: product.php');
             exit;
         }
 
@@ -52,7 +53,7 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
                 'cart_id' => null,
                 'product_id' => $singleProduct['product_id'],
                 'name' => $singleProduct['name'],
-                'image_path' => $singleProduct['image_path'],
+                'media_path' => $singleProduct['media_path'],
                 'business_name' => $singleProduct['business_name'],
                 'seller_id' => $singleProduct['seller_id'],
                 'quantity' => $quantity,
@@ -63,14 +64,14 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
         $total = $singleProduct['price'] * $quantity;
     } catch (PDOException $e) {
         error_log("Checkout single product fetch error: " . $e->getMessage());
-        header('Location: products.php');
+        header('Location: product.php');
         exit;
     }
 } else {
     // Normal cart checkout
     try {
         $stmt = $connection->prepare("
-            SELECT c.*, p.name, p.image_path, s.business_name
+            SELECT c.*, p.name, p.media_path, s.business_name
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
             JOIN sellers s ON p.seller_id = s.seller_id
@@ -100,6 +101,30 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Checkout user fetch error: " . $e->getMessage());
+}
+
+// Helper function to get product image URL
+function getCheckoutImageUrl($mediaPath) {
+    if (empty($mediaPath)) {
+        return '../assets/image/icons/package.svg';
+    }
+    
+    // Check if it's a media directory path
+    if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
+        $mediaDir = rtrim($mediaPath, '/') . '/';
+        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . 'thumbnail_1.png');
+    }
+    
+    // Direct file path
+    if (strpos($mediaPath, 'assets/') === 0) {
+        return '../' . $mediaPath;
+    }
+    
+    if (strpos($mediaPath, 'http') === 0) {
+        return $mediaPath;
+    }
+    
+    return '../' . $mediaPath;
 }
 
 // Get safe values for display with null checks
@@ -139,17 +164,15 @@ $userPhone = !empty($user['contact_number']) ? htmlspecialchars($user['contact_n
                 <h2>Order Summary</h2>
                 <div class="checkout-items">
                     <?php foreach ($cartItems as $item): 
-                        $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
-                        if (!empty($item['image_path'])) {
-                            $imagePath = (strpos($item['image_path'], 'assets/') === 0) ? '../' . $item['image_path'] : '../' . $item['image_path'];
-                        }
+                        // FIXED: Use the helper function to get image URL
+                        $imageUrl = getCheckoutImageUrl($item['media_path'] ?? '');
                         $itemName = !empty($item['name']) ? htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') : 'Product';
                         $sellerName = !empty($item['business_name']) ? htmlspecialchars($item['business_name'], ENT_QUOTES, 'UTF-8') : 'Seller';
                     ?>
                     <div class="checkout-item">
-                        <img src="<?= htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8') ?>" alt="<?= $itemName ?>"
+                        <img src="<?= htmlspecialchars($imageUrl, ENT_QUOTES, 'UTF-8') ?>" alt="<?= $itemName ?>"
                             class="checkout-item-image"
-                            onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                            onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
                         <div class="checkout-item-details">
                             <h3><?= $itemName ?></h3>
                             <p>Seller: <?= $sellerName ?></p>
@@ -182,7 +205,8 @@ $userPhone = !empty($user['contact_number']) ? htmlspecialchars($user['contact_n
                 </div>
 
                 <div class="checkout-actions">
-                    <a href="products.php" class="btn btn-secondary">Back to Shop</a>
+                    <!-- FIXED: Changed from products.php to product.php -->
+                    <a href="product.php" class="btn btn-secondary">Back to Shop</a>
                     <button id="placeOrderBtn" class="btn btn-primary">Place Order</button>
                 </div>
             </div>

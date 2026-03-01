@@ -22,7 +22,6 @@ CREATE TABLE users (
     address VARCHAR(255),
     profile_picture VARCHAR(255),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    -- removed last_updated
 );
 
 -- =====================================================
@@ -36,7 +35,7 @@ CREATE TABLE administrators (
     contact_number VARCHAR(15),
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- renamed from date_created
+    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =====================================================
@@ -46,7 +45,6 @@ CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- Removed denormalized fields: total_orders, total_spent
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
         ON DELETE CASCADE
@@ -77,11 +75,11 @@ CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     seller_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
+    description TEXT,                  -- changed to TEXT
     price DECIMAL(10, 2) NOT NULL,
     category VARCHAR(50),
     stock_quantity INT DEFAULT 0,
-    image_path VARCHAR(255),
+    media_path VARCHAR(255),            -- renamed from image_path
     is_active BOOLEAN DEFAULT TRUE,
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
@@ -196,7 +194,7 @@ CREATE VIEW customer_cart AS
 SELECT 
     c.*,
     p.name AS product_name,
-    p.image_path AS product_image,
+    p.media_path AS product_media,
     p.stock_quantity AS available_stock,
     s.business_name AS seller_name
 FROM carts c
@@ -209,7 +207,7 @@ CREATE VIEW customer_orders AS
 SELECT 
     o.*,
     p.name AS product_name,
-    p.image_path AS product_image,
+    p.media_path AS product_media,
     s.business_name AS seller_name,
     u.first_name,
     u.last_name,
@@ -228,7 +226,7 @@ CREATE VIEW seller_orders_view AS
 SELECT 
     o.*,
     p.name AS product_name,
-    p.image_path AS product_image,
+    p.media_path AS product_media,
     u.first_name,
     u.last_name,
     u.email,

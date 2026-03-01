@@ -58,7 +58,7 @@ if ($is_root) {
                 <?php if (!$isLoggedIn): ?>
                 <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
                 <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
-                <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
                 <?php else: ?>
@@ -66,14 +66,14 @@ if ($is_root) {
                 <?php if ($isSeller): ?>
                 <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-                <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
                 <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
                 <?php else: ?>
                 <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-                <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
                 <?php endif; ?>
@@ -92,7 +92,7 @@ if ($is_root) {
         <?php if (!$isLoggedIn): ?>
         <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
         <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
-        <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
         <?php else: ?>
@@ -100,14 +100,14 @@ if ($is_root) {
         <?php if ($isSeller): ?>
         <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-        <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
         <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
         <?php else: ?>
         <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
-        <a href="<?php echo $pathPrefix; ?>pages/products.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
         <?php endif; ?>

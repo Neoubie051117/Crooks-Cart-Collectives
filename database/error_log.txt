@@ -1,8 +1,13 @@
-[01-Mar-2026 12:45:49 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
-[01-Mar-2026 12:45:49 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png
-[01-Mar-2026 12:47:52 Europe/Berlin] Signin attempt for identifier: lance
-[01-Mar-2026 12:48:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
-[01-Mar-2026 12:48:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png
-[01-Mar-2026 12:52:20 Europe/Berlin] Signin attempt for identifier: lance
-[01-Mar-2026 13:01:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
-[01-Mar-2026 13:01:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png
+[01-Mar-2026 22:21:27 Europe/Berlin] getCustomerOrders error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'p.image_path' in 'field list'
+[01-Mar-2026 22:21:29 Europe/Berlin] getCustomerOrders error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'p.image_path' in 'field list'
+[01-Mar-2026 22:21:29 Europe/Berlin] getCustomerOrders error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'p.image_path' in 'field list'
+[01-Mar-2026 22:21:29 Europe/Berlin] getCustomerOrders error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'p.image_path' in 'field list'
+[01-Mar-2026 22:22:41 Europe/Berlin] getSellerOrders error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'p.image_path' in 'field list'
+[01-Mar-2026 22:43:10 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 22:48:19 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 22:48:23 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 22:48:43 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 22:51:17 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 22:51:18 Europe/Berlin] PHP Warning:  Undefined array key "image_path" in /home/administrator/Documents/Repository/Crooks-Cart-Collectives/pages/checkout.php on line 55
+[01-Mar-2026 23:19:44 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[01-Mar-2026 23:20:06 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com

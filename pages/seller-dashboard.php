@@ -142,7 +142,7 @@ try {
         <div class="quick-actions">
             <h2>Quick Actions</h2>
             <div class="actions-grid">
-                <a href="seller-add-product.php" class="action-card">
+                <a href="seller-new-product.php" class="action-card">
                     <div class="action-icon">
                         <img src="../assets/image/icons/cart-plus.svg" alt="Add product icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
@@ -151,7 +151,7 @@ try {
                     <p>List a new item for sale on the marketplace</p>
                 </a>
 
-                <a href="seller-products.php" class="action-card">
+                <a href="seller-manage-product.php" class="action-card">
                     <div class="action-icon">
                         <img src="../assets/image/icons/updatesvg.svg" alt="Manage products icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 if (!isset($_SESSION['is_seller']) || !$_SESSION['is_seller']) {
     header('Location: seller-fill-form.php');

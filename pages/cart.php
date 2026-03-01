@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: sign-in.php');
@@ -20,7 +21,7 @@ try {
             p.product_id,
             p.name,
             p.price AS current_price,
-            p.image_path,
+            p.media_path,
             p.stock_quantity,
             s.business_name,
             s.seller_id
@@ -39,6 +40,24 @@ try {
 } catch (PDOException $e) {
     error_log("Error fetching cart: " . $e->getMessage());
 }
+
+// Helper function to get product image
+function getProductImageUrl($mediaPath) {
+    if (empty($mediaPath)) {
+        return '../assets/image/icons/package.svg';
+    }
+    
+    $fullPath = dirname(__DIR__, 2) . '/' . $mediaPath;
+    if (is_dir($fullPath)) {
+        $thumbFiles = glob($fullPath . 'thumbnail_1.*');
+        if (!empty($thumbFiles)) {
+            $thumbFile = basename($thumbFiles[0]);
+            return getFileUrl($mediaPath . $thumbFile);
+        }
+    }
+    
+    return '../assets/image/icons/package.svg';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,32 +75,26 @@ try {
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <div class="cart-container">
-            <h1 class="cart-title">Shopping Cart</h1>
+        <h1 class="pageTitleHeader">Shopping Cart</h1>
 
+        <div class="cart-container">
             <?php if (empty($cartItems)): ?>
             <div class="empty-cart">
                 <p class="empty-cart-message">Your cart is empty.</p>
-                <a href="products.php" class="btn btn-primary">Continue Shopping</a>
+                <a href="product.php" class="btn-primary">Continue Shopping</a>
             </div>
             <?php else: ?>
 
             <div class="cart-items" id="cartItems">
                 <?php foreach ($cartItems as $item): 
-                        $imagePath = '../assets/image/icons/PlaceholderAssetProduct.png';
-                        if (!empty($item['image_path'])) {
-                            if (strpos($item['image_path'], 'assets/') === 0) {
-                                $imagePath = '../' . $item['image_path'];
-                            } else {
-                                $imagePath = '../' . $item['image_path'];
-                            }
-                        }
+                        $imageUrl = getProductImageUrl($item['media_path'] ?? '');
                         $subtotal = $item['price'] * $item['quantity'];
                     ?>
                 <div class="cart-item" data-id="<?= $item['cart_id'] ?>">
                     <div class="cart-item-image">
-                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                            onerror="this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" 
+                             alt="<?= htmlspecialchars($item['name']) ?>"
+                             onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
                     </div>
                     <div class="cart-item-details">
                         <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
@@ -94,7 +107,7 @@ try {
                                 <input type="number" id="quantity-<?= $item['cart_id'] ?>" class="quantity-input"
                                     value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
                                     data-id="<?= $item['cart_id'] ?>">
-                                <button class="remove-btn btn btn-secondary" data-id="<?= $item['cart_id'] ?>">
+                                <button class="remove-btn" data-id="<?= $item['cart_id'] ?>">
                                     Remove
                                 </button>
                             </div>
@@ -113,8 +126,8 @@ try {
                     <span class="total-amount" id="cartTotal">₱<?= number_format($total, 2) ?></span>
                 </div>
                 <div class="cart-actions">
-                    <a href="products.php" class="btn btn-secondary">Continue Shopping</a>
-                    <a href="checkout.php" class="btn btn-primary checkout-btn">Proceed to Checkout</a>
+                    <a href="product.php" class="btn btn-secondary">Continue Shopping</a>
+                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
                 </div>
             </div>
             <?php endif; ?>

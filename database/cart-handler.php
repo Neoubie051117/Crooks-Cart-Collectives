@@ -25,7 +25,7 @@ switch ($action) {
         updateCartItem($customer_id);
         break;
     case 'remove':
-        removeCartItem();
+        removeCartItem($customer_id);
         break;
     case 'get_count':
         getCartCount($customer_id);
@@ -92,8 +92,10 @@ function addToCart($customerId) {
                 WHERE cart_id = ?
             ");
             $stmt->execute([$newQuantity, $existing['cart_id']]);
+            
+            echo json_encode(['status' => 'success', 'message' => 'Cart updated successfully']);
         } else {
-            // Insert new cart item - using 'price' instead of 'price_at_time'
+            // Insert new cart item
             $stmt = $connection->prepare("
                 INSERT INTO carts (customer_id, seller_id, product_id, quantity, price)
                 VALUES (?, ?, ?, ?, ?)
@@ -105,9 +107,9 @@ function addToCart($customerId) {
                 $quantity,
                 $product['price']
             ]);
+            
+            echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
         }
-
-        echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
         
     } catch (PDOException $e) {
         error_log("Add to cart error: " . $e->getMessage());
@@ -129,7 +131,7 @@ function updateCartItem($customerId) {
     try {
         // Verify cart item belongs to customer and get product stock
         $stmt = $connection->prepare("
-            SELECT p.stock_quantity
+            SELECT p.stock_quantity, c.quantity as current_quantity
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
             WHERE c.cart_id = ? AND c.customer_id = ?
@@ -154,7 +156,7 @@ function updateCartItem($customerId) {
         ");
         $stmt->execute([$quantity, $cartId, $customerId]);
 
-        echo json_encode(['status' => 'success']);
+        echo json_encode(['status' => 'success', 'message' => 'Quantity updated']);
         
     } catch (PDOException $e) {
         error_log("Update cart error: " . $e->getMessage());
@@ -162,7 +164,7 @@ function updateCartItem($customerId) {
     }
 }
 
-function removeCartItem() {
+function removeCartItem($customerId) {
     global $connection;
     
     $cartId = $_POST['cart_item_id'] ?? 0;
@@ -173,10 +175,15 @@ function removeCartItem() {
     }
 
     try {
-        $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ?");
-        $stmt->execute([$cartId]);
+        // Verify item belongs to customer before deleting
+        $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ? AND customer_id = ?");
+        $stmt->execute([$cartId, $customerId]);
 
-        echo json_encode(['status' => 'success']);
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'Item removed']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Item not found']);
+        }
         
     } catch (PDOException $e) {
         error_log("Remove cart error: " . $e->getMessage());
@@ -189,7 +196,7 @@ function getCartCount($customerId) {
     
     try {
         $stmt = $connection->prepare("
-            SELECT SUM(quantity) as count 
+            SELECT COALESCE(SUM(quantity), 0) as count 
             FROM carts 
             WHERE customer_id = ?
         ");

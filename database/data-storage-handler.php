@@ -101,6 +101,218 @@ function processFileUpload($type, $userId, $file, $subtype = null) {
 }
 
 /**
+ * Process product media uploads (multiple images and one optional video)
+ * 
+ * @param int $productId The product ID
+ * @param array $imageFiles Array of image files from $_FILES['images'] (multiple)
+ * @param array|null $videoFile Single video file from $_FILES['video'] (optional)
+ * @return array ['status' => 'success'|'error', 'message' => string, 'paths' => array (if success)]
+ */
+function processProductMediaUpload($productId, $imageFiles, $videoFile = null) {
+    if (empty($productId) || !is_numeric($productId)) {
+        return ['status' => 'error', 'message' => 'Invalid product ID'];
+    }
+
+    // Validate images
+    if (!isset($imageFiles) || !is_array($imageFiles['name'])) {
+        return ['status' => 'error', 'message' => 'No images uploaded'];
+    }
+
+    $imageCount = count(array_filter($imageFiles['name']));
+    if ($imageCount < 2) {
+        return ['status' => 'error', 'message' => 'At least 2 images are required'];
+    }
+    if ($imageCount > 5) {
+        return ['status' => 'error', 'message' => 'Maximum 5 images allowed'];
+    }
+
+    // Allowed image types
+    $allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $allowedVideoTypes = ['video/mp4'];
+
+    // Target directory
+    $baseDir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/products/' . $productId . '/media/';
+    if (!is_dir($baseDir)) {
+        if (!mkdir($baseDir, 0755, true)) {
+            error_log("Data storage: Failed to create product media directory $baseDir");
+            return ['status' => 'error', 'message' => 'Server error: cannot create media directory'];
+        }
+    }
+
+    // Clear existing media files (optional, depending on update)
+    array_map('unlink', glob($baseDir . '*'));
+
+    $uploadedPaths = [];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+    // Process images
+    $imageIndex = 1;
+    foreach ($imageFiles['tmp_name'] as $key => $tmpName) {
+        if ($imageFiles['error'][$key] !== UPLOAD_ERR_OK) {
+            continue;
+        }
+
+        $detectedType = finfo_file($finfo, $tmpName);
+        if (!in_array($detectedType, $allowedImageTypes)) {
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Invalid image type. Only JPG, PNG, GIF, WEBP allowed.'];
+        }
+
+        if ($imageFiles['size'][$key] > 2 * 1024 * 1024) {
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Each image must be ≤ 2MB'];
+        }
+
+        $extension = strtolower(pathinfo($imageFiles['name'][$key], PATHINFO_EXTENSION));
+        $filename = 'thumbnail_' . $imageIndex . '.' . $extension;
+        $targetPath = $baseDir . $filename;
+
+        if (!move_uploaded_file($tmpName, $targetPath)) {
+            error_log("Data storage: Failed to move image to $targetPath");
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Failed to save image ' . $imageIndex];
+        }
+
+        chmod($targetPath, 0644);
+        $uploadedPaths['images'][] = 'Crooks-Data-Storage/products/' . $productId . '/media/' . $filename;
+        $imageIndex++;
+    }
+
+    // Process video (optional)
+    if ($videoFile && $videoFile['error'] === UPLOAD_ERR_OK) {
+        $detectedType = finfo_file($finfo, $videoFile['tmp_name']);
+        if (!in_array($detectedType, $allowedVideoTypes)) {
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Invalid video type. Only MP4 allowed.'];
+        }
+
+        if ($videoFile['size'] > 20 * 1024 * 1024) {
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Video must be ≤ 20MB'];
+        }
+
+        $extension = strtolower(pathinfo($videoFile['name'], PATHINFO_EXTENSION));
+        $filename = 'video_1.' . $extension;
+        $targetPath = $baseDir . $filename;
+
+        if (!move_uploaded_file($videoFile['tmp_name'], $targetPath)) {
+            error_log("Data storage: Failed to move video to $targetPath");
+            finfo_close($finfo);
+            return ['status' => 'error', 'message' => 'Failed to save video'];
+        }
+
+        chmod($targetPath, 0644);
+        $uploadedPaths['video'] = 'Crooks-Data-Storage/products/' . $productId . '/media/' . $filename;
+    }
+
+    finfo_close($finfo);
+    
+    // Store only the directory path in the database
+    $mediaDir = 'Crooks-Data-Storage/products/' . $productId . '/media/';
+    
+    return [
+        'status' => 'success',
+        'message' => 'Product media uploaded successfully',
+        'paths' => $uploadedPaths,
+        'media_path' => $mediaDir
+    ];
+}
+
+/**
+ * Delete all media for a product
+ * 
+ * @param int $productId
+ * @return bool
+ */
+function deleteProductMedia($productId) {
+    if (empty($productId) || !is_numeric($productId)) {
+        return false;
+    }
+    $mediaDir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/products/' . $productId . '/media/';
+    if (is_dir($mediaDir)) {
+        array_map('unlink', glob($mediaDir . '*'));
+        rmdir($mediaDir);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Get the first thumbnail image for a product
+ * 
+ * @param string $mediaPath The media directory path from database
+ * @return string|null The filename of the first thumbnail, or null if none found
+ */
+function getFirstProductThumbnail($mediaPath) {
+    if (empty($mediaPath)) {
+        return null;
+    }
+    
+    $fullPath = dirname(__DIR__, 2) . '/' . $mediaPath;
+    if (!is_dir($fullPath)) {
+        return null;
+    }
+    
+    $files = glob($fullPath . 'thumbnail_1.*');
+    if (!empty($files)) {
+        return basename($files[0]);
+    }
+    
+    return null;
+}
+
+/**
+ * Get all thumbnail images for a product
+ * 
+ * @param string $mediaPath The media directory path from database
+ * @return array Array of thumbnail filenames
+ */
+function getAllProductThumbnails($mediaPath) {
+    if (empty($mediaPath)) {
+        return [];
+    }
+    
+    $fullPath = dirname(__DIR__, 2) . '/' . $mediaPath;
+    if (!is_dir($fullPath)) {
+        return [];
+    }
+    
+    $thumbnails = [];
+    for ($i = 1; $i <= 5; $i++) {
+        $files = glob($fullPath . 'thumbnail_' . $i . '.*');
+        if (!empty($files)) {
+            $thumbnails[] = basename($files[0]);
+        }
+    }
+    
+    return $thumbnails;
+}
+
+/**
+ * Get the video file for a product
+ * 
+ * @param string $mediaPath The media directory path from database
+ * @return string|null The filename of the video, or null if none found
+ */
+function getProductVideo($mediaPath) {
+    if (empty($mediaPath)) {
+        return null;
+    }
+    
+    $fullPath = dirname(__DIR__, 2) . '/' . $mediaPath;
+    if (!is_dir($fullPath)) {
+        return null;
+    }
+    
+    $files = glob($fullPath . 'video_1.*');
+    if (!empty($files)) {
+        return basename($files[0]);
+    }
+    
+    return null;
+}
+
+/**
  * Convenience function for verification uploads
  */
 function processVerificationUpload($userId, $file, $subtype) {
@@ -138,26 +350,34 @@ function storageFileExists($relativePath) {
 /**
  * Get the URL to access a file (using a script to serve files from outside web root)
  * 
- * @param string $relativePath Path relative to project root (e.g., 'Crooks-Data-Storage/users/1/profile/profile.jpg')
+ * @param string $path Path to the file (can be full path or directory + filename)
+ * @param string|null $filename Optional filename if path is just a directory
  * @return string URL to access the file
  */
-function getFileUrl($relativePath) {
-    if (empty($relativePath)) {
+function getFileUrl($path, $filename = null) {
+    if (empty($path)) {
         return '';
     }
     
+    // If filename is provided, combine with path
+    if ($filename !== null) {
+        $fullPath = rtrim($path, '/') . '/' . $filename;
+    } else {
+        $fullPath = $path;
+    }
+    
     // For files in assets folder (already web accessible)
-    if (strpos($relativePath, 'assets/') === 0) {
-        return '../' . $relativePath;
+    if (strpos($fullPath, 'assets/') === 0) {
+        return '../' . $fullPath;
     }
     
     // For files in Crooks-Data-Storage, use this same file as a server
-    if (strpos($relativePath, 'Crooks-Data-Storage/') === 0) {
-        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($relativePath);
+    if (strpos($fullPath, 'Crooks-Data-Storage/') === 0) {
+        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($fullPath);
     }
     
     // For any other path
-    return '../' . $relativePath;
+    return '../' . $fullPath;
 }
 
 /**
@@ -180,17 +400,27 @@ function serveFile($relativePath) {
         die('Invalid file path');
     }
     
-    // Ownership check: for user files, ensure the user_id in path matches session user_id
+    // Parse the path to determine file type
     $pathParts = explode('/', $relativePath);
-    // Expected structure: Crooks-Data-Storage/users/{user_id}/...
+    
+    // Check if this is a user file (requires authentication)
     if (count($pathParts) >= 3 && $pathParts[1] === 'users') {
+        // This is a user file - require login
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(403);
+            die('Authentication required to access user files');
+        }
+        
         $fileUserId = (int)$pathParts[2];
         if ($fileUserId !== $_SESSION['user_id']) {
             http_response_code(403);
             die('Access denied: You do not own this file.');
         }
     }
-    // For other paths (e.g., assets) we don't check ownership (they are public)
+    
+    // For product media (products/{product_id}/...), allow public access
+    // No authentication required for product images
     
     $fullPath = getStoragePath($relativePath);
     
@@ -208,7 +438,8 @@ function serveFile($relativePath) {
         'gif' => 'image/gif',
         'webp' => 'image/webp',
         'svg' => 'image/svg+xml',
-        'pdf' => 'application/pdf'
+        'pdf' => 'application/pdf',
+        'mp4' => 'video/mp4'
     ];
     
     $contentType = $contentTypes[$extension] ?? 'application/octet-stream';
@@ -226,19 +457,18 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
     $action = $_GET['action'] ?? $_POST['action'] ?? '';
     
     if ($action === 'serve') {
-        // Serve file - require login for security
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            http_response_code(403);
-            die('Access denied');
-        }
-        
         $path = $_GET['path'] ?? '';
         serveFile($path);
         exit;
     }
     
-    // Default file upload handling
+    // Default file upload handling (requires login)
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        http_response_code(403);
+        die(json_encode(['status' => 'error', 'message' => 'Authentication required']));
+    }
+    
     header('Content-Type: application/json');
     
     error_reporting(E_ALL);
@@ -253,8 +483,15 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
     }
 
     $type = $_POST['type'] ?? '';
-    $userId = $_POST['user_id'] ?? '';
+    $userId = $_POST['user_id'] ?? $_SESSION['user_id'] ?? '';
     $file = $_FILES['file'] ?? null;
+
+    // Verify user ID matches session
+    if ($userId != $_SESSION['user_id']) {
+        http_response_code(403);
+        echo json_encode(['status' => 'error', 'message' => 'User ID mismatch']);
+        exit;
+    }
 
     $result = processFileUpload($type, $userId, $file);
     

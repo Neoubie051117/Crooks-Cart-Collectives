@@ -1,10 +1,11 @@
 <?php
 // Crooks-Cart-Collectives/index.php
-// FIXED VERSION - Replaced emoji icons with SVG icons
+// FIXED VERSION - Fixed image fetching for featured products
 ?>
 <?php
 session_start();
 require_once('database/database-connect.php');
+require_once('database/data-storage-handler.php');
 
 // Fetch featured products
 $featured_products = [];
@@ -21,6 +22,38 @@ try {
     $featured_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Error fetching featured products: " . $e->getMessage());
+}
+
+// Helper function to get product image URL for index page
+function getIndexProductImageUrl($mediaPath) {
+    if (empty($mediaPath)) {
+        return 'assets/image/icons/PlaceholderAssetProduct.png';
+    }
+    
+    // Check if it's a media directory path (from products table)
+    if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
+        $mediaDir = rtrim($mediaPath, '/') . '/';
+        // Use data-storage-handler to serve thumbnail 1
+        return 'database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . 'thumbnail_1.png');
+    }
+    
+    // Check if it's already a full URL
+    if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
+        return $mediaPath;
+    }
+    
+    // Check if it's a relative path starting with assets/
+    if (strpos($mediaPath, 'assets/') === 0) {
+        return $mediaPath;
+    }
+    
+    // Check if it's just a filename
+    if (strpos($mediaPath, '/') === false) {
+        return 'assets/image/icons/' . $mediaPath;
+    }
+    
+    // Any other relative path
+    return $mediaPath;
 }
 ?>
 
@@ -81,7 +114,7 @@ try {
                     <div class="showcase-content">
                         <h1>Community Marketplace</h1>
                         <p>Buy and sell within your community</p>
-                        <a href="pages/products.php" class="showcase-button">Shop Now</a>
+                        <a href="pages/product.php" class="showcase-button">Shop Now</a>
                     </div>
                 </div>
                 <div class="showcase-slide" style="background-image: url('assets/image/icons/Showcase2.png');">
@@ -149,33 +182,10 @@ try {
                     <div class="product-card">
                         <div class="product-image-container">
                             <?php 
-                    // FIX: Properly handle the image path from database
-                    $imagePath = '';
-                    if (!empty($product['image_path'])) {
-                        // Check if it's already a full URL
-                        if (filter_var($product['image_path'], FILTER_VALIDATE_URL)) {
-                            $imagePath = $product['image_path'];
-                        } 
-                        // Check if it's a relative path starting with assets/
-                        elseif (strpos($product['image_path'], 'assets/') === 0) {
-                            $imagePath = $product['image_path']; // Direct path from root
-                        }
-                        // Check if it's just a filename
-                        elseif (strpos($product['image_path'], '/') === false) {
-                            $imagePath = 'assets/image/icons/' . $product['image_path'];
-                        }
-                        // Any other relative path
-                        else {
-                            $imagePath = $product['image_path'];
-                        }
-                    }
-                    
-                    // If still empty, use placeholder
-                    if (empty($imagePath)) {
-                        $imagePath = 'assets/image/icons/PlaceholderAssetProduct.png';
-                    }
+                    // FIXED: Use the helper function to get image URL
+                    $imageUrl = getIndexProductImageUrl($product['media_path'] ?? '');
                     ?>
-                            <img src="<?php echo htmlspecialchars($imagePath); ?>"
+                            <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                 alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
                                 loading="lazy"
                                 onerror="this.onerror=null; this.src='assets/image/icons/PlaceholderAssetProduct.png';">
@@ -186,6 +196,7 @@ try {
                             <p class="product-seller">
                                 Seller: <?php echo htmlspecialchars($product['business_name']); ?>
                             </p>
+                            <!-- FIXED: Changed from products.php to product.php -->
                             <a href="pages/product-details.php?id=<?php echo $product['product_id']; ?>"
                                 class="view-product-btn">
                                 View Details
@@ -203,7 +214,8 @@ try {
                     </div>
                     <?php endif; ?>
                 </div>
-                <a href="pages/products.php" class="view-all-products-btn">View All Products</a>
+                <!-- FIXED: Changed from products.php to product.php -->
+                <a href="pages/product.php" class="view-all-products-btn">View All Products</a>
             </div>
         </section>
     </div>

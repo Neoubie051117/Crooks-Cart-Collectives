@@ -1,0 +1,372 @@
+/* product.css - Clean version for shop page */
+.content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pageTitleHeader {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF8246;
+}
+
+/* Filter Tabs - copied from orders filter tabs */
+.filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.filter-tab {
+    padding: 8px 20px;
+    background: #f5f5f5;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.filter-tab:hover {
+    background: #FF8246;
+    color: white;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
+}
+
+.filter-tab.active {
+    background: #FF8246;
+    color: white;
+    border-color: #FF8246;
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    background-color: #f5f5f5;
+}
+
+.product-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #1e2e2f;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.product-price {
+    color: #FF8246;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 5px 0;
+}
+
+.product-seller {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+.product-stock {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+/* Product Actions - Single button */
+.product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.view-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #FF8246;
+    color: white;
+}
+
+.view-btn:hover {
+    background: #e66a2e;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.3);
+}
+
+/* No Products State */
+.no-products {
+    text-align: center;
+    padding: 50px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    margin: 20px 0;
+}
+
+.no-products p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.loading::after {
+    content: 'Loading products...';
+    animation: pulse 1.5s infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Pagination Styles (if needed) */
+.pagination-container {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.pagination {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-item {
+    display: inline-block;
+    min-width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0 5px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background: #f5f5f5;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.pagination-item:hover:not(.disabled):not(.active) {
+    background: #FF8246;
+    color: white;
+}
+
+.pagination-item.active {
+    background: #FF8246;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(255, 130, 70, 0.3);
+}
+
+.pagination-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e0e0e0;
+}
+
+.pagination-ellipsis {
+    padding: 0 10px;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        padding: 15px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .filter-tabs {
+        margin-bottom: 20px;
+    }
+    
+    .filter-tab {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+    }
+    
+    .product-title {
+        font-size: 1rem;
+    }
+    
+    .product-price {
+        font-size: 1.2rem;
+    }
+    
+    .pagination {
+        gap: 3px;
+    }
+    
+    .pagination-item {
+        min-width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 10px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 22px;
+    }
+    
+    .filter-tabs {
+        gap: 8px;
+    }
+    
+    .filter-tab {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .product-image {
+        height: 180px;
+    }
+    
+    .product-info {
+        padding: 12px;
+    }
+    
+    .product-actions {
+        margin-top: 12px;
+    }
+    
+    .pagination {
+        gap: 2px;
+    }
+    
+    .pagination-item {
+        min-width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+    }
+}
+
+/* Filter Tabs - Adapted from seller-orders.css */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filter-tab {
+    padding: 8px 20px;
+    background: #ffffff;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+    color: #000000;
+    transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+    background: #FF8246;
+    color: #ffffff;
+    border-color: #FF8246;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
+}
+
+.filter-tab.active {
+    background: #FF8246;
+    color: #ffffff;
+    border-color: #FF8246;
+}

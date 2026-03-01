@@ -64,7 +64,7 @@ function getCustomerOrders() {
                 o.cancelled_at,
                 o.cancelled_by,
                 p.name AS product_name,
-                p.image_path,
+                p.media_path AS image_path,
                 s.business_name AS seller_name,
                 (SELECT COUNT(*) FROM product_reviews pr WHERE pr.order_id = o.order_id) AS has_review
             FROM orders o
@@ -178,7 +178,7 @@ function getSellerOrders() {
                 o.cancelled_at,
                 o.cancelled_by,
                 p.name AS product_name,
-                p.image_path,
+                p.media_path AS image_path,
                 u.first_name,
                 u.last_name,
                 u.email,
@@ -253,8 +253,6 @@ function updateItemStatus() {
                 WHERE order_id = ? AND seller_id = ?
             ");
             $update->execute([$order_id, $seller_id]);
-            
-            // Removed total_sales update – column no longer exists
             
         } else if ($status === 'cancelled') {
             $update = $connection->prepare("

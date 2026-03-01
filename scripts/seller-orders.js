@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* Revised with 1 second delay on status update for smooth UX */
+/* Revised with fixed image fetching - now properly fetches thumbnail 1 */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -120,13 +120,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
-    // ============= GET IMAGE PATH =============
-    function getImagePath(path) {
-        if (!path) return '../assets/image/icons/package.svg';
-        if (path.startsWith('assets/')) return '../' + path;
-        if (path.startsWith('http')) return path;
-        if (path.startsWith('../')) return path;
-        return '../' + path;
+    // ============= FIXED: GET IMAGE PATH FOR THUMBNAIL 1 =============
+    function getProductImageUrl(mediaPath) {
+        if (!mediaPath) {
+            return '../assets/image/icons/package.svg';
+        }
+        
+        // Check if it's a directory path (ends with /media/)
+        if (mediaPath.includes('/media/')) {
+            // Ensure trailing slash
+            const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
+            // Return URL with thumbnail_1.png (or .jpg) - let PHP handle finding the actual file
+            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
+        }
+        
+        // Direct file path
+        if (mediaPath.startsWith('assets/')) {
+            return '../' + mediaPath;
+        }
+        
+        if (mediaPath.startsWith('http')) {
+            return mediaPath;
+        }
+        
+        if (mediaPath.startsWith('../')) {
+            return mediaPath;
+        }
+        
+        return '../' + mediaPath;
     }
 
     // ============= ESCAPE HTML =============
@@ -154,7 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const orderDate = formatDate(order.order_date);
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
             const statusClass = order.status.toLowerCase();
-            const imagePath = getImagePath(order.image_path);
+            
+            // FIXED: Use the new function to get image URL
+            const imagePath = getProductImageUrl(order.image_path);
             
             const customerName = `${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')}`.trim() || 'Customer';
             
