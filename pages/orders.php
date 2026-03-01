@@ -46,7 +46,7 @@ $customer_id = $_SESSION['customer_id'];
                 <input type="hidden" name="product_id" id="reviewProductId">
 
                 <div class="form-group">
-                    <label class="form-label">Rating *</label>
+                    <label class="form-label">Rating</label>
                     <div class="star-rating" id="starRatingContainer">
                         <span class="star" data-value="1"></span>
                         <span class="star" data-value="2"></span>

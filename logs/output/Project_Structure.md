@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-01 03:27:32
+**Generated:** 2026-03-01 20:08:13
 **Mode:** all
 
 ```
@@ -83,6 +83,7 @@ Crooks-Cart-Collectives/
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
 │   ├── review-handler.php
+│   ├── seller-fill-form-handler.php
 │   ├── sign-in-handler.php
 │   ├── sign-out-handler.php
 │   ├── sign-up-handler.php
@@ -96,9 +97,7 @@ Crooks-Cart-Collectives/
 │   ├── output/
 │   │   ├── 0.0.17.md
 │   │   ├── Project_Structure.md
-│   │   ├── linux-path_Summary.md
-│   │   ├── preset_Summary.md
-│   │   └── specific-filesToShow_Summary.md
+│   │   └── linux-path_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -113,6 +112,7 @@ Crooks-Cart-Collectives/
 │   ├── contact.php
 │   ├── customer-dashboard.php
 │   ├── customer-profile.php
+│   ├── error_log.txt
 │   ├── footer.php
 │   ├── header.php
 │   ├── orders.php
@@ -141,6 +141,7 @@ Crooks-Cart-Collectives/
 │   ├── product-details.js
 │   ├── report-seller.js
 │   ├── seller-dashboard.js
+│   ├── seller-fill-form.js
 │   ├── seller-orders.js
 │   ├── showcase-slider.js
 │   ├── sign-in.js
@@ -179,16 +180,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 35 |
+| PHP Files | 36 |
 | CSS Files | 21 |
-| JavaScript Files | 17 |
+| JavaScript Files | 18 |
 | JSON Files | 0 |
-| Text/Markdown | 9 |
+| Text/Markdown | 8 |
 | Image Files | 55 |
 | Other Files | 13 |
 
 **Total Directories:** 15
-**Total Files:** 149
+**Total Files:** 150
 
 ---
 

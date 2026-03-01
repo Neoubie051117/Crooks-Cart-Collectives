@@ -63,7 +63,7 @@ try {
         <div class="report-form-container">
             <form id="reportForm" class="report-form">
                 <div class="form-group">
-                    <label for="seller_id">Select Seller *</label>
+                    <label for="seller_id">Select Seller</label>
                     <select id="seller_id" name="seller_id" required>
                         <option value="">-- Choose a seller --</option>
                         <?php foreach ($sellers as $seller): ?>
@@ -75,13 +75,13 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label for="reason">Reason *</label>
+                    <label for="reason">Reason</label>
                     <input type="text" id="reason" name="reason" required
                         placeholder="e.g., Fake product, Scam, Harassment">
                 </div>
 
                 <div class="form-group">
-                    <label for="details">Details *</label>
+                    <label for="details">Details</label>
                     <textarea id="details" name="details" rows="5" required
                         placeholder="Describe the incident in detail..."></textarea>
                 </div>

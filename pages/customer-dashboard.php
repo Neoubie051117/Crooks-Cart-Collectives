@@ -1,5 +1,3 @@
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -10,7 +8,32 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 }
 
 $userId = $_SESSION['user_id'];
-$isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+
+// VERIFY seller status from database, don't rely solely on session
+$isSeller = false;
+try {
+    $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $sellerData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($sellerData) {
+        $isSeller = true;
+        // Update session to match database
+        $_SESSION['is_seller'] = true;
+        $_SESSION['seller_id'] = $sellerData['seller_id'];
+        $_SESSION['seller_verified'] = (bool)$sellerData['is_verified'];
+    } else {
+        // Clear seller session flags if user is not a seller in database
+        unset($_SESSION['is_seller']);
+        unset($_SESSION['seller_id']);
+        unset($_SESSION['seller_verified']);
+        $isSeller = false;
+    }
+} catch (PDOException $e) {
+    error_log("Error checking seller status: " . $e->getMessage());
+    // On database error, keep session as is but log the error
+    $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+}
 
 try {
     $stmt = $connection->prepare("SELECT first_name FROM users WHERE user_id = ?");
@@ -101,7 +124,7 @@ try {
             </div>
 
             <?php if ($isSeller): ?>
-            <!-- SELLER: Show Selling dashboard link -->
+            <!-- SELLER: Show Selling dashboard link (only if actually a seller in database) -->
             <div class="dashboard-card">
                 <div class="card-icon">
                     <img src="../assets/image/icons/fill-form.svg" alt="Seller dashboard">

@@ -21,7 +21,7 @@ $current_page = 'contact';
     <link rel="stylesheet" href="../styles/contact.css">
 
     <style>
-    /* Contact card icon styling */
+     Contact card icon styling/
     .contact-card__icon {
         width: 60px;
         height: 60px;
@@ -124,14 +124,14 @@ $current_page = 'contact';
                 <form id="contactForm" class="contact-form" novalidate>
                     <div class="contact-form__row">
                         <div class="contact-form__group">
-                            <label for="fullName" class="contact-form__label">Your Name *</label>
+                            <label for="fullName" class="contact-form__label">Your Name</label>
                             <input type="text" id="fullName" name="fullName" class="contact-form__input" required
                                 placeholder="Enter your full name" aria-required="true">
                             <div class="contact-form__error" id="fullNameError" role="alert"></div>
                         </div>
 
                         <div class="contact-form__group">
-                            <label for="emailAddress" class="contact-form__label">Email Address *</label>
+                            <label for="emailAddress" class="contact-form__label">Email Address</label>
                             <input type="email" id="emailAddress" name="emailAddress" class="contact-form__input"
                                 required placeholder="your@email.com" aria-required="true">
                             <div class="contact-form__error" id="emailError" role="alert"></div>
@@ -146,7 +146,7 @@ $current_page = 'contact';
                         </div>
 
                         <div class="contact-form__group">
-                            <label for="inquirySubject" class="contact-form__label">Subject *</label>
+                            <label for="inquirySubject" class="contact-form__label">Subject</label>
                             <select id="inquirySubject" name="inquirySubject" class="contact-form__select" required
                                 aria-required="true">
                                 <option value="">Select a subject</option>
@@ -160,7 +160,7 @@ $current_page = 'contact';
                     </div>
 
                     <div class="contact-form__group contact-form__group--full">
-                        <label for="inquiryMessage" class="contact-form__label">Your Message *</label>
+                        <label for="inquiryMessage" class="contact-form__label">Your Message</label>
                         <textarea id="inquiryMessage" name="inquiryMessage" class="contact-form__textarea" rows="6"
                             required placeholder="How can we help you?" aria-required="true"></textarea>
                         <div class="contact-form__error" id="messageError" role="alert"></div>

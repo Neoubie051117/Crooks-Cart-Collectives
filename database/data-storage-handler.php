@@ -4,19 +4,24 @@
 /**
  * Process file upload and return result array
  * 
- * @param string $type 'profile' or 'valid_id'
+ * @param string $type 'profile', 'valid_id', or 'verification'
  * @param int $userId User ID
  * @param array $file $_FILES['file'] array
+ * @param string|null $subtype For verification: 'identity' or 'id_document'
  * @return array ['status' => 'success'|'error', 'message' => string, 'path' => string (if success)]
  */
-function processFileUpload($type, $userId, $file) {
+function processFileUpload($type, $userId, $file, $subtype = null) {
     
     if (empty($type) || empty($userId) || !is_numeric($userId)) {
         return ['status' => 'error', 'message' => 'Missing required parameters'];
     }
 
-    if (!in_array($type, ['profile', 'valid_id'])) {
+    if (!in_array($type, ['profile', 'valid_id', 'verification'])) {
         return ['status' => 'error', 'message' => 'Invalid file type'];
+    }
+
+    if ($type === 'verification' && !in_array($subtype, ['identity', 'id_document'])) {
+        return ['status' => 'error', 'message' => 'Invalid verification subtype'];
     }
 
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
@@ -37,13 +42,22 @@ function processFileUpload($type, $userId, $file) {
         return ['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, WEBP allowed.'];
     }
 
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $baseDir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/users/' . $userId . '/';
-    if ($type === 'profile') {
+
+    if ($type === 'verification') {
+        $targetDir = $baseDir . 'verification/';
+        // Fixed filenames: identity.* or id_document.*
+        if ($subtype === 'identity') {
+            $filename = 'identity.' . $extension;
+        } else { // id_document
+            $filename = 'id_document.' . $extension;
+        }
+    } elseif ($type === 'profile') {
         $targetDir = $baseDir . 'profile/';
-        $filename = 'profile.jpg';
-    } else {
+        $filename = 'profile.jpg'; // Always jpg for profile
+    } else { // valid_id (legacy, but we now use verification for both)
         $targetDir = $baseDir . 'valid_id/';
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = time() . '_' . uniqid() . '.' . $extension;
     }
 
@@ -54,8 +68,9 @@ function processFileUpload($type, $userId, $file) {
         }
     }
 
-    if ($type === 'profile') {
-        $pattern = $targetDir . 'profile.*';
+    // Delete any existing file with same base name but different extension
+    if ($type === 'verification') {
+        $pattern = $targetDir . $subtype . '.*';
         array_map('unlink', glob($pattern));
     }
 
@@ -68,7 +83,9 @@ function processFileUpload($type, $userId, $file) {
 
     chmod($targetPath, 0644);
 
-    if ($type === 'profile') {
+    if ($type === 'verification') {
+        $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/verification/' . $filename;
+    } elseif ($type === 'profile') {
         $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/profile/profile.jpg';
     } else {
         $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/valid_id/' . $filename;
@@ -81,6 +98,13 @@ function processFileUpload($type, $userId, $file) {
         'message' => 'File uploaded successfully',
         'path' => $relativePath
     ];
+}
+
+/**
+ * Convenience function for verification uploads
+ */
+function processVerificationUpload($userId, $file, $subtype) {
+    return processFileUpload('verification', $userId, $file, $subtype);
 }
 
 /**

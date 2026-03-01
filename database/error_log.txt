@@ -1,13 +1,8 @@
-[28-Feb-2026 17:18:31 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 17:36:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:14 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:14 Europe/Berlin] Password mismatch for user: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:55:55 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 19:13:54 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 20:13:55 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
-[28-Feb-2026 20:13:55 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[28-Feb-2026 20:13:55 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[28-Feb-2026 20:14:29 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 20:22:48 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 20:35:02 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[01-Mar-2026 12:45:49 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
+[01-Mar-2026 12:45:49 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png
+[01-Mar-2026 12:47:52 Europe/Berlin] Signin attempt for identifier: lance
+[01-Mar-2026 12:48:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
+[01-Mar-2026 12:48:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png
+[01-Mar-2026 12:52:20 Europe/Berlin] Signin attempt for identifier: lance
+[01-Mar-2026 13:01:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/identity.png
+[01-Mar-2026 13:01:10 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/verification/id_document.png

@@ -2,7 +2,7 @@
 
 **Preset:** linux-path
 
-**Generated:** 2026-03-01 03:27:35
+**Generated:** 2026-03-01 20:08:15
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-01 03:27:32
+**Generated:** 2026-03-01 20:08:13
 **Mode:** all
 
 ```
@@ -260,6 +260,7 @@ Crooks-Cart-Collectives/
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
 │   ├── review-handler.php
+│   ├── seller-fill-form-handler.php
 │   ├── sign-in-handler.php
 │   ├── sign-out-handler.php
 │   ├── sign-up-handler.php
@@ -273,9 +274,7 @@ Crooks-Cart-Collectives/
 │   ├── output/
 │   │   ├── 0.0.17.md
 │   │   ├── Project_Structure.md
-│   │   ├── linux-path_Summary.md
-│   │   ├── preset_Summary.md
-│   │   └── specific-filesToShow_Summary.md
+│   │   └── linux-path_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -290,6 +289,7 @@ Crooks-Cart-Collectives/
 │   ├── contact.php
 │   ├── customer-dashboard.php
 │   ├── customer-profile.php
+│   ├── error_log.txt
 │   ├── footer.php
 │   ├── header.php
 │   ├── orders.php
@@ -318,6 +318,7 @@ Crooks-Cart-Collectives/
 │   ├── product-details.js
 │   ├── report-seller.js
 │   ├── seller-dashboard.js
+│   ├── seller-fill-form.js
 │   ├── seller-orders.js
 │   ├── showcase-slider.js
 │   ├── sign-in.js
@@ -356,16 +357,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 35 |
+| PHP Files | 36 |
 | CSS Files | 21 |
-| JavaScript Files | 17 |
+| JavaScript Files | 18 |
 | JSON Files | 0 |
-| Text/Markdown | 9 |
+| Text/Markdown | 8 |
 | Image Files | 55 |
 | Other Files | 13 |
 
 **Total Directories:** 15
-**Total Files:** 149
+**Total Files:** 150
 
 ---
 
@@ -658,19 +659,17 @@ CREATE TABLE customers (
 );
 
 -- =====================================================
--- SELLERS TABLE
+-- SELLERS TABLE (REVISED)
 -- =====================================================
 CREATE TABLE sellers (
     seller_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     business_name VARCHAR(100),
-    valid_id_path VARCHAR(255),
+    identity_path VARCHAR(255),       -- path to formal picture
+    id_document_path VARCHAR(255),    -- path to valid ID document
     is_verified BOOLEAN DEFAULT FALSE,
     verification_date TIMESTAMP NULL,
     date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- Consider removing these denormalized fields:
-    -- total_products INT DEFAULT 0,
-    -- total_sales DECIMAL(10, 2) DEFAULT 0.00,
     rating DECIMAL(3, 2) DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
@@ -689,9 +688,8 @@ CREATE TABLE products (
     category VARCHAR(50),
     stock_quantity INT DEFAULT 0,
     image_path VARCHAR(255),
-    is_active BOOLEAN DEFAULT TRUE,  -- KEEP: used in queries
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- KEEP: used for sorting
-    -- removed last_updated
+    is_active BOOLEAN DEFAULT TRUE,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (seller_id)
         REFERENCES sellers(seller_id)
@@ -707,9 +705,8 @@ CREATE TABLE carts (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
-    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- keep this
-    -- removed updated_at
+    price DECIMAL(10, 2) NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
@@ -728,20 +725,16 @@ CREATE TABLE orders (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
     
-    -- Order details
     quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
+    price DECIMAL(10, 2) NOT NULL,
     subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
     
-    -- Shipping & payment
     shipping_address VARCHAR(255) NOT NULL,
     payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
     
-    -- Order tracking
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'delivered', 'cancelled') DEFAULT 'pending',
     
-    -- Cancellation tracking - keep separate, they track different aspects
     cancelled_by ENUM('customer', 'seller') NULL,
     delivered_at TIMESTAMP NULL,
     cancelled_at TIMESTAMP NULL,
@@ -765,7 +758,6 @@ CREATE TABLE product_reviews (
     rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- is_edited and last_edited removed
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
@@ -924,23 +916,23 @@ first_name, last_name, email, username, password, address, contact_number
 ('Lebron', 'James', 'lebron.james@Sellerdummy.com', 'ninja', '123', '15 Delgado St., Purok 2, Brgy. Jaro, Iloilo City', '09333333333');
 
 -- =========================
--- MAKE THEM SELLERS
+-- MAKE THEM SELLERS (UPDATED with identity_path and id_document_path)
 -- =========================
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Aling Bebang''s Tiangge', TRUE FROM users WHERE username = 'alingbebang';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Aling Bebang''s Tiangge', NULL, NULL, TRUE FROM users WHERE username = 'alingbebang';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Totoy Bibo Bargains', TRUE FROM users WHERE username = 'totoybibo';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Totoy Bibo Bargains', NULL, NULL, TRUE FROM users WHERE username = 'totoybibo';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'El Bimbo''s Ukay-Ukay', TRUE FROM users WHERE username = 'thelastelbimby';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'El Bimbo''s Ukay-Ukay', NULL, NULL, TRUE FROM users WHERE username = 'thelastelbimby';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Pure Foods Paninda', TRUE FROM users WHERE username = 'hotdog';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Pure Foods Paninda', NULL, NULL, TRUE FROM users WHERE username = 'hotdog';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Ninja''s Hidden Treasures', TRUE FROM users WHERE username = 'ninja';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Ninja''s Hidden Treasures', NULL, NULL, TRUE FROM users WHERE username = 'ninja';
 
 -- =========================
 -- INSERT 2 PRODUCTS PER SELLER WITH BUDGET PRICES
@@ -1572,6 +1564,228 @@ function handleSignup() {
 
 ---
 
+## File: `Crooks-Cart-Collectives/database/seller-fill-form-handler.php`
+
+**Status:** `FOUND`
+
+```php
+<?php
+session_start();
+header('Content-Type: application/json');
+
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error_log.txt');
+
+require_once(__DIR__ . '/database-connect.php');
+require_once(__DIR__ . '/data-storage-handler.php');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
+    exit;
+}
+
+$action = $_POST['action'] ?? '';
+
+if ($action !== 'update_seller') {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+    exit;
+}
+
+handleSellerUpdate();
+
+function handleSellerUpdate() {
+    global $connection;
+    
+    $userId = $_SESSION['user_id'];
+    
+    // Check if user is already a seller
+    $stmt = $connection->prepare("SELECT seller_id FROM sellers WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $existingSeller = $stmt->fetch(PDO::FETCH_ASSOC);
+    $isSeller = !empty($existingSeller);
+    
+    // Validate required fields - INCLUDING BUSINESS NAME NOW
+    $requiredFields = ['first_name', 'last_name', 'birthdate', 'gender', 'address', 'business_name'];
+    $missingFields = [];
+    
+    foreach ($requiredFields as $field) {
+        if (empty(trim($_POST[$field] ?? ''))) {
+            $missingFields[] = $field;
+        }
+    }
+    
+    // If there are missing required fields, return error
+    if (!empty($missingFields)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Please fill in all required fields including Store Name.',
+            'missing_fields' => $missingFields
+        ]);
+        exit;
+    }
+    
+    try {
+        $connection->beginTransaction();
+        
+        // Update users table
+        $updateUserSQL = "
+            UPDATE users SET
+                first_name = :first_name,
+                middle_name = :middle_name,
+                last_name = :last_name,
+                birthdate = :birthdate,
+                gender = :gender,
+                address = :address
+            WHERE user_id = :user_id
+        ";
+        
+        $stmt = $connection->prepare($updateUserSQL);
+        $stmt->execute([
+            ':first_name' => trim($_POST['first_name']),
+            ':middle_name' => !empty($_POST['middle_name']) ? trim($_POST['middle_name']) : null,
+            ':last_name' => trim($_POST['last_name']),
+            ':birthdate' => $_POST['birthdate'],
+            ':gender' => $_POST['gender'],
+            ':address' => trim($_POST['address']),
+            ':user_id' => $userId
+        ]);
+        
+        // Handle file uploads
+        $identityPath = null;
+        $idDocumentPath = null;
+        
+        // Process identity photo if uploaded
+        if (isset($_FILES['identity_photo']) && $_FILES['identity_photo']['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = processVerificationUpload($userId, $_FILES['identity_photo'], 'identity');
+            if ($uploadResult['status'] === 'success') {
+                $identityPath = $uploadResult['path'];
+            } else {
+                throw new Exception('Identity photo upload failed: ' . $uploadResult['message']);
+            }
+        }
+        
+        // Process ID document if uploaded
+        if (isset($_FILES['id_document']) && $_FILES['id_document']['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = processVerificationUpload($userId, $_FILES['id_document'], 'id_document');
+            if ($uploadResult['status'] === 'success') {
+                $idDocumentPath = $uploadResult['path'];
+            } else {
+                throw new Exception('ID document upload failed: ' . $uploadResult['message']);
+            }
+        }
+        
+        // Update or insert seller record
+        if ($isSeller) {
+            // Update existing seller - business_name is required
+            $updateSellerSQL = "
+                UPDATE sellers SET
+                    business_name = :business_name
+            ";
+            
+            // Only update file paths if new files were uploaded
+            if ($identityPath) {
+                $updateSellerSQL .= ", identity_path = :identity_path";
+            }
+            if ($idDocumentPath) {
+                $updateSellerSQL .= ", id_document_path = :id_document_path";
+            }
+            
+            $updateSellerSQL .= " WHERE user_id = :user_id";
+            
+            $stmt = $connection->prepare($updateSellerSQL);
+            $params = [
+                ':business_name' => trim($_POST['business_name']), // Required now
+                ':user_id' => $userId
+            ];
+            
+            if ($identityPath) {
+                $params[':identity_path'] = $identityPath;
+            }
+            if ($idDocumentPath) {
+                $params[':id_document_path'] = $idDocumentPath;
+            }
+            
+            $stmt->execute($params);
+        } else {
+            // Insert new seller - business_name is required
+            $insertSellerSQL = "
+                INSERT INTO sellers (
+                    user_id, 
+                    business_name, 
+                    identity_path, 
+                    id_document_path,
+                    is_verified,
+                    date_applied
+                ) VALUES (
+                    :user_id,
+                    :business_name,
+                    :identity_path,
+                    :id_document_path,
+                    0,
+                    NOW()
+                )
+            ";
+            
+            $stmt = $connection->prepare($insertSellerSQL);
+            $stmt->execute([
+                ':user_id' => $userId,
+                ':business_name' => trim($_POST['business_name']), // Required now
+                ':identity_path' => $identityPath,
+                ':id_document_path' => $idDocumentPath
+            ]);
+        }
+        
+        $connection->commit();
+        
+        // Update session if needed
+        if (!$isSeller) {
+            $_SESSION['is_seller'] = true;
+            // Get the new seller_id
+            $stmt = $connection->prepare("SELECT seller_id FROM sellers WHERE user_id = ?");
+            $stmt->execute([$userId]);
+            $seller = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($seller) {
+                $_SESSION['seller_id'] = $seller['seller_id'];
+                $_SESSION['seller_verified'] = false;
+            }
+        }
+        
+        // Fetch updated user data for response
+        $stmt = $connection->prepare("SELECT first_name, last_name FROM users WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => $isSeller ? 'Seller information updated successfully!' : 'Seller application submitted successfully!',
+            'data' => [
+                'first_name' => $userData['first_name'],
+                'last_name' => $userData['last_name']
+            ]
+        ]);
+        
+    } catch (Exception $e) {
+        $connection->rollBack();
+        error_log("Seller update error: " . $e->getMessage());
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Failed to save seller information. Please try again.'
+        ]);
+    }
+}
+?>
+```
+
+---
+
 ## File: `Crooks-Cart-Collectives/database/customer-profile-handler.php`
 
 **Status:** `FOUND`
@@ -1614,19 +1828,29 @@ function handleProfileUpdate($userId) {
     $connection->beginTransaction();
     
     try {
-        // Update text fields
+        // Build update list – include empty values for nullable fields (set to NULL)
         $updates = [];
         $params = [];
         
-        $allowedFields = [
-            'first_name', 'middle_name', 'last_name', 
-            'birthdate', 'gender', 'address'
-        ];
+        // Fields that can be updated (all are nullable except first/last/address, but we treat them separately)
+        $allowedFields = ['first_name', 'middle_name', 'last_name', 'birthdate', 'gender', 'address'];
+        // Fields that should be set to NULL when empty (others will keep old value if empty)
+        $nullableFields = ['middle_name', 'birthdate', 'gender'];
         
         foreach ($allowedFields as $field) {
-            if (isset($_POST[$field]) && trim($_POST[$field]) !== '') {
-                $updates[] = "$field = ?";
-                $params[] = trim($_POST[$field]);
+            if (isset($_POST[$field])) {
+                $value = trim($_POST[$field]);
+                if ($value === '') {
+                    // If field is nullable, set to NULL; otherwise skip update (keep old value)
+                    if (in_array($field, $nullableFields)) {
+                        $updates[] = "$field = ?";
+                        $params[] = null;
+                    }
+                    // else: required field empty – skip update, keep existing value
+                } else {
+                    $updates[] = "$field = ?";
+                    $params[] = $value;
+                }
             }
         }
         
@@ -2918,27 +3142,6 @@ function logError($message, $context = []) {
 
 ---
 
-## File: `Crooks-Cart-Collectives/database/error_log.txt`
-
-**Status:** `FOUND`
-
-```text
-[28-Feb-2026 17:18:31 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 17:36:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:14 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:14 Europe/Berlin] Password mismatch for user: iamlanceonline@gmail.com
-[28-Feb-2026 17:38:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 17:55:55 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 19:13:54 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 20:13:55 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
-[28-Feb-2026 20:13:55 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[28-Feb-2026 20:13:55 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[28-Feb-2026 20:14:29 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 20:22:48 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-```
-
----
-
 ## File: `Crooks-Cart-Collectives/database/data-storage-handler.php`
 
 **Status:** `FOUND`
@@ -2950,19 +3153,24 @@ function logError($message, $context = []) {
 /**
  * Process file upload and return result array
  * 
- * @param string $type 'profile' or 'valid_id'
+ * @param string $type 'profile', 'valid_id', or 'verification'
  * @param int $userId User ID
  * @param array $file $_FILES['file'] array
+ * @param string|null $subtype For verification: 'identity' or 'id_document'
  * @return array ['status' => 'success'|'error', 'message' => string, 'path' => string (if success)]
  */
-function processFileUpload($type, $userId, $file) {
+function processFileUpload($type, $userId, $file, $subtype = null) {
     
     if (empty($type) || empty($userId) || !is_numeric($userId)) {
         return ['status' => 'error', 'message' => 'Missing required parameters'];
     }
 
-    if (!in_array($type, ['profile', 'valid_id'])) {
+    if (!in_array($type, ['profile', 'valid_id', 'verification'])) {
         return ['status' => 'error', 'message' => 'Invalid file type'];
+    }
+
+    if ($type === 'verification' && !in_array($subtype, ['identity', 'id_document'])) {
+        return ['status' => 'error', 'message' => 'Invalid verification subtype'];
     }
 
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
@@ -2983,13 +3191,22 @@ function processFileUpload($type, $userId, $file) {
         return ['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, WEBP allowed.'];
     }
 
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $baseDir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/users/' . $userId . '/';
-    if ($type === 'profile') {
+
+    if ($type === 'verification') {
+        $targetDir = $baseDir . 'verification/';
+        // Fixed filenames: identity.* or id_document.*
+        if ($subtype === 'identity') {
+            $filename = 'identity.' . $extension;
+        } else { // id_document
+            $filename = 'id_document.' . $extension;
+        }
+    } elseif ($type === 'profile') {
         $targetDir = $baseDir . 'profile/';
-        $filename = 'profile.jpg';
-    } else {
+        $filename = 'profile.jpg'; // Always jpg for profile
+    } else { // valid_id (legacy, but we now use verification for both)
         $targetDir = $baseDir . 'valid_id/';
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = time() . '_' . uniqid() . '.' . $extension;
     }
 
@@ -3000,8 +3217,9 @@ function processFileUpload($type, $userId, $file) {
         }
     }
 
-    if ($type === 'profile') {
-        $pattern = $targetDir . 'profile.*';
+    // Delete any existing file with same base name but different extension
+    if ($type === 'verification') {
+        $pattern = $targetDir . $subtype . '.*';
         array_map('unlink', glob($pattern));
     }
 
@@ -3014,7 +3232,9 @@ function processFileUpload($type, $userId, $file) {
 
     chmod($targetPath, 0644);
 
-    if ($type === 'profile') {
+    if ($type === 'verification') {
+        $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/verification/' . $filename;
+    } elseif ($type === 'profile') {
         $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/profile/profile.jpg';
     } else {
         $relativePath = 'Crooks-Data-Storage/users/' . $userId . '/valid_id/' . $filename;
@@ -3027,6 +3247,13 @@ function processFileUpload($type, $userId, $file) {
         'message' => 'File uploaded successfully',
         'path' => $relativePath
     ];
+}
+
+/**
+ * Convenience function for verification uploads
+ */
+function processVerificationUpload($userId, $file, $subtype) {
+    return processFileUpload('verification', $userId, $file, $subtype);
 }
 
 /**
@@ -3589,7 +3816,7 @@ $current_page = 'contact';
     <link rel="stylesheet" href="../styles/contact.css">
 
     <style>
-    /* Contact card icon styling */
+     Contact card icon styling/
     .contact-card__icon {
         width: 60px;
         height: 60px;
@@ -3692,14 +3919,14 @@ $current_page = 'contact';
                 <form id="contactForm" class="contact-form" novalidate>
                     <div class="contact-form__row">
                         <div class="contact-form__group">
-                            <label for="fullName" class="contact-form__label">Your Name *</label>
+                            <label for="fullName" class="contact-form__label">Your Name</label>
                             <input type="text" id="fullName" name="fullName" class="contact-form__input" required
                                 placeholder="Enter your full name" aria-required="true">
                             <div class="contact-form__error" id="fullNameError" role="alert"></div>
                         </div>
 
                         <div class="contact-form__group">
-                            <label for="emailAddress" class="contact-form__label">Email Address *</label>
+                            <label for="emailAddress" class="contact-form__label">Email Address</label>
                             <input type="email" id="emailAddress" name="emailAddress" class="contact-form__input"
                                 required placeholder="your@email.com" aria-required="true">
                             <div class="contact-form__error" id="emailError" role="alert"></div>
@@ -3714,7 +3941,7 @@ $current_page = 'contact';
                         </div>
 
                         <div class="contact-form__group">
-                            <label for="inquirySubject" class="contact-form__label">Subject *</label>
+                            <label for="inquirySubject" class="contact-form__label">Subject</label>
                             <select id="inquirySubject" name="inquirySubject" class="contact-form__select" required
                                 aria-required="true">
                                 <option value="">Select a subject</option>
@@ -3728,7 +3955,7 @@ $current_page = 'contact';
                     </div>
 
                     <div class="contact-form__group contact-form__group--full">
-                        <label for="inquiryMessage" class="contact-form__label">Your Message *</label>
+                        <label for="inquiryMessage" class="contact-form__label">Your Message</label>
                         <textarea id="inquiryMessage" name="inquiryMessage" class="contact-form__textarea" rows="6"
                             required placeholder="How can we help you?" aria-required="true"></textarea>
                         <div class="contact-form__error" id="messageError" role="alert"></div>
@@ -5232,7 +5459,7 @@ try {
         <div class="report-form-container">
             <form id="reportForm" class="report-form">
                 <div class="form-group">
-                    <label for="seller_id">Select Seller *</label>
+                    <label for="seller_id">Select Seller</label>
                     <select id="seller_id" name="seller_id" required>
                         <option value="">-- Choose a seller --</option>
                         <?php foreach ($sellers as $seller): ?>
@@ -5244,13 +5471,13 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label for="reason">Reason *</label>
+                    <label for="reason">Reason</label>
                     <input type="text" id="reason" name="reason" required
                         placeholder="e.g., Fake product, Scam, Harassment">
                 </div>
 
                 <div class="form-group">
-                    <label for="details">Details *</label>
+                    <label for="details">Details</label>
                     <textarea id="details" name="details" rows="5" required
                         placeholder="Describe the incident in detail..."></textarea>
                 </div>
@@ -5356,7 +5583,7 @@ $customer_id = $_SESSION['customer_id'];
                 <input type="hidden" name="product_id" id="reviewProductId">
 
                 <div class="form-group">
-                    <label class="form-label">Rating *</label>
+                    <label class="form-label">Rating</label>
                     <div class="star-rating" id="starRatingContainer">
                         <span class="star" data-value="1"></span>
                         <span class="star" data-value="2"></span>
@@ -5426,8 +5653,6 @@ $customer_id = $_SESSION['customer_id'];
 **Status:** `FOUND`
 
 ```php
-<?php // PHP File Content ?>
-<?php // PHP File Content ?>
 <?php
 session_start();
 require_once('../database/database-connect.php');
@@ -5438,7 +5663,32 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 }
 
 $userId = $_SESSION['user_id'];
-$isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+
+// VERIFY seller status from database, don't rely solely on session
+$isSeller = false;
+try {
+    $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $sellerData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($sellerData) {
+        $isSeller = true;
+        // Update session to match database
+        $_SESSION['is_seller'] = true;
+        $_SESSION['seller_id'] = $sellerData['seller_id'];
+        $_SESSION['seller_verified'] = (bool)$sellerData['is_verified'];
+    } else {
+        // Clear seller session flags if user is not a seller in database
+        unset($_SESSION['is_seller']);
+        unset($_SESSION['seller_id']);
+        unset($_SESSION['seller_verified']);
+        $isSeller = false;
+    }
+} catch (PDOException $e) {
+    error_log("Error checking seller status: " . $e->getMessage());
+    // On database error, keep session as is but log the error
+    $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+}
 
 try {
     $stmt = $connection->prepare("SELECT first_name FROM users WHERE user_id = ?");
@@ -5529,7 +5779,7 @@ try {
             </div>
 
             <?php if ($isSeller): ?>
-            <!-- SELLER: Show Selling dashboard link -->
+            <!-- SELLER: Show Selling dashboard link (only if actually a seller in database) -->
             <div class="dashboard-card">
                 <div class="card-icon">
                     <img src="../assets/image/icons/fill-form.svg" alt="Seller dashboard">
@@ -6026,118 +6276,198 @@ try {
 <?php
 session_start();
 require_once('../database/database-connect.php');
+require_once('../database/data-storage-handler.php');
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: sign-in.php');
     exit;
 }
 
-// Check if already a seller
-$stmt = $connection->prepare("SELECT seller_id FROM sellers WHERE user_id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-if ($stmt->fetch()) {
-    header('Location: seller-dashboard.php');
+$userId = $_SESSION['user_id'];
+
+// Fetch user data
+$stmt = $connection->prepare("SELECT * FROM users WHERE user_id = ?");
+$stmt->execute([$userId]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    session_destroy();
+    header('Location: sign-in.php');
     exit;
+}
+
+// Fetch seller data if exists
+$stmt = $connection->prepare("SELECT * FROM sellers WHERE user_id = ?");
+$stmt->execute([$userId]);
+$seller = $stmt->fetch(PDO::FETCH_ASSOC);
+$isSeller = !empty($seller);
+
+// Helper to get file URL using data-storage-handler
+function getVerificationFileUrl($path) {
+    if (empty($path)) return '';
+    return getFileUrl($path);
+}
+
+// Determine existing verification file URLs
+$identityUrl = '';
+$idDocumentUrl = '';
+if ($isSeller) {
+    if (!empty($seller['identity_path'])) {
+        $identityUrl = getVerificationFileUrl($seller['identity_path']);
+    }
+    if (!empty($seller['id_document_path'])) {
+        $idDocumentUrl = getVerificationFileUrl($seller['id_document_path']);
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Become a Seller</title>
+    <title><?= $isSeller ? 'Edit Seller Information' : 'Become a Seller' ?> - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/seller-registration.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <?php include_once('header.php'); ?>
+    <script defer src="../scripts/seller-fill-form.js"></script>
 </head>
-
 <body>
+    <?php include_once('header.php'); ?>
+
     <div class="content">
-        <div class="pageTitleHeader">Seller Application Form</div>
+        <div class="pageTitleHeader"><?= $isSeller ? 'Seller Profile' : 'Seller Application' ?></div>
 
-        <form id="sellerForm" class="seller-container" enctype="multipart/form-data">
-            <div class="form-section">
-                <h3>Business Information</h3>
+        <form id="sellerFillForm" class="seller-fill-container" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="update_seller">
+            <input type="hidden" name="is_seller" value="<?= $isSeller ? '1' : '0' ?>">
 
+            <!-- Column 1: Credential Information -->
+            <div class="form-section credential-section">
+                <h3>Credential Information</h3>
+                <div class="upload-row">
+                    <div class="upload-box" id="identityUploadBox">
+                        <div class="upload-icon">
+                            <img src="../assets/image/icons/user-profile-circle.svg" alt="Formal picture">
+                        </div>
+                        <div class="upload-preview" id="identityPreview" style="<?= $identityUrl ? 'background-image: url(' . htmlspecialchars($identityUrl) . ');' : '' ?>"></div>
+                        <label for="identity_photo" class="upload-label">
+                            <span class="upload-text">Upload Formal Picture</span>
+                            <input type="file" id="identity_photo" name="identity_photo" accept="image/jpeg,image/png,image/gif,image/webp">
+                        </label>
+                        <div class="file-name" id="identityFileName"></div>
+                        <div class="help-text">Max 2MB. JPG, PNG, GIF, WEBP.</div>
+                    </div>
+                    <div class="upload-box" id="idDocumentUploadBox">
+                        <div class="upload-icon">
+                            <img src="../assets/image/icons/submit-valid-id-icon.png" alt="Valid ID">
+                        </div>
+                        <div class="upload-preview" id="idDocumentPreview" style="<?= $idDocumentUrl ? 'background-image: url(' . htmlspecialchars($idDocumentUrl) . ');' : '' ?>"></div>
+                        <label for="id_document" class="upload-label">
+                            <span class="upload-text">Upload Valid ID</span>
+                            <input type="file" id="id_document" name="id_document" accept="image/jpeg,image/png,image/gif,image/webp">
+                        </label>
+                        <div class="file-name" id="idDocumentFileName"></div>
+                        <div class="help-text">Max 2MB. JPG, PNG, GIF, WEBP.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Personal Information -->
+            <div class="form-section personal-section">
+                <h3>Personal Information</h3>
                 <div class="form-group">
-                    <label for="business_name">Business Name (Optional)</label>
+                    <label for="first_name">First Name *</label>
+                    <input type="text" id="first_name" name="first_name" required
+                           value="<?= htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    <div class="error-message" id="firstNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="middle_name">Middle Name</label>
+                    <input type="text" id="middle_name" name="middle_name"
+                           value="<?= htmlspecialchars($user['middle_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    <div class="error-message" id="middleNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name *</label>
+                    <input type="text" id="last_name" name="last_name" required
+                           value="<?= htmlspecialchars($user['last_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    <div class="error-message" id="lastNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="birthdate">Birthdate *</label>
+                    <input type="date" id="birthdate" name="birthdate" required
+                           value="<?= htmlspecialchars($user['birthdate'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                           max="<?= date('Y-m-d', strtotime('-13 years')) ?>">
+                    <div class="error-message" id="birthdateError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender *</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male" <?= ($user['gender'] ?? '') == 'Male' ? 'selected' : '' ?>>Male</option>
+                        <option value="Female" <?= ($user['gender'] ?? '') == 'Female' ? 'selected' : '' ?>>Female</option>
+                        <option value="Other" <?= ($user['gender'] ?? '') == 'Other' ? 'selected' : '' ?>>Other</option>
+                    </select>
+                    <div class="error-message" id="genderError"></div>
+                </div>
+            </div>
+
+            <!-- Column 3: Account & Seller Information (with buttons at bottom) -->
+            <div class="form-section combined-section">
+                <h3>Account & Seller Information</h3>
+                
+                <!-- Non-editable account info -->
+                <div class="info-group">
+                    <label>Email</label>
+                    <p class="info-value"><?= htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                </div>
+                <div class="info-group">
+                    <label>Username</label>
+                    <p class="info-value"><?= htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                </div>
+                <div class="info-group">
+                    <label>Contact Number</label>
+                    <p class="info-value"><?= htmlspecialchars($user['contact_number'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                </div>
+
+                <!-- Editable seller fields -->
+                <div class="form-group full-width">
+                    <label for="address">Address *</label>
+                    <textarea id="address" name="address" rows="3" required><?= htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="business_name">Store Name</label>
                     <input type="text" id="business_name" name="business_name"
-                        placeholder="If different from your name">
+                           value="<?= htmlspecialchars($seller['business_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                           placeholder="Your store name (optional)">
+                    <div class="error-message" id="businessNameError"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="valid_id">Valid Government ID*</label>
-                    <input type="file" id="valid_id" name="valid_id" accept="image/*,.pdf" required>
-                    <p class="help-text">Upload a clear photo of your government-issued ID</p>
+                <!-- Buttons inside this column, pushed to bottom -->
+                <div class="column-actions">
+                    <button type="button" id="backCancelBtn" class="btn btn-secondary">Back</button>
+                    <button type="submit" id="saveSellerBtn" class="btn btn-primary" disabled>Save</button>
                 </div>
             </div>
-
-            <div class="form-section">
-                <h3>Agreement</h3>
-
-                <div class="agreement-box">
-                    <p>By registering as a seller, you agree to:</p>
-                    <ul>
-                        <li>Provide accurate product information</li>
-                        <li>Maintain fair pricing</li>
-                        <li>Process orders within 2 business days</li>
-                        <li>Provide customer support</li>
-                        <li>Follow platform policies</li>
-                    </ul>
-
-                    <label class="checkbox">
-                        <input type="checkbox" id="agree_terms" required>
-                        <span>I agree to the Terms and Conditions</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="btn-container">
-                <button type="submit" class="btn btn-primary">Submit Application</button>
-                <a href="customer-dashboard.php" class="btn btn-secondary">Cancel</a>
-            </div>
-
-            <input type="hidden" name="action" value="become_seller">
         </form>
     </div>
 
+    <!-- Feedback Modal with single button -->
+    <div id="feedbackModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <img src="../assets/image/icons/mail.svg" alt="Notification">
+            </div>
+            <p id="modalMessage" class="modal-message"></p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" id="modalOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
     <?php include_once('footer.php'); ?>
-
-    <script>
-    document.getElementById('sellerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!document.getElementById('agree_terms').checked) {
-            alert('Please agree to the Terms and Conditions');
-            return;
-        }
-
-        const formData = new FormData(e.target);
-
-        try {
-            const response = await fetch('../database/customer-profile-handler.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                alert(result.message);
-                window.location.href = 'seller-dashboard.php';
-            } else {
-                alert('Error: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        }
-    });
-    </script>
 </body>
-
 </html>
 ```
 
@@ -10103,6 +10433,418 @@ function initQuickActions() {
 
 ---
 
+## File: `Crooks-Cart-Collectives/scripts/seller-fill-form.js`
+
+**Status:** `FOUND`
+
+```javascript
+/* Crooks-Cart-Collectives/scripts/seller-fill-form.js */
+/* Fixed: Removed beforeunload listener that caused unwanted window alert after submission */
+
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+
+    // ============= DOM ELEMENTS =============
+    const form = document.getElementById('sellerFillForm');
+    const saveBtn = document.getElementById('saveSellerBtn');
+    const backCancelBtn = document.getElementById('backCancelBtn');
+    
+    // Get all required fields (excluding middle_name which is optional)
+    const requiredFields = [
+        document.getElementById('first_name'),
+        document.getElementById('last_name'),
+        document.getElementById('birthdate'),
+        document.getElementById('gender'),
+        document.getElementById('address'),
+        document.getElementById('business_name')
+    ];
+    
+    // Optional field (middle name)
+    const middleNameField = document.getElementById('middle_name');
+    
+    // File inputs (should NOT affect save button state)
+    const identityPhoto = document.getElementById('identity_photo');
+    const idDocument = document.getElementById('id_document');
+    
+    // Preview elements
+    const identityPreview = document.getElementById('identityPreview');
+    const idDocumentPreview = document.getElementById('idDocumentPreview');
+    const identityFileName = document.getElementById('identityFileName');
+    const idDocumentFileName = document.getElementById('idDocumentFileName');
+    
+    // Modal elements
+    const modal = document.getElementById('feedbackModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalOkBtn = document.getElementById('modalOkBtn');
+    
+    // Hidden field to check if user is already a seller
+    const isSeller = document.querySelector('input[name="is_seller"]')?.value === '1';
+    
+    // ============= STATE =============
+    let isSubmitting = false;
+    let formChanged = false;
+    let initialFormState = {}; // Store initial form values
+    
+    // ============= MODAL FUNCTIONS =============
+    function showModal(message) {
+        if (!modal || !modalMessage) return;
+        modalMessage.textContent = message;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function hideModal() {
+        if (!modal) return;
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    if (modalOkBtn) {
+        modalOkBtn.addEventListener('click', hideModal);
+    }
+    
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) hideModal();
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+            hideModal();
+        }
+    });
+    
+    // ============= CAPTURE INITIAL FORM STATE =============
+    function captureInitialState() {
+        requiredFields.forEach(field => {
+            if (field) {
+                if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
+                    initialFormState[field.id] = field.value || '';
+                } else if (field.tagName === 'SELECT') {
+                    initialFormState[field.id] = field.value || '';
+                }
+            }
+        });
+        
+        if (middleNameField) {
+            initialFormState[middleNameField.id] = middleNameField.value || '';
+        }
+    }
+    
+    // ============= CHECK IF FORM ACTUALLY CHANGED =============
+    function hasFormChanged() {
+        // Check required fields
+        for (let field of requiredFields) {
+            if (!field) continue;
+            
+            const currentValue = field.tagName === 'SELECT' ? field.value : field.value || '';
+            const initialValue = initialFormState[field.id] || '';
+            
+            if (currentValue !== initialValue) {
+                return true;
+            }
+        }
+        
+        // Check middle name
+        if (middleNameField) {
+            if ((middleNameField.value || '') !== (initialFormState[middleNameField.id] || '')) {
+                return true;
+            }
+        }
+        
+        // Check file inputs (if they have files selected)
+        if (identityPhoto && identityPhoto.files.length > 0) {
+            return true;
+        }
+        if (idDocument && idDocument.files.length > 0) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // ============= FORM VALIDATION =============
+    function validateForm() {
+        // Check all required fields (excluding file inputs)
+        for (let field of requiredFields) {
+            if (!field) continue;
+            
+            // For text inputs, check value
+            if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
+                if (!field.value || !field.value.trim()) {
+                    return false;
+                }
+            }
+            
+            // For select elements
+            if (field.tagName === 'SELECT') {
+                if (!field.value) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    function highlightMissingFields() {
+        // Remove any existing highlights
+        requiredFields.forEach(field => {
+            if (field) {
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
+            }
+        });
+        
+        // Highlight missing required fields
+        requiredFields.forEach(field => {
+            if (!field) return;
+            
+            // Check if field is empty
+            let isEmpty = false;
+            if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
+                isEmpty = !field.value || !field.value.trim();
+            } else if (field.tagName === 'SELECT') {
+                isEmpty = !field.value;
+            }
+            
+            if (isEmpty) {
+                field.style.borderColor = '#FF8246';
+                field.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+            }
+        });
+    }
+    
+    function clearHighlights() {
+        requiredFields.forEach(field => {
+            if (field) {
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
+            }
+        });
+    }
+    
+    // ============= UPDATE SAVE BUTTON STATE =============
+    function updateSaveButtonState() {
+        if (!saveBtn) return;
+        
+        if (validateForm()) {
+            saveBtn.disabled = false;
+            saveBtn.classList.remove('disabled');
+        } else {
+            saveBtn.disabled = true;
+            saveBtn.classList.add('disabled');
+        }
+    }
+    
+    // ============= TRACK FORM CHANGES FOR REQUIRED FIELDS ONLY =============
+    function handleRequiredFieldChange() {
+        formChanged = hasFormChanged();
+        updateSaveButtonState();
+    }
+    
+    // Add change listeners to required fields ONLY
+    requiredFields.forEach(field => {
+        if (field) {
+            field.addEventListener('input', handleRequiredFieldChange);
+            field.addEventListener('change', handleRequiredFieldChange);
+        }
+    });
+    
+    // Add listener for middle name (optional, but still tracks form changes)
+    if (middleNameField) {
+        middleNameField.addEventListener('input', function() {
+            formChanged = hasFormChanged();
+            // Middle name changes do NOT affect save button state
+        });
+    }
+    
+    // ============= FILE UPLOAD HANDLING - NO EFFECT ON SAVE BUTTON =============
+    function handleFileUpload(input, previewElement, fileNameElement) {
+        if (!input || !previewElement || !fileNameElement) return;
+        
+        input.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                fileNameElement.textContent = file.name;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewElement.style.backgroundImage = `url('${e.target.result}')`;
+                    previewElement.style.backgroundSize = 'cover';
+                    previewElement.style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(file);
+                
+                // Add visual feedback
+                previewElement.style.border = '2px solid #FF8246';
+            } else {
+                fileNameElement.textContent = '';
+                previewElement.style.backgroundImage = '';
+                previewElement.style.border = '';
+            }
+            
+            // Check if form actually changed
+            formChanged = hasFormChanged();
+            
+            // IMPORTANT: DO NOT call updateSaveButtonState() here
+            // File uploads should NOT enable the save button
+        });
+    }
+    
+    handleFileUpload(identityPhoto, identityPreview, identityFileName);
+    handleFileUpload(idDocument, idDocumentPreview, idDocumentFileName);
+    
+    // ============= CAPTURE INITIAL STATE AFTER PAGE LOAD =============
+    captureInitialState();
+    
+    // ============= INITIAL CHECK =============
+    // Check if form is valid on load (for existing sellers)
+    updateSaveButtonState();
+    
+    // ============= FORM SUBMISSION =============
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isSubmitting) return;
+            
+            clearHighlights();
+            
+            // Check if form is valid (required fields only)
+            if (!validateForm()) {
+                highlightMissingFields();
+                showModal('Please fill in all required fields including Store Name.');
+                return;
+            }
+            
+            isSubmitting = true;
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(form);
+                
+                const response = await fetch('../database/seller-fill-form-handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showModal(result.message);
+                    
+                    // If there were missing fields highlighted, clear them
+                    clearHighlights();
+                    
+                    // After successful save, reset the form changed flag
+                    formChanged = false;
+                    
+                    // After 1.5 seconds, redirect based on seller status
+                    setTimeout(() => {
+                        if (isSeller) {
+                            // Existing seller - go back to dashboard
+                            window.location.href = 'seller-dashboard.php';
+                        } else {
+                            // New seller - go to dashboard after application
+                            window.location.href = 'seller-dashboard.php';
+                        }
+                    }, 1500);
+                    
+                } else {
+                    showModal(result.message || 'Failed to save. Please try again.');
+                    
+                    // Highlight missing fields if returned from server
+                    if (result.missing_fields && Array.isArray(result.missing_fields)) {
+                        result.missing_fields.forEach(fieldName => {
+                            const field = document.getElementById(fieldName);
+                            if (field) {
+                                field.style.borderColor = '#FF8246';
+                                field.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+                            }
+                        });
+                    }
+                    
+                    saveBtn.textContent = originalText;
+                    saveBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error saving seller info:', error);
+                showModal('Network error. Please check your connection and try again.');
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+            } finally {
+                isSubmitting = false;
+            }
+        });
+    }
+    
+    // ============= BACK/CANCEL BUTTON =============
+    if (backCancelBtn) {
+        backCancelBtn.addEventListener('click', function() {
+            if (hasFormChanged()) {
+                if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                    window.location.href = isSeller ? 'seller-dashboard.php' : 'customer-dashboard.php';
+                }
+            } else {
+                window.location.href = isSeller ? 'seller-dashboard.php' : 'customer-dashboard.php';
+            }
+        });
+    }
+    
+    // ============= AUTO-RESIZE TEXTAREA =============
+    const addressField = document.getElementById('address');
+    if (addressField) {
+        function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        }
+        
+        addressField.addEventListener('input', function() {
+            autoResize.call(this);
+            handleRequiredFieldChange(); // This is a required field
+        });
+        setTimeout(() => autoResize.call(addressField), 100);
+    }
+    
+    // ============= BIRTHDATE VALIDATION =============
+    const birthdateField = document.getElementById('birthdate');
+    if (birthdateField) {
+        birthdateField.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - selectedDate.getFullYear();
+            const monthDiff = today.getMonth() - selectedDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 13) {
+                showModal('You must be at least 13 years old to become a seller.');
+                this.value = '';
+            } else if (age > 120) {
+                showModal('Please enter a valid birthdate.');
+                this.value = '';
+            }
+            
+            handleRequiredFieldChange(); // This is a required field
+        });
+    }
+    
+    // ============= BEFOREUNLOAD LISTENER REMOVED TO PREVENT UNWANTED ALERT =============
+    // The browser-level confirmation is no longer needed; the modal is sufficient.
+});
+```
+
+---
+
 ## File: `Crooks-Cart-Collectives/scripts/cart.js`
 
 **Status:** `FOUND`
@@ -10362,7 +11104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 **Status:** `FOUND`
 
 ```javascript
-// customer-profile.js - Fixed for edit functionality with left preview
+// customer-profile.js - Fixed for edit functionality and name refresh after save
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -10393,8 +11135,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstNameInput = document.getElementById('first_name');
     const lastNameInput = document.getElementById('last_name');
     const addressInput = document.getElementById('address');
-
-    console.log('Editable inputs found:', editableInputs.length);
 
     // State
     let isEditMode = false;
@@ -10434,7 +11174,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enable edit mode
     function enableEditMode() {
-        console.log('Enabling edit mode');
         isEditMode = true;
         editBtn.textContent = 'Cancel';
         saveBtn.disabled = false;
@@ -10442,18 +11181,16 @@ document.addEventListener('DOMContentLoaded', function() {
             profilePicUpload.style.display = 'block';
         }
         if (chooseButtonContainer) {
-            chooseButtonContainer.style.display = 'flex';  // CHANGED: from 'block' to 'flex'
+            chooseButtonContainer.style.display = 'flex';
         }
         editableInputs.forEach(field => {
             field.disabled = false;
-            console.log('Enabling field:', field.id || 'unnamed field');
         });
         pictureChanged = false;
     }
 
     // Disable edit mode
     function disableEditMode(restore = true) {
-        console.log('Disabling edit mode, restore:', restore);
         isEditMode = false;
         editBtn.textContent = 'Edit';
         saveBtn.disabled = true;
@@ -10522,7 +11259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit/Cancel button
     if (editBtn) {
         editBtn.addEventListener('click', function() {
-            console.log('Edit/Cancel clicked, isEditMode:', isEditMode);
             if (!isEditMode) {
                 storeOriginalValues();
                 enableEditMode();
@@ -10535,7 +11271,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save button
     if (saveBtn) {
         saveBtn.addEventListener('click', async function() {
-            console.log('Save clicked');
             
             // Validation
             const firstName = firstNameInput ? firstNameInput.value.trim() : '';
@@ -10547,7 +11282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Disable button
+            // Disable button and store original text
             saveBtn.disabled = true;
             const originalText = saveBtn.textContent;
             saveBtn.textContent = 'Saving...';
@@ -10569,23 +11304,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.status === 'success') {
                     showModal('Profile updated successfully!');
                     
-                    // Add 1 second delay before handling
+                    // 1 second delay before handling UI updates
                     setTimeout(() => {
-                        // If picture was changed, force a full page reload
-                        if (pictureChanged) {
-                            window.location.reload(true);
-                        } else {
-                            // For text-only updates, just exit edit mode
+                        if (!pictureChanged) {
+                            // Update the displayed full name (profile stack container)
+                            const nameSpan = document.querySelector('.display-full-name');
+                            if (nameSpan && result.data) {
+                                nameSpan.textContent = (result.data.first_name || '') + ' ' + (result.data.last_name || '');
+                            }
+                            // Store new values as original for future cancels
+                            storeOriginalValues();
+                            // Exit edit mode without restoring old values
                             disableEditMode(false);
-                            saveBtn.disabled = false;
-                            saveBtn.textContent = originalText;
+                        } else {
+                            // Picture changed – force a full page reload after 1 second
+                            window.location.reload(true);
                         }
+                        // Reset save button text (already disabled by disableEditMode)
+                        saveBtn.textContent = originalText;
                     }, 1000);
                     
-                    // If no picture change, we'll handle it in the setTimeout above
-                    if (!pictureChanged) {
-                        return;
-                    }
                 } else {
                     showModal(result.message || 'Update failed. Please try again.');
                     saveBtn.disabled = false;
@@ -10603,6 +11341,2517 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial store
     storeOriginalValues();
 });
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/footer.css`
+
+**Status:** `FOUND`
+
+```css
+.footer {
+  background-color: var(--color-background-B);
+  padding: var(--size-header-padding);
+  box-shadow: var(--effect-box-shadow-default);
+  border-top: 2px solid var(--color-border-A);
+  width: 100vw !important;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  margin: 0 !important;
+}
+
+.footer-upper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--size-navigation-gap);
+  margin: 0;
+  color: var(--color-text-B);
+}
+
+.queries {
+  max-width: 50%;
+  color: var(--color-text-A);
+}
+
+.queries h2 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.queries span {
+  color: var(--color-accent-A);
+}
+
+.socials {
+  display: flex;
+  gap: var(--size-navigation-gap);
+}
+
+.socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.socials a img {
+  width:  40px;
+  height: 40px;
+}
+
+.footer-lower {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 0;
+  font-size: var(--font-size-base);
+  margin-top: 20px;
+  border-top: 2px solid var(--color-border-A);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mail-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--color-text-A);
+}
+
+.mail-button img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0);
+}
+
+.policy-links {
+  display: flex;
+  gap: var(--size-navigation-gap);
+  padding: 5px 0;
+}
+
+.policy-links a {
+  color: var(--color-text-A);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.policy-links a:hover {
+  color: var(--color-accent-A);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .policy-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .footer-lower {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mail-button {
+    margin-bottom: 10px;
+  }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/header.css`
+
+**Status:** `FOUND`
+
+```css
+/* CSS File Content */
+:root {
+  /* Sizes & Spacing */
+  --size-logo-height: 40px;
+  --size-button-padding: 10px 20px;
+  --size-button-radius: 5px;
+  --size-navigation-gap: 30px;
+  --size-header-padding: 15px 40px;
+  --size-mobile-menu-max-width: 270px;
+
+  /* Color Palette - Light Theme */
+  --color-background-A: #e4eaf2;        /* body background */
+  --color-background-B: #f2f4f6;        /* header background */
+  --color-background-C: #000000;  
+  --color-linear-gradient-A: #a49bf8, #b8b9fa, #dbd5fd, #43c9fb;      /* mobile menu bg or secondary light bg */
+  --color-text-A: #000000;              /* main text */
+  --color-text-B: #ffffff;              /* button text on orange */
+  --color-text-C: #1e2e2f;
+  --color-accent-A: #ff8246;            /* primary orange */
+  --color-hover-A: #e8693d;             /* hover orange variant */
+  --color-border-A: #363940;            /* border */
+
+  /* Effects */
+  --effect-glow-A: 0 0 10px rgba(0, 0, 0, 0.2);                /* soft shadow */
+  --effect-glow-B: 0 0 10px rgba(211, 94, 53, 0.7);            /* orange glow */
+  --effect-box-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);  /* lighter shadow */
+  --effect-transition-default: all 0.3s ease-in-out;
+
+  /* Typography */
+  --font-family-base: Arial, sans-serif;
+  --font-size-base: 16px;
+  --font-size-title: 22px;
+  --font-weight-bold: 400;
+}
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-background-A);
+  color: var(--color-text-A);
+  font-family: var(--font-family-base);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Scrollbar Removal */
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Header Styles */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-background-B);
+  padding: var(--size-header-padding);
+  box-shadow: var(--effect-box-shadow-default);
+  border-bottom: 2px solid var(--color-border-A);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.header-logo img {
+  height: var(--size-logo-height);
+  width: auto;
+}
+
+.title {
+  color: var(--color-text-A);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title span {
+  color: var(--color-accent-A);
+}
+
+/* Navigation Styles */
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: var(--size-navigation-gap);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nav-bar {
+  display: flex;
+  gap: var(--size-navigation-gap);
+  overflow: hidden;
+}
+
+/* Desktop Navigation Link Styles */
+.nav-link {
+  color: var(--color-text-A);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  transition: var(--effect-transition-default);
+  white-space: nowrap;
+  position: relative;
+  padding: 5px 0;
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--color-hover-A);
+}
+
+/* Desktop hover underline effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent-A);
+  transition: var(--effect-transition-default);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Button Styles */
+.social-button {
+  background: var(--color-accent-A);
+  color: var(--color-text-B);
+  padding: var(--size-button-padding);
+  border-radius: var(--size-button-radius);
+  text-decoration: none;
+  transition: var(--effect-transition-default);
+  border: 2px solid transparent;
+}
+
+.social-button:hover {
+  background: var(--color-hover-A);
+  box-shadow: var(--effect-glow-B);
+  color: var(--color-text-B);
+}
+
+/* Mobile Menu Styles */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  z-index: 1001;
+}
+
+.hamburger-icon {
+  width: 30px;
+  height: 30px;
+  transition: var(--effect-transition-default);
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    width: 50%;
+    max-width: var(--size-mobile-menu-max-width);
+    text-align: center;
+    height: calc(100vh - 80px);
+    background-color: var(--color-background-B);
+    z-index: 1000;
+    transform: translateX(100%); /* This is the key - hidden off-screen */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+    overflow-y: auto;
+    border-left: 2px solid var(--color-border-A);
+    border-radius: 15px 0 0 15px;
+    box-shadow: none;
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-nav.open {
+    transform: translateX(0) !important; /* ensure it overrides any leftover inline */
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+}
+/* Mobile Navigation Link Styles - RESTORED ORIGINAL HOVER EFFECT */
+.mobile-nav .nav-link {
+  color: var(--color-text-A);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 15px 10px; /* Increased padding for better touch targets */
+  position: relative;
+  transition: var(--effect-transition-default);
+  border-bottom: 1px solid var(--color-border-A);
+  display: block; /* Make it block level for full width */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* RESTORED: Underline hover effect for mobile nav - properly aligned */
+.mobile-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; /* Adjusted to sit right on the border */
+  left: 10px; /* Start after padding */
+  right: 10px; /* End before padding */
+  width: calc(100% - 20px); /* Full width minus left/right padding */
+  height: 2px;
+  background: var(--color-accent-A);
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+  transform-origin: left;
+}
+
+.mobile-nav .nav-link:hover::after,
+.mobile-nav .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.mobile-nav .nav-link:hover,
+.mobile-nav .nav-link.active {
+  color: var(--color-hover-A);
+}
+
+/* Special styling for the social button in mobile nav */
+.mobile-nav .social-button {
+  margin-top: 20px;
+  background-color: var(--color-accent-A);
+  color: var(--color-text-A);
+  padding: 15px 10px; /* Match nav link padding */
+  border-radius: var(--size-button-radius);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  transition: var(--effect-transition-default);
+  border: 2px solid transparent;
+  text-align: center;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Remove the after element for social button */
+.mobile-nav .social-button::after {
+  display: none;
+}
+
+.mobile-nav .social-button:hover {
+  background: var(--color-hover-A);
+  box-shadow: var(--effect-glow-B);
+  color: var(--color-text-B);
+}
+
+/* Backdrop for mobile menu */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cart count badge */
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--color-accent-A);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1005px) {
+  .hamburger-menu {
+    display: block;
+  }
+  
+  .nav-container {
+    display: none;
+  }
+  
+  .header-logo {
+    gap: 5px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-bar {
+    padding: 12px 25px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+  
+  .mobile-nav {
+    width: 65%;
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  /* Adjust underline for smaller screens */
+  .mobile-nav .nav-link::after {
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-bar {
+    padding: 10px 20px;
+  }
+  
+  .title {
+    font-size: 16px;
+  }
+  
+  .mobile-nav {
+    width: 80%;
+    top: 65px;
+    height: calc(100vh - 65px);
+    padding: 15px;
+  }
+  
+  .mobile-nav .nav-link {
+    padding: 12px 10px;
+  }
+  
+  /* Adjust underline for mobile */
+  .mobile-nav .nav-link::after {
+    bottom: -1px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+}
+
+/* Animation Enhancements */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.header-bar.header-delay,
+.mobile-nav.header-delay {
+  transition: none !important;
+}
+
+/* Fix for active link in desktop navigation */
+.nav-link.active {
+  color: var(--color-hover-A);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/index.css`
+
+**Status:** `FOUND`
+
+```css
+/* ===== RESET & BASE STYLES ===== */
+.content {
+    margin-top: 100px;
+}
+
+/* ===== SHOWCASE SECTION ===== */
+.showcase-section {
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+    margin-top: 70px;
+    margin-bottom: 40px;
+}
+
+.showcase-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.showcase-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.showcase-slide.active {
+    opacity: 1;
+}
+
+.showcase-content {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    max-width: 600px;
+}
+
+.showcase-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.showcase-content p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.showcase-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #ff8246;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.showcase-button:hover {
+    background-color: #e8693d;
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.slider-controls button {
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.slider-controls button:hover {
+    background: #ff8246;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+    padding: 40px 0;
+    background-color: #f2f4f6;
+    margin-bottom: 20px;
+}
+
+.features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.features-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #1e2e2f;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.feature-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+
+
+.feature-card h3 {
+    margin-bottom: 10px;
+    color: #1e2e2f;
+    font-size: 1.2rem;
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ===== FEATURED PRODUCTS SECTION ===== */
+.featured-products-section {
+    padding: 30px 0;
+}
+
+.products-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.featured-products-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #1e2e2f;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #1e2e2f;
+    line-height: 1.4;
+    min-height: 2.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    --webkit-line-clamp: 2;
+    --webkit-box-orient: vertical;
+}
+
+.product-price {
+    color: #ff8246;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin: 8px 0;
+}
+
+.product-seller {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 5px 0 12px 0;
+}
+
+.view-product-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff8246;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+.view-product-btn:hover {
+    background-color: #e8693d;
+}
+
+.no-products-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.no-products-message p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.become-seller-link {
+    color: #ff8246;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.become-seller-link:hover {
+    text-decoration: underline;
+}
+
+.view-all-products-btn {
+    display: block;
+    width: fit-content;
+    margin: 20px auto 0;
+    padding: 12px 35px;
+    background-color: #ff8246;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.view-all-products-btn:hover {
+    background-color: #e8693d;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 70px;
+    }
+    
+    .showcase-section {
+        height: 60vh;
+        margin-top: -70px;
+        margin-bottom: 30px;
+    }
+    
+    .showcase-content {
+        left: 5%;
+        max-width: 90%;
+    }
+    
+    .showcase-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .showcase-content p {
+        font-size: 1.2rem;
+    }
+    
+    .features-section {
+        padding: 30px 0;
+        margin-bottom: 15px;
+    }
+    
+    .features-section h2 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .featured-products-section {
+        padding: 20px 0;
+    }
+    
+    .featured-products-section h2 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+    
+    .product-image-container {
+        height: 180px;
+    }
+    
+    .view-all-products-btn {
+        margin: 15px auto 0;
+        padding: 10px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        margin-top: 60px;
+    }
+    
+    .showcase-section {
+        height: 50vh;
+        margin-top: -60px;
+        margin-bottom: 20px;
+    }
+    
+    .showcase-content h1 {
+        font-size: 2rem;
+    }
+    
+    .showcase-content p {
+        font-size: 1rem;
+    }
+    
+    .showcase-button {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+    
+    .features-section h2,
+    .featured-products-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .view-all-products-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .showcase-slide {
+        background-position: center center;
+    }
+}
+
+.features-section {
+    position: relative;
+}
+
+.features-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff8246, transparent);
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/profile.css`
+
+**Status:** `FOUND`
+
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f2f4f6;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 30px 0 20px;
+}
+
+/* Form Container */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Form Sections - stacked vertically */
+.form-section {
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-section:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: #000000;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF8246;
+}
+
+/* Account info section needs to position buttons at bottom */
+.account-info-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+/* PROFILE STACKED CONTAINER - Stack vertically and center */
+.profile-stacked-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Profile Picture Wrapper */
+.profile-picture-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-picture-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #FF8246;
+    background: #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Name Single Line - first name + last name on one line */
+.profile-name-single-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.display-full-name {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
+
+/* Choose button container - centered */
+.choose-button-container {
+    margin-top: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Choose photo button - centered */
+.btn-choose-photo {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.3px;
+    padding: 10px 24px;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    text-align: center;
+    border: 1px solid #000000;
+    white-space: nowrap;
+}
+
+.btn-choose-photo:hover {
+    background-color: #333333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile picture upload (hidden file input) */
+.profile-picture-upload {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.file-upload-label {
+    display: none;
+}
+
+.profile-picture-upload input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #000000;
+    word-break: break-all;
+    text-align: left;
+    opacity: 0.7;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: #666666;
+    margin-top: 4px;
+    text-align: left;
+}
+
+/* Fields row - for multiple fields in one line */
+.fields-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* Add labels above inputs */
+.with-labels {
+    margin-top: 10px;
+}
+
+.field-label {
+    display: block;
+    color: #000000;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+/* Balanced row - for birthdate and gender to share space equally */
+.balanced-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* Half field - exactly 50% minus half the gap */
+.half-field {
+    flex: 1 1 calc(50% - 7.5px);
+    min-width: 0;
+}
+
+/* Info row - for account info items */
+.info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Flex field - grows/shrinks based on content */
+.flex-field {
+    flex: 1 1 auto;
+    min-width: 120px;
+}
+
+/* Full width field */
+.full-width {
+    width: 100%;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 0;
+}
+
+/* Input styles - ORIGINAL STYLING for enabled/disabled states */
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    color: #000000;
+    transition: all 0.3s ease;
+}
+
+/* Make date input consistent */
+.form-group input[type="date"] {
+    font-family: inherit;
+}
+
+.form-group textarea {
+    height: 80px;
+    padding: 8px 12px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* FOCUS STATE - for when inputs are enabled and being edited */
+.form-group input:not(:disabled):focus,
+.form-group select:not(:disabled):focus,
+.form-group textarea:not(:disabled):focus {
+    border-color: #FF8246;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+/* DISABLED STATE - matches the info-value style from account info */
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background-color: #f9f9f9;
+    border-color: #e0e0e0;
+    color: #000000;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Make placeholder text in disabled fields lighter */
+.form-group input:disabled::placeholder,
+.form-group select:disabled::placeholder,
+.form-group textarea:disabled::placeholder {
+    color: #999999;
+    opacity: 1;
+}
+
+.error-message {
+    color: #FF8246;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    min-height: 18px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Info Group - for account info */
+.info-group {
+    flex: 1 1 0;
+    min-width: 150px;
+}
+
+.info-group label {
+    display: block;
+    color: #000000;
+    margin-bottom: 4px;
+    opacity: 0.8;
+    text-align: left;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #000000;
+    word-break: break-word;
+    background: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Info note - centered */
+.info-note {
+    margin-top: 10px;
+    margin-bottom: 25px;
+    color: #666666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Profile actions - equal width buttons at bottom of account info */
+.profile-actions {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.profile-actions .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 0;
+    text-align: center;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background-color: #FF8246;
+    color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #e66a2e;
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+}
+
+.btn-secondary {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Messages */
+.message {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: none;
+    border-left: 4px solid;
+}
+
+.message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-left-color: #2e7d32;
+}
+
+.message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border-left-color: #c62828;
+}
+
+/* Feedback Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeScale 0.3s ease;
+}
+
+.modal-icon {
+    margin-bottom: 20px;
+}
+
+.modal-icon img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.modal-message {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #000000;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-confirm {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.modal-btn-confirm:hover {
+    background: #e66a2e;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ========== DESKTOP VIEW ========== */
+@media (min-width: 769px) {
+    .profile-picture-wrapper img {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .display-full-name {
+        font-size: 2rem;
+    }
+    
+    .btn-choose-photo {
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        border-radius: 40px;
+    }
+}
+
+/* ========== TABLET VIEW ========== */
+@media (min-width: 577px) and (max-width: 768px) {
+    .profile-picture-wrapper img {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .display-full-name {
+        font-size: 2rem;
+    }
+    
+    .btn-choose-photo {
+        padding: 10px 28px;
+        font-size: 1rem;
+        border-radius: 30px;
+    }
+}
+
+/* ========== MOBILE VIEW ========== */
+@media (max-width: 576px) {
+    .profile-picture-wrapper img {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .display-full-name {
+        font-size: 1.8rem;
+        white-space: normal;
+        word-break: break-word;
+    }
+    
+    .btn-choose-photo {
+        padding: 10px 24px;
+        font-size: 1rem;
+        border-radius: 30px;
+    }
+    
+    /* Form fields stack vertically */
+    .fields-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .flex-field {
+        width: 100%;
+    }
+    
+    .balanced-row {
+        flex-direction: column;
+    }
+    
+    .half-field {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .info-group {
+        width: 100%;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .profile-actions .btn {
+        width: 100%;
+    }
+}
+
+/* ========== SMALL MOBILE VIEW ========== */
+@media (max-width: 375px) {
+    .profile-picture-wrapper img {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .display-full-name {
+        font-size: 1.5rem;
+    }
+    
+    .btn-choose-photo {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+} 
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/seller-registration.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/seller-registration.css */
+/* Three‑column layout based on sign-up.css, with buttons in third column */
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --input-height: 50px;
+    --border-radius: 12px;
+
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e4eaf2;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pageTitleHeader {
+    font-size: 2rem;
+    padding: 15px 40px;
+    margin: 20px auto 50px;
+    text-align: center;
+    width: 100%;
+    color: #1e2e2f;
+    font-weight: 400;
+}
+
+/* Form Container - Using Grid for precise column control */
+.seller-fill-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Exactly 3 equal columns */
+    gap: var(--form-section-gap);
+    width: 100%;
+    align-items: stretch;
+}
+
+/* Form Sections */
+.form-section {
+    background: #f2f4f6;
+    border: 1px solid #363940;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--effect-box-shadow-default);
+    transition: var(--effect-transition-default);
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+.form-section:hover {
+    box-shadow: var(--effect-box-shadow-hover);
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: #1e2e2f;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff8246;
+    flex-shrink: 0;
+}
+
+/* Combined section (third column) needs to push buttons to bottom */
+.combined-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.combined-section .column-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+
+/* Credential section specific */
+.credential-section .upload-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.upload-box {
+    flex: 1 1 200px;
+    text-align: center;
+    padding: 15px;
+    border: 2px dashed #363940;
+    border-radius: 8px;
+    transition: var(--effect-transition-default);
+    background: #ffffff;
+}
+
+.upload-box:hover {
+    border-color: #ff8246;
+}
+
+.upload-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.upload-preview {
+    width: 100%;
+    height: 120px;
+    background-size: cover;   /* fills box */
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #000000;
+}
+
+.upload-label {
+    cursor: pointer;
+    display: block;
+    background: #ff8246;
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    transition: var(--effect-transition-default);
+}
+
+.upload-label:hover {
+    background: #e8693d;
+    box-shadow: var(--effect-glow-B);
+}
+
+.upload-label input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #000000;
+    opacity: 0.7;
+    word-break: break-all;
+}
+
+.help-text {
+    font-size: 0.7rem;
+    color: #000000;
+    opacity: 0.6;
+    margin-top: 4px;
+}
+
+/* Form groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e2e2f;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 12px;
+    border: 1px solid #363940;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    color: #000000;
+    transition: var(--effect-transition-default);
+}
+
+.form-group textarea {
+    height: auto;
+    min-height: 80px;
+    padding: 8px 12px;
+    resize: none;
+    overflow-y: auto;
+    font-family: inherit;
+}
+
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background-color: #ffffff;
+    border-color: #000000;
+    opacity: 0.5;
+    color: #000000;
+    cursor: not-allowed;
+}
+
+.form-group input:not(:disabled):focus,
+.form-group select:not(:disabled):focus,
+.form-group textarea:not(:disabled):focus {
+    border-color: #ff8246;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+.error-message {
+    color: #ff8246;
+    font-size: 0.8rem;
+    min-height: 18px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Info groups for account info (non-editable) */
+.info-group {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    opacity: 0.8;
+    margin-bottom: 12px;
+}
+
+.info-group label {
+    display: block;
+    color: #000000;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #000000;
+    word-break: break-word;
+    padding: 8px 12px;
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    opacity: 0.7;
+    margin: 0;
+}
+
+/* Buttons inside combined section */
+.column-actions .btn {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--effect-transition-default);
+    text-align: center;
+}
+
+.column-actions .btn-primary {
+    background-color: #ff8246;
+    color: #ffffff;
+}
+
+.column-actions .btn-primary:hover:not(:disabled) {
+    background-color: #e8693d;
+    box-shadow: var(--effect-glow-B);
+}
+
+.column-actions .btn-secondary {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.column-actions .btn-secondary:hover:not(:disabled) {
+    background-color: #333333;
+}
+
+.column-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Feedback Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeScale 0.3s ease;
+}
+
+.modal-icon {
+    margin-bottom: 20px;
+}
+
+.modal-icon img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.modal-message {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #000000;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-primary {
+    background: #ff8246;
+    color: #ffffff;
+}
+
+.modal-btn-primary:hover {
+    background: #e66a2e;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1000px) {
+    .seller-fill-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+    }
+    
+    .form-section {
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .seller-fill-container {
+        grid-template-columns: 1fr; /* Single column - stacks all 3 vertically */
+        gap: 20px;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/styles/sign-up.css`
+
+**Status:** `FOUND`
+
+```css
+/* Crooks-Cart-Collectives/styles/sign-up.css */
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --form-group-gap: 20px;
+    --input-height: 50px;
+    --border-radius: 12px;
+    
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
+    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    outline: none;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background-A);
+    color: var(--color-text-A);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pageTitleHeader {
+    font-size: calc(15px + var(--font-size-title));
+    padding: var(--size-header-padding);
+    margin: 20px auto 50px;
+    text-align: center;
+    width: 100%;
+    color: var(--color-text-C);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Form Container */
+.signup-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--form-section-gap);
+    padding: 0 20px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Form Sections - Barangay Style */
+.form-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    margin-bottom: var(--form-section-gap);
+    transition: var(--effect-transition-default);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section:hover {
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: var(--color-text-C);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-accent-A);
+}
+
+/* Form Groups - Barangay Style */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px; /* Reduced from 20px */
+    width: 100%;
+}
+
+.form-group label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text-C);
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    font-size: var(--font-size-base);
+    padding: 0 15px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--color-text-A);
+    transition: var(--effect-transition-default);
+}
+
+/* Address textarea - fixed initial size, auto-expands */
+.form-group textarea#address {
+    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
+    padding: 15px;
+    resize: none;
+    overflow-y: hidden;
+    line-height: 1.5;
+    transition: height 0.2s ease;
+}
+
+.form-group textarea#address.expanding {
+    height: auto;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+    outline: none;
+}
+
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #e74c3c;
+}
+
+.form-group.error label {
+    color: #e74c3c;
+}
+
+/* Error Messages */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Button Container - Always Stacked */
+.btn-container {
+    display: flex;
+    flex-direction: column; /* always vertical */
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.btn {
+    padding: var(--size-button-padding);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    border-radius: var(--size-button-radius);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    width: 100%; /* Full width when stacked */
+    min-width: unset; /* Remove min-width constraint */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+}
+
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: var(--color-background-C);
+    border: 1px solid;
+    border-color: var(--color-border-A);
+    color: var(--color-text-B);
+}
+
+/* Remove extra spacing from button wrapper */
+.form-section .form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+/* Links Group - Better Spacing */
+.links-group {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-border-A);
+    width: 100%;
+}
+
+.login-link,
+.seller-link {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-text-C);
+}
+
+.login-link a,
+.seller-link a {
+    text-decoration: none;
+    color: var(--color-accent-A);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.login-link a:hover,
+.seller-link a:hover {
+    color: var(--color-hover-A);
+    background-color: rgba(255, 130, 70, 0.1);
+}
+
+/* Notifier Modal - Barangay Style */
+.notifier {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.notifier.hidden {
+    display: none;
+}
+
+.notifier-content {
+    background-color: var(--color-background-B);
+    color: var(--color-text-A);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: var(--effect-box-shadow-default);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeScale 0.3s ease-in-out;
+}
+
+.notifier-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Last Form Section (Contact & Registration) Layout Fix */
+.form-section:last-child {
+    padding-bottom: 25px;
+}
+
+/* Form submitted state - Barangay Style */
+.signup-container.submitted .form-group:has(input:invalid),
+.signup-container.submitted .form-group:has(select:invalid),
+.signup-container.submitted .form-group:has(textarea:invalid) {
+    animation: pulseWarning 0.5s ease-in-out;
+}
+
+@keyframes pulseWarning {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Barangay-style color themes for form sections */
+.form-section {
+    background-color: var(--color-background-B);
+    border-color: var(--color-border-A);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border-color: var(--color-border-A);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+}
+
+/* Responsive Design - Barangay Style Adjustments */
+@media (max-width: 1024px) {
+    .signup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 1.5rem;
+        padding: 15px 10px;
+        margin: 10px auto 30px;
+    }
+    
+    .form-section {
+        padding: 20px;
+        min-width: 100%;
+        margin: 0 0 10px;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-container {
+        margin-top: 15px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        height: 45px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group textarea#address {
+        height: 90px;
+        min-height: 90px;
+    }
+    
+    .links-group {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.9rem;
+        margin: 5px 0;
+    }
+    
+    .signup-container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: 18px 15px;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 18px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-container {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .links-group {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.85rem;
+        margin: 4px 0;
+    }
+}
+
+/* Password toggle styles */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover img {
+    opacity: 1;
+}
+
+/* Ensure password fields have proper padding */
+.form-group input[type="password"] {
+    padding-right: 45px;
+}
 ```
 
 ---

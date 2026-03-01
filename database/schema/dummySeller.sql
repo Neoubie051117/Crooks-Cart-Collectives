@@ -14,23 +14,23 @@ first_name, last_name, email, username, password, address, contact_number
 ('Lebron', 'James', 'lebron.james@Sellerdummy.com', 'ninja', '123', '15 Delgado St., Purok 2, Brgy. Jaro, Iloilo City', '09333333333');
 
 -- =========================
--- MAKE THEM SELLERS
+-- MAKE THEM SELLERS (UPDATED with identity_path and id_document_path)
 -- =========================
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Aling Bebang''s Tiangge', TRUE FROM users WHERE username = 'alingbebang';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Aling Bebang''s Tiangge', NULL, NULL, TRUE FROM users WHERE username = 'alingbebang';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Totoy Bibo Bargains', TRUE FROM users WHERE username = 'totoybibo';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Totoy Bibo Bargains', NULL, NULL, TRUE FROM users WHERE username = 'totoybibo';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'El Bimbo''s Ukay-Ukay', TRUE FROM users WHERE username = 'thelastelbimby';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'El Bimbo''s Ukay-Ukay', NULL, NULL, TRUE FROM users WHERE username = 'thelastelbimby';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Pure Foods Paninda', TRUE FROM users WHERE username = 'hotdog';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Pure Foods Paninda', NULL, NULL, TRUE FROM users WHERE username = 'hotdog';
 
-INSERT INTO sellers (user_id, business_name, is_verified)
-SELECT user_id, 'Ninja''s Hidden Treasures', TRUE FROM users WHERE username = 'ninja';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
+SELECT user_id, 'Ninja''s Hidden Treasures', NULL, NULL, TRUE FROM users WHERE username = 'ninja';
 
 -- =========================
 -- INSERT 2 PRODUCTS PER SELLER WITH BUDGET PRICES

@@ -53,19 +53,17 @@ CREATE TABLE customers (
 );
 
 -- =====================================================
--- SELLERS TABLE
+-- SELLERS TABLE (REVISED)
 -- =====================================================
 CREATE TABLE sellers (
     seller_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     business_name VARCHAR(100),
-    valid_id_path VARCHAR(255),
+    identity_path VARCHAR(255),       -- path to formal picture
+    id_document_path VARCHAR(255),    -- path to valid ID document
     is_verified BOOLEAN DEFAULT FALSE,
     verification_date TIMESTAMP NULL,
     date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- Consider removing these denormalized fields:
-    -- total_products INT DEFAULT 0,
-    -- total_sales DECIMAL(10, 2) DEFAULT 0.00,
     rating DECIMAL(3, 2) DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
@@ -84,9 +82,8 @@ CREATE TABLE products (
     category VARCHAR(50),
     stock_quantity INT DEFAULT 0,
     image_path VARCHAR(255),
-    is_active BOOLEAN DEFAULT TRUE,  -- KEEP: used in queries
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- KEEP: used for sorting
-    -- removed last_updated
+    is_active BOOLEAN DEFAULT TRUE,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (seller_id)
         REFERENCES sellers(seller_id)
@@ -102,9 +99,8 @@ CREATE TABLE carts (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
-    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- keep this
-    -- removed updated_at
+    price DECIMAL(10, 2) NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
@@ -123,20 +119,16 @@ CREATE TABLE orders (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
     
-    -- Order details
     quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,  -- renamed from price_at_time
+    price DECIMAL(10, 2) NOT NULL,
     subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
     
-    -- Shipping & payment
     shipping_address VARCHAR(255) NOT NULL,
     payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
     
-    -- Order tracking
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'delivered', 'cancelled') DEFAULT 'pending',
     
-    -- Cancellation tracking - keep separate, they track different aspects
     cancelled_by ENUM('customer', 'seller') NULL,
     delivered_at TIMESTAMP NULL,
     cancelled_at TIMESTAMP NULL,
@@ -160,7 +152,6 @@ CREATE TABLE product_reviews (
     rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- is_edited and last_edited removed
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
