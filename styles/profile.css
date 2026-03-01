@@ -371,13 +371,7 @@ body {
     border: 1px solid #000000;
 }
 
-.btn-secondary:hover:not(:disabled) {
-    background-color: #333333;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
 .btn:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;

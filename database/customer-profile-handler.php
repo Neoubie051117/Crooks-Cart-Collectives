@@ -35,19 +35,29 @@ function handleProfileUpdate($userId) {
     $connection->beginTransaction();
     
     try {
-        // Update text fields
+        // Build update list – include empty values for nullable fields (set to NULL)
         $updates = [];
         $params = [];
         
-        $allowedFields = [
-            'first_name', 'middle_name', 'last_name', 
-            'birthdate', 'gender', 'address'
-        ];
+        // Fields that can be updated (all are nullable except first/last/address, but we treat them separately)
+        $allowedFields = ['first_name', 'middle_name', 'last_name', 'birthdate', 'gender', 'address'];
+        // Fields that should be set to NULL when empty (others will keep old value if empty)
+        $nullableFields = ['middle_name', 'birthdate', 'gender'];
         
         foreach ($allowedFields as $field) {
-            if (isset($_POST[$field]) && trim($_POST[$field]) !== '') {
-                $updates[] = "$field = ?";
-                $params[] = trim($_POST[$field]);
+            if (isset($_POST[$field])) {
+                $value = trim($_POST[$field]);
+                if ($value === '') {
+                    // If field is nullable, set to NULL; otherwise skip update (keep old value)
+                    if (in_array($field, $nullableFields)) {
+                        $updates[] = "$field = ?";
+                        $params[] = null;
+                    }
+                    // else: required field empty – skip update, keep existing value
+                } else {
+                    $updates[] = "$field = ?";
+                    $params[] = $value;
+                }
             }
         }
         

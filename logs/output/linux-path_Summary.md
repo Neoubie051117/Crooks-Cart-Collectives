@@ -2,7 +2,7 @@
 
 **Preset:** linux-path
 
-**Generated:** 2026-02-28 23:37:31
+**Generated:** 2026-03-01 03:27:35
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-02-28 23:37:30
+**Generated:** 2026-03-01 03:27:32
 **Mode:** all
 
 ```
@@ -268,19 +268,20 @@ Crooks-Cart-Collectives/
 │   ├── backend/
 │   ├── content-fetcher-configuration/
 │   │   ├── linux-path.py
-│   │   └── preset.py
+│   │   ├── specific-filesToShow.py
+│   │   └── windows-preset.py
 │   ├── output/
 │   │   ├── 0.0.17.md
 │   │   ├── Project_Structure.md
 │   │   ├── linux-path_Summary.md
-│   │   └── preset_Summary.md
+│   │   ├── preset_Summary.md
+│   │   └── specific-filesToShow_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
 │   ├── content-fetcher.py
 │   ├── runner.bat
 │   ├── runner.sh
-│   ├── tempCodeRunnerFile.bat
 │   └── tree-mapper.py
 ├── pages/
 │   ├── about.php
@@ -359,12 +360,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 21 |
 | JavaScript Files | 17 |
 | JSON Files | 0 |
-| Text/Markdown | 8 |
+| Text/Markdown | 9 |
 | Image Files | 55 |
 | Other Files | 13 |
 
 **Total Directories:** 15
-**Total Files:** 148
+**Total Files:** 149
 
 ---
 
@@ -2922,15 +2923,18 @@ function logError($message, $context = []) {
 **Status:** `FOUND`
 
 ```text
-[28-Feb-2026 14:29:18 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 14:35:24 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
-[28-Feb-2026 16:24:06 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
-[28-Feb-2026 16:24:06 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
-[28-Feb-2026 16:24:06 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
-[28-Feb-2026 16:25:59 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 16:26:17 Europe/Berlin] Signin attempt for identifier: alingbebang
-[28-Feb-2026 16:27:37 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
-[28-Feb-2026 16:27:56 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 17:18:31 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 17:36:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 17:38:14 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 17:38:14 Europe/Berlin] Password mismatch for user: iamlanceonline@gmail.com
+[28-Feb-2026 17:38:21 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 17:55:55 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 19:13:54 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
+[28-Feb-2026 20:13:55 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
+[28-Feb-2026 20:13:55 Europe/Berlin] Connection details - Host: localhost, Database: crooks_cart_collectives, Username: root
+[28-Feb-2026 20:13:55 Europe/Berlin] MySQL server is not running or cannot be reached. Please start MySQL service.
+[28-Feb-2026 20:14:29 Europe/Berlin] Signin attempt for identifier: iamlanceonline@gmail.com
+[28-Feb-2026 20:22:48 Europe/Berlin] Data storage: File saved successfully: Crooks-Data-Storage/users/1/profile/profile.jpg
 ```
 
 ---
@@ -5634,7 +5638,6 @@ function getProfilePictureUrl($picture) {
     <?php include_once('header.php'); ?>
 
     <div class="content">
-        <div class="pageTitleHeader">Edit Your Profile</div>
 
         <?php if (isset($error)): ?>
         <div class="message error" style="display: block; margin-bottom: 20px;">
@@ -5651,57 +5654,69 @@ function getProfilePictureUrl($picture) {
             <div id="successMessage" class="message success" style="display: none;"></div>
             <div id="errorMessage" class="message error" style="display: none;"></div>
 
-            <!-- Profile Picture Section -->
-            <div class="profile-picture-section">
-                <div class="profile-picture-wrapper">
-                    <img id="profilePicturePreview" 
-                         src="<?php echo getProfilePictureUrl($user['profile_picture'] ?? ''); ?>" 
-                         alt="Profile Picture"
-                         onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+            <!-- Personal Info Section with Profile Preview -->
+            <div class="form-section personal-info-section">
+                <h3>Profile Information</h3>
+                
+                <!-- PROFILE CONTAINER - Stacked and Centered -->
+                <div class="profile-stacked-container">
+                    <!-- Profile Picture -->
+                    <div class="profile-picture-wrapper">
+                        <img id="profilePicturePreview" 
+                             src="<?php echo getProfilePictureUrl($user['profile_picture'] ?? ''); ?>" 
+                             alt="Profile Picture"
+                             onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                        
+                        <div class="profile-picture-upload" id="profilePictureUpload" style="display: none;">
+                            <label for="profile_picture" class="file-upload-label">Choose Photo to Upload</label>
+                            <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                            <div class="file-name" id="fileNameDisplay"></div>
+                            <div class="help-text">Max 2MB. JPG, PNG, GIF.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Name (one line - first name + last name) -->
+                    <div class="profile-name-single-line">
+                        <span class="display-full-name"><?php echo htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars($user['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                    </div>
+                    
+                    <!-- Choose button container - centered below name -->
+                    <div class="choose-button-container" id="chooseButtonContainer" style="display: none;">
+                        <button type="button" class="btn-choose-photo" id="triggerFileUpload">Choose Photo to Upload</button>
+                    </div>
                 </div>
-                <div class="profile-name">
-                    <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
-                </div>
-                <div class="profile-picture-upload" id="profilePictureUpload" style="display: none;">
-                    <label for="profile_picture" class="file-upload-label">Choose New Picture</label>
-                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-                    <div class="file-name" id="fileNameDisplay"></div>
-                    <div class="help-text">Max 2MB. JPG, PNG, GIF.</div>
-                </div>
-            </div>
 
-            <!-- Three‑column layout -->
-            <div class="profile-columns">
-                <!-- Column 1: Personal Information -->
-                <div class="form-section personal-info-column">
-                    <h3>Personal Information</h3>
-
-                    <div class="form-group">
-                        <label for="first_name">First Name *</label>
+                <!-- Name fields with labels -->
+                <div class="fields-row with-labels">
+                    <div class="form-group flex-field">
+                        <label for="first_name" class="field-label">First name</label>
                         <input type="text" id="first_name" name="first_name" required
                                value="<?php echo htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your first name" maxlength="50" disabled>
+                               placeholder="First name" maxlength="50" disabled>
                         <div class="error-message" id="firstNameError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="middle_name">Middle Name</label>
+                    <div class="form-group flex-field">
+                        <label for="middle_name" class="field-label">Middle name</label>
                         <input type="text" id="middle_name" name="middle_name"
                                value="<?php echo htmlspecialchars($user['middle_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your middle name (optional)" maxlength="50" disabled>
+                               placeholder="Middle name" maxlength="50" disabled>
                         <div class="error-message" id="middleNameError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="last_name">Last Name *</label>
+                    <div class="form-group flex-field">
+                        <label for="last_name" class="field-label">Last name</label>
                         <input type="text" id="last_name" name="last_name" required
                                value="<?php echo htmlspecialchars($user['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                               placeholder="Enter your last name" maxlength="50" disabled>
+                               placeholder="Last name" maxlength="50" disabled>
                         <div class="error-message" id="lastNameError"></div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="birthdate">Birthdate</label>
+                <!-- Birthdate and Gender with labels -->
+                <div class="fields-row balanced-row with-labels">
+                    <div class="form-group half-field">
+                        <label for="birthdate" class="field-label">Birthdate</label>
                         <input type="date" id="birthdate" name="birthdate"
                                value="<?php echo htmlspecialchars($user['birthdate'] ?? ''); ?>"
                                max="<?php echo date('Y-m-d', strtotime('-13 years')); ?>"
@@ -5709,10 +5724,10 @@ function getProfilePictureUrl($picture) {
                         <div class="error-message" id="birthdateError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
+                    <div class="form-group half-field">
+                        <label for="gender" class="field-label">Gender</label>
                         <select id="gender" name="gender" disabled>
-                            <option value="">Select Gender (Optional)</option>
+                            <option value="">Select Gender</option>
                             <option value="Male" <?php echo ($user['gender'] ?? '') == 'Male' ? 'selected' : ''; ?>>Male</option>
                             <option value="Female" <?php echo ($user['gender'] ?? '') == 'Female' ? 'selected' : ''; ?>>Female</option>
                             <option value="Other" <?php echo ($user['gender'] ?? '') == 'Other' ? 'selected' : ''; ?>>Other</option>
@@ -5721,45 +5736,43 @@ function getProfilePictureUrl($picture) {
                     </div>
                 </div>
 
-                <!-- Column 2: Account Information -->
-                <div class="form-section account-info-column">
-                    <h3>Account Information</h3>
+                <!-- Address with label -->
+                <div class="form-group full-width with-label">
+                    <label for="address" class="field-label">Address</label>
+                    <textarea id="address" name="address" required rows="3"
+                              placeholder="Enter your complete address"
+                              maxlength="255" disabled><?php echo htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+            </div>
 
+            <!-- Account Info Section with buttons at bottom -->
+            <div class="form-section account-info-section">
+                <h3>Account Information</h3>
+
+                <div class="info-row">
                     <div class="info-group">
-                        <label>Email Address</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <label>Email</label>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
 
                     <div class="info-group">
                         <label>Username</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
 
                     <div class="info-group">
-                        <label>Contact Number</label>
-                        <p class="info-value"><?php echo htmlspecialchars($user['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <label>Contact num</label>
+                        <p class="info-value centered"><?php echo htmlspecialchars($user['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
-
-                    <div class="info-note">These details cannot be changed.</div>
                 </div>
 
-                <!-- Column 3: Shipping Information -->
-                <div class="form-section shipping-info-column">
-                    <h3>Shipping Information</h3>
+                <div class="info-note centered">These details cannot be changed.</div>
 
-                    <div class="form-group">
-                        <label for="address">Address *</label>
-                        <textarea id="address" name="address" required rows="4"
-                                  placeholder="Enter your complete shipping address"
-                                  maxlength="255" disabled><?php echo htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-                        <div class="error-message" id="addressError"></div>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="profile-actions">
-                        <button type="button" id="editCancelBtn" class="btn btn-secondary">Edit</button>
-                        <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
-                    </div>
+                <!-- Buttons inside Account Info column at bottom -->
+                <div class="profile-actions">
+                    <button type="button" id="editCancelBtn" class="btn btn-secondary">Edit</button>
+                    <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
                 </div>
             </div>
         </form>
@@ -10349,7 +10362,7 @@ document.addEventListener('DOMContentLoaded', function() {
 **Status:** `FOUND`
 
 ```javascript
-// customer-profile.js
+// customer-profile.js - Fixed for edit functionality with left preview
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -10358,14 +10371,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const editBtn = document.getElementById('editCancelBtn');
     const saveBtn = document.getElementById('saveProfileBtn');
     const profileForm = document.getElementById('profileForm');
-    const editableInputs = profileForm.querySelectorAll('input:not([type="hidden"]):not([disabled]), select, textarea');
+    
+    // Get ALL editable fields in Personal Info section
+    const editableInputs = document.querySelectorAll(
+        '.personal-info-section input:not([type="hidden"]):not([type="file"]), ' +
+        '.personal-info-section select, ' +
+        '.personal-info-section textarea'
+    );
+    
     const profilePicUpload = document.getElementById('profilePictureUpload');
+    const chooseButtonContainer = document.getElementById('chooseButtonContainer');
+    const triggerFileUpload = document.getElementById('triggerFileUpload');
     const profilePicInput = document.getElementById('profile_picture');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
     const profilePicPreview = document.getElementById('profilePicturePreview');
     const modal = document.getElementById('feedbackModal');
     const modalMessage = document.getElementById('modalMessage');
     const modalClose = document.getElementById('modalCloseBtn');
+
+    // Form fields for validation
+    const firstNameInput = document.getElementById('first_name');
+    const lastNameInput = document.getElementById('last_name');
+    const addressInput = document.getElementById('address');
+
+    console.log('Editable inputs found:', editableInputs.length);
 
     // State
     let isEditMode = false;
@@ -10382,7 +10411,10 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
     }
 
-    modalClose.addEventListener('click', hideModal);
+    if (modalClose) {
+        modalClose.addEventListener('click', hideModal);
+    }
+    
     window.addEventListener('click', function(e) {
         if (e.target === modal) hideModal();
     });
@@ -10391,7 +10423,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function storeOriginalValues() {
         originalValues = {};
         editableInputs.forEach(input => {
-            originalValues[input.id] = input.value;
+            if (input.id) {
+                originalValues[input.id] = input.value;
+            }
         });
         if (profilePicPreview) {
             originalValues.profile_picture = profilePicPreview.src;
@@ -10400,25 +10434,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enable edit mode
     function enableEditMode() {
+        console.log('Enabling edit mode');
         isEditMode = true;
         editBtn.textContent = 'Cancel';
         saveBtn.disabled = false;
-        profilePicUpload.style.display = 'block';
-        document.querySelectorAll('.personal-info-column input, .personal-info-column select, .shipping-info-column textarea').forEach(field => {
+        if (profilePicUpload) {
+            profilePicUpload.style.display = 'block';
+        }
+        if (chooseButtonContainer) {
+            chooseButtonContainer.style.display = 'flex';  // CHANGED: from 'block' to 'flex'
+        }
+        editableInputs.forEach(field => {
             field.disabled = false;
+            console.log('Enabling field:', field.id || 'unnamed field');
         });
         pictureChanged = false;
     }
 
     // Disable edit mode
     function disableEditMode(restore = true) {
+        console.log('Disabling edit mode, restore:', restore);
         isEditMode = false;
         editBtn.textContent = 'Edit';
         saveBtn.disabled = true;
-        profilePicUpload.style.display = 'none';
-        profilePicInput.value = '';
-        fileNameDisplay.textContent = '';
-        document.querySelectorAll('.personal-info-column input, .personal-info-column select, .shipping-info-column textarea').forEach(field => {
+        if (profilePicUpload) {
+            profilePicUpload.style.display = 'none';
+        }
+        if (chooseButtonContainer) {
+            chooseButtonContainer.style.display = 'none';
+        }
+        if (profilePicInput) {
+            profilePicInput.value = '';
+        }
+        if (fileNameDisplay) {
+            fileNameDisplay.textContent = '';
+        }
+        editableInputs.forEach(field => {
             field.disabled = true;
         });
         
@@ -10429,94 +10480,125 @@ document.addEventListener('DOMContentLoaded', function() {
                     field.value = originalValues[id];
                 }
             }
-            if (originalValues.profile_picture) {
+            if (originalValues.profile_picture && profilePicPreview) {
                 profilePicPreview.src = originalValues.profile_picture;
             }
         }
         pictureChanged = false;
     }
 
+    // Trigger file upload from the Choose button
+    if (triggerFileUpload && profilePicInput) {
+        triggerFileUpload.addEventListener('click', function() {
+            profilePicInput.click();
+        });
+    }
+
     // File input change
-    profilePicInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            fileNameDisplay.textContent = file.name;
-            pictureChanged = true;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                profilePicPreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            fileNameDisplay.textContent = '';
-            pictureChanged = false;
-        }
-    });
+    if (profilePicInput) {
+        profilePicInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+                pictureChanged = true;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (profilePicPreview) {
+                        profilePicPreview.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = '';
+                }
+                pictureChanged = false;
+            }
+        });
+    }
 
     // Edit/Cancel button
-    editBtn.addEventListener('click', function() {
-        if (!isEditMode) {
-            storeOriginalValues();
-            enableEditMode();
-        } else {
-            disableEditMode(true);
-        }
-    });
+    if (editBtn) {
+        editBtn.addEventListener('click', function() {
+            console.log('Edit/Cancel clicked, isEditMode:', isEditMode);
+            if (!isEditMode) {
+                storeOriginalValues();
+                enableEditMode();
+            } else {
+                disableEditMode(true);
+            }
+        });
+    }
 
     // Save button
-    saveBtn.addEventListener('click', async function() {
-        // Validation
-        const firstName = document.getElementById('first_name').value.trim();
-        const lastName = document.getElementById('last_name').value.trim();
-        const address = document.getElementById('address').value.trim();
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async function() {
+            console.log('Save clicked');
+            
+            // Validation
+            const firstName = firstNameInput ? firstNameInput.value.trim() : '';
+            const lastName = lastNameInput ? lastNameInput.value.trim() : '';
+            const address = addressInput ? addressInput.value.trim() : '';
 
-        if (!firstName || !lastName || !address) {
-            showModal('First name, last name, and address are required.');
-            return;
-        }
-
-        // Disable button
-        saveBtn.disabled = true;
-        const originalText = saveBtn.textContent;
-        saveBtn.textContent = 'Saving...';
-
-        const formData = new FormData(profileForm);
-
-        try {
-            const response = await fetch('../database/customer-profile-handler.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (!firstName || !lastName || !address) {
+                showModal('First name, last name, and address are required.');
+                return;
             }
 
-            const result = await response.json();
+            // Disable button
+            saveBtn.disabled = true;
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
 
-            if (result.status === 'success') {
-                showModal('Profile updated successfully!');
-                
-                if (pictureChanged) {
-                    // Refresh page after 2 seconds
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    disableEditMode(false);
+            const formData = new FormData(profileForm);
+
+            try {
+                const response = await fetch('../database/customer-profile-handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            } else {
-                showModal(result.message || 'Update failed. Please try again.');
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showModal('Profile updated successfully!');
+                    
+                    // Add 1 second delay before handling
+                    setTimeout(() => {
+                        // If picture was changed, force a full page reload
+                        if (pictureChanged) {
+                            window.location.reload(true);
+                        } else {
+                            // For text-only updates, just exit edit mode
+                            disableEditMode(false);
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = originalText;
+                        }
+                    }, 1000);
+                    
+                    // If no picture change, we'll handle it in the setTimeout above
+                    if (!pictureChanged) {
+                        return;
+                    }
+                } else {
+                    showModal(result.message || 'Update failed. Please try again.');
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showModal('Network error. Please check your connection and try again.');
                 saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
             }
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            showModal('Network error. Please check your connection and try again.');
-            saveBtn.disabled = false;
-        } finally {
-            saveBtn.textContent = originalText;
-        }
-    });
+        });
+    }
 
     // Initial store
     storeOriginalValues();

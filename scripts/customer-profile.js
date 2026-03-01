@@ -1,4 +1,4 @@
-// customer-profile.js - Fixed for edit functionality with left preview
+// customer-profile.js - Fixed for edit functionality and name refresh after save
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstNameInput = document.getElementById('first_name');
     const lastNameInput = document.getElementById('last_name');
     const addressInput = document.getElementById('address');
-
-    console.log('Editable inputs found:', editableInputs.length);
 
     // State
     let isEditMode = false;
@@ -70,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enable edit mode
     function enableEditMode() {
-        console.log('Enabling edit mode');
         isEditMode = true;
         editBtn.textContent = 'Cancel';
         saveBtn.disabled = false;
@@ -78,18 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
             profilePicUpload.style.display = 'block';
         }
         if (chooseButtonContainer) {
-            chooseButtonContainer.style.display = 'flex';  // CHANGED: from 'block' to 'flex'
+            chooseButtonContainer.style.display = 'flex';
         }
         editableInputs.forEach(field => {
             field.disabled = false;
-            console.log('Enabling field:', field.id || 'unnamed field');
         });
         pictureChanged = false;
     }
 
     // Disable edit mode
     function disableEditMode(restore = true) {
-        console.log('Disabling edit mode, restore:', restore);
         isEditMode = false;
         editBtn.textContent = 'Edit';
         saveBtn.disabled = true;
@@ -158,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit/Cancel button
     if (editBtn) {
         editBtn.addEventListener('click', function() {
-            console.log('Edit/Cancel clicked, isEditMode:', isEditMode);
             if (!isEditMode) {
                 storeOriginalValues();
                 enableEditMode();
@@ -171,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save button
     if (saveBtn) {
         saveBtn.addEventListener('click', async function() {
-            console.log('Save clicked');
             
             // Validation
             const firstName = firstNameInput ? firstNameInput.value.trim() : '';
@@ -183,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Disable button
+            // Disable button and store original text
             saveBtn.disabled = true;
             const originalText = saveBtn.textContent;
             saveBtn.textContent = 'Saving...';
@@ -205,23 +198,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.status === 'success') {
                     showModal('Profile updated successfully!');
                     
-                    // Add 1 second delay before handling
+                    // 1 second delay before handling UI updates
                     setTimeout(() => {
-                        // If picture was changed, force a full page reload
-                        if (pictureChanged) {
-                            window.location.reload(true);
-                        } else {
-                            // For text-only updates, just exit edit mode
+                        if (!pictureChanged) {
+                            // Update the displayed full name (profile stack container)
+                            const nameSpan = document.querySelector('.display-full-name');
+                            if (nameSpan && result.data) {
+                                nameSpan.textContent = (result.data.first_name || '') + ' ' + (result.data.last_name || '');
+                            }
+                            // Store new values as original for future cancels
+                            storeOriginalValues();
+                            // Exit edit mode without restoring old values
                             disableEditMode(false);
-                            saveBtn.disabled = false;
-                            saveBtn.textContent = originalText;
+                        } else {
+                            // Picture changed – force a full page reload after 1 second
+                            window.location.reload(true);
                         }
+                        // Reset save button text (already disabled by disableEditMode)
+                        saveBtn.textContent = originalText;
                     }, 1000);
                     
-                    // If no picture change, we'll handle it in the setTimeout above
-                    if (!pictureChanged) {
-                        return;
-                    }
                 } else {
                     showModal(result.message || 'Update failed. Please try again.');
                     saveBtn.disabled = false;
