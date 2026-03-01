@@ -180,6 +180,18 @@ function serveFile($relativePath) {
         die('Invalid file path');
     }
     
+    // Ownership check: for user files, ensure the user_id in path matches session user_id
+    $pathParts = explode('/', $relativePath);
+    // Expected structure: Crooks-Data-Storage/users/{user_id}/...
+    if (count($pathParts) >= 3 && $pathParts[1] === 'users') {
+        $fileUserId = (int)$pathParts[2];
+        if ($fileUserId !== $_SESSION['user_id']) {
+            http_response_code(403);
+            die('Access denied: You do not own this file.');
+        }
+    }
+    // For other paths (e.g., assets) we don't check ownership (they are public)
+    
     $fullPath = getStoragePath($relativePath);
     
     if (!$fullPath || !file_exists($fullPath)) {

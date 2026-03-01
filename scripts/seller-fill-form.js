@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-fill-form.js */
-/* Fixed: Removed beforeunload listener that caused unwanted window alert after submission */
+/* Fixed: Birthdate validation only triggers on save, not on input/change; custom unsaved changes modal */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Optional field (middle name)
     const middleNameField = document.getElementById('middle_name');
     
-    // File inputs (should NOT affect save button state)
+    // File inputs
     const identityPhoto = document.getElementById('identity_photo');
     const idDocument = document.getElementById('id_document');
     
@@ -37,6 +37,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalMessage = document.getElementById('modalMessage');
     const modalOkBtn = document.getElementById('modalOkBtn');
     
+    // Unsaved Changes Modal - create it dynamically
+    const unsavedModal = document.createElement('div');
+    unsavedModal.id = 'unsavedChangesModal';
+    unsavedModal.className = 'modal';
+    unsavedModal.style.display = 'none';
+    unsavedModal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-icon">
+                <img src="../assets/image/icons/edit.svg" alt="Unsaved changes">
+            </div>
+            <h3 class="modal-title">Unsaved Changes</h3>
+            <p class="modal-message">You have unsaved changes. Do you want to continue editing or leave?</p>
+            <div class="modal-actions">
+                <button id="continueEditingBtn" class="modal-btn modal-btn-secondary">Continue Editing</button>
+                <button id="confirmLeaveBtn" class="modal-btn modal-btn-primary">Leave</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(unsavedModal);
+    
+    const continueEditingBtn = document.getElementById('continueEditingBtn');
+    const confirmLeaveBtn = document.getElementById('confirmLeaveBtn');
+    
     // Hidden field to check if user is already a seller
     const isSeller = document.querySelector('input[name="is_seller"]')?.value === '1';
     
@@ -44,7 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let isSubmitting = false;
     let formChanged = false;
     let initialFormState = {}; // Store initial form values
-    
+    let pendingNavigationUrl = null; // URL to navigate to after unsaved changes decision
+    let birthdateValid = true; // Track birthdate validity separately
+
     // ============= MODAL FUNCTIONS =============
     function showModal(message) {
         if (!modal || !modalMessage) return;
@@ -59,17 +84,47 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
     
+    function showUnsavedModal(url) {
+        pendingNavigationUrl = url;
+        unsavedModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function hideUnsavedModal() {
+        unsavedModal.style.display = 'none';
+        document.body.style.overflow = '';
+        pendingNavigationUrl = null;
+    }
+    
     if (modalOkBtn) {
         modalOkBtn.addEventListener('click', hideModal);
     }
     
+    if (continueEditingBtn) {
+        continueEditingBtn.addEventListener('click', function() {
+            hideUnsavedModal();
+        });
+    }
+    
+    if (confirmLeaveBtn) {
+        confirmLeaveBtn.addEventListener('click', function() {
+            if (pendingNavigationUrl) {
+                window.location.href = pendingNavigationUrl;
+            }
+        });
+    }
+    
     window.addEventListener('click', function(e) {
         if (e.target === modal) hideModal();
+        if (e.target === unsavedModal) hideUnsavedModal();
     });
     
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
             hideModal();
+        }
+        if (e.key === 'Escape' && unsavedModal && unsavedModal.style.display === 'flex') {
+            hideUnsavedModal();
         }
     });
     
@@ -143,6 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Validate birthdate separately if needed
+        if (!birthdateValid) {
+            return false;
+        }
+        
         return true;
     }
     
@@ -172,6 +232,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 field.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
             }
         });
+        
+        // Highlight birthdate if invalid
+        const birthdateField = document.getElementById('birthdate');
+        if (birthdateField && !birthdateValid) {
+            birthdateField.style.borderColor = '#FF8246';
+            birthdateField.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+        }
     }
     
     function clearHighlights() {
@@ -202,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSaveButtonState();
     }
     
-    // Add change listeners to required fields ONLY
+    // Add change listeners to required fields
     requiredFields.forEach(field => {
         if (field) {
             field.addEventListener('input', handleRequiredFieldChange);
@@ -218,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ============= FILE UPLOAD HANDLING - NO EFFECT ON SAVE BUTTON =============
+    // ============= FILE UPLOAD HANDLING - TRACK CHANGES =============
     function handleFileUpload(input, previewElement, fileNameElement) {
         if (!input || !previewElement || !fileNameElement) return;
         
@@ -246,9 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Check if form actually changed
             formChanged = hasFormChanged();
-            
-            // IMPORTANT: DO NOT call updateSaveButtonState() here
-            // File uploads should NOT enable the save button
         });
     }
     
@@ -259,7 +323,6 @@ document.addEventListener('DOMContentLoaded', function() {
     captureInitialState();
     
     // ============= INITIAL CHECK =============
-    // Check if form is valid on load (for existing sellers)
     updateSaveButtonState();
     
     // ============= FORM SUBMISSION =============
@@ -270,6 +333,33 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isSubmitting) return;
             
             clearHighlights();
+            
+            // Validate birthdate on save
+            const birthdateField = document.getElementById('birthdate');
+            if (birthdateField && birthdateField.value) {
+                const selectedDate = new Date(birthdateField.value);
+                const today = new Date();
+                let age = today.getFullYear() - selectedDate.getFullYear();
+                const monthDiff = today.getMonth() - selectedDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+                    age--;
+                }
+                
+                if (age < 13) {
+                    birthdateValid = false;
+                    highlightMissingFields();
+                    showModal('You must be at least 13 years old to become a seller.');
+                    return;
+                } else if (age > 120) {
+                    birthdateValid = false;
+                    highlightMissingFields();
+                    showModal('Please enter a valid birthdate.');
+                    return;
+                } else {
+                    birthdateValid = true;
+                }
+            }
             
             // Check if form is valid (required fields only)
             if (!validateForm()) {
@@ -347,13 +437,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ============= BACK/CANCEL BUTTON =============
     if (backCancelBtn) {
-        backCancelBtn.addEventListener('click', function() {
+        backCancelBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetUrl = isSeller ? 'seller-dashboard.php' : 'customer-dashboard.php';
+            
             if (hasFormChanged()) {
-                if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
-                    window.location.href = isSeller ? 'seller-dashboard.php' : 'customer-dashboard.php';
-                }
+                showUnsavedModal(targetUrl);
             } else {
-                window.location.href = isSeller ? 'seller-dashboard.php' : 'customer-dashboard.php';
+                window.location.href = targetUrl;
             }
         });
     }
@@ -373,31 +465,45 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => autoResize.call(addressField), 100);
     }
     
-    // ============= BIRTHDATE VALIDATION =============
+    // ============= BIRTHDATE HANDLING - FIXED =============
     const birthdateField = document.getElementById('birthdate');
     if (birthdateField) {
+        // Remove any previous validation listeners that might trigger modal
+        // Just track changes without validation modal
+        birthdateField.addEventListener('input', function() {
+            // Only track that form has changed, don't validate
+            formChanged = hasFormChanged();
+            // Reset validity flag - will be checked on save
+            birthdateValid = true;
+            // Clear any highlight when user types
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+        });
+        
         birthdateField.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - selectedDate.getFullYear();
-            const monthDiff = today.getMonth() - selectedDate.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
-                age--;
-            }
-            
-            if (age < 13) {
-                showModal('You must be at least 13 years old to become a seller.');
-                this.value = '';
-            } else if (age > 120) {
-                showModal('Please enter a valid birthdate.');
-                this.value = '';
-            }
-            
-            handleRequiredFieldChange(); // This is a required field
+            // Only track that form has changed, don't validate
+            formChanged = hasFormChanged();
+            // Reset validity flag - will be checked on save
+            birthdateValid = true;
         });
     }
     
-    // ============= BEFOREUNLOAD LISTENER REMOVED TO PREVENT UNWANTED ALERT =============
-    // The browser-level confirmation is no longer needed; the modal is sufficient.
+    // ============= ADD UNSAVED CHANGES STYLES =============
+    const style = document.createElement('style');
+    style.textContent = `
+        .modal-btn-secondary {
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #000000;
+        }
+        .modal-btn-secondary:hover {
+            background: #333333;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+    `;
+    document.head.appendChild(style);
 });

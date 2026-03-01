@@ -60,7 +60,7 @@ if ($isSeller) {
     <?php include_once('header.php'); ?>
 
     <div class="content">
-        <div class="pageTitleHeader"><?= $isSeller ? 'Seller Profile' : 'Seller Application' ?></div>
+        <div class="pageTitleHeader"><?= $isSeller ? 'Seller Profile' : 'Seller Registration' ?></div>
 
         <form id="sellerFillForm" class="seller-fill-container" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="action" value="update_seller">

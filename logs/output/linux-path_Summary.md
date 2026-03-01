@@ -2,7 +2,7 @@
 
 **Preset:** linux-path
 
-**Generated:** 2026-03-01 20:08:15
+**Generated:** 2026-03-01 20:17:18
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-01 20:08:13
+**Generated:** 2026-03-01 20:17:16
 **Mode:** all
 
 ```
@@ -3328,6 +3328,18 @@ function serveFile($relativePath) {
         http_response_code(403);
         die('Invalid file path');
     }
+    
+    // Ownership check: for user files, ensure the user_id in path matches session user_id
+    $pathParts = explode('/', $relativePath);
+    // Expected structure: Crooks-Data-Storage/users/{user_id}/...
+    if (count($pathParts) >= 3 && $pathParts[1] === 'users') {
+        $fileUserId = (int)$pathParts[2];
+        if ($fileUserId !== $_SESSION['user_id']) {
+            http_response_code(403);
+            die('Access denied: You do not own this file.');
+        }
+    }
+    // For other paths (e.g., assets) we don't check ownership (they are public)
     
     $fullPath = getStoragePath($relativePath);
     
