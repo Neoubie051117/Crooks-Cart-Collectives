@@ -1,6 +1,6 @@
 <?php
 // Crooks-Cart-Collectives/index.php
-// FIXED VERSION - Fixed image fetching for featured products
+// FIXED VERSION - Fixed image fetching with proper path handling for root location
 ?>
 <?php
 session_start();
@@ -14,7 +14,7 @@ try {
         SELECT p.*, s.business_name 
         FROM products p 
         JOIN sellers s ON p.seller_id = s.seller_id 
-        WHERE p.is_active = 1 
+        WHERE p.is_active = 1 AND p.stock_quantity > 0
         ORDER BY RAND() 
         LIMIT 5
     ");
@@ -24,17 +24,32 @@ try {
     error_log("Error fetching featured products: " . $e->getMessage());
 }
 
-// Helper function to get product image URL for index page
+// Helper function to get product image URL for index page (root folder)
 function getIndexProductImageUrl($mediaPath) {
+    // Default fallback icon
+    $fallbackIcon = 'assets/image/icons/package.svg';
+    
     if (empty($mediaPath)) {
-        return 'assets/image/icons/PlaceholderAssetProduct.png';
+        return $fallbackIcon;
     }
     
     // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        // Use data-storage-handler to serve thumbnail 1
-        return 'database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . 'thumbnail_1.png');
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            // Found a thumbnail file – get its basename and build URL via data-storage-handler
+            $thumbFile = basename($thumbFiles[0]);
+            // Root folder path to database handler
+            return 'database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . $thumbFile);
+        }
+        
+        // No thumbnail found – use fallback icon
+        return $fallbackIcon;
     }
     
     // Check if it's already a full URL
@@ -42,7 +57,7 @@ function getIndexProductImageUrl($mediaPath) {
         return $mediaPath;
     }
     
-    // Check if it's a relative path starting with assets/
+    // Check if it's a relative path starting with assets/ (root folder can access directly)
     if (strpos($mediaPath, 'assets/') === 0) {
         return $mediaPath;
     }
@@ -52,7 +67,12 @@ function getIndexProductImageUrl($mediaPath) {
         return 'assets/image/icons/' . $mediaPath;
     }
     
-    // Any other relative path
+    // Any other relative path - try to use it as is, but ensure it starts from root
+    if (strpos($mediaPath, '../') === 0) {
+        // Remove ../ from paths that try to go up from pages
+        $mediaPath = str_replace('../', '', $mediaPath);
+    }
+    
     return $mediaPath;
 }
 ?>
@@ -74,30 +94,6 @@ function getIndexProductImageUrl($mediaPath) {
     <link rel="stylesheet" href="styles/header.css">
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/footer.css">
-
-    <style>
-    /* Feature icon styling */
-    .feature-icon {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .feature-icon img {
-        width: 48px;
-        height: 48px;
-        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-        transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover .feature-icon img {
-        transform: scale(1.1);
-    }
-    </style>
-
     <script defer src="scripts/header.js"></script>
     <script defer src="scripts/showcase-slider.js"></script>
     <script defer src="scripts/index.js"></script>
@@ -131,7 +127,7 @@ function getIndexProductImageUrl($mediaPath) {
             </div>
         </section>
 
-        <!-- Features Section - FIXED: Replaced emojis with SVG icons -->
+        <!-- Features Section -->
         <section class="features-section">
             <div class="features-container">
                 <h2>Why Choose Our Platform?</h2>
@@ -182,13 +178,12 @@ function getIndexProductImageUrl($mediaPath) {
                     <div class="product-card">
                         <div class="product-image-container">
                             <?php 
-                    // FIXED: Use the helper function to get image URL
-                    $imageUrl = getIndexProductImageUrl($product['media_path'] ?? '');
-                    ?>
+                            // Get image URL with proper fallback
+                            $imageUrl = getIndexProductImageUrl($product['media_path'] ?? '');
+                            ?>
                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                 alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
-                                loading="lazy"
-                                onerror="this.onerror=null; this.src='assets/image/icons/PlaceholderAssetProduct.png';">
+                                loading="lazy" onerror="this.onerror=null; this.src='assets/image/icons/package.svg';">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
@@ -196,8 +191,7 @@ function getIndexProductImageUrl($mediaPath) {
                             <p class="product-seller">
                                 Seller: <?php echo htmlspecialchars($product['business_name']); ?>
                             </p>
-                            <!-- FIXED: Changed from products.php to product.php -->
-                            <a href="pages/product-details.php?id=<?php echo $product['product_id']; ?>"
+                            <a href="pages/product-detail.php?id=<?php echo $product['product_id']; ?>"
                                 class="view-product-btn">
                                 View Details
                             </a>
@@ -214,7 +208,6 @@ function getIndexProductImageUrl($mediaPath) {
                     </div>
                     <?php endif; ?>
                 </div>
-                <!-- FIXED: Changed from products.php to product.php -->
                 <a href="pages/product.php" class="view-all-products-btn">View All Products</a>
             </div>
         </section>

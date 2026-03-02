@@ -9,6 +9,43 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 }
 
 $customer_id = $_SESSION['customer_id'];
+
+// Helper function to get product image URL for orders page
+function getOrdersImageUrl($mediaPath) {
+    // Default fallback
+    $fallbackImage = '../assets/image/icons/package.svg';
+    
+    if (empty($mediaPath)) {
+        return $fallbackImage;
+    }
+    
+    // Check if it's a media directory path
+    if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
+        $mediaDir = rtrim($mediaPath, '/') . '/';
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        }
+        
+        return $fallbackImage;
+    }
+    
+    // Direct file path
+    if (strpos($mediaPath, 'assets/') === 0) {
+        return '../' . $mediaPath;
+    }
+    
+    if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
+        return $mediaPath;
+    }
+    
+    return $fallbackImage;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

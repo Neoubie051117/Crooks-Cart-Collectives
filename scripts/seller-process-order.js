@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-process-order.js */
-/* Revised with filter tabs hidden when no orders */
+/* Updated to handle inactive products with "Product Unavailable" message */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationClose = document.getElementById('notificationClose');
     
     // State
-    let currentAction = null;          // 'delivered' or 'cancelled'
+    let currentAction = null;
     let currentOrderId = null;
     let currentFilter = 'all';
     let allOrders = [];
@@ -143,9 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return '../assets/image/icons/package.svg';
         }
         
-        if (mediaPath.includes('/media/')) {
+        // If it's already a data-storage-handler URL, return as is
+        if (mediaPath.includes('data-storage-handler.php')) {
+            return mediaPath;
+        }
+        
+        // Check if it's a media directory path
+        if (mediaPath.includes('Crooks-Data-Storage/products/')) {
             const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
-            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
+            // We need to let the server find the actual file extension
+            // So we encode the base path and let the handler do the glob search
+            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.*');
         }
         
         if (mediaPath.startsWith('assets/')) {
@@ -199,6 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const subtotal = Number(order.subtotal).toFixed(2);
             const total = Number(order.subtotal).toFixed(2);
+            
+            // Check if product is active
+            const isProductActive = order.is_active ? true : false;
 
             let eventHtml = '';
             eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
@@ -235,7 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                      class="product-thumbnail"
                                      onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
                                 <div class="product-info">
-                                    <h4>${escapeHtml(order.product_name)}</h4>
+                                    ${!isProductActive ? '<span class="inactive-badge" style="display: inline-block; background: #000000; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-bottom: 5px;">Product Unavailable</span>' : ''}
+                                    <h4>${!isProductActive ? 'This product is unavailable' : escapeHtml(order.product_name)}</h4>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
                                     <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>
                                 </div>
@@ -278,8 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
             `;
 
-            // Action buttons - only shown for pending orders
-            if (order.status === 'pending') {
+            // Action buttons - only shown for pending orders and if product is active
+            if (order.status === 'pending' && isProductActive) {
                 html += `
                     <div class="order-actions">
                         <button class="action-btn complete" data-order-id="${order.order_id}">
@@ -287,6 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         </button>
                         <button class="action-btn cancel" data-order-id="${order.order_id}">
                             Cancel Order
+                        </button>
+                    </div>
+                `;
+            } else if (order.status === 'pending' && !isProductActive) {
+                html += `
+                    <div class="order-actions">
+                        <button class="action-btn cancel" data-order-id="${order.order_id}" style="margin-top: 10px;">
+                            Cancel Order (Product Unavailable)
                         </button>
                     </div>
                 `;

@@ -1,8 +1,8 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+require_once 'database-connect.php';
 
-require_once(__DIR__ . '/database-connect.php');
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
@@ -11,125 +11,158 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 
 $customer_id = $_SESSION['customer_id'];
 $user_id = $_SESSION['user_id'];
+$action = $_POST['action'] ?? '';
 
-// Fetch shipping address from user profile
-$stmt = $connection->prepare("SELECT address FROM users WHERE user_id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch();
-if (!$user || empty($user['address'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Please complete your profile with a shipping address first.']);
+if ($action !== 'place_order') {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
     exit;
 }
-$shipping_address = $user['address'];
 
 try {
     $connection->beginTransaction();
-
-    // Check if this is a single product checkout (Buy Now)
-    $singleProductId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
-    $singleQuantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
-
-    if ($singleProductId > 0 && $singleQuantity > 0) {
-        // Single product checkout
-        // Fetch product details
+    
+    // Check if this is a direct order (single product without cart) or cart checkout
+    $product_id = $_POST['product_id'] ?? 0;
+    $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
+    
+    if ($product_id > 0) {
+        // Single product checkout (Buy Now)
+        // Verify product is active
         $stmt = $connection->prepare("
-            SELECT p.*, s.seller_id
-            FROM products p
-            JOIN sellers s ON p.seller_id = s.seller_id
+            SELECT p.*, s.seller_id 
+            FROM products p 
+            JOIN sellers s ON p.seller_id = s.seller_id 
             WHERE p.product_id = ? AND p.is_active = 1
         ");
-        $stmt->execute([$singleProductId]);
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        $stmt->execute([$product_id]);
+        $product = $stmt->fetch();
+        
         if (!$product) {
-            throw new Exception('Product not found');
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Product not available']);
+            exit;
         }
-
-        if ($singleQuantity > $product['stock_quantity']) {
-            throw new Exception("Insufficient stock for {$product['name']}");
+        
+        if ($product['stock_quantity'] < $quantity) {
+            $connection->rollBack();
+            echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+            exit;
         }
-
-        // Insert order
-        $orderStmt = $connection->prepare("
+        
+        // Get user shipping address
+        $stmt = $connection->prepare("SELECT address FROM users WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch();
+        
+        $shipping_address = $user['address'] ?? '';
+        $subtotal = $product['price'] * $quantity;
+        
+        // Create order
+        $stmt = $connection->prepare("
             INSERT INTO orders (
-                customer_id, seller_id, product_id, quantity, price,
-                shipping_address, payment_method, status, order_date
-            )
-            VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery', 'pending', NOW())
+                customer_id, seller_id, product_id, quantity, 
+                price, subtotal, shipping_address, status, order_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
         ");
-        $orderStmt->execute([
-            $customer_id,
-            $product['seller_id'],
-            $product['product_id'],
-            $singleQuantity,
-            $product['price'],
+        $stmt->execute([
+            $customer_id, 
+            $product['seller_id'], 
+            $product_id, 
+            $quantity, 
+            $product['price'], 
+            $subtotal, 
             $shipping_address
         ]);
-
-        // Reduce stock
-        $updateStock = $connection->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?");
-        $updateStock->execute([$singleQuantity, $product['product_id']]);
+        
+        // Update stock
+        $new_stock = $product['stock_quantity'] - $quantity;
+        $stmt = $connection->prepare("UPDATE products SET stock_quantity = ? WHERE product_id = ?");
+        $stmt->execute([$new_stock, $product_id]);
+        
     } else {
-        // Normal cart checkout
-        // Get cart items
+        // Cart checkout - only include active products
+        // Get cart items with product active status check
         $stmt = $connection->prepare("
-            SELECT c.*, p.name, p.stock_quantity, p.seller_id
+            SELECT c.*, p.stock_quantity, p.is_active, p.price as current_price, p.name
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
             WHERE c.customer_id = ?
         ");
         $stmt->execute([$customer_id]);
-        $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        $cartItems = $stmt->fetchAll();
+        
         if (empty($cartItems)) {
+            $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
             exit;
         }
-
-        // Insert orders and update stock
+        
+        // Check for inactive products
+        $inactiveProducts = [];
         foreach ($cartItems as $item) {
-            // Final stock check
-            if ($item['quantity'] > $item['stock_quantity']) {
-                throw new Exception("Insufficient stock for {$item['name']}");
+            if (!$item['is_active']) {
+                $inactiveProducts[] = $item['name'];
             }
-
-            $orderStmt = $connection->prepare("
+        }
+        
+        if (!empty($inactiveProducts)) {
+            $connection->rollBack();
+            $productList = implode(', ', $inactiveProducts);
+            echo json_encode(['status' => 'error', 'message' => 'The following products are no longer available: ' . $productList]);
+            exit;
+        }
+        
+        // Check stock for all items
+        foreach ($cartItems as $item) {
+            if ($item['quantity'] > $item['stock_quantity']) {
+                $connection->rollBack();
+                echo json_encode(['status' => 'error', 'message' => 'Insufficient stock for ' . $item['name']]);
+                exit;
+            }
+        }
+        
+        // Get user shipping address
+        $stmt = $connection->prepare("SELECT address FROM users WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch();
+        $shipping_address = $user['address'] ?? '';
+        
+        // Create orders and update stock
+        foreach ($cartItems as $item) {
+            $subtotal = $item['price'] * $item['quantity'];
+            
+            $stmt = $connection->prepare("
                 INSERT INTO orders (
-                    customer_id, seller_id, product_id, quantity, price,
-                    shipping_address, payment_method, status, order_date
-                )
-                VALUES (?, ?, ?, ?, ?, ?, 'Cash on Delivery', 'pending', NOW())
+                    customer_id, seller_id, product_id, quantity, 
+                    price, subtotal, shipping_address, status, order_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
             ");
-            $orderStmt->execute([
-                $customer_id,
-                $item['seller_id'],
-                $item['product_id'],
-                $item['quantity'],
-                $item['price'],
+            $stmt->execute([
+                $customer_id, 
+                $item['seller_id'], 
+                $item['product_id'], 
+                $item['quantity'], 
+                $item['price'], 
+                $subtotal, 
                 $shipping_address
             ]);
-
-            // Reduce stock
-            $updateStock = $connection->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?");
-            $updateStock->execute([$item['quantity'], $item['product_id']]);
+            
+            // Update stock
+            $new_stock = $item['stock_quantity'] - $item['quantity'];
+            $stmt = $connection->prepare("UPDATE products SET stock_quantity = ? WHERE product_id = ?");
+            $stmt->execute([$new_stock, $item['product_id']]);
         }
-
-        // Clear the cart
-        $clearStmt = $connection->prepare("DELETE FROM carts WHERE customer_id = ?");
-        $clearStmt->execute([$customer_id]);
+        
+        // Clear cart
+        $stmt = $connection->prepare("DELETE FROM carts WHERE customer_id = ?");
+        $stmt->execute([$customer_id]);
     }
-
+    
     $connection->commit();
-
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Order placed successfully',
-        'redirect' => 'orders.php'
-    ]);
-
-} catch (Exception $e) {
+    echo json_encode(['status' => 'success', 'message' => 'Order placed successfully', 'redirect' => 'orders.php']);
+    
+} catch (PDOException $e) {
     $connection->rollBack();
     error_log("Checkout error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Failed to place order: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
 }
-?>

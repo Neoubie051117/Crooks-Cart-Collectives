@@ -1,14 +1,13 @@
 /* Crooks-Cart-Collectives/scripts/cart.js */
-/* Shopping Cart JavaScript - Fixed version */
+/* Shopping Cart JavaScript - Updated to handle inactive products */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
-    console.log('Cart.js loaded'); // Debug log
+    console.log('Cart.js loaded');
 
     // ===== UTILITY FUNCTIONS =====
     function showMessage(message, type = 'error') {
-        // Remove any existing message
         const existingMsg = document.querySelector('.cart-message');
         if (existingMsg) existingMsg.remove();
 
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showConfirmation(title, message) {
         return new Promise((resolve) => {
-            // Remove any existing modal
             const existingModal = document.querySelector('.cart-notifier-modal');
             if (existingModal) existingModal.remove();
 
@@ -87,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ===== QUANTITY INPUT HANDLERS =====
-    document.querySelectorAll('.quantity-input').forEach(input => {
+    // ===== QUANTITY INPUT HANDLERS - Only for active items =====
+    document.querySelectorAll('.cart-item[data-active="1"] .quantity-input').forEach(input => {
         let timeoutId;
 
         input.addEventListener('input', function() {
@@ -139,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
-                console.log('Update response:', result); // Debug log
 
                 if (result.status === 'success') {
                     const priceText = cartItem.querySelector('.cart-item-price').textContent;
@@ -152,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     let newTotal = 0;
-                    document.querySelectorAll('.subtotal-amount').forEach(span => {
+                    document.querySelectorAll('.cart-item[data-active="1"] .subtotal-amount').forEach(span => {
                         newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
                     });
                     
@@ -185,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== REMOVE BUTTON HANDLERS =====
+    // ===== REMOVE BUTTON HANDLERS - Works for all items =====
     document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -218,7 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
-                console.log('Remove response:', result); // Debug log
 
                 if (result.status === 'success') {
                     if (cartItem) {
@@ -229,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (cartItem.parentNode) cartItem.remove();
 
                             let newTotal = 0;
-                            document.querySelectorAll('.subtotal-amount').forEach(span => {
+                            document.querySelectorAll('.cart-item[data-active="1"] .subtotal-amount').forEach(span => {
                                 newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
                             });
 
@@ -245,6 +241,16 @@ document.addEventListener('DOMContentLoaded', function() {
                                 setTimeout(() => {
                                     location.reload();
                                 }, 1500);
+                            } else {
+                                // Check if all remaining items are inactive
+                                const activeItems = document.querySelectorAll('.cart-item[data-active="1"]');
+                                const checkoutBtn = document.querySelector('.cart-actions .btn-primary');
+                                if (checkoutBtn && activeItems.length === 0) {
+                                    checkoutBtn.textContent = 'No Active Items';
+                                    checkoutBtn.disabled = true;
+                                    checkoutBtn.style.opacity = '0.5';
+                                    checkoutBtn.style.cursor = 'not-allowed';
+                                }
                             }
                         }, 300);
                     }
@@ -266,5 +272,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update cart count on page load
     updateHeaderCartCount();
-    console.log('Cart.js initialization complete'); // Debug log
+    console.log('Cart.js initialization complete');
 });

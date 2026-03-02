@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-02 17:40:52
+**Generated:** 2026-03-02 19:37:20
 **Mode:** all
 
 ```
@@ -101,7 +101,8 @@ Crooks-Cart-Collectives/
 │   ├── output/
 │   │   ├── 0.0.17.md
 │   │   ├── linux-path_Summary.md
-│   │   └── Project_Structure.md
+│   │   ├── Project_Structure.md
+│   │   └── windows-preset_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -120,14 +121,14 @@ Crooks-Cart-Collectives/
 │   ├── header.php
 │   ├── orders.php
 │   ├── privacy-policy.php
-│   ├── product-details.php
+│   ├── product-detail.php
 │   ├── product.php
 │   ├── report-seller.php
 │   ├── seller-dashboard.php
 │   ├── seller-fill-form.php
 │   ├── seller-manage-product.php
 │   ├── seller-new-product.php
-│   ├── seller-orders.php
+│   ├── seller-process-order.php
 │   ├── sign-in.php
 │   ├── sign-up.php
 │   └── terms-and-conditions.php
@@ -140,14 +141,14 @@ Crooks-Cart-Collectives/
 │   ├── header.js
 │   ├── index.js
 │   ├── orders.js
-│   ├── product-details.js
+│   ├── product-detail.js
 │   ├── product.js
 │   ├── report-seller.js
 │   ├── seller-dashboard.js
 │   ├── seller-fill-form.js
 │   ├── seller-manage-product.js
 │   ├── seller-new-product.js
-│   ├── seller-orders.js
+│   ├── seller-process-order.js
 │   ├── showcase-slider.js
 │   ├── sign-in.js
 │   ├── sign-out.js
@@ -163,14 +164,14 @@ Crooks-Cart-Collectives/
 │   ├── index.css
 │   ├── orders.css
 │   ├── privacy-policy.css
-│   ├── product-details.css
+│   ├── product-detail.css
 │   ├── product.css
 │   ├── profile.css
 │   ├── report-seller.css
 │   ├── seller-dashboard.css
 │   ├── seller-manage-product.css
 │   ├── seller-new-product.css
-│   ├── seller-orders.css
+│   ├── seller-process-order.css
 │   ├── seller-registration.css
 │   ├── sign-in.css
 │   ├── sign-out.css
@@ -191,12 +192,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 23 |
 | JavaScript Files | 20 |
 | JSON Files | 0 |
-| Text/Markdown | 7 |
+| Text/Markdown | 8 |
 | Image Files | 60 |
 | Other Files | 12 |
 
 **Total Directories:** 14
-**Total Files:** 158
+**Total Files:** 159
 
 ---
 

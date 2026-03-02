@@ -422,6 +422,24 @@ function serveFile($relativePath) {
     // For product media (products/{product_id}/...), allow public access
     // No authentication required for product images
     
+    // ===== WILDCARD SEARCH FOR THUMBNAILS =====
+    // Check if path contains wildcard (*) for extension search
+    if (strpos($relativePath, 'thumbnail_1.*') !== false) {
+        // Extract the base directory
+        $baseDir = str_replace('thumbnail_1.*', '', $relativePath);
+        $fullBaseDir = getStoragePath($baseDir);
+        
+        // Search for any thumbnail_1 file
+        $thumbFiles = glob($fullBaseDir . 'thumbnail_1.*');
+        if (!empty($thumbFiles)) {
+            $actualFile = basename($thumbFiles[0]);
+            $relativePath = $baseDir . $actualFile;
+        } else {
+            http_response_code(404);
+            die('Thumbnail not found');
+        }
+    }
+    
     $fullPath = getStoragePath($relativePath);
     
     if (!$fullPath || !file_exists($fullPath)) {

@@ -1,199 +1,219 @@
 <?php
+// Crooks-Cart-Collectives/database/product-handler.php
 session_start();
+require_once 'database-connect.php';
+require_once 'data-storage-handler.php';
+
 header('Content-Type: application/json');
 
+// Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/error_log.txt');
 
-require_once(__DIR__ . '/database-connect.php');
-
-if (!isset($_SESSION['is_seller']) || !$_SESSION['is_seller']) {
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+// Check if user is logged in and is a seller
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_seller']) || !$_SESSION['is_seller']) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Authentication required']);
     exit;
 }
 
-$sellerId = $_SESSION['seller_id'];
+$seller_id = $_SESSION['seller_id'];
 $action = $_POST['action'] ?? '';
 
+error_log("Product handler action: " . $action . " for seller: " . $seller_id);
+
 switch ($action) {
-    case 'add':
-        addProduct($sellerId);
-        break;
-    case 'update':
-        updateProduct($sellerId);
-        break;
     case 'delete':
-        deleteProduct($sellerId);
+        handleDelete($connection, $seller_id);
         break;
+        
+    case 'toggle_status':
+        handleToggleStatus($connection, $seller_id);
+        break;
+        
     default:
+        http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+        break;
 }
 
-function addProduct($sellerId) {
-    global $connection;
-
-    $required = ['name', 'category', 'price', 'stock_quantity', 'description'];
-    foreach ($required as $field) {
-        if (empty($_POST[$field])) {
-            echo json_encode(['status' => 'error', 'message' => "$field is required"]);
-            exit;
-        }
-    }
-
+/**
+ * Handle soft delete (set is_active = 0) and cancel pending orders
+ */
+function handleDelete($connection, $seller_id) {
     try {
-        $connection->beginTransaction();
+        $product_id = $_POST['product_id'] ?? 0;
         
-        // Insert product first to get product_id
-        $stmt = $connection->prepare("
-            INSERT INTO products (seller_id, name, category, price, stock_quantity, description, date_added)
-            VALUES (?, ?, ?, ?, ?, ?, NOW())
-        ");
-        $stmt->execute([
-            $sellerId,
-            $_POST['name'],
-            $_POST['category'],
-            $_POST['price'],
-            $_POST['stock_quantity'],
-            $_POST['description']
-        ]);
-        
-        $productId = $connection->lastInsertId();
-        
-        // Handle image uploads
-        $mediaPath = null;
-        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-            require_once(__DIR__ . '/data-storage-handler.php');
-            $uploadResult = processProductMediaUpload($productId, $_FILES['images']);
-            
-            if ($uploadResult['status'] === 'success' && isset($uploadResult['media_path'])) {
-                $mediaPath = $uploadResult['media_path'];
-                
-                // Update product with media path
-                $stmt = $connection->prepare("UPDATE products SET media_path = ? WHERE product_id = ?");
-                $stmt->execute([$mediaPath, $productId]);
-            } else {
-                $connection->rollBack();
-                echo json_encode(['status' => 'error', 'message' => $uploadResult['message']]);
-                exit;
-            }
+        if (!$product_id) {
+            echo json_encode(['status' => 'error', 'message' => 'Product ID required']);
+            return;
         }
         
-        $connection->commit();
-        echo json_encode(['status' => 'success', 'message' => 'Product added successfully']);
+        // Verify product belongs to this seller
+        $stmt = $connection->prepare("SELECT product_id, name FROM products WHERE product_id = ? AND seller_id = ?");
+        $stmt->execute([$product_id, $seller_id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
         
-    } catch (Exception $e) {
-        $connection->rollBack();
-        error_log("Add product error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Failed to add product']);
-    }
-}
-
-function updateProduct($sellerId) {
-    global $connection;
-
-    if (empty($_POST['product_id'])) {
-        echo json_encode(['status' => 'error', 'message' => 'Product ID missing']);
-        exit;
-    }
-
-    // Verify ownership
-    $stmt = $connection->prepare("SELECT product_id FROM products WHERE product_id = ? AND seller_id = ?");
-    $stmt->execute([$_POST['product_id'], $sellerId]);
-    if (!$stmt->fetch()) {
-        echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
-        exit;
-    }
-
-    $required = ['name', 'category', 'price', 'stock_quantity', 'description'];
-    foreach ($required as $field) {
-        if (empty($_POST[$field])) {
-            echo json_encode(['status' => 'error', 'message' => "$field is required"]);
-            exit;
-        }
-    }
-
-    try {
-        $connection->beginTransaction();
-        
-        // Update product details
-        $stmt = $connection->prepare("
-            UPDATE products 
-            SET name=?, category=?, price=?, stock_quantity=?, description=?
-            WHERE product_id=? AND seller_id=?
-        ");
-        $stmt->execute([
-            $_POST['name'],
-            $_POST['category'],
-            $_POST['price'],
-            $_POST['stock_quantity'],
-            $_POST['description'],
-            $_POST['product_id'],
-            $sellerId
-        ]);
-
-        // Handle image uploads if new files are provided
-        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-            require_once(__DIR__ . '/data-storage-handler.php');
-            
-            // Delete old media
-            deleteProductMedia($_POST['product_id']);
-            
-            // Upload new media
-            $uploadResult = processProductMediaUpload($_POST['product_id'], $_FILES['images']);
-            
-            if ($uploadResult['status'] === 'success' && isset($uploadResult['media_path'])) {
-                // Update media path
-                $stmt = $connection->prepare("UPDATE products SET media_path = ? WHERE product_id = ?");
-                $stmt->execute([$uploadResult['media_path'], $_POST['product_id']]);
-            } else {
-                $connection->rollBack();
-                echo json_encode(['status' => 'error', 'message' => $uploadResult['message']]);
-                exit;
-            }
-        }
-        
-        $connection->commit();
-        echo json_encode(['status' => 'success', 'message' => 'Product updated successfully']);
-        
-    } catch (Exception $e) {
-        $connection->rollBack();
-        error_log("Update product error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update product']);
-    }
-}
-
-function deleteProduct($sellerId) {
-    global $connection;
-
-    if (empty($_POST['product_id'])) {
-        echo json_encode(['status' => 'error', 'message' => 'Product ID missing']);
-        exit;
-    }
-
-    try {
-        $connection->beginTransaction();
-        
-        // Verify ownership and delete
-        $stmt = $connection->prepare("DELETE FROM products WHERE product_id = ? AND seller_id = ?");
-        $stmt->execute([$_POST['product_id'], $sellerId]);
-
-        if ($stmt->rowCount() > 0) {
-            // Delete media files
-            require_once(__DIR__ . '/data-storage-handler.php');
-            deleteProductMedia($_POST['product_id']);
-            
-            $connection->commit();
-            echo json_encode(['status' => 'success', 'message' => 'Product deleted']);
-        } else {
-            $connection->rollBack();
+        if (!$product) {
             echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
+            return;
         }
-    } catch (Exception $e) {
-        $connection->rollBack();
-        error_log("Delete product error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Failed to delete product']);
+        
+        // Start transaction
+        $connection->beginTransaction();
+        
+        // Soft delete the product (set is_active = 0)
+        $stmt = $connection->prepare("UPDATE products SET is_active = 0 WHERE product_id = ?");
+        $stmt->execute([$product_id]);
+        
+        // ===== CRITICAL: Cancel any pending orders for this product =====
+        // Get all pending orders for this product
+        $stmt = $connection->prepare("
+            SELECT order_id, quantity 
+            FROM orders 
+            WHERE product_id = ? AND status = 'pending'
+        ");
+        $stmt->execute([$product_id]);
+        $pendingOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $cancelledCount = 0;
+        
+        if (!empty($pendingOrders)) {
+            // Update all pending orders to cancelled
+            $stmt = $connection->prepare("
+                UPDATE orders 
+                SET status = 'cancelled', 
+                    cancelled_at = NOW(), 
+                    cancelled_by = 'seller',
+                    notes = CONCAT(IFNULL(notes, ''), ' Product removed by seller. Order automatically cancelled.')
+                WHERE product_id = ? AND status = 'pending'
+            ");
+            $stmt->execute([$product_id]);
+            $cancelledCount = $stmt->rowCount();
+            
+            // Restore stock for cancelled orders
+            foreach ($pendingOrders as $order) {
+                $stmt = $connection->prepare("
+                    UPDATE products 
+                    SET stock_quantity = stock_quantity + ? 
+                    WHERE product_id = ?
+                ");
+                $stmt->execute([$order['quantity'], $product_id]);
+            }
+            
+            error_log("Product removal: Cancelled {$cancelledCount} pending orders for product ID {$product_id}");
+        }
+        
+        // Check if there are any carts containing this product and remove them
+        $stmt = $connection->prepare("DELETE FROM carts WHERE product_id = ?");
+        $stmt->execute([$product_id]);
+        $cartsRemoved = $stmt->rowCount();
+        
+        if ($cartsRemoved > 0) {
+            error_log("Product removal: Removed {$cartsRemoved} cart entries for product ID {$product_id}");
+        }
+        
+        $connection->commit();
+        
+        $message = 'Product removed successfully';
+        if ($cancelledCount > 0) {
+            $message .= ". {$cancelledCount} pending order(s) have been automatically cancelled.";
+        }
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => $message,
+            'data' => [
+                'cancelled_orders' => $cancelledCount,
+                'carts_removed' => $cartsRemoved,
+                'product_name' => $product['name']
+            ]
+        ]);
+        
+    } catch (PDOException $e) {
+        if ($connection->inTransaction()) {
+            $connection->rollBack();
+        }
+        error_log("Product delete error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
+    }
+}
+
+/**
+ * Handle toggle product active status (for future use if needed)
+ */
+function handleToggleStatus($connection, $seller_id) {
+    try {
+        $product_id = $_POST['product_id'] ?? 0;
+        $status = $_POST['status'] ?? 0; // 1 for active, 0 for inactive
+        
+        if (!$product_id) {
+            echo json_encode(['status' => 'error', 'message' => 'Product ID required']);
+            return;
+        }
+        
+        // Verify product belongs to this seller
+        $stmt = $connection->prepare("SELECT product_id FROM products WHERE product_id = ? AND seller_id = ?");
+        $stmt->execute([$product_id, $seller_id]);
+        
+        if (!$stmt->fetch()) {
+            echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
+            return;
+        }
+        
+        // Toggle status
+        $stmt = $connection->prepare("UPDATE products SET is_active = ? WHERE product_id = ?");
+        $stmt->execute([$status, $product_id]);
+        
+        // If setting to inactive, also handle pending orders
+        if ($status == 0) {
+            // Get all pending orders for this product
+            $stmt = $connection->prepare("
+                SELECT order_id, quantity 
+                FROM orders 
+                WHERE product_id = ? AND status = 'pending'
+            ");
+            $stmt->execute([$product_id]);
+            $pendingOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (!empty($pendingOrders)) {
+                // Update all pending orders to cancelled
+                $stmt = $connection->prepare("
+                    UPDATE orders 
+                    SET status = 'cancelled', 
+                        cancelled_at = NOW(), 
+                        cancelled_by = 'seller',
+                        notes = CONCAT(IFNULL(notes, ''), ' Product deactivated by seller. Order automatically cancelled.')
+                    WHERE product_id = ? AND status = 'pending'
+                ");
+                $stmt->execute([$product_id]);
+                
+                // Restore stock for cancelled orders
+                foreach ($pendingOrders as $order) {
+                    $stmt = $connection->prepare("
+                        UPDATE products 
+                        SET stock_quantity = stock_quantity + ? 
+                        WHERE product_id = ?
+                    ");
+                    $stmt->execute([$order['quantity'], $product_id]);
+                }
+            }
+            
+            // Remove from carts
+            $stmt = $connection->prepare("DELETE FROM carts WHERE product_id = ?");
+            $stmt->execute([$product_id]);
+        }
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Product status updated successfully'
+        ]);
+        
+    } catch (PDOException $e) {
+        error_log("Product toggle error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
     }
 }
 ?>

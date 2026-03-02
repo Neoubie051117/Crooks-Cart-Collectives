@@ -1,7 +1,7 @@
 // Hero Slider Functionality
 class HeroSlider {
     constructor() {
-        this.slides = document.querySelectorAll('.slide');
+        this.slides = document.querySelectorAll('.showcase-slide');
         this.prevBtn = document.querySelector('.prev-slide');
         this.nextBtn = document.querySelector('.next-slide');
         this.currentSlide = 0;
@@ -35,7 +35,7 @@ class HeroSlider {
         }
         
         // Pause on hover
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (slider) {
             slider.addEventListener('mouseenter', () => this.stopAutoSlide());
             slider.addEventListener('mouseleave', () => this.startAutoSlide());
@@ -43,6 +43,10 @@ class HeroSlider {
         
         // Touch/swipe support for mobile
         this.initTouchEvents();
+        
+        // Adjust slider height based on header
+        this.adjustSliderHeight();
+        window.addEventListener('resize', () => this.adjustSliderHeight());
     }
     
     showSlide(index) {
@@ -81,16 +85,18 @@ class HeroSlider {
         let touchStartX = 0;
         let touchEndX = 0;
         
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (!slider) return;
         
         slider.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
+            this.stopAutoSlide();
         });
         
         slider.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
+            this.startAutoSlide();
         });
     }
     
@@ -102,38 +108,56 @@ class HeroSlider {
         } else if (endX - startX > minSwipeDistance) {
             this.prevSlide();
         }
-        this.resetAutoSlide();
+    }
+    
+    adjustSliderHeight() {
+        const header = document.querySelector('.header-bar');
+        const showcaseSection = document.querySelector('.showcase-section');
+        if (header && showcaseSection) {
+            const headerHeight = header.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            showcaseSection.style.height = `calc(${viewportHeight * 0.6}px - ${headerHeight}px)`;
+        }
     }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new HeroSlider();
-    
-    // REMOVE the loadFeaturedProducts() call - PHP handles this
-    // loadFeaturedProducts();
 });
 
-// REMOVE or comment out the loadFeaturedProducts function entirely
-// It's conflicting with PHP-generated content
-/*
-async function loadFeaturedProducts() {
-    // This will be replaced with actual API call
-    const productsGrid = document.querySelector('.products-grid');
-    if (!productsGrid) return;
+// ===== FALLBACK FOR ANY IMAGES THAT STILL FAIL TO LOAD =====
+document.addEventListener('DOMContentLoaded', () => {
+    // Add global image error handler for all product images
+    document.querySelectorAll('.product-image').forEach(img => {
+        // If image already failed to load, ensure it uses fallback
+        if (img.complete && img.naturalHeight === 0) {
+            img.src = 'assets/image/icons/package.svg';
+        }
+        
+        // Add error handler for future errors
+        img.addEventListener('error', function() {
+            this.src = 'assets/image/icons/package.svg';
+        });
+    });
+});
+
+// ===== FIX FOR HEADER PATH ISSUES =====
+// This ensures header links work correctly when on root vs pages
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we're in root or pages folder
+    const isRoot = window.location.pathname === '/' || 
+                   window.location.pathname.endsWith('index.php') ||
+                   window.location.pathname.split('/').pop() === '';
     
-    // Placeholder - replace with actual API call
-    setTimeout(() => {
-        productsGrid.innerHTML = `
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250x200" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Sample Product 1</h3>
-                    <p class="product-price">₱999.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-            </div>
-        `;
-    }, 1000);
-}
-*/
+    // Fix any navigation links that might have incorrect paths
+    document.querySelectorAll('.nav-link, .social-button, .footer a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('pages/') && !isRoot) {
+            // Already in pages folder, need to adjust
+            if (window.location.pathname.includes('/pages/')) {
+                link.setAttribute('href', href.replace('pages/', ''));
+            }
+        }
+    });
+});

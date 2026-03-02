@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-manage-product.js */
-/* Revised with consistent modal styling and empty state handling */
+/* Updated to use soft delete (set is_active to 0) instead of permanent deletion */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             isProcessing = true;
             const originalText = this.textContent;
-            this.textContent = 'Deleting...';
+            this.textContent = 'Removing...';
             this.disabled = true;
 
             try {
@@ -98,22 +98,45 @@ document.addEventListener('DOMContentLoaded', function() {
                     hideModal(deleteModal);
                     showNotification(result.message);
                     
-                    // Remove the deleted product card from DOM
+                    // Update the product card to show inactive status instead of removing it
                     const productCard = document.querySelector(`.delete-btn[data-id="${currentProductId}"]`).closest('.product-card');
                     if (productCard) {
-                        productCard.style.transition = 'opacity 0.3s ease';
-                        productCard.style.opacity = '0';
-                        setTimeout(() => {
-                            productCard.remove();
-                            
-                            // Check if no products left
-                            const remainingProducts = document.querySelectorAll('.product-card');
-                            if (remainingProducts.length === 0) {
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 500);
+                        // Change the product status display
+                        const statusElement = productCard.querySelector('.product-status');
+                        if (statusElement) {
+                            statusElement.textContent = 'Inactive';
+                            statusElement.className = 'product-status status-inactive';
+                        }
+                        
+                        // Disable or change the edit button if needed
+                        const editButton = productCard.querySelector('.edit-btn');
+                        if (editButton) {
+                            // Optionally change edit button appearance
+                            // editButton.style.opacity = '0.5';
+                        }
+                        
+                        // Visual indication that product is inactive
+                        productCard.style.opacity = '0.8';
+                        productCard.style.borderColor = '#cccccc';
+                        
+                        // Add a small badge or indicator
+                        const existingBadge = productCard.querySelector('.inactive-badge');
+                        if (!existingBadge) {
+                            const badge = document.createElement('span');
+                            badge.className = 'inactive-badge';
+                            badge.textContent = 'Removed';
+                            badge.style.cssText = 'display: inline-block; background: #000000; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px;';
+                            const titleElement = productCard.querySelector('.product-title');
+                            if (titleElement) {
+                                titleElement.appendChild(badge);
                             }
-                        }, 300);
+                        }
+                        
+                        // Hide the delete button for this product
+                        const deleteButton = productCard.querySelector('.delete-btn');
+                        if (deleteButton) {
+                            deleteButton.style.display = 'none';
+                        }
                     }
                 } else {
                     showNotification('Error: ' + result.message, true);
