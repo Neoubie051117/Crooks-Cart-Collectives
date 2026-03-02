@@ -1,0 +1,353 @@
+/* Admin Verify Sellers Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+    min-height: calc(100vh - 200px);
+}
+
+/* Page Title Header */
+.page-title-header {
+    width: 100%;
+    margin: 20px 0 30px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #FF8246;
+}
+
+.page-title-header h1 {
+    font-size: 2rem;
+    color: #000000;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    width: 100%;
+}
+
+.filter-tab {
+    padding: 8px 20px;
+    background: #ffffff;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #666666;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.filter-tab:hover {
+    background: #FF8246;
+    color: #ffffff;
+    border-color: #FF8246;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
+}
+
+.filter-tab.active {
+    background: #FF8246;
+    color: #ffffff;
+    border-color: #FF8246;
+}
+
+/* Sellers Grid */
+.sellers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+/* Seller Card */
+.seller-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.seller-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #FF8246;
+}
+
+.seller-header {
+    padding: 20px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seller-header h3 {
+    font-size: 1.2rem;
+    color: #000000;
+    margin: 0;
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.status-badge.verified {
+    background: #000000;
+    color: #ffffff;
+}
+
+.status-badge.rejected {
+    background: #666666;
+    color: #ffffff;
+}
+
+.seller-body {
+    padding: 20px;
+}
+
+.seller-body p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #000000;
+}
+
+.seller-body strong {
+    color: #666666;
+    min-width: 70px;
+    display: inline-block;
+}
+
+.seller-actions {
+    padding: 15px 20px;
+    background: #f8f8f8;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-verify,
+.btn-reject {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-verify {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.btn-verify:hover {
+    background: #e66a2e;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.3);
+}
+
+.btn-reject {
+    background: #000000;
+    color: #ffffff;
+}
+
+.btn-reject:hover {
+    background: #333333;
+}
+
+.btn-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+.status-message {
+    color: #666666;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    width: 100%;
+}
+
+.empty-state-content {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666666;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.empty-state-hint {
+    margin-top: 15px;
+    font-style: italic;
+    color: #999999;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666666;
+    font-size: 1rem;
+}
+
+.loading::after {
+    content: '...';
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeScale 0.3s ease;
+}
+
+@keyframes fadeScale {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.modal-icon {
+    margin-bottom: 20px;
+}
+
+.modal-icon img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.modal-message {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-confirm {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.modal-btn-confirm:hover {
+    background: #e66a2e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .sellers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .seller-actions {
+        flex-direction: column;
+    }
+    
+    .btn-verify,
+    .btn-reject {
+        width: 100%;
+        justify-content: center;
+    }
+}

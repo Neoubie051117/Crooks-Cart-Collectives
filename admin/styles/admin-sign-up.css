@@ -1,0 +1,487 @@
+/* REVISE THIS AS PART OF ADMIN */
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --form-group-gap: 20px;
+    --input-height: 50px;
+    --border-radius: 12px;
+    
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
+    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    outline: none;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background-A);
+    color: var(--color-text-A);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pageTitleHeader {
+    font-size: calc(15px + var(--font-size-title));
+    padding: var(--size-header-padding);
+    margin: 20px auto 50px;
+    text-align: center;
+    width: 100%;
+    color: var(--color-text-C);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Form Container */
+.signup-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--form-section-gap);
+    padding: 0 20px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Form Sections - Barangay Style */
+.form-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    margin-bottom: var(--form-section-gap);
+    transition: var(--effect-transition-default);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section:hover {
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    color: var(--color-text-C);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-accent-A);
+}
+
+/* Form Groups - Barangay Style */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px; /* Reduced from 20px */
+    width: 100%;
+}
+
+.form-group label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text-C);
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    font-size: var(--font-size-base);
+    padding: 0 15px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--color-text-A);
+    transition: var(--effect-transition-default);
+}
+
+/* Address textarea - fixed initial size, auto-expands */
+.form-group textarea#address {
+    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
+    padding: 15px;
+    resize: none;
+    overflow-y: hidden;
+    line-height: 1.5;
+    transition: height 0.2s ease;
+}
+
+.form-group textarea#address.expanding {
+    height: auto;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+    outline: none;
+}
+
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #e74c3c;
+}
+
+.form-group.error label {
+    color: #e74c3c;
+}
+
+/* Error Messages */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Button Container - Always Stacked */
+.btn-container {
+    display: flex;
+    flex-direction: column; /* always vertical */
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.btn {
+    padding: var(--size-button-padding);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    border-radius: var(--size-button-radius);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    width: 100%; /* Full width when stacked */
+    min-width: unset; /* Remove min-width constraint */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+}
+
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: var(--color-background-C);
+    border: 1px solid;
+    border-color: var(--color-border-A);
+    color: var(--color-text-B);
+}
+
+/* Remove extra spacing from button wrapper */
+.form-section .form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+/* Links Group - Better Spacing */
+.links-group {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-border-A);
+    width: 100%;
+}
+
+.login-link,
+.seller-link {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-text-C);
+}
+
+.login-link a,
+.seller-link a {
+    text-decoration: none;
+    color: var(--color-accent-A);
+    font-weight: var(--font-weight-bold);
+    transition: var(--effect-transition-default);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.login-link a:hover,
+.seller-link a:hover {
+    color: var(--color-hover-A);
+    background-color: rgba(255, 130, 70, 0.1);
+}
+
+/* Notifier Modal - Barangay Style */
+.notifier {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.notifier.hidden {
+    display: none;
+}
+
+.notifier-content {
+    background-color: var(--color-background-B);
+    color: var(--color-text-A);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: var(--effect-box-shadow-default);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeScale 0.3s ease-in-out;
+}
+
+.notifier-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+@keyframes fadeScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Last Form Section (Contact & Registration) Layout Fix */
+.form-section:last-child {
+    padding-bottom: 25px;
+}
+
+/* Form submitted state - Barangay Style */
+.signup-container.submitted .form-group:has(input:invalid),
+.signup-container.submitted .form-group:has(select:invalid),
+.signup-container.submitted .form-group:has(textarea:invalid) {
+    animation: pulseWarning 0.5s ease-in-out;
+}
+
+@keyframes pulseWarning {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Barangay-style color themes for form sections */
+.form-section {
+    background-color: var(--color-background-B);
+    border-color: var(--color-border-A);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border-color: var(--color-border-A);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-accent-A);
+}
+
+/* Responsive Design - Barangay Style Adjustments */
+@media (max-width: 1024px) {
+    .signup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .pageTitleHeader {
+        font-size: 1.5rem;
+        padding: 15px 10px;
+        margin: 10px auto 30px;
+    }
+    
+    .form-section {
+        padding: 20px;
+        min-width: 100%;
+        margin: 0 0 10px;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-container {
+        margin-top: 15px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        height: 45px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group textarea#address {
+        height: 90px;
+        min-height: 90px;
+    }
+    
+    .links-group {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.9rem;
+        margin: 5px 0;
+    }
+    
+    .signup-container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: 18px 15px;
+    }
+    
+    .form-section:last-child {
+        padding-bottom: 18px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-container {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .links-group {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.85rem;
+        margin: 4px 0;
+    }
+}
+
+/* Password toggle styles */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover img {
+    opacity: 1;
+}
+
+/* Ensure password fields have proper padding */
+.form-group input[type="password"] {
+    padding-right: 45px;
+}
