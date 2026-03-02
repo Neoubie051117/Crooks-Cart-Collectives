@@ -25,7 +25,7 @@ CREATE TABLE users (
 );
 
 -- =====================================================
--- ADMINISTRATORS TABLE
+-- ADMINISTRATORS TABLE (REVISED with profile_picture)
 -- =====================================================
 CREATE TABLE administrators (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,6 +35,7 @@ CREATE TABLE administrators (
     contact_number VARCHAR(15),
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    profile_picture VARCHAR(255),  -- Added profile_picture field
     date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -51,7 +52,7 @@ CREATE TABLE customers (
 );
 
 -- =====================================================
--- SELLERS TABLE (REVISED)
+-- SELLERS TABLE
 -- =====================================================
 CREATE TABLE sellers (
     seller_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -75,11 +76,11 @@ CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     seller_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    description TEXT,                  -- changed to TEXT
+    description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     category VARCHAR(50),
     stock_quantity INT DEFAULT 0,
-    media_path VARCHAR(255),            -- renamed from image_path
+    media_path VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     

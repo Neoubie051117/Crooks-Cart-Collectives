@@ -1,5 +1,5 @@
 <?php
-// Redirect to admin sign-up page
-header('Location: pages/admin-sign-up.php');
+// Redirect to admin sign-in page
+header('Location: pages/admin-sign-in.php');
 exit;
 ?>

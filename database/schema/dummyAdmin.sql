@@ -11,7 +11,8 @@ INSERT INTO administrators (
     contact_number, 
     username, 
     password,
-    date_joined  -- renamed from date_created
+    profile_picture,
+    date_joined
 ) VALUES
 (
     'Admin', 
@@ -20,6 +21,7 @@ INSERT INTO administrators (
     '+639123456789', 
     'admin1', 
     'admin123',
+    NULL,
     NOW()
 ),
 (
@@ -29,10 +31,6 @@ INSERT INTO administrators (
     '+639987654321', 
     'admin2', 
     'admin456',
+    NULL,
     NOW()
 );
-
--- =========================
--- VERIFY ADMIN INSERTION
--- =========================
--- SELECT * FROM administrators;

@@ -2,7 +2,503 @@
 
 **Preset:** admin_path
 
-**Generated:** 2026-03-03 01:50:13
+**Generated:** 2026-03-03 04:21:59
+
+---
+
+## File: `Crooks-Cart-Collectives/logs/requirement/Instructions.md`
+
+**Status:** `FOUND`
+
+```markdown
+# ⚠️ CRITICAL: AI INSTRUCTION ENFORCEMENT ⚠️
+
+## 🔴 ABSOLUTE MANDATORY RULES - DO NOT IGNORE 🔴
+
+**YOU MUST FOLLOW THESE RULES EXACTLY. NO EXCEPTIONS. NO DEVIATIONS.**
+
+---
+
+### RULE 001: REVIEW BEFORE CHANGING
+- You MUST review ALL provided files completely before making ANY changes
+- Read through the entire context first
+- Understand the full project structure before modifying anything
+- **FAILURE TO REVIEW FIRST = IGNORING INSTRUCTIONS**
+
+---
+
+### RULE 002: NO EMOJIS - STRICTLY FORBIDDEN
+- **YOU ARE ABSOLUTELY FORBIDDEN FROM USING ANY EMOJIS IN CODE, COMMENTS, OR OUTPUT**
+- This includes: 😊 🎉 ✅ ❌ ⚠️ 🔴 🟢 🔵 💰 📦 👤 📅 📋 ✗ ✓ • or ANY other emoji
+- Use only plain text characters: letters, numbers, and standard punctuation
+- Use simple bullet points like "-" or "*" if needed
+- **VIOLATION: Adding ANY emoji = FAILURE TO FOLLOW INSTRUCTIONS**
+
+---
+
+### RULE 003: STRICT COLOR PALETTE - ONLY THREE COLORS ALLOWED
+- **COLORS PERMITTED:** White (#FFFFFF), Orange (#FF8246), and Black (#000000)
+- **NO OTHER COLORS WHATSOEVER** - This means:
+  - NO blues, greens, reds, yellows, purples, grays (except black/white)
+  - NO #28a745 (green), NO #dc3545 (red), NO #007bff (blue)
+  - NO rgba() with colors outside white/orange/black
+  - NO gradients using other colors
+- Backgrounds must be white, black, or orange only
+- Text must be black on light backgrounds, white on dark backgrounds
+- Borders must be black or orange only
+- **VIOLATION: Using ANY color outside white/orange/black = FAILURE**
+
+---
+
+### RULE 004: MODIFY ONLY REQUESTED FILES
+- Change ONLY the files explicitly mentioned in the request
+- If told "revise seller orders js and css" - ONLY change those two files
+- Do NOT touch other JavaScript files, CSS files, PHP files, or HTML
+- Do NOT add new files
+- Do NOT modify file structure
+- **VIOLATION: Changing unrequested files = FAILURE**
+
+---
+
+### RULE 005: REWRITE ENTIRE FILES - NO SNIPPETS
+- When modifying a file, you MUST output the COMPLETE file content
+- Do NOT send partial code snippets or diffs
+- The entire file must be shown from start to end
+- Include ALL original code plus your changes
+- **VIOLATION: Sending snippets instead of full files = FAILURE**
+
+---
+
+### RULE 006: FILE PATH FORMAT - STRICT REQUIREMENT
+- When outputting any file, you MUST start with:
+
+- Example: /Crooks-Cart-Collectives/scripts/seller-orders.js
+- Then immediately follow with the file content in a code block
+- **VIOLATION: Missing or incorrect file path format = FAILURE**
+
+---
+
+### RULE 007: USE EXISTING SVG ICONS ONLY
+- NEVER create or hardcode vector icons
+- ONLY use SVG files from `/assets/image/icons/`
+- Do NOT edit SVG files directly
+- Apply orange color to SVGs using CSS filters or root variables
+- For hover effects: ONLY simple icon scaling on divs or cards
+- NO animations that move cards up/down
+- **VIOLATION: Creating new icons or using non-existent icons = FAILURE**
+
+---
+
+### RULE 008: PLAIN TEXT PASSWORDS FOR DEMO
+- Passwords MUST be stored as plain text
+- NO password hashing implementation
+- NO suggesting hashing in comments
+- This is intentional for demo purposes
+- **VIOLATION: Implementing or suggesting hashing = FAILURE**
+
+---
+
+### RULE 009: ORDER STATUSES - EXACTLY THREE
+- Only three statuses allowed: `pending`, `cancelled`, `delivered`
+- NO additional statuses like "processing", "shipped", "completed"
+- NO tracking simulation
+- **VIOLATION: Adding extra statuses = FAILURE**
+
+---
+
+### RULE 010: SIMPLE ERROR MESSAGES ONLY
+- User interface errors: ONLY simple messages like "Invalid credentials. Please try again."
+- Detailed errors go ONLY to `/database/error_log.txt`
+- NO exposing system details to users
+- **VIOLATION: Exposing system errors to users = FAILURE**
+
+---
+
+### RULE 011: DO NOT ADD EXTRA FEATURES
+- Implement ONLY what is explicitly requested
+- If you notice something that needs improvement but wasn't requested:
+- Mention it as a suggestion in a comment
+- Do NOT implement it without permission
+- **VIOLATION: Adding unrequested features = FAILURE**
+
+---
+
+## 📋 CURRENT REQUEST (COPY THIS TO YOUR CONTEXT)
+
+
+---
+
+## ✅ CHECKLIST - VERIFY BEFORE SUBMITTING
+
+Before you output your response, verify ALL of these:
+
+- [ ] Did I review ALL files before changing?
+- [ ] Am I ONLY modifying `/scripts/seller-orders.js` and `/styles/seller-orders.css`?
+- [ ] Did I remove ALL emojis from code and comments?
+- [ ] Did I use ONLY white, orange (#FF8246), and black colors?
+- [ ] Did I output COMPLETE files, not snippets?
+- [ ] Did I include the correct file paths in ## format?
+- [ ] Did I use ONLY existing SVG icons?
+- [ ] Did I avoid adding any new features?
+
+**If ANY checkbox is unchecked, STOP and fix it.**
+
+---
+
+## ⚡ AI REMINDER - READ THIS EVERY TIME ⚡
+
+
+---
+
+## 📌 SUMMARY OF THIS REQUEST
+
+| Aspect | Requirement |
+|--------|-------------|
+| Files to modify | `/scripts/seller-orders.js` and `/styles/seller-orders.css` ONLY |
+| Colors allowed | White (#FFFFFF), Orange (#FF8246), Black (#000000) ONLY |
+| Emojis | ABSOLUTELY FORBIDDEN |
+| Event text | Fix inconsistent sizing, prevent incomplete sentences |
+| Event separation | Make each event a separate statement (customer order, seller sold) |
+| Column depth | Balance colors for more visual depth |
+
+---
+
+**FAILURE TO FOLLOW ANY OF THESE RULES = INCOMPLETE RESPONSE**
+
+**YOU HAVE BEEN WARNED.**
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/logs/output/Project_Structure.md`
+
+**Status:** `FOUND`
+
+```markdown
+# Web Project Structure
+
+**Project:** Crooks-Cart-Collectives
+**Generated:** 2026-03-03 04:21:54
+**Mode:** all
+
+```
+Crooks-Cart-Collectives/
+│
+├── admin/
+│   ├── assets/
+│   │   └── image/
+│   │       ├── brand/
+│   │       │   └── Logo.png
+│   │       ├── icons/
+│   │       │   ├── about-empty.svg
+│   │       │   ├── about-filled.svg
+│   │       │   ├── add-circle-empty.svg
+│   │       │   ├── add-to-queue.svg
+│   │       │   ├── add.svg
+│   │       │   ├── building.svg
+│   │       │   ├── cancel.svg
+│   │       │   ├── cart-arrow-downsvg.svg
+│   │       │   ├── cart-arrow-up.svg
+│   │       │   ├── cart-plus.svg
+│   │       │   ├── cart-shopping-fast.svg
+│   │       │   ├── cart-shopping.svg
+│   │       │   ├── chart-line-up.svg
+│   │       │   ├── community-general.svg
+│   │       │   ├── complaint-icon.png
+│   │       │   ├── contact-us-empty.svg
+│   │       │   ├── contact-us-filled.svg
+│   │       │   ├── edit.svg
+│   │       │   ├── facebook.svg
+│   │       │   ├── fill-form.svg
+│   │       │   ├── github.svg
+│   │       │   ├── hamburger-menu.svg
+│   │       │   ├── instagram.svg
+│   │       │   ├── logoutsvg.svg
+│   │       │   ├── mail.svg
+│   │       │   ├── order.svg
+│   │       │   ├── package.svg
+│   │       │   ├── password-hide.svg
+│   │       │   ├── password-unhide.svg
+│   │       │   ├── people-team.svg
+│   │       │   ├── profile.svg
+│   │       │   ├── reset.svg
+│   │       │   ├── save-empty.svg
+│   │       │   ├── save-filled.svg
+│   │       │   ├── seller-product-placeholder.png
+│   │       │   ├── Showcase1.png
+│   │       │   ├── Showcase2.png
+│   │       │   ├── star-empty.svg
+│   │       │   ├── star-filled.svg
+│   │       │   ├── submit-picture-icon.png
+│   │       │   ├── submit-valid-id-icon.png
+│   │       │   ├── time-update.svg
+│   │       │   ├── trash.svg
+│   │       │   ├── update.svg
+│   │       │   ├── updatesvg.svg
+│   │       │   ├── user-profile-circle.svg
+│   │       │   ├── verified-empty.svg
+│   │       │   ├── verified-filled.svg
+│   │       │   └── youtube.svg
+│   │       ├── team/
+│   │       │   ├── charles-canoneo.png
+│   │       │   ├── christian-adviento.png
+│   │       │   ├── christian-mendoza.png
+│   │       │   ├── clark-mallo.jpg
+│   │       │   ├── clark-mallo.png
+│   │       │   ├── kishiekel-fernandez.png
+│   │       │   ├── lance-madelar.png
+│   │       │   ├── rylle-bernardino.png
+│   │       │   └── william-aranez.png
+│   │       └── Logo.png
+│   ├── database/
+│   │   ├── admin-auth-handler.php
+│   │   ├── admin-data-storage-handler.php
+│   │   ├── admin-database-connect.php
+│   │   ├── admin-logs-handler.php
+│   │   ├── admin-profile-handler.php
+│   │   ├── admin-reports-handler.php
+│   │   ├── admin-sign-in-handler.php
+│   │   ├── admin-sign-out-handler.php
+│   │   ├── admin-sign-up-handler.php
+│   │   ├── error_log.txt
+│   │   └── validation.php
+│   ├── includes/
+│   │   ├── admin-footer.php
+│   │   ├── admin-header.php
+│   │   ├── admin-privacy-policy.php
+│   │   └── admin-terms-and-conditions.php
+│   ├── pages/
+│   │   ├── admin-dashboard.php
+│   │   ├── admin-logs.php
+│   │   ├── admin-manage-report.php
+│   │   ├── admin-profile.php
+│   │   ├── admin-sign-in.php
+│   │   ├── admin-sign-up.php
+│   │   └── admin-verify-sellers.php
+│   ├── scripts/
+│   │   ├── admin-header.js
+│   │   ├── admin-logs.js
+│   │   ├── admin-profile.js
+│   │   ├── admin-sign-in.js
+│   │   ├── admin-sign-out.js
+│   │   ├── admin-sign-up.js
+│   │   └── admin-verify-sellers.js
+│   ├── styles/
+│   │   ├── admin-dashboard.css
+│   │   ├── admin-footer.css
+│   │   ├── admin-header.css
+│   │   ├── admin-index.css
+│   │   ├── admin-logs.css
+│   │   ├── admin-privacy-policy.css
+│   │   ├── admin-profile.css
+│   │   ├── admin-sign-in.css
+│   │   ├── admin-sign-out.css
+│   │   ├── admin-sign-up.css
+│   │   ├── admin-terms-and-conditions.css
+│   │   └── admin-verify-sellers.css
+│   └── admin-index.php
+├── assets/
+│   └── image/
+│       ├── brand/
+│       │   └── Logo.png
+│       ├── icons/
+│       │   ├── about-empty.svg
+│       │   ├── about-filled.svg
+│       │   ├── add-circle-empty.svg
+│       │   ├── add-to-queue.svg
+│       │   ├── add.svg
+│       │   ├── building.svg
+│       │   ├── cancel.svg
+│       │   ├── cart-arrow-downsvg.svg
+│       │   ├── cart-arrow-up.svg
+│       │   ├── cart-plus.svg
+│       │   ├── cart-shopping-fast.svg
+│       │   ├── cart-shopping.svg
+│       │   ├── chart-line-up.svg
+│       │   ├── community-general.svg
+│       │   ├── complaint-icon.png
+│       │   ├── contact-us-empty.svg
+│       │   ├── contact-us-filled.svg
+│       │   ├── edit.svg
+│       │   ├── facebook.svg
+│       │   ├── fill-form.svg
+│       │   ├── github.svg
+│       │   ├── hamburger-menu.svg
+│       │   ├── instagram.svg
+│       │   ├── logoutsvg.svg
+│       │   ├── mail.svg
+│       │   ├── order.svg
+│       │   ├── package.svg
+│       │   ├── password-hide.svg
+│       │   ├── password-unhide.svg
+│       │   ├── people-team.svg
+│       │   ├── profile.svg
+│       │   ├── reset.svg
+│       │   ├── save-empty.svg
+│       │   ├── save-filled.svg
+│       │   ├── seller-product-placeholder.png
+│       │   ├── Showcase1.png
+│       │   ├── Showcase2.png
+│       │   ├── star-empty.svg
+│       │   ├── star-filled.svg
+│       │   ├── submit-picture-icon.png
+│       │   ├── submit-valid-id-icon.png
+│       │   ├── time-update.svg
+│       │   ├── trash.svg
+│       │   ├── update.svg
+│       │   ├── updatesvg.svg
+│       │   ├── user-profile-circle.svg
+│       │   ├── verified-empty.svg
+│       │   ├── verified-filled.svg
+│       │   └── youtube.svg
+│       ├── team/
+│       │   ├── charles-canoneo.png
+│       │   ├── christian-adviento.png
+│       │   ├── christian-mendoza.png
+│       │   ├── clark-mallo.jpg
+│       │   ├── clark-mallo.png
+│       │   ├── kishiekel-fernandez.png
+│       │   ├── lance-madelar.png
+│       │   ├── rylle-bernardino.png
+│       │   └── william-aranez.png
+│       └── Logo.png
+├── Crooks-Data-Storage/
+│   └── administrators/
+│       └── 2/
+│           └── profile/
+├── database/
+│   ├── schema/
+│   │   ├── dbCreation.sql
+│   │   ├── dummyAdmin.sql
+│   │   ├── dummySeller.sql
+│   │   └── dummyUser.sql
+│   ├── cart-handler.php
+│   ├── checkout-handler.php
+│   ├── customer-profile-handler.php
+│   ├── data-storage-handler.php
+│   ├── database-connect.php
+│   ├── order-handler.php
+│   ├── product-handler.php
+│   ├── report-seller-handler.php
+│   ├── review-handler.php
+│   ├── seller-fill-form-handler.php
+│   ├── seller-new-product-handler.php
+│   ├── sign-in-handler.php
+│   ├── sign-out-handler.php
+│   ├── sign-up-handler.php
+│   └── validation.php
+├── logs/
+│   ├── content-fetcher-configuration/
+│   │   ├── admin_path.py
+│   │   ├── all_path.py
+│   │   ├── linux-path.py
+│   │   └── windows-preset.py
+│   ├── output/
+│   │   ├── admin_path_Summary.md
+│   │   ├── all_path_Summary.md
+│   │   ├── Project_Structure.md
+│   │   └── windows-preset_Summary.md
+│   ├── requirement/
+│   │   ├── Apply Tree map.md
+│   │   └── Instructions.md
+│   ├── content-fetcher.py
+│   ├── runner.bat
+│   ├── runner.sh
+│   └── tree-mapper.py
+├── pages/
+│   ├── about.php
+│   ├── cart.php
+│   ├── checkout.php
+│   ├── contact.php
+│   ├── customer-dashboard.php
+│   ├── customer-profile.php
+│   ├── footer.php
+│   ├── header.php
+│   ├── orders.php
+│   ├── privacy-policy.php
+│   ├── product-detail.php
+│   ├── product.php
+│   ├── report-seller.php
+│   ├── seller-dashboard.php
+│   ├── seller-fill-form.php
+│   ├── seller-manage-product.php
+│   ├── seller-new-product.php
+│   ├── seller-process-order.php
+│   ├── sign-in.php
+│   ├── sign-up.php
+│   └── terms-and-conditions.php
+├── scripts/
+│   ├── cart.js
+│   ├── checkout.js
+│   ├── contact.js
+│   ├── customer-profile.js
+│   ├── error-handler.js
+│   ├── header.js
+│   ├── index.js
+│   ├── orders.js
+│   ├── product-detail.js
+│   ├── product.js
+│   ├── report-seller.js
+│   ├── seller-dashboard.js
+│   ├── seller-fill-form.js
+│   ├── seller-manage-product.js
+│   ├── seller-new-product.js
+│   ├── seller-process-order.js
+│   ├── showcase-slider.js
+│   ├── sign-in.js
+│   ├── sign-out.js
+│   └── sign-up.js
+├── styles/
+│   ├── about.css
+│   ├── cart.css
+│   ├── checkout.css
+│   ├── contact.css
+│   ├── customer-dashboard.css
+│   ├── footer.css
+│   ├── header.css
+│   ├── index.css
+│   ├── orders.css
+│   ├── privacy-policy.css
+│   ├── product-detail.css
+│   ├── product.css
+│   ├── profile.css
+│   ├── report-seller.css
+│   ├── seller-dashboard.css
+│   ├── seller-manage-product.css
+│   ├── seller-new-product.css
+│   ├── seller-process-order.css
+│   ├── seller-registration.css
+│   ├── sign-in.css
+│   ├── sign-out.css
+│   ├── sign-up.css
+│   └── terms-and-conditions.css
+├── .gitignore
+├── index.php
+├── LICENSE
+└── README.md
+```
+
+## Summary
+
+| File Type | Count |
+|-----------|-------|
+| HTML Files | 0 |
+| PHP Files | 59 |
+| CSS Files | 35 |
+| JavaScript Files | 27 |
+| JSON Files | 0 |
+| Text/Markdown | 8 |
+| Image Files | 120 |
+| Other Files | 14 |
+
+**Total Directories:** 29
+**Total Files:** 262
+
+---
+
+*Generated by Web Project Tree Mapper*
+*Script: tree-mapper.py*
+```
 
 ---
 
@@ -12,8 +508,8 @@
 
 ```php
 <?php
-// Redirect to admin sign-up page
-header('Location: pages/admin-sign-up.php');
+// Redirect to admin sign-in page
+header('Location: pages/admin-sign-in.php');
 exit;
 ?>
 ```
@@ -193,71 +689,316 @@ echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 
 ```php
 <?php
-// Admin data storage handler - for serving and saving admin files
-session_start();
+// Admin data storage handler - for serving and saving admin files outside web root
+// Check if session is not already started before starting
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Function to serve admin files (profile pictures)
+// Error logging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error_log.txt');
+
+// Configuration - Store in external directory like customer/seller data
+define('ADMIN_STORAGE_PATH', dirname(__DIR__, 2) . '/Crooks-Data-Storage/administrators/');
+
+// Create base directory if it doesn't exist
+if (!is_dir(dirname(__DIR__, 2) . '/Crooks-Data-Storage/')) {
+    mkdir(dirname(__DIR__, 2) . '/Crooks-Data-Storage/', 0755, true);
+}
+if (!is_dir(ADMIN_STORAGE_PATH)) {
+    mkdir(ADMIN_STORAGE_PATH, 0755, true);
+}
+
+/**
+ * Serve admin files (profile pictures) with proper security and authentication
+ * @param string $path Relative path within administrators storage
+ */
 function serveAdminFile($path) {
-    // Security: ensure path is within administrators directory
-    $baseDir = dirname(__DIR__) . '/Crooks-Data-Storage/administrators/';
-    $fullPath = realpath($baseDir . $path);
-    if ($fullPath === false || strpos($fullPath, $baseDir) !== 0) {
+    error_log("Admin storage: Serving file: " . $path);
+    
+    // ===== CRITICAL: Authentication check =====
+    if (!isset($_SESSION['admin_id'])) {
+        error_log("Admin storage: Unauthorized access attempt to: " . $path);
+        http_response_code(401);
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => 'Authentication required']);
+        exit;
+    }
+    
+    // Security: ensure path is within administrators directory and prevent directory traversal
+    $path = str_replace(['../', '..\\', './', '.\\'], '', $path);
+    
+    $fullPath = ADMIN_STORAGE_PATH . $path;
+    error_log("Admin storage: Full path: " . $fullPath);
+    
+    // Check if file exists
+    if (!file_exists($fullPath)) {
+        error_log("Admin storage: File not found: " . $fullPath);
         http_response_code(404);
         exit;
     }
-    $ext = pathinfo($fullPath, PATHINFO_EXTENSION);
-    $mime = [
+    
+    // Get file extension and set appropriate mime type
+    $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+    $mimeTypes = [
         'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
         'png' => 'image/png',
         'gif' => 'image/gif',
-        'svg' => 'image/svg+xml'
-    ][strtolower($ext)] ?? 'application/octet-stream';
-
+        'svg' => 'image/svg+xml',
+        'webp' => 'image/webp'
+    ];
+    
+    $mime = $mimeTypes[$ext] ?? 'application/octet-stream';
+    
+    // Set caching headers
     header('Content-Type: ' . $mime);
     header('Content-Length: ' . filesize($fullPath));
+    header('Cache-Control: public, max-age=86400'); // 24 hours cache
+    header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
+    
+    // Output file
     readfile($fullPath);
     exit;
 }
 
-// Function to save admin profile picture
+/**
+ * Save admin profile picture to storage outside web root
+ * @param int $admin_id Admin ID
+ * @param array $file Uploaded file data from $_FILES
+ * @return array Result with success status and path/message
+ */
 function saveAdminProfilePicture($admin_id, $file) {
-    $targetDir = dirname(__DIR__) . '/Crooks-Data-Storage/administrators/profile/';
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0777, true);
-    }
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $filename = $admin_id . '_' . time() . '.' . $ext;
-    $targetPath = $targetDir . $filename;
-    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        // Return relative path for database storage
+    error_log("Admin storage: Saving profile picture for admin: " . $admin_id);
+    
+    // Authentication check
+    if (!isset($_SESSION['admin_id']) || $_SESSION['admin_id'] != $admin_id) {
+        error_log("Admin storage: Authentication mismatch for admin: " . $admin_id);
         return [
-            'success' => true,
-            'path' => 'administrators/profile/' . $filename
+            'success' => false,
+            'message' => 'Authentication required'
         ];
     }
+    
+    $targetDir = ADMIN_STORAGE_PATH . $admin_id . '/profile/';
+    error_log("Admin storage: Target directory: " . $targetDir);
+    
+    // Create directory if it doesn't exist
+    if (!is_dir($targetDir)) {
+        if (!mkdir($targetDir, 0755, true)) {
+            error_log("Admin storage: Failed to create directory: " . $targetDir);
+            return [
+                'success' => false,
+                'message' => 'Failed to create upload directory.'
+            ];
+        }
+    }
+    
+    // Validate file
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $maxSize = 2 * 1024 * 1024; // 2MB
+    
+    // Verify file type using finfo for security
+    if (!file_exists($file['tmp_name'])) {
+        error_log("Admin storage: Temporary file does not exist");
+        return [
+            'success' => false,
+            'message' => 'Upload failed: Temporary file not found.'
+        ];
+    }
+    
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $detectedType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($detectedType, $allowedTypes)) {
+        error_log("Admin storage: Invalid file type: " . $detectedType);
+        return [
+            'success' => false,
+            'message' => 'Invalid file type. Only JPG, PNG, GIF, and WEBP are allowed.'
+        ];
+    }
+    
+    if ($file['size'] > $maxSize) {
+        error_log("Admin storage: File too large: " . $file['size']);
+        return [
+            'success' => false,
+            'message' => 'File size must be less than 2MB.'
+        ];
+    }
+    
+    // Validate upload
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $uploadErrors = [
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive.',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive.',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded.',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder.',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension.'
+        ];
+        $errorMsg = $uploadErrors[$file['error']] ?? 'Unknown upload error.';
+        error_log("Admin storage: Upload error: " . $errorMsg);
+        return [
+            'success' => false,
+            'message' => 'Upload failed: ' . $errorMsg
+        ];
+    }
+    
+    // Delete any existing profile picture files for this admin
+    $existingFiles = glob($targetDir . 'profile.*');
+    foreach ($existingFiles as $existingFile) {
+        if (is_file($existingFile)) {
+            unlink($existingFile);
+            error_log("Admin storage: Deleted existing file: " . $existingFile);
+        }
+    }
+    
+    // Get original extension from detected type
+    $ext = '';
+    switch ($detectedType) {
+        case 'image/jpeg':
+            $ext = 'jpg';
+            break;
+        case 'image/png':
+            $ext = 'png';
+            break;
+        case 'image/gif':
+            $ext = 'gif';
+            break;
+        case 'image/webp':
+            $ext = 'webp';
+            break;
+        default:
+            $ext = 'jpg';
+    }
+    
+    // Fixed filename: profile.extension (like customer side)
+    $filename = 'profile.' . $ext;
+    $targetPath = $targetDir . $filename;
+    
+    error_log("Admin storage: Target path: " . $targetPath);
+    
+    // Move uploaded file
+    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+        // Set proper permissions
+        chmod($targetPath, 0644);
+        error_log("Admin storage: File saved successfully: " . $targetPath);
+        
+        // Return relative path for database storage (relative to storage root)
+        return [
+            'success' => true,
+            'path' => 'administrators/' . $admin_id . '/profile/' . $filename
+        ];
+    }
+    
+    error_log("Admin storage: Failed to move uploaded file to " . $targetPath);
     return [
         'success' => false,
-        'message' => 'Failed to upload file.'
+        'message' => 'Failed to save uploaded file.'
     ];
 }
 
-// Get admin profile picture URL
-function getAdminProfilePictureUrl($path) {
-    if (empty($path)) {
-        return '../assets/image/icons/user-profile-circle.svg';
+/**
+ * Delete old profile pictures for an admin
+ * @param int $admin_id Admin ID
+ */
+function cleanupOldAdminProfilePictures($admin_id) {
+    if (!isset($_SESSION['admin_id']) || $_SESSION['admin_id'] != $admin_id) {
+        return;
     }
-    return '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($path);
+    
+    $profileDir = ADMIN_STORAGE_PATH . $admin_id . '/profile/';
+    
+    if (!is_dir($profileDir)) {
+        return;
+    }
+    
+    // Find all profile files for this admin
+    $oldFiles = glob($profileDir . 'profile.*');
+    
+    foreach ($oldFiles as $file) {
+        if (is_file($file)) {
+            unlink($file);
+            error_log("Admin storage: Cleaned up file: " . $file);
+        }
+    }
+}
+
+// Check if the function already exists before declaring it
+if (!function_exists('getAdminProfilePictureUrl')) {
+    /**
+     * Get admin profile picture URL via data storage handler
+     * @param string $path Storage path
+     * @return string URL to serve the file
+     */
+    function getAdminProfilePictureUrl($path) {
+        if (empty($path)) {
+            return '../assets/image/icons/user-profile-circle.svg';
+        }
+        
+        // URL encode the path to handle special characters
+        $encodedPath = urlencode($path);
+        
+        // Return URL to this handler with serve action
+        return '../database/admin-data-storage-handler.php?action=serve&path=' . $encodedPath;
+    }
 }
 
 // Handle requests
-if (isset($_GET['action']) && $_GET['action'] === 'serve' && isset($_GET['path'])) {
-    serveAdminFile($_GET['path']);
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+    
+    if ($action === 'serve' && isset($_GET['path'])) {
+        serveAdminFile($_GET['path']);
+        exit;
+    }
+}
+
+// Handle file upload via POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload') {
+    header('Content-Type: application/json');
+    
+    if (!isset($_SESSION['admin_id'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
+    
+    $admin_id = $_SESSION['admin_id'];
+    $file = $_FILES['profile_picture'] ?? null;
+    
+    if (!$file) {
+        echo json_encode(['status' => 'error', 'message' => 'No file uploaded']);
+        exit;
+    }
+    
+    $result = saveAdminProfilePicture($admin_id, $file);
+    
+    if ($result['success']) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Profile picture uploaded successfully',
+            'path' => $result['path']
+        ]);
+    } else {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => $result['message']
+        ]);
+    }
     exit;
 }
 
-// If not serving, output nothing
-?>
+// If no valid action, output 404 instead of 400 to avoid confusion
+http_response_code(404);
+echo 'Not found';
+exit;
 ```
 
 ---
@@ -540,111 +1281,7 @@ echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 **Status:** `FOUND`
 
 ```php
-<?php
-// Admin Profile Handler
-session_start();
-header('Content-Type: application/json');
-
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/error_log.txt');
-
-require_once(__DIR__ . '/admin-database-connect.php');
-require_once(__DIR__ . '/admin-data-storage-handler.php');
-
-if (!isset($_SESSION['admin_id'])) {
-    http_response_code(401);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
-    exit;
-}
-
-$action = $_POST['action'] ?? '';
-
-if ($action !== 'update_profile') {
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
-    exit;
-}
-
-handleProfileUpdate();
-
-function handleProfileUpdate() {
-    global $connection;
-    
-    $admin_id = $_SESSION['admin_id'];
-    
-    // Get form data
-    $first_name = trim($_POST['first_name'] ?? '');
-    $last_name = trim($_POST['last_name'] ?? '');
-    $contact_number = trim($_POST['contact_number'] ?? '');
-    
-    // Validate required fields
-    if (empty($first_name) || empty($last_name) || empty($contact_number)) {
-        echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
-        exit;
-    }
-    
-    // Validate Philippine mobile number
-    $cleaned_contact = preg_replace('/[^0-9]/', '', $contact_number);
-    if (!preg_match('/^09\d{9}$/', $cleaned_contact)) {
-        echo json_encode(['status' => 'error', 'message' => 'Please enter a valid Philippine mobile number']);
-        exit;
-    }
-    
-    // Handle profile picture upload
-    $profile_picture_path = null;
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-        $upload_result = saveAdminProfilePicture($admin_id, $_FILES['profile_picture']);
-        if ($upload_result['success']) {
-            $profile_picture_path = $upload_result['path'];
-        } else {
-            echo json_encode(['status' => 'error', 'message' => $upload_result['message']]);
-            exit;
-        }
-    }
-    
-    try {
-        // Build update query
-        $sql = "UPDATE administrators SET first_name = ?, last_name = ?, contact_number = ?";
-        $params = [$first_name, $last_name, $cleaned_contact];
-        
-        if ($profile_picture_path) {
-            $sql .= ", profile_picture = ?";
-            $params[] = $profile_picture_path;
-        }
-        
-        $sql .= " WHERE admin_id = ?";
-        $params[] = $admin_id;
-        
-        $stmt = $connection->prepare($sql);
-        $stmt->execute($params);
-        
-        // Update session variables
-        $_SESSION['admin_first_name'] = $first_name;
-        $_SESSION['admin_last_name'] = $last_name;
-        
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Profile updated successfully',
-            'data' => [
-                'first_name' => $first_name,
-                'last_name' => $last_name
-            ]
-        ]);
-        
-    } catch (PDOException $e) {
-        error_log("Profile update error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
-    }
-}
-?>
+//fix
 ```
 
 ---
@@ -860,7 +1497,6 @@ exit;
 
 ```php
 <?php
-// Admin Sign Up Handler
 session_start();
 header('Content-Type: application/json');
 
@@ -871,9 +1507,34 @@ ini_set('error_log', __DIR__ . '/error_log.txt');
 
 require_once(__DIR__ . '/admin-database-connect.php');
 
+// ===== ADD THIS TEST ENDPOINT =====
+if (isset($_GET['ping'])) {
+    echo json_encode([
+        'status' => 'ok', 
+        'message' => 'Signup handler is reachable',
+        'time' => date('Y-m-d H:i:s'),
+        'session' => isset($_SESSION['admin_id']) ? 'active' : 'inactive'
+    ]);
+    exit;
+}
+// ===== END TEST ENDPOINT =====
+
+// Allow testing
+if (isset($_GET['test'])) {
+    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
+    exit;
+}
+
+// Allow testing
+if (isset($_GET['test'])) {
+    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
+    exit;
+}
+
+// Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
     exit;
 }
 
@@ -881,153 +1542,118 @@ $action = $_POST['action'] ?? '';
 
 if ($action !== 'signup') {
     http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid action: ' . $action]);
     exit;
 }
 
-handleAdminSignup();
+// Get and validate data
+$first_name = trim($_POST['first_name'] ?? '');
+$last_name = trim($_POST['last_name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$contact = trim($_POST['contact_number'] ?? '');
+$username = trim($_POST['username'] ?? '');
+$password = $_POST['password'] ?? '';
+$confirm = $_POST['confirm_password'] ?? '';
 
-function formatPhoneForStorage($phone) {
-    $cleaned = preg_replace('/[^0-9]/', '', $phone);
-    
-    if (strlen($cleaned) === 11 && substr($cleaned, 0, 2) === '09') {
-        return $cleaned;
-    }
-    
-    return $phone;
+// Check required fields
+if (empty($first_name) || empty($last_name) || empty($email) || empty($contact) || empty($username) || empty($password)) {
+    echo json_encode(['status' => 'error', 'message' => 'missing-field']);
+    exit;
 }
 
-function handleAdminSignup() {
-    global $connection;
-    
-    error_log("Admin signup attempt");
-    
-    // Check required fields
-    $required = ['first_name', 'last_name', 'email', 'contact_number', 'username', 'password', 'confirm_password'];
-    
-    foreach ($required as $field) {
-        if (empty(trim($_POST[$field] ?? ''))) {
-            echo json_encode(['status' => 'error', 'message' => 'missing-field', 'field' => $field]);
-            exit;
-        }
-    }
-    
-    // Validate email
-    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode(['status' => 'error', 'message' => 'invalid-email']);
-        exit;
-    }
-    
-    // Validate password
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    
-    if (strlen($password) < 8) {
-        echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
-        exit;
-    }
-    if (strlen($password) > 16) {
-        echo json_encode(['status' => 'error', 'message' => 'password-too-long']);
-        exit;
-    }
-    if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)) {
-        echo json_encode(['status' => 'error', 'message' => 'password-needs-mixed-case']);
-        exit;
-    }
-    if (!preg_match('/[0-9]/', $password)) {
-        echo json_encode(['status' => 'error', 'message' => 'password-needs-number']);
-        exit;
-    }
-    if ($password !== $confirm_password) {
-        echo json_encode(['status' => 'error', 'message' => 'passwords-mismatch']);
-        exit;
-    }
-    
-    // Validate username
-    $username = trim($_POST['username']);
-    if (strlen($username) < 3) {
-        echo json_encode(['status' => 'error', 'message' => 'username-too-short']);
-        exit;
-    }
-    if (strlen($username) > 20) {
-        echo json_encode(['status' => 'error', 'message' => 'username-too-long']);
-        exit;
-    }
-    if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-        echo json_encode(['status' => 'error', 'message' => 'username-invalid-chars']);
-        exit;
-    }
-    
-    // Check if username exists
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM administrators WHERE username = ?");
+// Validate email
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['status' => 'error', 'message' => 'invalid-email']);
+    exit;
+}
+
+// Validate password
+if (strlen($password) < 8) {
+    echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
+    exit;
+}
+if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)) {
+    echo json_encode(['status' => 'error', 'message' => 'password-needs-mixed-case']);
+    exit;
+}
+if (!preg_match('/[0-9]/', $password)) {
+    echo json_encode(['status' => 'error', 'message' => 'password-needs-number']);
+    exit;
+}
+if ($password !== $confirm) {
+    echo json_encode(['status' => 'error', 'message' => 'passwords-mismatch']);
+    exit;
+}
+
+// Validate username
+if (strlen($username) < 3 || strlen($username) > 20) {
+    echo json_encode(['status' => 'error', 'message' => 'username-length']);
+    exit;
+}
+if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+    echo json_encode(['status' => 'error', 'message' => 'username-invalid-chars']);
+    exit;
+}
+
+// Format phone
+$phone = preg_replace('/[^0-9]/', '', $contact);
+if (strlen($phone) === 10 && $phone[0] === '9') {
+    $phone = '0' . $phone;
+} elseif (strlen($phone) === 12 && substr($phone, 0, 2) === '63') {
+    $phone = '0' . substr($phone, 2);
+} elseif (strlen($phone) === 12 && substr($phone, 0, 3) === '639') {
+    $phone = '0' . substr($phone, 2);
+}
+
+if (!preg_match('/^09\d{9}$/', $phone)) {
+    echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
+    exit;
+}
+
+try {
+    // Check duplicates
+    $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE username = ?");
     $stmt->execute([$username]);
-    if ($stmt->fetchColumn() > 0) {
+    if ($stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'username-unavailable']);
         exit;
     }
     
-    // Check if email exists
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM administrators WHERE email = ?");
+    $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE email = ?");
     $stmt->execute([$email]);
-    if ($stmt->fetchColumn() > 0) {
+    if ($stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'duplicate-email']);
         exit;
     }
     
-    // Validate contact number
-    $contact_number = trim($_POST['contact_number']);
-    $storage_contact = formatPhoneForStorage($contact_number);
-    
-    $cleaned_contact = preg_replace('/[^0-9]/', '', $contact_number);
-    if (!preg_match('/^09\d{9}$/', $storage_contact)) {
-        echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
-        exit;
-    }
-    
-    // Check if contact exists
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM administrators WHERE contact_number = ?");
-    $stmt->execute([$storage_contact]);
-    if ($stmt->fetchColumn() > 0) {
+    $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE contact_number = ?");
+    $stmt->execute([$phone]);
+    if ($stmt->fetch()) {
         echo json_encode(['status' => 'error', 'message' => 'duplicate-contact']);
         exit;
     }
     
-    try {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
-        $admin_data = [
-            ':first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
-            ':last_name' => htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8'),
-            ':email' => $email,
-            ':contact_number' => $storage_contact,
-            ':username' => htmlspecialchars($username, ENT_QUOTES, 'UTF-8'),
-            ':password' => $hashed_password
-        ];
-        
-        // Use date_joined instead of created_at
-        $sql = "INSERT INTO administrators (
-                    first_name, last_name, email, contact_number, username, password, date_joined
-                ) VALUES (
-                    :first_name, :last_name, :email, :contact_number, :username, :password, NOW()
-                )";
-        $stmt = $connection->prepare($sql);
-        $stmt->execute($admin_data);
-        
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Admin account created successfully! Please sign in.',
-            'redirect' => '../pages/admin-sign-in.php',
-            'delay' => 5000
-        ]);
-        
-    } catch (PDOException $e) {
-        error_log("Admin signup database error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Database error occurred. Please try again.']);
-    } catch (Exception $e) {
-        error_log("General error in admin signup: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'An error occurred. Please try again.']);
+    // Create admin
+    $hashed = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $connection->prepare("INSERT INTO administrators (first_name, last_name, email, contact_number, username, password, date_joined) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+    $stmt->execute([$first_name, $last_name, $email, $phone, $username, $hashed]);
+    
+    // Create storage directory
+    $admin_id = $connection->lastInsertId();
+    $storage_dir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/administrators/' . $admin_id . '/profile/';
+    if (!is_dir($storage_dir)) {
+        mkdir($storage_dir, 0755, true);
     }
+    
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Admin account created successfully!',
+        'redirect' => 'admin-sign-in.php'
+    ]);
+    
+} catch (Exception $e) {
+    error_log("Signup error: " . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => 'Database error']);
 }
 ?>
 ```
@@ -1364,7 +1990,7 @@ try {
         <!-- Dashboard Cards -->
         <div class="dashboard-grid">
             <!-- Admin Profile Card -->
-            <a href="admin-profile.php" class="dashboard-card">
+            <a href="admin-profile-edit.php" class="dashboard-card">
                 <div class="card-icon">
                     <img src="../assets/image/icons/profile.svg" alt="Profile">
                 </div>
@@ -1580,34 +2206,7 @@ unset($_SESSION['admin_message'], $_SESSION['admin_error']);
 
 ```php
 <?php
-session_start();
-require_once('../database/admin-database-connect.php');
-require_once('../database/admin-data-storage-handler.php');
 
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin-sign-in.php');
-    exit;
-}
-
-$adminId = $_SESSION['admin_id'];
-
-$admin = [];
-try {
-    $stmt = $connection->prepare("SELECT * FROM administrators WHERE admin_id = ?");
-    $stmt->execute([$adminId]);
-    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$admin) {
-        session_destroy();
-        header('Location: admin-sign-in.php');
-        exit;
-    }
-} catch (PDOException $e) {
-    error_log("Error fetching admin profile: " . $e->getMessage());
-    $error = "Unable to load profile data. Please try again later.";
-}
-
-// REMOVED: getAdminProfilePictureUrl function - now using the one from admin-data-storage-handler.php
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1626,13 +2225,12 @@ try {
     <?php include_once('../includes/admin-header.php'); ?>
 
     <div class="content">
-
         <?php if (isset($error)): ?>
-        <div class="message error" style="display: block; margin-bottom: 20px;">
+        <div class="message error"
+            style="display: block; margin-bottom: 20px; padding: 15px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px;">
             <?php echo htmlspecialchars($error); ?>
-            <a href="admin-dashboard.php" style="color: white; text-decoration: underline; margin-left: 10px;">
-                Return to Dashboard
-            </a>
+            <a href="admin-dashboard.php" style="color: #721c24; text-decoration: underline; margin-left: 10px;">Return
+                to Dashboard</a>
         </div>
         <?php else: ?>
 
@@ -1642,110 +2240,148 @@ try {
             <div id="successMessage" class="message success" style="display: none;"></div>
             <div id="errorMessage" class="message error" style="display: none;"></div>
 
-            <!-- Personal Info Section with Profile Preview -->
-            <div class="form-section personal-info-section">
-                <h3>Profile Information</h3>
-
-                <!-- PROFILE CONTAINER - Stacked and Centered -->
-                <div class="profile-stacked-container">
-                    <!-- Profile Picture -->
-                    <div class="profile-picture-wrapper">
-                        <img id="profilePicturePreview"
-                            src="<?php echo getAdminProfilePictureUrl($admin['profile_picture'] ?? ''); ?>"
-                            alt="Profile Picture"
+            <div class="profile-header-card" id="profileHeaderCard">
+                <div class="profile-header-left">
+                    <div class="profile-avatar-wrapper">
+                        <img id="profilePicturePreview" src="<?php echo $profilePicUrl; ?>" alt="Profile Picture"
                             onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
-
-                        <div class="profile-picture-upload" id="profilePictureUpload" style="display: none;">
-                            <label for="profile_picture" class="file-upload-label">Choose Photo to Upload</label>
-                            <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-                            <div class="file-name" id="fileNameDisplay"></div>
-                            <div class="help-text">Max 2MB. JPG, PNG, GIF.</div>
+                        <div class="profile-avatar-edit" id="profilePictureUpload">
+                            <label for="profile_picture" class="file-upload-label" title="Upload profile picture">
+                                <img src="../assets/image/icons/camera.svg" alt="Upload">
+                            </label>
+                            <input type="file" id="profile_picture" name="profile_picture"
+                                accept="image/jpeg,image/png,image/gif,image/webp">
                         </div>
                     </div>
-
-                    <!-- Profile Name (one line - first name + last name) -->
-                    <div class="profile-name-single-line">
-                        <span
-                            class="display-full-name"><?php echo htmlspecialchars($admin['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                            <?php echo htmlspecialchars($admin['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
-                    </div>
-
-                    <!-- Choose button container - centered below name -->
-                    <div class="choose-button-container" id="chooseButtonContainer" style="display: none;">
-                        <button type="button" class="btn-choose-photo" id="triggerFileUpload">Choose Photo to
-                            Upload</button>
+                    <div class="profile-name-role">
+                        <h1 class="profile-full-name">
+                            <?php echo htmlspecialchars($admin['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            <?php echo htmlspecialchars($admin['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                        </h1>
+                        <span class="profile-role-badge">Administrator</span>
+                        <div id="fileNameDisplay" class="file-name"></div>
                     </div>
                 </div>
 
-                <!-- Name fields with labels -->
-                <div class="fields-row with-labels">
-                    <div class="form-group flex-field">
-                        <label for="first_name" class="field-label">First name</label>
-                        <input type="text" id="first_name" name="first_name" required
-                            value="<?php echo htmlspecialchars($admin['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            placeholder="First name" maxlength="50" disabled>
-                        <div class="error-message" id="firstNameError"></div>
-                    </div>
+                <div class="profile-header-right">
+                    <button type="button" id="editProfileBtn" class="btn btn-edit">
+                        <img src="../assets/image/icons/edit.svg" alt="Edit" class="btn-icon">
+                        Edit Profile
+                    </button>
 
-                    <div class="form-group flex-field">
-                        <label for="last_name" class="field-label">Last name</label>
-                        <input type="text" id="last_name" name="last_name" required
-                            value="<?php echo htmlspecialchars($admin['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            placeholder="Last name" maxlength="50" disabled>
-                        <div class="error-message" id="lastNameError"></div>
+                    <div id="profileActions" class="profile-actions-header" style="display: none;">
+                        <button type="button" id="uploadPhotoBtn" class="btn btn-upload" title="Upload Profile Photo">
+                            <img src="../assets/image/icons/camera.svg" alt="Upload" class="btn-icon">
+                            <span class="btn-text">Upload Photo</span>
+                        </button>
+                        <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>
+                            <img src="../assets/image/icons/check.svg" alt="Save" class="btn-icon">
+                            <span class="btn-text">Save</span>
+                        </button>
+                        <button type="button" id="cancelEditBtn" class="btn btn-secondary">
+                            <img src="../assets/image/icons/cancel.svg" alt="Cancel" class="btn-icon">
+                            <span class="btn-text">Cancel</span>
+                        </button>
                     </div>
-                </div>
-
-                <!-- Contact number with label -->
-                <div class="form-group full-width with-label">
-                    <label for="contact_number" class="field-label">Contact Number</label>
-                    <input type="tel" id="contact_number" name="contact_number" required
-                        value="<?php echo htmlspecialchars($admin['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                        placeholder="09XX XXX XXXX" maxlength="13" disabled>
-                    <div class="error-message" id="contactError"></div>
                 </div>
             </div>
 
-            <!-- Account Info Section with buttons at bottom -->
-            <div class="form-section account-info-section">
-                <h3>Account Information</h3>
-
-                <div class="info-row">
-                    <div class="info-group">
-                        <label>Email</label>
-                        <p class="info-value centered">
-                            <?php echo htmlspecialchars($admin['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+            <div class="profile-grid">
+                <div class="profile-card personal-info-card">
+                    <div class="card-header">
+                        <h3>Personal Information</h3>
                     </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="first_name" class="field-label">
+                                <img src="../assets/image/icons/user.svg" alt="" class="field-icon">
+                                First Name
+                            </label>
+                            <input type="text" id="first_name" name="first_name" required
+                                value="<?php echo htmlspecialchars($admin['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="First name" maxlength="50" disabled>
+                            <div class="error-message" id="firstNameError"></div>
+                        </div>
 
-                    <div class="info-group">
-                        <label>Username</label>
-                        <p class="info-value centered">
-                            <?php echo htmlspecialchars($admin['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <div class="form-group">
+                            <label for="last_name" class="field-label">
+                                <img src="../assets/image/icons/user.svg" alt="" class="field-icon">
+                                Last Name
+                            </label>
+                            <input type="text" id="last_name" name="last_name" required
+                                value="<?php echo htmlspecialchars($admin['last_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="Last name" maxlength="50" disabled>
+                            <div class="error-message" id="lastNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact_number" class="field-label">
+                                <img src="../assets/image/icons/phone.svg" alt="" class="field-icon">
+                                Contact Number
+                            </label>
+                            <input type="tel" id="contact_number" name="contact_number" required
+                                value="<?php echo htmlspecialchars($admin['contact_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="09XX XXX XXXX" maxlength="13" disabled>
+                            <div class="error-message" id="contactError"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="info-note centered">These details cannot be changed.</div>
+                <div class="profile-card account-info-card">
+                    <div class="card-header">
+                        <h3>Account Information</h3>
+                        <span class="badge">Cannot be changed</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-display-group">
+                            <div class="info-icon">
+                                <img src="../assets/image/icons/mail.svg" alt="">
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Email Address</span>
+                                <span
+                                    class="info-value"><?php echo htmlspecialchars($admin['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                        </div>
 
-                <!-- Buttons inside Account Info column at bottom -->
-                <div class="profile-actions">
-                    <button type="button" id="editCancelBtn" class="btn btn-secondary">Edit</button>
-                    <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
+                        <div class="info-display-group">
+                            <div class="info-icon">
+                                <img src="../assets/image/icons/user.svg" alt="">
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Username</span>
+                                <span
+                                    class="info-value"><?php echo htmlspecialchars($admin['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                        </div>
+
+                        <div class="info-display-group">
+                            <div class="info-icon">
+                                <img src="../assets/image/icons/calendar.svg" alt="">
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Member Since</span>
+                                <span class="info-value"><?php echo htmlspecialchars($dateJoined ?: 'N/A'); ?></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <input type="file" id="profile_picture_trigger" name="profile_picture"
+                accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
         </form>
         <?php endif; ?>
     </div>
 
-    <!-- Feedback Modal -->
     <div id="feedbackModal" class="modal">
         <div class="modal-content">
-            <div class="modal-icon">
-                <img src="../assets/image/icons/mail.svg" alt="Notification"
-                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
+            <div class="modal-icon success-icon">
+                <img src="../assets/image/icons/check-circle.svg" alt="Success">
             </div>
             <p id="modalMessage" class="modal-message"></p>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-confirm" id="modalCloseBtn">OK</button>
+                <button class="modal-btn modal-btn-primary" id="modalCloseBtn">OK</button>
             </div>
         </div>
     </div>
@@ -1841,12 +2477,12 @@ if (isset($_SESSION['admin_id'])) {
 
 ```php
 <?php
+// Admin Sign Up Page - Modified to allow access even when logged in
 session_start();
 
-if (isset($_SESSION['admin_id'])) {
-    header('Location: admin-dashboard.php');
-    exit;
-}
+// REMOVED the redirect that sent logged-in admins back to dashboard.
+// Now both logged-in and non-logged-in users can access this page.
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1866,11 +2502,12 @@ if (isset($_SESSION['admin_id'])) {
     <div class="content">
         <div class="pageTitleHeader">Admin Registration</div>
 
-        <form id="signupForm" class="signup-container" method="POST" autocomplete="on">
+        <form id="signupForm" class="signup-container" method="POST" action="../database/admin-sign-up-handler.php"
+            autocomplete="on">
             <input type="hidden" name="action" value="signup">
 
             <!-- Two-column layout -->
-            <div class="form-section">
+            <div class="form-section personal-info-section">
                 <h3>Personal Information</h3>
 
                 <div class="form-group">
@@ -1891,13 +2528,9 @@ if (isset($_SESSION['admin_id'])) {
                     <label for="contact_number">Contact Number *</label>
                     <input type="tel" id="contact_number" name="contact_number" required placeholder="09XX XXX XXXX"
                         autocomplete="tel">
-                    <div class="help-text">Philippine mobile number (e.g., 09123456789)</div>
+                    <div class="help-text">Philippine mobile number (e.g., 0912 345 6789)</div>
                     <div class="error-message" id="contactError"></div>
                 </div>
-            </div>
-
-            <div class="form-section">
-                <h3>Account Information</h3>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
@@ -1913,6 +2546,10 @@ if (isset($_SESSION['admin_id'])) {
                     <div class="help-text">3-20 characters (letters, numbers, underscore)</div>
                     <div class="error-message" id="usernameError"></div>
                 </div>
+            </div>
+
+            <div class="form-section account-info-section">
+                <h3>Account Security</h3>
 
                 <div class="form-group">
                     <label for="password">Password *</label>
@@ -1941,13 +2578,11 @@ if (isset($_SESSION['admin_id'])) {
                     </div>
                     <div class="error-message" id="confirmError"></div>
                 </div>
-            </div>
 
-            <!-- Buttons Section - Full width -->
-            <div class="form-section full-width-section">
+                <!-- Buttons inside Account Information column at the bottom -->
                 <div class="btn-container">
                     <button type="submit" class="btn btn-primary">Register Admin</button>
-                    <button type="reset" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                    <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
                 </div>
 
                 <div class="links-group">
@@ -2079,11 +2714,23 @@ if ($is_includes) {
 // Get admin info for profile display
 $adminName = '';
 $adminProfilePic = $pathPrefix . 'assets/image/icons/user-profile-circle.svg';
+
 if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
     $adminName = $_SESSION['admin_first_name'] . ' ' . ($_SESSION['admin_last_name'] ?? '');
     
-    // In a real implementation, you would fetch the actual profile picture from database
-    // $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_pic'] ?? '');
+    // Get profile picture from session or database
+    if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
+        // Include the data storage handler to use the function
+        require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
+        
+        // Check if the function exists before calling it
+        if (function_exists('getAdminProfilePictureUrl')) {
+            $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_picture']);
+        } else {
+            // Fallback if function doesn't exist
+            $adminProfilePic = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($_SESSION['admin_profile_picture']);
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -2107,7 +2754,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
             <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <div class="admin-profile-mini">
-                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar">
+                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar"
+                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg';">
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
@@ -2936,22 +3584,26 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // DOM Elements
-    const editBtn = document.getElementById('editCancelBtn');
+    const editBtn = document.getElementById('editProfileBtn');
     const saveBtn = document.getElementById('saveProfileBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
     const profileForm = document.getElementById('profileForm');
     
-    // Get ALL editable fields in Personal Info section
-    const editableInputs = document.querySelectorAll(
-        '.personal-info-section input:not([type="hidden"]):not([type="file"]), ' +
-        '.personal-info-section textarea'
-    );
+    // Action containers
+    const editButtonDiv = document.getElementById('editProfileBtn');
+    const profileActionsDiv = document.getElementById('profileActions');
     
-    const profilePicUpload = document.getElementById('profilePictureUpload');
-    const chooseButtonContainer = document.getElementById('chooseButtonContainer');
-    const triggerFileUpload = document.getElementById('triggerFileUpload');
+    // Get editable inputs in Personal Info card
+    const editableInputs = document.querySelectorAll('.personal-info-card input:not([type="hidden"])');
+    
+    // Profile picture elements
     const profilePicInput = document.getElementById('profile_picture');
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const profilePicTrigger = document.getElementById('profile_picture_trigger');
     const profilePicPreview = document.getElementById('profilePicturePreview');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    
+    // Modal elements
     const modal = document.getElementById('feedbackModal');
     const modalMessage = document.getElementById('modalMessage');
     const modalClose = document.getElementById('modalCloseBtn');
@@ -2970,23 +3622,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatPhilippineNumber(input) {
         let value = input.value.replace(/\D/g, '');
         
-        if (value.startsWith('63') && value.length <= 12) {
-            if (value.length > 2) {
-                let formatted = '+63';
-                if (value.length > 5) {
-                    formatted += ' ' + value.substring(2, 5);
-                } else {
-                    formatted += ' ' + value.substring(2);
-                }
-                if (value.length > 8) {
-                    formatted += ' ' + value.substring(5, 8);
-                }
-                if (value.length > 11) {
-                    formatted += ' ' + value.substring(8, 12);
-                }
-                input.value = formatted;
-            }
-        } else if (value.startsWith('0') && value.length <= 11) {
+        if (value.startsWith('09') && value.length <= 11) {
             if (value.length > 4) {
                 let formatted = value.substring(0, 4) + ' ' + value.substring(4, 7);
                 if (value.length > 7) {
@@ -2996,6 +3632,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 input.value = value;
             }
+        } else {
+            input.value = value;
         }
     }
 
@@ -3004,9 +3642,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return (cleaned.length === 11 && cleaned.startsWith('09'));
     }
 
-    // Modal functions
-    function showModal(message) {
+    // ===== MODAL FUNCTIONS =====
+    function showModal(message, isError = false) {
         modalMessage.textContent = message;
+        const modalIcon = document.querySelector('.modal-icon');
+        if (modalIcon) {
+            modalIcon.className = 'modal-icon ' + (isError ? 'error-icon' : 'success-icon');
+            modalIcon.innerHTML = isError 
+                ? '<img src="../assets/image/icons/cancel.svg" alt="Error">'
+                : '<img src="../assets/image/icons/check-circle.svg" alt="Success">';
+        }
         modal.style.display = 'flex';
     }
 
@@ -3022,7 +3667,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === modal) hideModal();
     });
 
-    // Store original values
+    // ===== STORE ORIGINAL VALUES =====
     function storeOriginalValues() {
         originalValues = {};
         editableInputs.forEach(input => {
@@ -3035,44 +3680,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Enable edit mode
+    // ===== ENABLE EDIT MODE =====
     function enableEditMode() {
         isEditMode = true;
-        editBtn.textContent = 'Cancel';
-        saveBtn.disabled = false;
-        if (profilePicUpload) {
-            profilePicUpload.style.display = 'block';
-        }
-        if (chooseButtonContainer) {
-            chooseButtonContainer.style.display = 'flex';
-        }
+        
+        // Hide edit button, show action buttons
+        if (editButtonDiv) editButtonDiv.style.display = 'none';
+        if (profileActionsDiv) profileActionsDiv.style.display = 'flex';
+        
+        // Enable all editable inputs
         editableInputs.forEach(field => {
             field.disabled = false;
         });
+        
+        // Show avatar edit overlay
+        const avatarEdit = document.getElementById('profilePictureUpload');
+        if (avatarEdit) avatarEdit.style.display = 'flex';
+        
         pictureChanged = false;
     }
 
-    // Disable edit mode
+    // ===== DISABLE EDIT MODE =====
     function disableEditMode(restore = true) {
         isEditMode = false;
-        editBtn.textContent = 'Edit';
-        saveBtn.disabled = true;
-        if (profilePicUpload) {
-            profilePicUpload.style.display = 'none';
-        }
-        if (chooseButtonContainer) {
-            chooseButtonContainer.style.display = 'none';
-        }
-        if (profilePicInput) {
-            profilePicInput.value = '';
-        }
-        if (fileNameDisplay) {
-            fileNameDisplay.textContent = '';
-        }
+        
+        // Show edit button, hide action buttons
+        if (editButtonDiv) editButtonDiv.style.display = 'flex';
+        if (profileActionsDiv) profileActionsDiv.style.display = 'none';
+        
+        // Disable all editable inputs
         editableInputs.forEach(field => {
             field.disabled = true;
         });
         
+        // Hide avatar edit overlay
+        const avatarEdit = document.getElementById('profilePictureUpload');
+        if (avatarEdit) avatarEdit.style.display = 'none';
+        
+        // Clear file input and filename
+        if (profilePicInput) {
+            profilePicInput.value = '';
+        }
+        if (profilePicTrigger) {
+            profilePicTrigger.value = '';
+        }
+        if (fileNameDisplay) {
+            fileNameDisplay.style.display = 'none';
+            fileNameDisplay.textContent = '';
+        }
+        
+        // Restore original values if needed
         if (restore) {
             for (let id in originalValues) {
                 const field = document.getElementById(id);
@@ -3085,93 +3742,200 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Reset save button state
+        if (saveBtn) saveBtn.disabled = true;
         pictureChanged = false;
     }
 
-    // Trigger file upload from the Choose button
-    if (triggerFileUpload && profilePicInput) {
-        triggerFileUpload.addEventListener('click', function() {
-            profilePicInput.click();
-        });
+    // ===== PROFILE PICTURE HANDLING =====
+    function handleProfilePictureSelect(file) {
+        if (file) {
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                showModal('File size must be less than 2MB', true);
+                return false;
+            }
+            
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showModal('Please upload a valid image (JPG, PNG, GIF, WEBP)', true);
+                return false;
+            }
+            
+            fileNameDisplay.style.display = 'block';
+            fileNameDisplay.textContent = 'New photo selected: ' + file.name;
+            pictureChanged = true;
+            
+            // Enable save button if in edit mode
+            if (saveBtn) saveBtn.disabled = false;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (profilePicPreview) {
+                    profilePicPreview.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+            return true;
+        }
+        return false;
     }
 
-    // File input change
+    // Connect both file inputs to the same handler
     if (profilePicInput) {
         profilePicInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                if (fileNameDisplay) {
-                    fileNameDisplay.textContent = file.name;
-                }
-                pictureChanged = true;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (profilePicPreview) {
-                        profilePicPreview.src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            } else {
-                if (fileNameDisplay) {
-                    fileNameDisplay.textContent = '';
-                }
-                pictureChanged = false;
+            if (this.files[0]) {
+                handleProfilePictureSelect(this.files[0]);
             }
         });
     }
 
-    // Phone number formatting
+    if (profilePicTrigger) {
+        profilePicTrigger.addEventListener('change', function() {
+            if (this.files[0]) {
+                // Sync the visible input with the trigger
+                if (profilePicInput) {
+                    // Create a DataTransfer to copy the file
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(this.files[0]);
+                    profilePicInput.files = dataTransfer.files;
+                }
+                handleProfilePictureSelect(this.files[0]);
+            }
+        });
+    }
+
+    // Upload photo button click handler
+    if (uploadPhotoBtn) {
+        uploadPhotoBtn.addEventListener('click', function() {
+            if (profilePicTrigger) {
+                profilePicTrigger.click();
+            } else if (profilePicInput) {
+                profilePicInput.click();
+            }
+        });
+    }
+
+    // Hide avatar edit overlay by default
+    const avatarEdit = document.getElementById('profilePictureUpload');
+    if (avatarEdit) avatarEdit.style.display = 'none';
+
+    // ===== PHONE NUMBER INPUT HANDLING =====
     if (contactInput) {
         contactInput.addEventListener('input', function() {
             if (isEditMode) {
                 formatPhilippineNumber(this);
+                // Enable save button when changes are made
+                if (saveBtn) saveBtn.disabled = false;
             }
         });
         
         contactInput.addEventListener('blur', function() {
             if (isEditMode && this.value && !isPhoneValid(this.value)) {
                 this.style.borderColor = '#FF8246';
+                document.getElementById('contactError').textContent = 'Please enter a valid Philippine mobile number (09XXXXXXXXX)';
+                document.getElementById('contactError').style.display = 'block';
             } else {
                 this.style.borderColor = '';
+                document.getElementById('contactError').textContent = '';
+                document.getElementById('contactError').style.display = 'none';
             }
         });
     }
 
-    // Edit/Cancel button
+    // ===== EDIT BUTTON CLICK =====
     if (editBtn) {
         editBtn.addEventListener('click', function() {
-            if (!isEditMode) {
-                storeOriginalValues();
-                enableEditMode();
-            } else {
-                disableEditMode(true);
-            }
+            storeOriginalValues();
+            enableEditMode();
         });
     }
 
-    // Save button
+    // ===== CANCEL EDIT BUTTON =====
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', function() {
+            disableEditMode(true);
+        });
+    }
+
+    // ===== INPUT CHANGE HANDLERS - Enable save button =====
+    if (firstNameInput) {
+        firstNameInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
+            this.style.borderColor = '';
+            document.getElementById('firstNameError').textContent = '';
+            document.getElementById('firstNameError').style.display = 'none';
+        });
+    }
+
+    if (lastNameInput) {
+        lastNameInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
+            this.style.borderColor = '';
+            document.getElementById('lastNameError').textContent = '';
+            document.getElementById('lastNameError').style.display = 'none';
+        });
+    }
+
+    if (contactInput) {
+        contactInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
+        });
+    }
+
+    // ===== SAVE BUTTON CLICK =====
     if (saveBtn) {
         saveBtn.addEventListener('click', async function() {
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
             
             // Validation
             const firstName = firstNameInput ? firstNameInput.value.trim() : '';
             const lastName = lastNameInput ? lastNameInput.value.trim() : '';
             const contact = contactInput ? contactInput.value.trim() : '';
 
-            if (!firstName || !lastName) {
-                showModal('First name and last name are required.');
+            let isValid = true;
+
+            if (!firstName) {
+                document.getElementById('firstNameError').textContent = 'First name is required';
+                document.getElementById('firstNameError').style.display = 'block';
+                firstNameInput.style.borderColor = '#FF8246';
+                isValid = false;
+            }
+
+            if (!lastName) {
+                document.getElementById('lastNameError').textContent = 'Last name is required';
+                document.getElementById('lastNameError').style.display = 'block';
+                lastNameInput.style.borderColor = '#FF8246';
+                isValid = false;
+            }
+
+            if (!contact) {
+                document.getElementById('contactError').textContent = 'Contact number is required';
+                document.getElementById('contactError').style.display = 'block';
+                contactInput.style.borderColor = '#FF8246';
+                isValid = false;
+            } else if (!isPhoneValid(contact)) {
+                document.getElementById('contactError').textContent = 'Please enter a valid Philippine mobile number (e.g., 09123456789)';
+                document.getElementById('contactError').style.display = 'block';
+                contactInput.style.borderColor = '#FF8246';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                showModal('Please fix the errors before saving', true);
                 return;
             }
 
-            if (!contact || !isPhoneValid(contact)) {
-                showModal('Please enter a valid Philippine mobile number (e.g., 09123456789).');
-                return;
-            }
-
-            // Disable button and store original text
+            // Disable button and show loading state
             saveBtn.disabled = true;
-            const originalText = saveBtn.textContent;
-            saveBtn.textContent = 'Saving...';
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<span class="btn-text">Saving...</span>';
 
             const formData = new FormData(profileForm);
 
@@ -3191,35 +3955,55 @@ document.addEventListener('DOMContentLoaded', function() {
                     showModal('Profile updated successfully!');
                     
                     setTimeout(() => {
-                        if (!pictureChanged) {
-                            // Update the displayed full name
-                            const nameSpan = document.querySelector('.display-full-name');
-                            if (nameSpan && result.data) {
-                                nameSpan.textContent = (result.data.first_name || '') + ' ' + (result.data.last_name || '');
-                            }
-                            storeOriginalValues();
-                            disableEditMode(false);
-                        } else {
-                            window.location.reload(true);
+                        // Update the displayed full name
+                        const nameElement = document.querySelector('.profile-full-name');
+                        if (nameElement && result.data) {
+                            nameElement.textContent = (result.data.first_name || '') + ' ' + (result.data.last_name || '');
                         }
-                        saveBtn.textContent = originalText;
-                    }, 1000);
+                        
+                        storeOriginalValues();
+                        disableEditMode(false);
+                        saveBtn.innerHTML = originalText;
+                        
+                        // If picture changed, reload to update header
+                        if (pictureChanged) {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        }
+                    }, 1500);
                     
                 } else {
-                    showModal(result.message || 'Update failed. Please try again.');
+                    showModal(result.message || 'Update failed. Please try again.', true);
                     saveBtn.disabled = false;
-                    saveBtn.textContent = originalText;
+                    saveBtn.innerHTML = originalText;
                 }
             } catch (error) {
                 console.error('Error saving profile:', error);
-                showModal('Network error. Please check your connection and try again.');
+                showModal('Network error. Please check your connection and try again.', true);
                 saveBtn.disabled = false;
-                saveBtn.textContent = originalText;
+                saveBtn.innerHTML = originalText;
             }
         });
     }
 
-    // Initial store
+    // ===== KEYBOARD SHORTCUTS =====
+    document.addEventListener('keydown', function(e) {
+        // Escape key cancels edit mode
+        if (e.key === 'Escape' && isEditMode) {
+            disableEditMode(true);
+        }
+        
+        // Ctrl+S or Cmd+S saves
+        if ((e.ctrlKey || e.metaKey) && e.key === 's' && isEditMode) {
+            e.preventDefault();
+            if (saveBtn && !saveBtn.disabled) {
+                saveBtn.click();
+            }
+        }
+    });
+
+    // ===== INITIAL STORE =====
     storeOriginalValues();
 });
 ```
@@ -3484,250 +4268,676 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    const sellersList = document.getElementById('sellersList');
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const notificationModal = document.getElementById('notificationModal');
-    const notificationMessage = document.getElementById('notificationMessage');
-    const notificationClose = document.getElementById('notificationClose');
+    const form = document.getElementById('signupForm');
+    const clearButton = document.getElementById('clearForm');
+    const submitButton = form.querySelector('.btn-primary');
+    
+    const modal = document.getElementById('notifierModal');
+    const modalMessage = document.getElementById('notifierMessage');
+    const modalClose = document.getElementById('notifierCloseBtn');
+    
+    // Form fields
+    const firstNameField = document.getElementById('first_name');
+    const lastNameField = document.getElementById('last_name');
+    const contactField = document.getElementById('contact_number');
+    const emailField = document.getElementById('email');
+    const usernameField = document.getElementById('username');
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm_password');
+    
+    // Error message elements
+    const firstNameError = document.getElementById('firstNameError');
+    const lastNameError = document.getElementById('lastNameError');
+    const contactError = document.getElementById('contactError');
+    const emailError = document.getElementById('emailError');
+    const usernameError = document.getElementById('usernameError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmError = document.getElementById('confirmError');
+    
+    // Password toggle elements
+    const togglePassword = document.getElementById('togglePassword');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const passwordIcon = document.getElementById('passwordIcon');
+    const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
+    
+    // State
+    let isModalOpen = false;
+    let isSubmitting = false;
+    let isFormatting = false;
 
-    let currentFilter = 'pending';
-    let allSellers = [];
-
-    // Show/hide modal functions
-    function showNotification(message, isError = false) {
-        if (notificationMessage) {
-            notificationMessage.textContent = message;
-        }
-        notificationModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        
-        if (!isError) {
-            setTimeout(() => {
-                notificationModal.style.display = 'none';
-                document.body.style.overflow = '';
-            }, 3000);
-        }
-    }
-
-    function hideNotification() {
-        notificationModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-
-    if (notificationClose) {
-        notificationClose.addEventListener('click', hideNotification);
-    }
-
-    notificationModal.addEventListener('click', (e) => {
-        if (e.target === notificationModal) hideNotification();
-    });
-
-    // Filter functions
-    function setActiveFilter(filter) {
-        filterTabs.forEach(tab => {
-            const tabFilter = tab.dataset.filter;
-            if (tabFilter === filter) {
-                tab.classList.add('active');
+    // ============= PASSWORD TOGGLE FUNCTIONALITY =============
+    if (togglePassword && passwordField && passwordIcon) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            if (type === 'text') {
+                passwordIcon.src = '../assets/image/icons/password-unhide.svg';
+                passwordIcon.alt = 'Show password';
             } else {
-                tab.classList.remove('active');
+                passwordIcon.src = '../assets/image/icons/password-hide.svg';
+                passwordIcon.alt = 'Hide password';
+            }
+        });
+    }
+    
+    if (toggleConfirmPassword && confirmPasswordField && confirmPasswordIcon) {
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            
+            if (type === 'text') {
+                confirmPasswordIcon.src = '../assets/image/icons/password-unhide.svg';
+                confirmPasswordIcon.alt = 'Show password';
+            } else {
+                confirmPasswordIcon.src = '../assets/image/icons/password-hide.svg';
+                confirmPasswordIcon.alt = 'Hide password';
             }
         });
     }
 
-    function filterSellers(filter) {
-        currentFilter = filter;
-        setActiveFilter(filter);
+    // ============= NOTIFIER FUNCTIONS =============
+    function showNotifier(message) {
+        if (isModalOpen) return;
+        modalMessage.textContent = message;
+        modal.classList.remove('hidden');
+        isModalOpen = true;
         
-        if (!allSellers || allSellers.length === 0) {
-            renderEmptyState(filter);
+        // Auto-hide after 5 seconds for success messages
+        if (message.includes('success')) {
+            setTimeout(() => {
+                closeNotifier();
+            }, 5000);
+        }
+    }
+
+    function closeNotifier() {
+        modal.classList.add('hidden');
+        isModalOpen = false;
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeNotifier);
+    }
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeNotifier();
+    });
+
+    // ============= FIELD HIGHLIGHTING =============
+    function highlightField(field, highlight = true) {
+        if (!field) return;
+        if (highlight) {
+            field.style.borderColor = '#FF8246';
+            field.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+            field.classList.add('error-field');
+        } else {
+            field.style.borderColor = '';
+            field.style.boxShadow = '';
+            field.classList.remove('error-field');
+        }
+    }
+
+    function resetHighlights() {
+        form.querySelectorAll('input').forEach(field => highlightField(field, false));
+        
+        // Clear all error messages
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+        });
+    }
+
+    // ============= VALIDATION FUNCTIONS =============
+    function isEmailValid(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validateUsername(username) {
+        if (username.length < 3) {
+            return { valid: false, message: 'Username must be at least 3 characters long.' };
+        }
+        if (username.length > 20) {
+            return { valid: false, message: 'Username cannot exceed 20 characters.' };
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            return { valid: false, message: 'Username can only contain letters, numbers, and underscore.' };
+        }
+        return { valid: true, message: '' };
+    }
+
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return { valid: false, message: 'Password must be at least 8 characters long.' };
+        }
+        if (password.length > 16) {
+            return { valid: false, message: 'Password cannot exceed 16 characters.' };
+        }
+        if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+            return { valid: false, message: 'Password must contain both uppercase and lowercase letters.' };
+        }
+        if (!/[0-9]/.test(password)) {
+            return { valid: false, message: 'Password must contain at least one number.' };
+        }
+        return { valid: true, message: '' };
+    }
+
+    // ============= IMPROVED PHONE NUMBER FORMATTING =============
+    function cleanPhoneNumber(value) {
+        return value.replace(/\D/g, '');
+    }
+
+    function formatPhoneDisplay(cleaned) {
+        if (!cleaned) return '';
+        
+        let displayNumber = cleaned;
+        
+        if (cleaned.startsWith('63') && cleaned.length >= 3) {
+            displayNumber = '0' + cleaned.substring(2);
+        }
+        else if (cleaned.startsWith('639') && cleaned.length >= 4) {
+            displayNumber = '0' + cleaned.substring(2);
+        }
+        else if (cleaned.startsWith('063') && cleaned.length >= 4) {
+            displayNumber = '0' + cleaned.substring(3);
+        }
+        else if (cleaned.startsWith('9') && cleaned.length === 10) {
+            displayNumber = '0' + cleaned;
+        }
+        
+        displayNumber = displayNumber.substring(0, 11);
+        
+        if (displayNumber.length > 4) {
+            let formatted = displayNumber.substring(0, 4);
+            if (displayNumber.length > 7) {
+                formatted += ' ' + displayNumber.substring(4, 7) + ' ' + displayNumber.substring(7, 11);
+            } else if (displayNumber.length > 4) {
+                formatted += ' ' + displayNumber.substring(4);
+            }
+            return formatted;
+        }
+        
+        return displayNumber;
+    }
+
+    function formatPhilippineNumber(input) {
+        if (isFormatting) return;
+        isFormatting = true;
+        
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const oldLength = input.value.length;
+        
+        const cleaned = cleanPhoneNumber(input.value);
+        const formatted = formatPhoneDisplay(cleaned);
+        
+        input.value = formatted;
+        
+        const newLength = input.value.length;
+        const cursorAdjust = newLength - oldLength;
+        
+        setTimeout(() => {
+            input.setSelectionRange(start + cursorAdjust, end + cursorAdjust);
+            isFormatting = false;
+        }, 0);
+    }
+
+    function isPhoneValid(phone) {
+        const cleaned = cleanPhoneNumber(phone);
+        
+        if (cleaned.length === 11 && cleaned.startsWith('09')) {
+            return true;
+        }
+        
+        if (cleaned.length === 10 && cleaned.startsWith('9')) {
+            return true;
+        }
+        
+        if ((cleaned.length === 12 && cleaned.startsWith('63')) || 
+            (cleaned.length === 13 && cleaned.startsWith('063')) ||
+            (cleaned.length === 12 && cleaned.startsWith('639'))) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    function normalizePhoneForStorage(phone) {
+        let cleaned = cleanPhoneNumber(phone);
+        
+        if (cleaned.startsWith('63') && cleaned.length >= 3) {
+            return '0' + cleaned.substring(2);
+        }
+        if (cleaned.startsWith('639') && cleaned.length >= 4) {
+            return '0' + cleaned.substring(2);
+        }
+        if (cleaned.startsWith('063') && cleaned.length >= 4) {
+            return '0' + cleaned.substring(3);
+        }
+        if (cleaned.startsWith('9') && cleaned.length === 10) {
+            return '0' + cleaned;
+        }
+        
+        return cleaned;
+    }
+
+    // ============= REAL-TIME VALIDATION =============
+    function validateField(field, errorElement, validationFn, errorMessage) {
+        if (!field.value.trim()) {
+            errorElement.textContent = 'This field is required';
+            highlightField(field, true);
+            return false;
+        }
+        
+        if (validationFn && !validationFn(field.value)) {
+            errorElement.textContent = errorMessage || 'Invalid format';
+            highlightField(field, true);
+            return false;
+        }
+        
+        errorElement.textContent = '';
+        highlightField(field, false);
+        return true;
+    }
+
+    // Email validation
+    emailField.addEventListener('blur', function() {
+        validateField(this, emailError, isEmailValid, 'Please enter a valid email address');
+    });
+
+    // Username validation
+    usernameField.addEventListener('blur', function() {
+        const validation = validateUsername(this.value);
+        if (this.value.trim() && !validation.valid) {
+            usernameError.textContent = validation.message;
+            highlightField(this, true);
+        } else if (!this.value.trim()) {
+            usernameError.textContent = 'Username is required';
+            highlightField(this, true);
+        } else {
+            usernameError.textContent = '';
+            highlightField(this, false);
+        }
+    });
+
+    // Password validation
+    passwordField.addEventListener('blur', function() {
+        const validation = validatePassword(this.value);
+        if (this.value.trim() && !validation.valid) {
+            passwordError.textContent = validation.message;
+            highlightField(this, true);
+        } else if (!this.value.trim()) {
+            passwordError.textContent = 'Password is required';
+            highlightField(this, true);
+        } else {
+            passwordError.textContent = '';
+            highlightField(this, false);
+        }
+        
+        if (confirmPasswordField.value) {
+            if (this.value !== confirmPasswordField.value) {
+                confirmError.textContent = 'Passwords do not match';
+                highlightField(confirmPasswordField, true);
+            } else {
+                confirmError.textContent = '';
+                highlightField(confirmPasswordField, false);
+            }
+        }
+    });
+
+    confirmPasswordField.addEventListener('blur', function() {
+        if (this.value && this.value !== passwordField.value) {
+            confirmError.textContent = 'Passwords do not match';
+            highlightField(this, true);
+        } else if (!this.value.trim()) {
+            confirmError.textContent = 'Please confirm your password';
+            highlightField(this, true);
+        } else {
+            confirmError.textContent = '';
+            highlightField(this, false);
+        }
+    });
+
+    // ============= INPUT EVENT LISTENERS =============
+    if (contactField) {
+        contactField.addEventListener('input', function(e) {
+            formatPhilippineNumber(this);
+            
+            if (contactError) {
+                contactError.textContent = '';
+            }
+            highlightField(this, false);
+        });
+
+        contactField.addEventListener('blur', function() {
+            if (this.value) {
+                if (!isPhoneValid(this.value)) {
+                    contactError.textContent = 'Please enter a valid Philippine mobile number (e.g., 0912 345 6789)';
+                    highlightField(this, true);
+                } else {
+                    const cleaned = cleanPhoneNumber(this.value);
+                    const normalized = normalizePhoneForStorage(cleaned);
+                    this.value = formatPhoneDisplay(normalized);
+                    contactError.textContent = '';
+                    highlightField(this, false);
+                }
+            } else {
+                contactError.textContent = 'Contact number is required';
+                highlightField(this, true);
+            }
+        });
+    }
+
+    // Clear highlights on input for all fields
+    firstNameField.addEventListener('input', () => {
+        highlightField(firstNameField, false);
+        firstNameError.textContent = '';
+    });
+    
+    lastNameField.addEventListener('input', () => {
+        highlightField(lastNameField, false);
+        lastNameError.textContent = '';
+    });
+    
+    emailField.addEventListener('input', () => {
+        highlightField(emailField, false);
+        emailError.textContent = '';
+    });
+    
+    usernameField.addEventListener('input', () => {
+        highlightField(usernameField, false);
+        usernameError.textContent = '';
+    });
+    
+    passwordField.addEventListener('input', () => {
+        highlightField(passwordField, false);
+        passwordError.textContent = '';
+        
+        if (confirmPasswordField.value) {
+            if (passwordField.value !== confirmPasswordField.value) {
+                confirmError.textContent = 'Passwords do not match';
+                highlightField(confirmPasswordField, true);
+            } else {
+                confirmError.textContent = '';
+                highlightField(confirmPasswordField, false);
+            }
+        }
+    });
+    
+    confirmPasswordField.addEventListener('input', () => {
+        if (confirmPasswordField.value && confirmPasswordField.value !== passwordField.value) {
+            confirmError.textContent = 'Passwords do not match';
+            highlightField(confirmPasswordField, true);
+        } else {
+            confirmError.textContent = '';
+            highlightField(confirmPasswordField, false);
+        }
+    });
+
+    // ============= FORM SUBMISSION WITH FALLBACKS =============
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (isSubmitting) return;
+        
+        resetHighlights();
+        
+        // Check required fields with specific error messages
+        let hasErrors = false;
+        
+        if (!firstNameField.value.trim()) {
+            firstNameError.textContent = 'First name is required';
+            highlightField(firstNameField, true);
+            hasErrors = true;
+        }
+        
+        if (!lastNameField.value.trim()) {
+            lastNameError.textContent = 'Last name is required';
+            highlightField(lastNameField, true);
+            hasErrors = true;
+        }
+        
+        if (!contactField.value.trim()) {
+            contactError.textContent = 'Contact number is required';
+            highlightField(contactField, true);
+            hasErrors = true;
+        } else if (!isPhoneValid(contactField.value)) {
+            contactError.textContent = 'Please enter a valid Philippine mobile number';
+            highlightField(contactField, true);
+            hasErrors = true;
+        }
+        
+        if (!emailField.value.trim()) {
+            emailError.textContent = 'Email is required';
+            highlightField(emailField, true);
+            hasErrors = true;
+        } else if (!isEmailValid(emailField.value)) {
+            emailError.textContent = 'Please enter a valid email address';
+            highlightField(emailField, true);
+            hasErrors = true;
+        }
+        
+        if (!usernameField.value.trim()) {
+            usernameError.textContent = 'Username is required';
+            highlightField(usernameField, true);
+            hasErrors = true;
+        } else {
+            const usernameValidation = validateUsername(usernameField.value);
+            if (!usernameValidation.valid) {
+                usernameError.textContent = usernameValidation.message;
+                highlightField(usernameField, true);
+                hasErrors = true;
+            }
+        }
+        
+        if (!passwordField.value) {
+            passwordError.textContent = 'Password is required';
+            highlightField(passwordField, true);
+            hasErrors = true;
+        } else {
+            const passwordValidation = validatePassword(passwordField.value);
+            if (!passwordValidation.valid) {
+                passwordError.textContent = passwordValidation.message;
+                highlightField(passwordField, true);
+                hasErrors = true;
+            }
+        }
+        
+        if (!confirmPasswordField.value) {
+            confirmError.textContent = 'Please confirm your password';
+            highlightField(confirmPasswordField, true);
+            hasErrors = true;
+        } else if (passwordField.value !== confirmPasswordField.value) {
+            confirmError.textContent = 'Passwords do not match';
+            highlightField(confirmPasswordField, true);
+            hasErrors = true;
+        }
+        
+        if (hasErrors) {
+            showNotifier('Please fix the errors before submitting.');
+            return;
+        }
+        
+        // Prepare form data - normalize phone number before submission
+        const formData = new FormData(form);
+        
+        // Replace phone with normalized version for storage
+        const normalizedPhone = normalizePhoneForStorage(contactField.value);
+        formData.set('contact_number', normalizedPhone);
+        
+        // Submit form
+        isSubmitting = true;
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Creating Account...';
+        submitButton.disabled = true;
+
+        // Array of URLs to try in order
+        const urlsToTry = [
+            '../database/admin-sign-up-handler.php',  // Relative path (primary)
+            '/admin/database/admin-sign-up-handler.php', // Absolute path (fallback 1)
+            './database/admin-sign-up-handler.php'    // Current directory path (fallback 2)
+        ];
+
+        let response = null;
+        let lastError = null;
+        let usedUrl = '';
+
+        // Try each URL until one works
+        for (const url of urlsToTry) {
+            try {
+                console.log(`Trying URL: ${url}`);
+                response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    usedUrl = url;
+                    console.log(`✅ Success with URL: ${url}`);
+                    
+                    // Log successful fallback to server if not primary
+                    if (url !== urlsToTry[0]) {
+                        try {
+                            await fetch('../database/auto-test.php?log=' + encodeURIComponent(`SIGNUP FALLBACK: Used ${url} successfully`));
+                        } catch (e) {
+                            // Ignore logging errors
+                        }
+                    }
+                    break; // Exit loop on success
+                }
+            } catch (error) {
+                console.log(`❌ Failed with URL: ${url}`, error.message);
+                lastError = error;
+                response = null;
+            }
+        }
+
+        // If all URLs failed
+        if (!response) {
+            console.error('All fetch attempts failed:', lastError);
+            showNotifier('Network error. Please check your connection and try again.');
+            isSubmitting = false;
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
             return;
         }
 
-        let filteredSellers = [];
-        if (filter === 'pending') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 0 || s.is_verified === '0');
-        } else if (filter === 'verified') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 1 || s.is_verified === '1');
-        } else if (filter === 'rejected') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 2 || s.is_verified === '2');
-        }
-
-        if (filteredSellers.length === 0) {
-            renderEmptyState(filter);
-        } else {
-            renderSellers(filteredSellers);
-        }
-    }
-
-    function renderEmptyState(filter = 'pending') {
-        let message = '';
-        if (filter === 'pending') {
-            message = 'No pending seller applications.';
-        } else if (filter === 'verified') {
-            message = 'No verified sellers yet.';
-        } else if (filter === 'rejected') {
-            message = 'No rejected applications.';
-        }
-
-        sellersList.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-content">
-                    <img src="../assets/image/icons/verified-empty.svg" alt="No sellers" class="empty-state-icon">
-                    <h2>${message}</h2>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderSellers(sellers) {
-        let html = '<div class="sellers-grid">';
-
-        sellers.forEach(seller => {
-            const createdDate = seller.created_at ? new Date(seller.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            }) : 'N/A';
-
-            const statusBadge = seller.is_verified == 0 ? 'pending' : 
-                               seller.is_verified == 1 ? 'verified' : 'rejected';
-            const statusText = seller.is_verified == 0 ? 'Pending' : 
-                              seller.is_verified == 1 ? 'Verified' : 'Rejected';
-
-            html += `
-                <div class="seller-card" data-id="${seller.seller_id}">
-                    <div class="seller-header">
-                        <h3>${escapeHtml(seller.business_name || 'No Business Name')}</h3>
-                        <span class="status-badge ${statusBadge}">${statusText}</span>
-                    </div>
-                    <div class="seller-body">
-                        <p><strong>Name:</strong> ${escapeHtml(seller.first_name || '')} ${escapeHtml(seller.last_name || '')}</p>
-                        <p><strong>Email:</strong> ${escapeHtml(seller.email || 'N/A')}</p>
-                        <p><strong>Contact:</strong> ${escapeHtml(seller.contact_number || 'N/A')}</p>
-                        <p><strong>Applied:</strong> ${createdDate}</p>
-                    </div>
-            `;
-
-            if (seller.is_verified == 0) {
-                html += `
-                    <div class="seller-actions">
-                        <button class="btn-verify" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/verified-filled.svg" alt="Verify" class="btn-icon">
-                            Verify
-                        </button>
-                        <button class="btn-reject" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/cancel.svg" alt="Reject" class="btn-icon">
-                            Reject
-                        </button>
-                    </div>
-                `;
-            }
-
-            html += '</div>';
-        });
-
-        html += '</div>';
-        sellersList.innerHTML = html;
-        attachEventListeners();
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function attachEventListeners() {
-        document.querySelectorAll('.btn-verify').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'verify');
-            });
-        });
-
-        document.querySelectorAll('.btn-reject').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'reject');
-            });
-        });
-    }
-
-    async function handleVerification(sellerId, action) {
-        // Disable button to prevent double submission
-        const buttons = document.querySelectorAll(`.btn-${action}[data-id="${sellerId}"]`);
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.style.opacity = '0.5';
-        });
-
         try {
-            const formData = new URLSearchParams();
-            formData.append('action', action);
-            formData.append('seller_id', sellerId);
-
-            const response = await fetch('../database/admin-auth-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
-            });
-
-            const result = await response.json();
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+            
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse JSON:', responseText);
+                showNotifier('Server returned invalid response. Please try again.');
+                isSubmitting = false;
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+                return;
+            }
 
             if (result.status === 'success') {
-                showNotification(result.message);
-                await loadSellers(); // Reload the list
+                const delayTime = result.delay || 5000;
+                showNotifier(result.message || 'Admin account created successfully! Please sign in.');
+                setTimeout(() => {
+                    window.location.href = result.redirect;
+                }, delayTime);
             } else {
-                showNotification(result.message || 'Action failed', true);
-                // Re-enable buttons
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                });
+                console.error('Signup error details:', result);
+                
+                // Handle specific error messages
+                if (result.message === 'duplicate-email') {
+                    emailError.textContent = 'Email already exists';
+                    highlightField(emailField, true);
+                    showNotifier('Email already exists. Please use a different email.');
+                } else if (result.message === 'username-unavailable') {
+                    usernameError.textContent = 'Username already taken';
+                    highlightField(usernameField, true);
+                    showNotifier('Username already taken. Please choose a different username.');
+                } else if (result.message === 'duplicate-contact') {
+                    contactError.textContent = 'Phone number already registered';
+                    highlightField(contactField, true);
+                    showNotifier('Phone number already registered. Please use a different number.');
+                } else if (result.message === 'username-too-short') {
+                    usernameError.textContent = 'Username too short';
+                    highlightField(usernameField, true);
+                    showNotifier('Username must be at least 3 characters long.');
+                } else if (result.message === 'username-too-long') {
+                    usernameError.textContent = 'Username too long';
+                    highlightField(usernameField, true);
+                    showNotifier('Username cannot exceed 20 characters.');
+                } else if (result.message === 'username-invalid-chars') {
+                    usernameError.textContent = 'Invalid characters';
+                    highlightField(usernameField, true);
+                    showNotifier('Username can only contain letters, numbers, and underscore.');
+                } else if (result.message === 'password-too-short') {
+                    passwordError.textContent = 'Password too short';
+                    highlightField(passwordField, true);
+                    showNotifier('Password must be at least 8 characters long.');
+                } else if (result.message === 'password-too-long') {
+                    passwordError.textContent = 'Password too long';
+                    highlightField(passwordField, true);
+                    showNotifier('Password cannot exceed 16 characters.');
+                } else if (result.message === 'password-needs-mixed-case') {
+                    passwordError.textContent = 'Needs uppercase & lowercase';
+                    highlightField(passwordField, true);
+                    showNotifier('Password must contain both uppercase and lowercase letters.');
+                } else if (result.message === 'password-needs-number') {
+                    passwordError.textContent = 'Needs at least one number';
+                    highlightField(passwordField, true);
+                    showNotifier('Password must contain at least one number.');
+                } else if (result.message === 'passwords-mismatch') {
+                    confirmError.textContent = 'Passwords do not match';
+                    highlightField(confirmPasswordField, true);
+                    showNotifier('Passwords do not match.');
+                } else if (result.message === 'invalid-email') {
+                    emailError.textContent = 'Invalid email format';
+                    highlightField(emailField, true);
+                    showNotifier('Please enter a valid email address.');
+                } else if (result.message === 'invalid-contact') {
+                    contactError.textContent = 'Invalid phone number';
+                    highlightField(contactField, true);
+                    showNotifier('Please enter a valid Philippine mobile number.');
+                } else if (result.message === 'missing-field') {
+                    const field = result.field || '';
+                    if (field) {
+                        const fieldElement = document.getElementById(field);
+                        if (fieldElement) {
+                            const errorElement = document.getElementById(field + 'Error');
+                            if (errorElement) {
+                                errorElement.textContent = 'This field is required';
+                            }
+                            highlightField(fieldElement, true);
+                        }
+                    }
+                    showNotifier('Please fill in all required fields.');
+                } else {
+                    showNotifier('Oops! There was a problem creating your account. Please try again.');
+                }
             }
         } catch (error) {
-            console.error('Verification error:', error);
-            showNotification('Network error. Please try again.', true);
-            // Re-enable buttons
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-            });
+            console.error('Signup error:', error);
+            showNotifier('Network error. Please check your connection and try again.');
+        } finally {
+            isSubmitting = false;
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
         }
-    }
-
-    async function loadSellers() {
-        sellersList.innerHTML = '<div class="loading">Loading sellers...</div>';
-
-        try {
-            const response = await fetch('../database/admin-auth-handler.php?action=get_all_sellers');
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                allSellers = result.data;
-                filterSellers(currentFilter);
-            } else {
-                sellersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Failed to load sellers: ' + (result.message || 'Unknown error') + '</p></div></div>';
-            }
-        } catch (error) {
-            console.error('Error loading sellers:', error);
-            sellersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Network error. Please check your connection.</p></div></div>';
-        }
-    }
-
-    // Filter tab click handlers
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const filter = tab.dataset.filter;
-            filterSellers(filter);
-        });
     });
 
-    // Initial load
-    loadSellers();
+    // ============= CLEAR FORM =============
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            form.reset();
+            resetHighlights();
+        });
+    }
+
+    // ============= INITIAL FOCUS =============
+    setTimeout(() => {
+        firstNameField.focus();
+    }, 100);
 });
 ```
 
@@ -4019,4562 +5229,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load
     loadSellers();
 });
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-dashboard.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== DASHBOARD LAYOUT ===== */
-.content {
-    max-width: 1200px;
-    margin: 80px auto 20px;
-    padding: 20px;
-    min-height: calc(100vh - 200px);
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== WELCOME SECTION ===== */
-.welcome-section {
-    background: linear-gradient(135deg, #f2f4f6 0%, #ffffff 100%);
-    padding: 50px 40px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    border: 1px solid #363940;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.welcome-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #ff8246, #e8693d);
-}
-
-.welcome-section h1 {
-    font-size: 2.2rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-}
-
-.welcome-section h1 span {
-    color: #ff8246;
-}
-
-.welcome-section p {
-    font-size: 1.1rem;
-    color: #000000;
-    opacity: 0.8;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* ===== DASHBOARD GRID ===== */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== DASHBOARD CARDS ===== */
-.dashboard-card {
-    background: #f2f4f6;
-    border-radius: 12px;
-    padding: 30px 25px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    text-align: center;
-    transition: box-shadow 0.3s ease-in-out;
-    border: 1px solid #363940;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.dashboard-card:hover {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    border-color: #ff8246;
-}
-
-.dashboard-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.dashboard-card h3 {
-    font-size: 1.4rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.dashboard-card h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 2px;
-    background: #ff8246;
-    transition: width 0.3s ease;
-}
-
-.dashboard-card:hover h3::after {
-    width: 80px;
-}
-
-.dashboard-card p {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 25px;
-    line-height: 1.6;
-    flex-grow: 1;
-    opacity: 0.8;
-}
-
-.card-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 12px;
-}
-
-.card-icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-/* ===== BUTTON STYLES ===== */
-.btn-primary {
-    display: inline-block;
-    background: #ff8246;
-    color: #ffffff;
-    padding: 12px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1rem;
-    transition: background-color 0.3s ease-in-out;
-    border: 2px solid transparent;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: auto;
-    align-self: center;
-    min-width: 140px;
-    box-sizing: border-box;
-}
-
-.btn-primary:hover {
-    background: #e8693d;
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (min-width: 1200px) {
-    .content {
-        margin-top: 100px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .welcome-section h1 {
-        font-size: 2.5rem;
-    }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .content {
-        margin-top: 70px;
-        padding: 15px;
-    }
-    
-    .welcome-section {
-        padding: 40px 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 2rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 767px) {
-    body {
-        overflow-x: hidden;
-    }
-    
-    .content {
-        margin-top: 60px;
-        padding: 15px;
-        max-width: 100%;
-    }
-    
-    .welcome-section {
-        padding: 30px 20px;
-        margin-bottom: 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.8rem;
-    }
-    
-    .welcome-section p {
-        font-size: 1rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        width: 100%;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-        max-width: 100%;
-        margin: 0 auto;
-        width: 100%;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-primary {
-        padding: 10px 25px;
-        min-width: 120px;
-        font-size: 0.95rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 55px;
-        padding: 12px;
-    }
-    
-    .welcome-section {
-        padding: 25px 15px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.5rem;
-    }
-    
-    .welcome-section p {
-        font-size: 0.95rem;
-    }
-    
-    .dashboard-card {
-        padding: 20px 15px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-    
-    .dashboard-card p {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-    }
-    
-    .btn-primary {
-        padding: 10px 20px;
-        min-width: 110px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .content {
-        margin-top: 50px;
-        padding: 10px;
-    }
-    
-    .welcome-section {
-        padding: 20px 12px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.3rem;
-    }
-    
-    .dashboard-card {
-        padding: 18px 12px;
-    }
-    
-    .btn-primary {
-        padding: 8px 16px;
-        min-width: 100px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .content {
-        margin-top: 50px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .welcome-section {
-        padding: 20px;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dashboard-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
-}
-
-.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
-.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
-.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
-.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
-.dashboard-card:nth-child(7) { animation-delay: 0.7s; }
-
-@media print {
-    .btn-primary {
-        display: none;
-    }
-    
-    .dashboard-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-footer.css`
-
-**Status:** `FOUND`
-
-```css
-.footer {
-  background-color: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-top: 2px solid var(--color-border-A);
-  width: 100vw !important;
-  max-width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  left: 0;
-  margin: 0 !important;
-}
-
-.footer-upper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--size-navigation-gap);
-  margin: 0;
-  color: var(--color-text-B);
-}
-
-.queries {
-  max-width: 50%;
-  color: var(--color-text-A);
-}
-
-.queries h2 {
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-}
-
-.queries span {
-  color: var(--color-accent-A);
-}
-
-.socials {
-  display: flex;
-  gap: var(--size-navigation-gap);
-}
-
-.socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-}
-
-.socials a img {
-  width:  40px;
-  height: 40px;
-}
-
-.footer-lower {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px 0;
-  font-size: var(--font-size-base);
-  margin-top: 20px;
-  border-top: 2px solid var(--color-border-A);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.mail-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  color: var(--color-text-A);
-}
-
-.mail-button img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0);
-}
-
-.policy-links {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  padding: 5px 0;
-}
-
-.policy-links a {
-  color: var(--color-text-A);
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.policy-links a:hover {
-  color: var(--color-accent-A);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .policy-links {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .footer-lower {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mail-button {
-    margin-bottom: 10px;
-  }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-header.css`
-
-**Status:** `FOUND`
-
-```css
-/* CSS File Content */
-:root {
-  /* Sizes & Spacing */
-  --size-logo-height: 40px;
-  --size-button-padding: 10px 20px;
-  --size-button-radius: 5px;
-  --size-navigation-gap: 30px;
-  --size-header-padding: 15px 40px;
-  --size-mobile-menu-max-width: 270px;
-
-  /* Color Palette - Light Theme */
-  --color-background-A: #e4eaf2;        /* body background */
-  --color-background-B: #f2f4f6;        /* header background */
-  --color-background-C: #000000;  
-  --color-linear-gradient-A: #a49bf8, #b8b9fa, #dbd5fd, #43c9fb;      /* mobile menu bg or secondary light bg */
-  --color-text-A: #000000;              /* main text */
-  --color-text-B: #ffffff;              /* button text on orange */
-  --color-text-C: #1e2e2f;
-  --color-accent-A: #ff8246;            /* primary orange */
-  --color-hover-A: #e8693d;             /* hover orange variant */
-  --color-border-A: #363940;            /* border */
-
-  /* Effects */
-  --effect-glow-A: 0 0 10px rgba(0, 0, 0, 0.2);                /* soft shadow */
-  --effect-glow-B: 0 0 10px rgba(211, 94, 53, 0.7);            /* orange glow */
-  --effect-box-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);  /* lighter shadow */
-  --effect-transition-default: all 0.3s ease-in-out;
-
-  /* Typography */
-  --font-family-base: Arial, sans-serif;
-  --font-size-base: 16px;
-  --font-size-title: 22px;
-  --font-weight-bold: 400;
-}
-
-/* Global Styles */
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background-color: var(--color-background-A);
-  color: var(--color-text-A);
-  font-family: var(--font-family-base);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-/* Scrollbar Removal */
-html {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Header Styles */
-.header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-bottom: 2px solid var(--color-border-A);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-sizing: border-box;
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  max-width: 100%;
-}
-
-.header-logo img {
-  height: var(--size-logo-height);
-  width: auto;
-}
-
-.title {
-  color: var(--color-text-A);
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.title span {
-  color: var(--color-accent-A);
-}
-
-/* Navigation Styles */
-.nav-container {
-  display: flex;
-  align-items: center;
-  gap: var(--size-navigation-gap);
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.nav-bar {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  overflow: hidden;
-}
-
-/* Desktop Navigation Link Styles */
-.nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  transition: var(--effect-transition-default);
-  white-space: nowrap;
-  position: relative;
-  padding: 5px 0;
-}
-
-.nav-link:hover, 
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Desktop hover underline effect */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-accent-A);
-  transition: var(--effect-transition-default);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 100%;
-}
-
-/* Button Styles */
-.social-button {
-  background: var(--color-accent-A);
-  color: var(--color-text-B);
-  padding: var(--size-button-padding);
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-}
-
-.social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Mobile Menu Styles */
-.hamburger-menu {
-  display: none;
-  cursor: pointer;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  z-index: 1001;
-}
-
-.hamburger-icon {
-  width: 30px;
-  height: 30px;
-  transition: var(--effect-transition-default);
-}
-
-.mobile-nav {
-    position: fixed;
-    top: 80px;
-    right: 0;
-    width: 50%;
-    max-width: var(--size-mobile-menu-max-width);
-    text-align: center;
-    height: calc(100vh - 80px);
-    background-color: var(--color-background-B);
-    z-index: 1000;
-    transform: translateX(100%); /* This is the key - hidden off-screen */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 20px;
-    overflow-y: auto;
-    border-left: 2px solid var(--color-border-A);
-    border-radius: 15px 0 0 15px;
-    box-shadow: none;
-    visibility: visible;
-    opacity: 1;
-}
-
-.mobile-nav.open {
-    transform: translateX(0) !important; /* ensure it overrides any leftover inline */
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
-}
-/* Mobile Navigation Link Styles - RESTORED ORIGINAL HOVER EFFECT */
-.mobile-nav .nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: 16px;
-  padding: 15px 10px; /* Increased padding for better touch targets */
-  position: relative;
-  transition: var(--effect-transition-default);
-  border-bottom: 1px solid var(--color-border-A);
-  display: block; /* Make it block level for full width */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* RESTORED: Underline hover effect for mobile nav - properly aligned */
-.mobile-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; /* Adjusted to sit right on the border */
-  left: 10px; /* Start after padding */
-  right: 10px; /* End before padding */
-  width: calc(100% - 20px); /* Full width minus left/right padding */
-  height: 2px;
-  background: var(--color-accent-A);
-  transform: scaleX(0);
-  transition: transform 0.3s ease-in-out;
-  transform-origin: left;
-}
-
-.mobile-nav .nav-link:hover::after,
-.mobile-nav .nav-link.active::after {
-  transform: scaleX(1);
-}
-
-.mobile-nav .nav-link:hover,
-.mobile-nav .nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Special styling for the social button in mobile nav */
-.mobile-nav .social-button {
-  margin-top: 20px;
-  background-color: var(--color-accent-A);
-  color: var(--color-text-A);
-  padding: 15px 10px; /* Match nav link padding */
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-  text-align: center;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Remove the after element for social button */
-.mobile-nav .social-button::after {
-  display: none;
-}
-
-.mobile-nav .social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Backdrop for mobile menu */
-.menu-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.menu-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Cart count badge */
-.cart-count {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: var(--color-accent-A);
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 50%;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Responsive Design */
-@media (max-width: 1005px) {
-  .hamburger-menu {
-    display: block;
-  }
-  
-  .nav-container {
-    display: none;
-  }
-  
-  .header-logo {
-    gap: 5px;
-  }
-  
-  .title {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-bar {
-    padding: 12px 25px;
-  }
-  
-  .title {
-    font-size: 18px;
-  }
-  
-  .mobile-nav {
-    width: 65%;
-    top: 70px;
-    height: calc(100vh - 70px);
-  }
-  
-  /* Adjust underline for smaller screens */
-  .mobile-nav .nav-link::after {
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-@media (max-width: 480px) {
-  .header-bar {
-    padding: 10px 20px;
-  }
-  
-  .title {
-    font-size: 16px;
-  }
-  
-  .mobile-nav {
-    width: 80%;
-    top: 65px;
-    height: calc(100vh - 65px);
-    padding: 15px;
-  }
-  
-  .mobile-nav .nav-link {
-    padding: 12px 10px;
-  }
-  
-  /* Adjust underline for mobile */
-  .mobile-nav .nav-link::after {
-    bottom: -1px;
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-/* Animation Enhancements */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-in-out forwards;
-}
-
-.fade-out {
-  opacity: 1;
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.header-bar.header-delay,
-.mobile-nav.header-delay {
-  transition: none !important;
-}
-
-/* Fix for active link in desktop navigation */
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-.nav-link.active::after {
-  width: 100%;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-index.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== RESET & BASE STYLES ===== */
-.content {
-    margin-top: 100px;
-}
-
-/* ===== SHOWCASE SECTION ===== */
-.showcase-section {
-    position: relative;
-    height: 70vh;
-    overflow: hidden;
-    margin-top: 70px;
-    margin-bottom: 40px;
-}
-
-.showcase-slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.showcase-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: top center;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.showcase-slide.active {
-    opacity: 1;
-}
-
-.showcase-content {
-    position: absolute;
-    bottom: 20%;
-    left: 10%;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    max-width: 600px;
-}
-
-.showcase-content h1 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-}
-
-.showcase-content p {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-}
-
-.showcase-button {
-    display: inline-block;
-    padding: 15px 40px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.showcase-button:hover {
-    background-color: #e8693d;
-}
-
-.slider-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.slider-controls button {
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.slider-controls button:hover {
-    background: #ff8246;
-}
-
-/* ===== FEATURES SECTION ===== */
-.features-section {
-    padding: 40px 0;
-    background-color: #f2f4f6;
-    margin-bottom: 20px;
-}
-
-.features-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.features-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.feature-card {
-    text-align: center;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-.feature-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.feature-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.feature-icon img {
-    width: 48px;
-    height: 48px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-
-
-.feature-card h3 {
-    margin-bottom: 10px;
-    color: #1e2e2f;
-    font-size: 1.2rem;
-}
-
-.feature-card p {
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* ===== FEATURED PRODUCTS SECTION ===== */
-.featured-products-section {
-    padding: 30px 0;
-}
-
-.products-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.featured-products-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-    padding: 0 10px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.product-image-container {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background-color: #f5f5f5;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.product-info {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-title {
-    margin: 0 0 8px 0;
-    font-size: 1.1rem;
-    color: #1e2e2f;
-    line-height: 1.4;
-    min-height: 2.8em;
-    overflow: hidden;
-    display: -webkit-box;
-    --webkit-line-clamp: 2;
-    --webkit-box-orient: vertical;
-}
-
-.product-price {
-    color: #ff8246;
-    font-weight: 400;
-    font-size: 1.3rem;
-    margin: 8px 0;
-}
-
-.product-seller {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 5px 0 12px 0;
-}
-
-.view-product-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
-    margin-top: auto;
-    font-size: 0.9rem;
-}
-
-.view-product-btn:hover {
-    background-color: #e8693d;
-}
-
-.no-products-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 30px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.no-products-message p {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.become-seller-link {
-    color: #ff8246;
-    text-decoration: none;
-    font-weight: 400;
-}
-
-.become-seller-link:hover {
-    text-decoration: underline;
-}
-
-.view-all-products-btn {
-    display: block;
-    width: fit-content;
-    margin: 20px auto 0;
-    padding: 12px 35px;
-    background-color: #ff8246;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.view-all-products-btn:hover {
-    background-color: #e8693d;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 70px;
-    }
-    
-    .showcase-section {
-        height: 60vh;
-        margin-top: -70px;
-        margin-bottom: 30px;
-    }
-    
-    .showcase-content {
-        left: 5%;
-        max-width: 90%;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1.2rem;
-    }
-    
-    .features-section {
-        padding: 30px 0;
-        margin-bottom: 15px;
-    }
-    
-    .features-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .featured-products-section {
-        padding: 20px 0;
-    }
-    
-    .featured-products-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    }
-    
-    .product-image-container {
-        height: 180px;
-    }
-    
-    .view-all-products-btn {
-        margin: 15px auto 0;
-        padding: 10px 30px;
-    }
-}
-
-@media (max-width: 480px) {
-    .content {
-        margin-top: 60px;
-    }
-    
-    .showcase-section {
-        height: 50vh;
-        margin-top: -60px;
-        margin-bottom: 20px;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1rem;
-    }
-    
-    .showcase-button {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-    
-    .features-section h2,
-    .featured-products-section h2 {
-        font-size: 1.8rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: 1fr;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .view-all-products-btn {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .showcase-slide {
-        background-position: center center;
-    }
-}
-
-.features-section {
-    position: relative;
-}
-
-.features-section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-logs.css`
-
-**Status:** `FOUND`
-
-```css
-/* Admin Logs Styles */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e4eaf2;
-    color: #000000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    width: 100%;
-    min-height: calc(100vh - 200px);
-    display: flex;
-    flex-direction: column;
-}
-
-/* ===== PAGE TITLE HEADER - Unified with admin dashboard ===== */
-.page-title-header {
-    width: 100%;
-    margin: 20px 0 30px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.page-title-header h1 {
-    font-size: 2rem;
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* ===== FILTER TABS - Consistent with verify sellers ===== */
-.filter-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-}
-
-.filter-tab {
-    padding: 8px 20px;
-    background: #ffffff;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #666666;
-    transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.filter-tab:hover {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
-}
-
-.filter-tab.active {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-}
-
-/* ===== LOGS LIST ===== */
-.logs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    min-height: 400px;
-}
-
-/* ===== LOGS CONTAINER ===== */
-.logs-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px 0;
-}
-
-/* ===== LOG ENTRY CARD ===== */
-.log-entry {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px;
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.log-entry:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #FF8246;
-    transform: translateY(-2px);
-}
-
-/* ===== LOG ICON ===== */
-.log-icon {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 12px;
-}
-
-.log-icon img {
-    width: 36px;
-    height: 36px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: transform 0.3s ease;
-}
-
-.log-entry:hover .log-icon img {
-    transform: scale(1.1);
-}
-
-/* ===== LOG CONTENT ===== */
-.log-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.log-description {
-    font-size: 1rem;
-    color: #000000;
-    line-height: 1.5;
-    font-weight: 500;
-}
-
-.log-time {
-    font-size: 0.85rem;
-    color: #999999;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.log-time::before {
-    content: '🕒';
-    font-size: 0.8rem;
-    opacity: 0.7;
-}
-
-/* ===== LOG TYPE BADGES (Optional - can be added in future) ===== */
-.log-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-left: 10px;
-    background: #f0f0f0;
-    color: #666666;
-}
-
-.log-badge.user {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.log-badge.seller {
-    background: #000000;
-    color: #ffffff;
-}
-
-.log-badge.product {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.log-badge.order {
-    background: #000000;
-    color: #ffffff;
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 400px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 20px 0;
-}
-
-.empty-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.empty-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.empty-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.empty-state p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.empty-state-hint {
-    font-style: italic;
-    color: #999999;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed #e0e0e0;
-}
-
-/* ===== LOADING STATE ===== */
-.loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666666;
-    font-size: 1.1rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.loading::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f0f0f0;
-    border-top-color: #FF8246;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== ERROR STATE ===== */
-.error-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 400px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 20px 0;
-}
-
-.error-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.error-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.error-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.error-state p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-.error-state .btn {
-    display: inline-block;
-    padding: 10px 25px;
-    background: #FF8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.error-state .btn:hover {
-    background: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-    transform: translateY(-2px);
-}
-
-/* ===== STATS SUMMARY (Optional - can be added at top) ===== */
-.logs-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.summary-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.summary-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #FF8246;
-    line-height: 1.2;
-    margin-bottom: 5px;
-}
-
-.summary-label {
-    font-size: 0.85rem;
-    color: #666666;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 992px) {
-    .content {
-        margin-top: 90px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 0 15px;
-    }
-    
-    .page-title-header {
-        margin: 15px 0 25px 0;
-        padding-bottom: 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .filter-tabs {
-        margin-bottom: 25px;
-        padding: 8px 0;
-    }
-    
-    .filter-tab {
-        padding: 6px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .log-entry {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-        padding: 25px 20px;
-    }
-    
-    .log-icon {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 5px;
-    }
-    
-    .log-icon img {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .log-description {
-        font-size: 0.95rem;
-    }
-    
-    .log-time {
-        justify-content: center;
-    }
-    
-    .empty-state {
-        min-height: 350px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.3rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.95rem;
-    }
-    
-    .logs-summary {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 70px;
-        padding: 0 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.4rem;
-    }
-    
-    .filter-tabs {
-        gap: 8px;
-    }
-    
-    .filter-tab {
-        padding: 5px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .log-entry {
-        padding: 20px 15px;
-    }
-    
-    .log-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .log-icon img {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .log-description {
-        font-size: 0.9rem;
-        word-break: break-word;
-    }
-    
-    .log-time {
-        font-size: 0.8rem;
-    }
-    
-    .empty-state-content {
-        padding: 30px 20px;
-    }
-    
-    .empty-state-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.2rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.9rem;
-    }
-    
-    .logs-summary {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .summary-card {
-        padding: 12px;
-    }
-    
-    .summary-number {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .page-title-header h1 {
-        font-size: 1.3rem;
-    }
-    
-    .filter-tab {
-        padding: 4px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .log-entry {
-        padding: 15px 12px;
-    }
-    
-    .log-icon {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .log-icon img {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* ===== PRINT STYLES ===== */
-@media print {
-    .filter-tabs,
-    .logs-summary,
-    .btn {
-        display: none;
-    }
-    
-    .log-entry {
-        break-inside: avoid;
-        border: 1px solid #000000;
-        box-shadow: none;
-    }
-    
-    .log-icon img {
-        filter: none;
-    }
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.log-entry {
-    animation: slideIn 0.3s ease forwards;
-    opacity: 0;
-}
-
-.log-entry:nth-child(1) { animation-delay: 0.1s; }
-.log-entry:nth-child(2) { animation-delay: 0.15s; }
-.log-entry:nth-child(3) { animation-delay: 0.2s; }
-.log-entry:nth-child(4) { animation-delay: 0.25s; }
-.log-entry:nth-child(5) { animation-delay: 0.3s; }
-.log-entry:nth-child(6) { animation-delay: 0.35s; }
-.log-entry:nth-child(7) { animation-delay: 0.4s; }
-.log-entry:nth-child(8) { animation-delay: 0.45s; }
-.log-entry:nth-child(9) { animation-delay: 0.5s; }
-.log-entry:nth-child(10) { animation-delay: 0.55s; }
-
-/* ===== SCROLLBAR STYLING ===== */
-.logs-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.logs-list::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 3px;
-}
-
-.logs-list::-webkit-scrollbar-thumb {
-    background: #FF8246;
-    border-radius: 3px;
-}
-
-.logs-list::-webkit-scrollbar-thumb:hover {
-    background: #e66a2e;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-privacy-policy.css`
-
-**Status:** `FOUND`
-
-```css
-/* /REVISE THIS FOR ADMIN PRIVACY POLOCY/ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.privacy-policy-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.policy-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.policy-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.policy-hero__highlight {
-    color: #ff8246;
-}
-
-.policy-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.policy-intro {
-    margin-bottom: 40px;
-}
-
-.policy-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-intro__last-updated {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== POLICY SECTIONS ===== */
-.policy-sections {
-    width: 100%;
-}
-
-.policy-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.policy-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.policy-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.policy-section__body {
-    padding-left: 19px; /* Aligns with accent line */
-}
-
-.policy-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.policy-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.policy-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.policy-section__note {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    font-style: italic;
-    color: #666;
-}
-
-.policy-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.policy-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.policy-contact__item {
-    margin-bottom: 8px;
-}
-
-.policy-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .privacy-policy-page {
-        margin-top: 80px;
-    }
-    
-    .policy-hero {
-        padding: 40px 20px;
-    }
-    
-    .policy-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .policy-section {
-        padding: 25px 20px;
-    }
-    
-    .policy-section__body {
-        padding-left: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .policy-hero {
-        padding: 30px 15px;
-    }
-    
-    .policy-hero__title {
-        font-size: 2rem;
-    }
-    
-    .policy-intro__card {
-        padding: 20px;
-    }
-    
-    .policy-intro__text {
-        font-size: 1rem;
-    }
-    
-    .policy-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .policy-section__accent {
-        height: 25px;
-    }
-    
-    .policy-section {
-        padding: 20px 15px;
-    }
-    
-    .policy-section__body {
-        padding-left: 9px;
-    }
-    
-    .policy-section__body p,
-    .policy-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .policy-contact {
-        padding: 15px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-profile.css`
-
-**Status:** `FOUND`
-
-```css
-/* /REVISE THIS FOR ADMIN PROFILE/ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: #f2f4f6;
-    color: #000000;
-    line-height: 1.5;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 30px 0 20px;
-}
-
-/* Form Container */
-.profile-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* Form Sections - stacked vertically */
-.form-section {
-    background: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease;
-}
-
-.form-section:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.form-section h3 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 25px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #FF8246;
-}
-
-/* Account info section needs to position buttons at bottom */
-.account-info-section {
-    display: flex;
-    flex-direction: column;
-    min-height: 300px;
-}
-
-/* PROFILE STACKED CONTAINER - Stack vertically and center */
-.profile-stacked-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-/* Profile Picture Wrapper */
-.profile-picture-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.profile-picture-wrapper img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #FF8246;
-    background: #f0f0f0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Profile Name Single Line - first name + last name on one line */
-.profile-name-single-line {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.display-full-name {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #000000;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 90%;
-}
-
-/* Choose button container - centered */
-.choose-button-container {
-    margin-top: 8px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-/* Choose photo button - centered */
-.btn-choose-photo {
-    background-color: #000000;
-    color: #ffffff;
-    border: none;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    letter-spacing: 0.3px;
-    padding: 10px 24px;
-    width: auto;
-    min-width: 0;
-    max-width: 100%;
-    text-align: center;
-    border: 1px solid #000000;
-    white-space: nowrap;
-}
-
-.btn-choose-photo:hover {
-    background-color: #333333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Profile picture upload (hidden file input) */
-.profile-picture-upload {
-    margin-top: 10px;
-    width: 100%;
-}
-
-.file-upload-label {
-    display: none;
-}
-
-.profile-picture-upload input[type="file"] {
-    display: none;
-}
-
-.file-name {
-    margin-top: 6px;
-    font-size: 0.8rem;
-    color: #000000;
-    word-break: break-all;
-    text-align: left;
-    opacity: 0.7;
-}
-
-.help-text {
-    font-size: 0.75rem;
-    color: #666666;
-    margin-top: 4px;
-    text-align: left;
-}
-
-/* Fields row - for multiple fields in one line */
-.fields-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-/* Add labels above inputs */
-.with-labels {
-    margin-top: 10px;
-}
-
-.field-label {
-    display: block;
-    color: #000000;
-    margin-bottom: 4px;
-    opacity: 0.8;
-}
-
-/* Balanced row - for birthdate and gender to share space equally */
-.balanced-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-/* Half field - exactly 50% minus half the gap */
-.half-field {
-    flex: 1 1 calc(50% - 7.5px);
-    min-width: 0;
-}
-
-/* ===== FIXED: Info row - for account info items ===== */
-.info-row {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 15px;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-/* ===== FIXED: Info Group - for account info with equal height ===== */
-.info-group {
-    flex: 1 1 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    background: #f9f9f9;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    padding: 10px 8px;
-    height: 100%;
-}
-
-.info-group label {
-    display: block;
-    color: #000000;
-    margin-bottom: 2px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    opacity: 0.7;
-    white-space: nowrap;
-}
-
-/* ===== FIXED: Info value with proper text handling ===== */
-.info-value {
-    font-size: 0.8rem;
-    color: #000000;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-    background: transparent;
-    padding: 2px 0;
-    border: none;
-    width: 100%;
-}
-
-/* Special handling for email - slightly smaller to fit */
-.info-group:first-child .info-value {
-    font-size: 0.7rem;
-    letter-spacing: -0.02em;
-}
-
-/* Flex field - grows/shrinks based on content */
-.flex-field {
-    flex: 1 1 auto;
-    min-width: 120px;
-}
-
-/* Full width field */
-.full-width {
-    width: 100%;
-}
-
-/* Form Groups */
-.form-group {
-    margin-bottom: 0;
-}
-
-/* Input styles - ORIGINAL STYLING for enabled/disabled states */
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    height: 42px;
-    padding: 0 12px;
-    border: 1px solid #000000;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.3s ease;
-}
-
-/* Make date input consistent */
-.form-group input[type="date"] {
-    font-family: inherit;
-}
-
-.form-group textarea {
-    height: 80px;
-    padding: 8px 12px;
-    resize: vertical;
-    font-family: inherit;
-}
-
-/* FOCUS STATE - for when inputs are enabled and being edited */
-.form-group input:not(:disabled):focus,
-.form-group select:not(:disabled):focus,
-.form-group textarea:not(:disabled):focus {
-    border-color: #FF8246;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-/* DISABLED STATE - matches the info-value style from account info */
-.form-group input:disabled,
-.form-group select:disabled,
-.form-group textarea:disabled {
-    background-color: #f9f9f9;
-    border-color: #e0e0e0;
-    color: #000000;
-    cursor: not-allowed;
-    opacity: 1;
-}
-
-/* Make placeholder text in disabled fields lighter */
-.form-group input:disabled::placeholder,
-.form-group select:disabled::placeholder,
-.form-group textarea:disabled::placeholder {
-    color: #999999;
-    opacity: 1;
-}
-
-.error-message {
-    color: #FF8246;
-    font-size: 0.8rem;
-    margin-top: 4px;
-    min-height: 18px;
-    display: none;
-}
-
-.error-message.show {
-    display: block;
-}
-
-/* Info note - centered */
-.info-note {
-    margin-top: 10px;
-    margin-bottom: 25px;
-    color: #666666;
-    font-style: italic;
-    text-align: center;
-    font-size: 0.9rem;
-}
-
-/* Profile actions - equal width buttons at bottom of account info */
-.profile-actions {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    margin-top: auto;
-    padding-top: 20px;
-}
-
-.profile-actions .btn {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 12px 0;
-    text-align: center;
-}
-
-.btn {
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    letter-spacing: 0.5px;
-}
-
-.btn-primary {
-    background-color: #FF8246;
-    color: #ffffff;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background-color: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.btn-secondary {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.btn:disabled {
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Messages */
-.message {
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    display: none;
-    border-left: 4px solid;
-}
-
-.message.success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border-left-color: #2e7d32;
-}
-
-.message.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border-left-color: #c62828;
-}
-
-/* Feedback Modal */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeScale 0.3s ease;
-}
-
-.modal-icon {
-    margin-bottom: 20px;
-}
-
-.modal-icon img {
-    width: 60px;
-    height: 60px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.modal-message {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-    color: #000000;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.modal-btn-confirm {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.modal-btn-confirm:hover {
-    background: #e66a2e;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* ========== DESKTOP VIEW ========== */
-@media (min-width: 769px) {
-    .profile-picture-wrapper img {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .display-full-name {
-        font-size: 2rem;
-    }
-    
-    .btn-choose-photo {
-        padding: 12px 32px;
-        font-size: 1.1rem;
-        border-radius: 40px;
-    }
-}
-
-/* ========== TABLET VIEW ========== */
-@media (min-width: 577px) and (max-width: 768px) {
-    .profile-picture-wrapper img {
-        width: 160px;
-        height: 160px;
-    }
-    
-    .display-full-name {
-        font-size: 2rem;
-    }
-    
-    .btn-choose-photo {
-        padding: 10px 28px;
-        font-size: 1rem;
-        border-radius: 30px;
-    }
-    
-    .info-value {
-        font-size: 0.75rem;
-    }
-    
-    .info-group:first-child .info-value {
-        font-size: 0.65rem;
-    }
-}
-
-/* ========== MOBILE VIEW ========== */
-@media (max-width: 768px) {
-    .info-row {
-        flex-wrap: wrap;
-    }
-    
-    .info-group {
-        min-width: 200px;
-    }
-    
-    .info-value {
-        font-size: 0.85rem;
-        white-space: normal;
-        -webkit-line-clamp: 2;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-    }
-    
-    .info-group:first-child .info-value {
-        font-size: 0.8rem;
-        white-space: normal;
-    }
-}
-
-@media (max-width: 576px) {
-    .profile-picture-wrapper img {
-        width: 140px;
-        height: 140px;
-    }
-    
-    .display-full-name {
-        font-size: 1.8rem;
-        white-space: normal;
-        word-break: break-word;
-    }
-    
-    .btn-choose-photo {
-        padding: 10px 24px;
-        font-size: 1rem;
-        border-radius: 30px;
-    }
-    
-    /* Form fields stack vertically */
-    .fields-row {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .flex-field {
-        width: 100%;
-    }
-    
-    .balanced-row {
-        flex-direction: column;
-    }
-    
-    .half-field {
-        width: 100%;
-    }
-    
-    .info-row {
-        flex-direction: column;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    
-    .info-group {
-        width: 100%;
-        min-width: 100%;
-    }
-    
-    .profile-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .profile-actions .btn {
-        width: 100%;
-    }
-    
-    .info-value {
-        font-size: 0.95rem;
-        white-space: normal;
-        -webkit-line-clamp: 3;
-    }
-}
-
-/* ========== SMALL MOBILE VIEW ========== */
-@media (max-width: 375px) {
-    .profile-picture-wrapper img {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .display-full-name {
-        font-size: 1.5rem;
-    }
-    
-    .btn-choose-photo {
-        padding: 8px 20px;
-        font-size: 0.9rem;
-    }
-    
-    .info-value {
-        font-size: 0.9rem;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-in.css`
-
-**Status:** `FOUND`
-
-```css
-/* /REVISE THIS AS PART OF ADMIN/ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    min-height: calc(100vh - 200px);
-}
-
-/* ===== PAGE TITLE ===== */
-.pageTitleHeader {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #1e2e2f;
-    margin: 110px auto 20px;
-    padding-bottom: 15px;
-}
-
-/* ===== FORM CONTAINER ===== */
-.signin-container {
-    max-width: 450px;
-    margin: 0 auto;
-    background: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* ===== FORM GROUPS ===== */
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #000000;
-    font-size: 0.95rem;
-}
-
-.form-group input {
-    width: 100%;
-    height: 50px;
-    padding: 0 15px;
-    border: 1px solid #363940;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: #FF8246;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-.form-group input.error {
-    border-color: #FF8246;
-}
-
-.error-message {
-    color: #FF8246;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-/* ===== PASSWORD TOGGLE ===== */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* ===== BUTTONS ===== */
-.btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    width: 100%;
-    background: #000000;
-    color: #ffffff;
-}
-
-.btn-primary {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #363940;
-}
-
-/* ===== LINKS ===== */
-.signup-link,
-.forgot-password-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.95rem;
-    color: #000000;
-}
-
-.signup-link a,
-.forgot-password-link a {
-    color: #FF8246;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.signup-link a:hover,
-.forgot-password-link a:hover { 
-    text-decoration: underline;
-}
-
-/* ===== NOTIFIER MODAL ===== */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 30px 40px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.3s ease-out;
-}
-
-.notifier-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    color: #000000;
-    line-height: 1.5;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 2rem;
-    }
-    
-    .signin-container {
-        padding: 30px 25px;
-    }
-}
-
-@media (max-width: 480px) {
-    .pageTitleHeader {
-        font-size: 1.8rem;
-    }
-    
-    .signin-container {
-        padding: 25px 20px;
-    }
-    
-    .btn {
-        padding: 12px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-out.css`
-
-**Status:** `FOUND`
-
-```css
-/* REVISE THIS AS PART OF ADMIN */
-
-:root {
-    /* Use the same variables as sign-up.css for consistency */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-/* Logout Confirmation Modal - MATCHING SIGN-UP STYLE */
-.logout-modal {
-    position: fixed;
-    inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; */
-    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
-    backdrop-filter: blur(5px); /* Blur effect like sign-up modal */
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.logout-modal.active {
-    display: flex;
-}
-
-.logout-modal-content {
-    background-color: white;
-    padding: 30px 25px;
-    border-radius: 12px; /* Matching sign-up border-radius */
-    box-shadow: var(--effect-box-shadow-default);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease-in-out; /* Match sign-up animation */
-}
-
-/* Animation - EXACTLY matching sign-up modal */
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.logout-modal-icon {
-    margin-bottom: 20px;
-}
-
-.logout-modal-icon svg {
-    width: 70px;
-    height: 70px;
-    stroke: #FF8246; /* Your accent color */
-    stroke-width: 1.8;
-}
-
-.logout-modal h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.logout-modal p {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.logout-modal-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.logout-modal-btn {
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px; /* Matching sign-up input border-radius */
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--effect-transition-default);
-    flex: 1;
-    max-width: 150px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn-cancel {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-.btn-cancel:hover {
-    background-color: #d0d0d0;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.btn-confirm {
-    background-color: #FF8246;
-    color: white;
-}
-
-.btn-confirm:hover {
-    background-color: #e66a2e;
-    box-shadow: var(--effect-glow-B);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .logout-modal-content {
-        padding: 25px 20px;
-        width: 85%;
-    }
-    
-    .logout-modal-icon svg {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 22px;
-    }
-    
-    .logout-modal p {
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .logout-modal-btn {
-        padding: 10px 20px;
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .logout-modal-content {
-        padding: 20px 15px;
-        width: 90%;
-    }
-    
-    .logout-modal-icon svg {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 20px;
-    }
-    
-    .logout-modal p {
-        font-size: 14px;
-        margin-bottom: 18px;
-    }
-    
-    .logout-modal-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .logout-modal-btn {
-        max-width: 100%;
-        padding: 12px;
-        font-size: 14px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-up.css`
-
-**Status:** `FOUND`
-
-```css
-/* REVISE THIS AS PART OF ADMIN */
-
-:root {
-    /* Form Layout */
-    --form-section-gap: 30px;
-    --form-group-gap: 20px;
-    --input-height: 50px;
-    --border-radius: 12px;
-    
-    /* Effects */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
-    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    outline: none;
-}
-
-body {
-    font-family: var(--font-family-base);
-    background-color: var(--color-background-A);
-    color: var(--color-text-A);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-::-webkit-scrollbar {
-    display: none;
-}
-
-.content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.pageTitleHeader {
-    font-size: calc(15px + var(--font-size-title));
-    padding: var(--size-header-padding);
-    margin: 20px auto 50px;
-    text-align: center;
-    width: 100%;
-    color: var(--color-text-C);
-    font-weight: var(--font-weight-bold);
-}
-
-/* Form Container */
-.signup-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--form-section-gap);
-    padding: 0 20px;
-    width: 100%;
-    max-width: 100%;
-}
-
-/* Form Sections - Barangay Style */
-.form-section {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    padding: 25px 30px;
-    border-radius: var(--border-radius);
-    border: 1px solid;
-    margin-bottom: var(--form-section-gap);
-    transition: var(--effect-transition-default);
-    display: flex;
-    flex-direction: column;
-}
-
-.form-section:hover {
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.form-section h3 {
-    font-size: 1.5rem;
-    color: var(--color-text-C);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--color-accent-A);
-}
-
-/* Form Groups - Barangay Style */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px; /* Reduced from 20px */
-    width: 100%;
-}
-
-.form-group label {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--color-text-C);
-    margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    height: var(--input-height);
-    font-size: var(--font-size-base);
-    padding: 0 15px;
-    border: 1px solid;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: var(--color-text-A);
-    transition: var(--effect-transition-default);
-}
-
-/* Address textarea - fixed initial size, auto-expands */
-.form-group textarea#address {
-    height: 100px;
-    min-height: 100px;
-    max-height: 300px;
-    padding: 15px;
-    resize: none;
-    overflow-y: hidden;
-    line-height: 1.5;
-    transition: height 0.2s ease;
-}
-
-.form-group textarea#address.expanding {
-    height: auto;
-    min-height: 100px;
-    overflow-y: auto;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-    outline: none;
-}
-
-.form-group.error input,
-.form-group.error select,
-.form-group.error textarea {
-    border-color: #e74c3c;
-}
-
-.form-group.error label {
-    color: #e74c3c;
-}
-
-/* Error Messages */
-.error-message {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-/* Button Container - Always Stacked */
-.btn-container {
-    display: flex;
-    flex-direction: column; /* always vertical */
-    justify-content: center;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    width: 100%;
-}
-
-.btn {
-    padding: var(--size-button-padding);
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    border-radius: var(--size-button-radius);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    width: 100%; /* Full width when stacked */
-    min-width: unset; /* Remove min-width constraint */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-}
-
-
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-secondary {
-    background-color: var(--color-background-C);
-    border: 1px solid;
-    border-color: var(--color-border-A);
-    color: var(--color-text-B);
-}
-
-/* Remove extra spacing from button wrapper */
-.form-section .form-group:last-of-type {
-    margin-bottom: 10px;
-}
-
-/* Links Group - Better Spacing */
-.links-group {
-    text-align: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--color-border-A);
-    width: 100%;
-}
-
-.login-link,
-.seller-link {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--color-text-C);
-}
-
-.login-link a,
-.seller-link a {
-    text-decoration: none;
-    color: var(--color-accent-A);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.login-link a:hover,
-.seller-link a:hover {
-    color: var(--color-hover-A);
-    background-color: rgba(255, 130, 70, 0.1);
-}
-
-/* Notifier Modal - Barangay Style */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background-color: var(--color-background-B);
-    color: var(--color-text-A);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: var(--effect-box-shadow-default);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-.notifier-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Last Form Section (Contact & Registration) Layout Fix */
-.form-section:last-child {
-    padding-bottom: 25px;
-}
-
-/* Form submitted state - Barangay Style */
-.signup-container.submitted .form-group:has(input:invalid),
-.signup-container.submitted .form-group:has(select:invalid),
-.signup-container.submitted .form-group:has(textarea:invalid) {
-    animation: pulseWarning 0.5s ease-in-out;
-}
-
-@keyframes pulseWarning {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-/* Barangay-style color themes for form sections */
-.form-section {
-    background-color: var(--color-background-B);
-    border-color: var(--color-border-A);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    border-color: var(--color-border-A);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-}
-
-/* Responsive Design - Barangay Style Adjustments */
-@media (max-width: 1024px) {
-    .signup-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .form-section {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        padding: 20px 15px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 1.5rem;
-        padding: 15px 10px;
-        margin: 10px auto 30px;
-    }
-    
-    .form-section {
-        padding: 20px;
-        min-width: 100%;
-        margin: 0 0 10px;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 20px;
-    }
-    
-    .form-section h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-container {
-        margin-top: 15px;
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 14px;
-        font-size: 1rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-        height: 45px;
-        font-size: 0.95rem;
-    }
-    
-    .form-group textarea#address {
-        height: 90px;
-        min-height: 90px;
-    }
-    
-    .links-group {
-        margin-top: 12px;
-        padding-top: 12px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.9rem;
-        margin: 5px 0;
-    }
-    
-    .signup-container {
-        padding: 0 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-section {
-        padding: 18px 15px;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 18px;
-    }
-    
-    .btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
-    
-    .btn-container {
-        gap: 8px;
-        margin-top: 12px;
-    }
-    
-    .links-group {
-        margin-top: 10px;
-        padding-top: 10px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.85rem;
-        margin: 4px 0;
-    }
-}
-
-/* Password toggle styles */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    padding: 0;
-    z-index: 2;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* Ensure password fields have proper padding */
-.form-group input[type="password"] {
-    padding-right: 45px;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-terms-and-conditions.css`
-
-**Status:** `FOUND`
-
-```css
-/* NOTE REVISE THIS IF ONLY NEEDED */
-
-/* ============================================
-   TERMS AND CONDITIONS PAGE STYLES
-   Class naming convention: BEM (Block Element Modifier)
-   Block: terms-page, terms-hero, terms-intro, terms-section, terms-agreement
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.terms-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.terms-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.terms-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.terms-hero__highlight {
-    color: #ff8246;
-}
-
-.terms-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.terms-intro {
-    margin-bottom: 40px;
-}
-
-.terms-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-intro__effective-date {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== TERMS SECTIONS ===== */
-.terms-sections {
-    width: 100%;
-}
-
-.terms-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.terms-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.terms-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.terms-section__body {
-    padding-left: 19px;
-}
-
-.terms-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.terms-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.terms-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.terms-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.terms-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.terms-contact__item {
-    margin-bottom: 8px;
-}
-
-.terms-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== AGREEMENT SECTION ===== */
-.terms-agreement {
-    margin-top: 40px;
-}
-
-.terms-agreement__box {
-    background: white;
-    border-radius: 10px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-.terms-agreement__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 30px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.terms-agreement__actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.terms-agreement__btn {
-    display: inline-block;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-}
-
-.terms-agreement__btn--primary {
-    background-color: #ff8246;
-    color: white;
-}
-
-.terms-agreement__btn--primary:hover {
-    background-color: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.terms-agreement__btn--secondary {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.terms-agreement__btn--secondary:hover {
-    background-color: #000000;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .terms-page {
-        margin-top: 80px;
-    }
-    
-    .terms-hero {
-        padding: 40px 20px;
-    }
-    
-    .terms-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .terms-section {
-        padding: 25px 20px;
-    }
-    
-    .terms-section__body {
-        padding-left: 14px;
-    }
-    
-    .terms-agreement__box {
-        padding: 30px 20px;
-    }
-    
-    .terms-agreement__actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .terms-agreement__btn {
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .terms-hero {
-        padding: 30px 15px;
-    }
-    
-    .terms-hero__title {
-        font-size: 2rem;
-    }
-    
-    .terms-intro__card {
-        padding: 20px;
-    }
-    
-    .terms-intro__text {
-        font-size: 1rem;
-    }
-    
-    .terms-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .terms-section__accent {
-        height: 25px;
-    }
-    
-    .terms-section {
-        padding: 20px 15px;
-    }
-    
-    .terms-section__body {
-        padding-left: 9px;
-    }
-    
-    .terms-section__body p,
-    .terms-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .terms-agreement__box {
-        padding: 25px 15px;
-    }
-    
-    .terms-agreement__text {
-        font-size: 1rem;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-verify-sellers.css`
-
-**Status:** `FOUND`
-
-```css
-/* Admin Verify Sellers Styles */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    min-height: calc(100vh - 200px);
-}
-
-/* Page Title Header */
-.page-title-header {
-    width: 100%;
-    margin: 20px 0 30px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.page-title-header h1 {
-    font-size: 2rem;
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* Filter Tabs */
-.filter-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-}
-
-.filter-tab {
-    padding: 8px 20px;
-    background: #ffffff;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #666666;
-    transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.filter-tab:hover {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
-}
-
-.filter-tab.active {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-}
-
-/* Sellers Grid */
-.sellers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 20px 0;
-}
-
-/* Seller Card */
-.seller-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-}
-
-.seller-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #FF8246;
-}
-
-.seller-header {
-    padding: 20px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.seller-header h3 {
-    font-size: 1.2rem;
-    color: #000000;
-    margin: 0;
-    font-weight: 600;
-}
-
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-badge.pending {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.status-badge.verified {
-    background: #000000;
-    color: #ffffff;
-}
-
-.status-badge.rejected {
-    background: #666666;
-    color: #ffffff;
-}
-
-.seller-body {
-    padding: 20px;
-}
-
-.seller-body p {
-    margin: 8px 0;
-    font-size: 0.95rem;
-    color: #000000;
-}
-
-.seller-body strong {
-    color: #666666;
-    min-width: 70px;
-    display: inline-block;
-}
-
-.seller-actions {
-    padding: 15px 20px;
-    background: #f8f8f8;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
-.btn-verify,
-.btn-reject {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s ease;
-}
-
-.btn-verify {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-verify:hover {
-    background: #e66a2e;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.3);
-}
-
-.btn-reject {
-    background: #000000;
-    color: #ffffff;
-}
-
-.btn-reject:hover {
-    background: #333333;
-}
-
-.btn-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1);
-}
-
-.status-message {
-    color: #666666;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* Empty State */
-.empty-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    width: 100%;
-}
-
-.empty-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-}
-
-.empty-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.empty-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 10px;
-}
-
-.empty-state p {
-    color: #666666;
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-.empty-state-hint {
-    margin-top: 15px;
-    font-style: italic;
-    color: #999999;
-}
-
-/* Loading State */
-.loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666666;
-    font-size: 1rem;
-}
-
-.loading::after {
-    content: '...';
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* Modal */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeScale 0.3s ease;
-}
-
-@keyframes fadeScale {
-    0% { opacity: 0; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.modal-icon {
-    margin-bottom: 20px;
-}
-
-.modal-icon img {
-    width: 60px;
-    height: 60px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.modal-message {
-    font-size: 1rem;
-    margin-bottom: 25px;
-    color: #000000;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.modal-btn-confirm {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.modal-btn-confirm:hover {
-    background: #e66a2e;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .sellers-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .seller-actions {
-        flex-direction: column;
-    }
-    
-    .btn-verify,
-    .btn-reject {
-        width: 100%;
-        justify-content: center;
-    }
-}
 ```
 
 ---

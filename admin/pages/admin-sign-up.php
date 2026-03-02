@@ -1,10 +1,10 @@
 <?php
+// Admin Sign Up Page - Modified to allow access even when logged in
 session_start();
 
-if (isset($_SESSION['admin_id'])) {
-    header('Location: admin-dashboard.php');
-    exit;
-}
+// REMOVED the redirect that sent logged-in admins back to dashboard.
+// Now both logged-in and non-logged-in users can access this page.
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,11 +24,12 @@ if (isset($_SESSION['admin_id'])) {
     <div class="content">
         <div class="pageTitleHeader">Admin Registration</div>
 
-        <form id="signupForm" class="signup-container" method="POST" autocomplete="on">
+        <form id="signupForm" class="signup-container" method="POST" action="../database/admin-sign-up-handler.php"
+            autocomplete="on">
             <input type="hidden" name="action" value="signup">
 
             <!-- Two-column layout -->
-            <div class="form-section">
+            <div class="form-section personal-info-section">
                 <h3>Personal Information</h3>
 
                 <div class="form-group">
@@ -49,13 +50,9 @@ if (isset($_SESSION['admin_id'])) {
                     <label for="contact_number">Contact Number *</label>
                     <input type="tel" id="contact_number" name="contact_number" required placeholder="09XX XXX XXXX"
                         autocomplete="tel">
-                    <div class="help-text">Philippine mobile number (e.g., 09123456789)</div>
+                    <div class="help-text">Philippine mobile number (e.g., 0912 345 6789)</div>
                     <div class="error-message" id="contactError"></div>
                 </div>
-            </div>
-
-            <div class="form-section">
-                <h3>Account Information</h3>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
@@ -71,6 +68,10 @@ if (isset($_SESSION['admin_id'])) {
                     <div class="help-text">3-20 characters (letters, numbers, underscore)</div>
                     <div class="error-message" id="usernameError"></div>
                 </div>
+            </div>
+
+            <div class="form-section account-info-section">
+                <h3>Account Security</h3>
 
                 <div class="form-group">
                     <label for="password">Password *</label>
@@ -99,13 +100,11 @@ if (isset($_SESSION['admin_id'])) {
                     </div>
                     <div class="error-message" id="confirmError"></div>
                 </div>
-            </div>
 
-            <!-- Buttons Section - Full width -->
-            <div class="form-section full-width-section">
+                <!-- Buttons inside Account Information column at the bottom -->
                 <div class="btn-container">
                     <button type="submit" class="btn btn-primary">Register Admin</button>
-                    <button type="reset" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                    <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
                 </div>
 
                 <div class="links-group">

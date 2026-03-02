@@ -2,17 +2,22 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // DOM Elements
-    const editBtn = document.getElementById('editCancelBtn');
+    const editBtn = document.getElementById('editProfileBtn');
     const saveBtn = document.getElementById('saveProfileBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
     const profileForm = document.getElementById('profileForm');
-    const profileActions = document.getElementById('profileActions');
+    
+    // Action containers
+    const editButtonDiv = document.getElementById('editProfileBtn');
+    const profileActionsDiv = document.getElementById('profileActions');
     
     // Get editable inputs in Personal Info card
     const editableInputs = document.querySelectorAll('.personal-info-card input:not([type="hidden"])');
     
     // Profile picture elements
     const profilePicInput = document.getElementById('profile_picture');
+    const profilePicTrigger = document.getElementById('profile_picture_trigger');
     const profilePicPreview = document.getElementById('profilePicturePreview');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
     
@@ -46,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = value;
             }
         } else {
-            // Remove non-digits for other formats
             input.value = value;
         }
     }
@@ -63,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalIcon) {
             modalIcon.className = 'modal-icon ' + (isError ? 'error-icon' : 'success-icon');
             modalIcon.innerHTML = isError 
-                ? '<img src="../assets/image/icons/error.svg" alt="Error">'
+                ? '<img src="../assets/image/icons/cancel.svg" alt="Error">'
                 : '<img src="../assets/image/icons/check-circle.svg" alt="Success">';
         }
         modal.style.display = 'flex';
@@ -97,13 +101,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== ENABLE EDIT MODE =====
     function enableEditMode() {
         isEditMode = true;
-        editBtn.style.display = 'none';
-        profileActions.style.display = 'block';
+        
+        // Hide edit button, show action buttons
+        if (editButtonDiv) editButtonDiv.style.display = 'none';
+        if (profileActionsDiv) profileActionsDiv.style.display = 'flex';
         
         // Enable all editable inputs
         editableInputs.forEach(field => {
             field.disabled = false;
         });
+        
+        // Show avatar edit overlay
+        const avatarEdit = document.getElementById('profilePictureUpload');
+        if (avatarEdit) avatarEdit.style.display = 'flex';
         
         pictureChanged = false;
     }
@@ -111,17 +121,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== DISABLE EDIT MODE =====
     function disableEditMode(restore = true) {
         isEditMode = false;
-        editBtn.style.display = 'flex';
-        profileActions.style.display = 'none';
+        
+        // Show edit button, hide action buttons
+        if (editButtonDiv) editButtonDiv.style.display = 'flex';
+        if (profileActionsDiv) profileActionsDiv.style.display = 'none';
         
         // Disable all editable inputs
         editableInputs.forEach(field => {
             field.disabled = true;
         });
         
+        // Hide avatar edit overlay
+        const avatarEdit = document.getElementById('profilePictureUpload');
+        if (avatarEdit) avatarEdit.style.display = 'none';
+        
         // Clear file input and filename
         if (profilePicInput) {
             profilePicInput.value = '';
+        }
+        if (profilePicTrigger) {
+            profilePicTrigger.value = '';
         }
         if (fileNameDisplay) {
             fileNameDisplay.style.display = 'none';
@@ -141,53 +160,92 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Reset save button state
+        if (saveBtn) saveBtn.disabled = true;
         pictureChanged = false;
     }
 
     // ===== PROFILE PICTURE HANDLING =====
+    function handleProfilePictureSelect(file) {
+        if (file) {
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                showModal('File size must be less than 2MB', true);
+                return false;
+            }
+            
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showModal('Please upload a valid image (JPG, PNG, GIF, WEBP)', true);
+                return false;
+            }
+            
+            fileNameDisplay.style.display = 'block';
+            fileNameDisplay.textContent = 'New photo selected: ' + file.name;
+            pictureChanged = true;
+            
+            // Enable save button if in edit mode
+            if (saveBtn) saveBtn.disabled = false;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (profilePicPreview) {
+                    profilePicPreview.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+            return true;
+        }
+        return false;
+    }
+
+    // Connect both file inputs to the same handler
     if (profilePicInput) {
         profilePicInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                // Validate file size (2MB max)
-                if (file.size > 2 * 1024 * 1024) {
-                    showModal('File size must be less than 2MB', true);
-                    this.value = '';
-                    return;
-                }
-                
-                // Validate file type
-                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                if (!validTypes.includes(file.type)) {
-                    showModal('Please upload a valid image (JPG, PNG, GIF)', true);
-                    this.value = '';
-                    return;
-                }
-                
-                fileNameDisplay.style.display = 'block';
-                fileNameDisplay.textContent = file.name;
-                pictureChanged = true;
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (profilePicPreview) {
-                        profilePicPreview.src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.style.display = 'none';
-                fileNameDisplay.textContent = '';
-                pictureChanged = false;
+            if (this.files[0]) {
+                handleProfilePictureSelect(this.files[0]);
             }
         });
     }
+
+    if (profilePicTrigger) {
+        profilePicTrigger.addEventListener('change', function() {
+            if (this.files[0]) {
+                // Sync the visible input with the trigger
+                if (profilePicInput) {
+                    // Create a DataTransfer to copy the file
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(this.files[0]);
+                    profilePicInput.files = dataTransfer.files;
+                }
+                handleProfilePictureSelect(this.files[0]);
+            }
+        });
+    }
+
+    // Upload photo button click handler
+    if (uploadPhotoBtn) {
+        uploadPhotoBtn.addEventListener('click', function() {
+            if (profilePicTrigger) {
+                profilePicTrigger.click();
+            } else if (profilePicInput) {
+                profilePicInput.click();
+            }
+        });
+    }
+
+    // Hide avatar edit overlay by default
+    const avatarEdit = document.getElementById('profilePictureUpload');
+    if (avatarEdit) avatarEdit.style.display = 'none';
 
     // ===== PHONE NUMBER INPUT HANDLING =====
     if (contactInput) {
         contactInput.addEventListener('input', function() {
             if (isEditMode) {
                 formatPhilippineNumber(this);
+                // Enable save button when changes are made
+                if (saveBtn) saveBtn.disabled = false;
             }
         });
         
@@ -216,6 +274,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', function() {
             disableEditMode(true);
+        });
+    }
+
+    // ===== INPUT CHANGE HANDLERS - Enable save button =====
+    if (firstNameInput) {
+        firstNameInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
+            this.style.borderColor = '';
+            document.getElementById('firstNameError').textContent = '';
+            document.getElementById('firstNameError').style.display = 'none';
+        });
+    }
+
+    if (lastNameInput) {
+        lastNameInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
+            this.style.borderColor = '';
+            document.getElementById('lastNameError').textContent = '';
+            document.getElementById('lastNameError').style.display = 'none';
+        });
+    }
+
+    if (contactInput) {
+        contactInput.addEventListener('input', function() {
+            if (isEditMode && saveBtn) saveBtn.disabled = false;
         });
     }
 
@@ -269,12 +352,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Disable button and show loading state
             saveBtn.disabled = true;
-            const originalText = saveBtn.textContent;
-            saveBtn.textContent = 'Saving...';
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<span class="btn-text">Saving...</span>';
 
             const formData = new FormData(profileForm);
 
             try {
+                // FIXED: Correct path to admin-profile-handler.php
                 const response = await fetch('../database/admin-profile-handler.php', {
                     method: 'POST',
                     body: formData
@@ -298,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         storeOriginalValues();
                         disableEditMode(false);
-                        saveBtn.textContent = originalText;
+                        saveBtn.innerHTML = originalText;
                         
                         // If picture changed, reload to update header
                         if (pictureChanged) {
@@ -311,39 +395,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     showModal(result.message || 'Update failed. Please try again.', true);
                     saveBtn.disabled = false;
-                    saveBtn.textContent = originalText;
+                    saveBtn.innerHTML = originalText;
                 }
             } catch (error) {
                 console.error('Error saving profile:', error);
                 showModal('Network error. Please check your connection and try again.', true);
                 saveBtn.disabled = false;
-                saveBtn.textContent = originalText;
+                saveBtn.innerHTML = originalText;
             }
-        });
-    }
-
-    // ===== INPUT ERROR CLEARING =====
-    if (firstNameInput) {
-        firstNameInput.addEventListener('input', function() {
-            this.style.borderColor = '';
-            document.getElementById('firstNameError').textContent = '';
-            document.getElementById('firstNameError').style.display = 'none';
-        });
-    }
-
-    if (lastNameInput) {
-        lastNameInput.addEventListener('input', function() {
-            this.style.borderColor = '';
-            document.getElementById('lastNameError').textContent = '';
-            document.getElementById('lastNameError').style.display = 'none';
-        });
-    }
-
-    if (contactInput) {
-        contactInput.addEventListener('input', function() {
-            this.style.borderColor = '';
-            document.getElementById('contactError').textContent = '';
-            document.getElementById('contactError').style.display = 'none';
         });
     }
 
@@ -357,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ctrl+S or Cmd+S saves
         if ((e.ctrlKey || e.metaKey) && e.key === 's' && isEditMode) {
             e.preventDefault();
-            if (!saveBtn.disabled) {
+            if (saveBtn && !saveBtn.disabled) {
                 saveBtn.click();
             }
         }

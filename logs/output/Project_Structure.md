@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-03 01:50:10
+**Generated:** 2026-03-03 04:22:10
 **Mode:** all
 
 ```
@@ -83,6 +83,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-sign-in-handler.php
 │   │   ├── admin-sign-out-handler.php
 │   │   ├── admin-sign-up-handler.php
+│   │   ├── error_log.txt
 │   │   └── validation.php
 │   ├── includes/
 │   │   ├── admin-footer.php
@@ -184,6 +185,10 @@ Crooks-Cart-Collectives/
 │       │   ├── rylle-bernardino.png
 │       │   └── william-aranez.png
 │       └── Logo.png
+├── Crooks-Data-Storage/
+│   └── administrators/
+│       └── 2/
+│           └── profile/
 ├── database/
 │   ├── schema/
 │   │   ├── dbCreation.sql
@@ -208,11 +213,14 @@ Crooks-Cart-Collectives/
 ├── logs/
 │   ├── content-fetcher-configuration/
 │   │   ├── admin_path.py
+│   │   ├── all_path.py
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
 │   │   ├── admin_path_Summary.md
-│   │   └── Project_Structure.md
+│   │   ├── all_path_Summary.md
+│   │   ├── Project_Structure.md
+│   │   └── windows-preset_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -302,12 +310,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 35 |
 | JavaScript Files | 27 |
 | JSON Files | 0 |
-| Text/Markdown | 5 |
+| Text/Markdown | 8 |
 | Image Files | 120 |
-| Other Files | 13 |
+| Other Files | 14 |
 
-**Total Directories:** 25
-**Total Files:** 258
+**Total Directories:** 29
+**Total Files:** 262
 
 ---
 

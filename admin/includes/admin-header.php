@@ -25,11 +25,23 @@ if ($is_includes) {
 // Get admin info for profile display
 $adminName = '';
 $adminProfilePic = $pathPrefix . 'assets/image/icons/user-profile-circle.svg';
+
 if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
     $adminName = $_SESSION['admin_first_name'] . ' ' . ($_SESSION['admin_last_name'] ?? '');
     
-    // In a real implementation, you would fetch the actual profile picture from database
-    // $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_pic'] ?? '');
+    // Get profile picture from session or database
+    if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
+        // Include the data storage handler to use the function
+        require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
+        
+        // Check if the function exists before calling it
+        if (function_exists('getAdminProfilePictureUrl')) {
+            $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_picture']);
+        } else {
+            // Fallback if function doesn't exist
+            $adminProfilePic = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($_SESSION['admin_profile_picture']);
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -53,7 +65,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
             <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <div class="admin-profile-mini">
-                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar">
+                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar"
+                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg';">
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
