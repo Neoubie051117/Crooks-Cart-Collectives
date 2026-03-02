@@ -1,4 +1,4 @@
-// customer-profile.js - Fixed for edit functionality and name refresh after save
+// customer-profile.js - Fixed with birthdate validation
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -29,11 +29,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstNameInput = document.getElementById('first_name');
     const lastNameInput = document.getElementById('last_name');
     const addressInput = document.getElementById('address');
+    const birthdateInput = document.getElementById('birthdate');
 
     // State
     let isEditMode = false;
     let originalValues = {};
     let pictureChanged = false;
+
+    // ===== BIRTHDATE VALIDATION FUNCTIONS =====
+    function calculateAge(birthdate) {
+        const birthDate = new Date(birthdate);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    function isValidAge(birthdate) {
+        if (!birthdate) return false;
+        
+        const age = calculateAge(birthdate);
+        return age >= 13 && age <= 120;
+    }
+
+    function validateBirthdate(birthdate) {
+        if (!birthdate) {
+            return { valid: false, message: 'Birthdate is required.' };
+        }
+        
+        const age = calculateAge(birthdate);
+        
+        if (age < 13) {
+            return { valid: false, message: 'You must be at least 13 years old.' };
+        }
+        
+        if (age > 120) {
+            return { valid: false, message: 'Please enter a valid birthdate.' };
+        }
+        
+        return { valid: true, message: '' };
+    }
+
+    function highlightField(field, isValid) {
+        if (!field) return;
+        
+        if (!isValid) {
+            field.style.borderColor = '#FF8246';
+            field.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+        } else {
+            field.style.borderColor = '';
+            field.style.boxShadow = '';
+        }
+    }
 
     // Modal functions
     function showModal(message) {
@@ -81,6 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
             field.disabled = false;
         });
         pictureChanged = false;
+        
+        // Clear any existing validation highlights
+        if (birthdateInput) {
+            highlightField(birthdateInput, true);
+        }
     }
 
     // Disable edit mode
@@ -115,6 +171,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 profilePicPreview.src = originalValues.profile_picture;
             }
         }
+        
+        // Clear validation highlights
+        if (birthdateInput) {
+            highlightField(birthdateInput, true);
+        }
+        
         pictureChanged = false;
     }
 
@@ -150,6 +212,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Real-time birthdate validation when in edit mode
+    if (birthdateInput) {
+        birthdateInput.addEventListener('input', function() {
+            if (!isEditMode) return;
+            
+            const validation = validateBirthdate(this.value);
+            highlightField(this, validation.valid);
+        });
+        
+        birthdateInput.addEventListener('blur', function() {
+            if (!isEditMode) return;
+            
+            if (this.value) {
+                const validation = validateBirthdate(this.value);
+                highlightField(this, validation.valid);
+            }
+        });
+    }
+
     // Edit/Cancel button
     if (editBtn) {
         editBtn.addEventListener('click', function() {
@@ -170,9 +251,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const firstName = firstNameInput ? firstNameInput.value.trim() : '';
             const lastName = lastNameInput ? lastNameInput.value.trim() : '';
             const address = addressInput ? addressInput.value.trim() : '';
+            const birthdate = birthdateInput ? birthdateInput.value : '';
 
             if (!firstName || !lastName || !address) {
                 showModal('First name, last name, and address are required.');
+                return;
+            }
+
+            // Validate birthdate
+            if (birthdate) {
+                const validation = validateBirthdate(birthdate);
+                if (!validation.valid) {
+                    highlightField(birthdateInput, false);
+                    showModal(validation.message);
+                    return;
+                }
+            } else {
+                highlightField(birthdateInput, false);
+                showModal('Birthdate is required.');
                 return;
             }
 
@@ -228,6 +324,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 showModal('Network error. Please check your connection and try again.');
                 saveBtn.disabled = false;
                 saveBtn.textContent = originalText;
+            }
+        });
+    }
+
+    // Prevent invalid date entry (optional - adds additional keyboard validation)
+    if (birthdateInput) {
+        birthdateInput.addEventListener('keydown', function(e) {
+            // Allow navigation keys, backspace, delete, tab
+            const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Backspace', 'Delete', 'Tab', 'Home', 'End'];
+            
+            if (allowedKeys.includes(e.key)) {
+                return;
+            }
+            
+            // Prevent entering letters in date field (browser usually handles this, but just in case)
+            if (e.key.length === 1 && !/[0-9-]/.test(e.key)) {
+                e.preventDefault();
             }
         });
     }

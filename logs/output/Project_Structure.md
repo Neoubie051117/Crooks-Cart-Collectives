@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-02 06:21:18
+**Generated:** 2026-03-02 17:40:52
 **Mode:** all
 
 ```
@@ -12,8 +12,6 @@ Crooks-Cart-Collectives/
 │       ├── brand/
 │       │   └── Logo.png
 │       ├── icons/
-│       │   ├── Showcase1.png
-│       │   ├── Showcase2.png
 │       │   ├── about-empty.svg
 │       │   ├── about-filled.svg
 │       │   ├── add-circle-empty.svg
@@ -49,6 +47,8 @@ Crooks-Cart-Collectives/
 │       │   ├── save-empty.svg
 │       │   ├── save-filled.svg
 │       │   ├── seller-product-placeholder.png
+│       │   ├── Showcase1.png
+│       │   ├── Showcase2.png
 │       │   ├── star-empty.svg
 │       │   ├── star-filled.svg
 │       │   ├── submit-picture-icon.png
@@ -95,14 +95,13 @@ Crooks-Cart-Collectives/
 │   ├── sign-up-handler.php
 │   └── validation.php
 ├── logs/
-│   ├── backend/
 │   ├── content-fetcher-configuration/
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
 │   │   ├── 0.0.17.md
-│   │   ├── Project_Structure.md
-│   │   └── linux-path_Summary.md
+│   │   ├── linux-path_Summary.md
+│   │   └── Project_Structure.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -178,9 +177,9 @@ Crooks-Cart-Collectives/
 │   ├── sign-up.css
 │   └── terms-and-conditions.css
 ├── .gitignore
+├── index.php
 ├── LICENSE
-├── README.md
-└── index.php
+└── README.md
 ```
 
 ## Summary
@@ -196,7 +195,7 @@ Crooks-Cart-Collectives/
 | Image Files | 60 |
 | Other Files | 12 |
 
-**Total Directories:** 15
+**Total Directories:** 14
 **Total Files:** 158
 
 ---

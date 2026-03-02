@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-manage-product.js */
-/* Fixed: Replaced window alert with modal confirmation for delete */
+/* Revised with consistent modal styling and empty state handling */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -8,47 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteButtons = document.querySelectorAll('.delete-btn');
     
     // Modal Elements
-    const deleteModal = document.createElement('div');
-    deleteModal.className = 'modal';
-    deleteModal.id = 'deleteConfirmModal';
-    deleteModal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-icon">
-                <img src="../assets/image/icons/trash.svg" alt="Delete">
-            </div>
-            <h3 class="modal-title">Confirm Delete</h3>
-            <p class="modal-message">Are you sure you want to delete this product? This action cannot be undone.</p>
-            <div class="modal-actions">
-                <button id="cancelDelete" class="modal-btn modal-btn-cancel">Cancel</button>
-                <button id="confirmDelete" class="modal-btn modal-btn-confirm">Delete</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(deleteModal);
-
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const notificationModal = document.getElementById('notificationModal');
+    
     const cancelDelete = document.getElementById('cancelDelete');
     const confirmDelete = document.getElementById('confirmDelete');
-
-    // Notification Modal (reuse existing or create new)
-    let notificationModal = document.getElementById('notificationModal');
-    if (!notificationModal) {
-        notificationModal = document.createElement('div');
-        notificationModal.className = 'modal';
-        notificationModal.id = 'notificationModal';
-        notificationModal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-icon">
-                    <img src="../assets/image/icons/mail.svg" alt="Notification">
-                </div>
-                <p id="notificationMessage" class="modal-message"></p>
-                <div class="modal-actions">
-                    <button id="notificationClose" class="modal-btn modal-btn-confirm">OK</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(notificationModal);
-    }
-
     const notificationMessage = document.getElementById('notificationMessage');
     const notificationClose = document.getElementById('notificationClose');
 
@@ -69,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
             document.body.style.overflow = '';
         }
+    }
+
+    function hideAllModals() {
+        hideModal(deleteModal);
+        hideModal(notificationModal);
+        currentProductId = null;
     }
 
     function showNotification(message, isError = false) {
@@ -161,12 +131,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Close modal when clicking outside
-    deleteModal.addEventListener('click', function(e) {
-        if (e.target === deleteModal) {
-            hideModal(deleteModal);
-            currentProductId = null;
-        }
-    });
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                hideModal(deleteModal);
+                currentProductId = null;
+            }
+        });
+    }
 
     if (notificationModal) {
         notificationModal.addEventListener('click', function(e) {
@@ -186,9 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            hideModal(deleteModal);
-            hideModal(notificationModal);
-            currentProductId = null;
+            hideAllModals();
         }
     });
 });

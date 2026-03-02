@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../database/database-connect.php');
-require_once('../database/data-storage-handler.php'); // Add this for getFileUrl()
+require_once('../database/data-storage-handler.php');
 
 // Fetch all active products
 $products = [];
@@ -36,17 +36,20 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/product.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/product.css">
 </head>
 
 <body>
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <div class="pageTitleHeader">Shop Products</div>
-        
-        <!-- Filter Tabs - CSS copied from orders filter tabs -->
+        <div class="page-title-header">
+            <h1>Shop Products</h1>
+        </div>
+
+        <?php if (!empty($products)): ?>
+        <!-- Filter Tabs - Only shown when products exist -->
         <div class="filter-tabs" id="filterTabs">
             <span class="filter-tab active" data-filter="all">All Products</span>
             <?php foreach ($categories as $category): ?>
@@ -56,55 +59,50 @@ try {
             <?php endforeach; ?>
         </div>
 
-        <!-- Products Grid - Styled like seller-manage-product but with single button -->
+        <!-- Products Grid -->
         <div class="products-grid" id="productsGrid">
-            <?php if (!empty($products)): ?>
-                <?php foreach ($products as $product): ?>
-                <div class="product-card" data-category="<?php echo htmlspecialchars(strtolower($product['category'])); ?>">
-                    <?php 
-                    // FIXED: Use getFileUrl() to properly serve the image - copied from seller-manage-product.php
-                    $imageUrl = '../assets/image/icons/PlaceholderAssetProduct.png';
-                    
-                    if (!empty($product['media_path'])) {
-                        // Ensure media_path has trailing slash
-                        $mediaDir = rtrim($product['media_path'], '/') . '/';
-                        // Use the data-storage-handler to get the proper URL
-                        $imageUrl = getFileUrl($mediaDir, 'thumbnail_1.png');
-                        if (empty($imageUrl) || strpos($imageUrl, 'placeholder') !== false) {
-                            // Fallback to placeholder if no image found
-                            $imageUrl = '../assets/image/icons/PlaceholderAssetProduct.png';
-                        }
-                    } elseif (!empty($product['image_path'])) {
-                        // Legacy image path handling
-                        if (strpos($product['image_path'], 'assets/') === 0) {
-                            $imageUrl = '../' . $product['image_path'];
-                        } else {
-                            $imageUrl = '../' . $product['image_path'];
-                        }
+            <?php foreach ($products as $product): ?>
+            <div class="product-card" data-category="<?php echo htmlspecialchars(strtolower($product['category'])); ?>">
+                <?php 
+                $imageUrl = '../assets/image/icons/PlaceholderAssetProduct.png';
+                
+                if (!empty($product['media_path'])) {
+                    $mediaDir = rtrim($product['media_path'], '/') . '/';
+                    $imageUrl = getFileUrl($mediaDir, 'thumbnail_1.png');
+                    if (empty($imageUrl) || strpos($imageUrl, 'placeholder') !== false) {
+                        $imageUrl = '../assets/image/icons/PlaceholderAssetProduct.png';
                     }
-                    ?>
-                    <img src="<?php echo htmlspecialchars($imageUrl); ?>" 
-                         alt="<?php echo htmlspecialchars($product['name']); ?>" 
-                         class="product-image"
-                         onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
-                    <div class="product-info">
-                        <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
-                        <p class="product-price">₱<?php echo number_format($product['price'], 2); ?></p>
-                        <p class="product-seller">Seller: <?php echo htmlspecialchars($product['business_name']); ?></p>
-                        <p class="product-stock">Stock: <?php echo (int)$product['stock_quantity']; ?></p>
-                        <!-- Single button only - View Details -->
-                        <div class="product-actions">
-                            <a href="product-details.php?id=<?php echo $product['product_id']; ?>" class="view-btn">View Details</a>
-                        </div>
+                }
+                ?>
+                <div class="product-image-container">
+                    <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                        alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
+                        onerror="this.onerror=null; this.src='../assets/image/icons/PlaceholderAssetProduct.png';">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <p class="product-price">₱<?php echo number_format($product['price'], 2); ?></p>
+                    <p class="product-seller">Seller: <?php echo htmlspecialchars($product['business_name']); ?></p>
+                    <p class="product-stock">Stock: <?php echo (int)$product['stock_quantity']; ?></p>
+                    <div class="product-actions">
+                        <a href="product-detail.php?id=<?php echo $product['product_id']; ?>"
+                            class="btn btn-primary">View Details</a>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="no-products">
-                    <p>No products available at the moment.</p>
-                </div>
-            <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
         </div>
+        <?php else: ?>
+        <!-- Empty State - Full width container -->
+        <div class="empty-state">
+            <div class="empty-state-content">
+                <img src="../assets/image/icons/package.svg" alt="No products" class="empty-state-icon">
+                <h2>No Products Available</h2>
+                <p>There are no products available at the moment.</p>
+                <a href="../index.php" class="btn btn-primary">Return to Home</a>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 
     <?php include_once('footer.php'); ?>

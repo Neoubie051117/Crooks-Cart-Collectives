@@ -1,5 +1,5 @@
-/* Crooks-Cart-Collectives/scripts/seller-orders.js */
-/* Revised with fixed image fetching - now properly fetches thumbnail 1 */
+/* Crooks-Cart-Collectives/scripts/seller-process-order.js */
+/* Revised with filter tabs hidden when no orders */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('sellerOrdersList');
     const filterTabs = document.querySelectorAll('.filter-tab');
+    const filterTabsContainer = document.getElementById('filterTabs');
     
-    // Confirmation Modal Elements (seller version)
+    // Confirmation Modal Elements
     const confirmModal = document.getElementById('confirmModal');
     const confirmTitle = document.getElementById('confirmTitle');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -85,6 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============= SHOW/HIDE FILTER TABS =============
+    function updateFilterTabsVisibility() {
+        if (!filterTabsContainer) return;
+        
+        if (allOrders && allOrders.length > 0) {
+            filterTabsContainer.style.display = 'flex';
+        } else {
+            filterTabsContainer.style.display = 'none';
+        }
+    }
+
     // ============= LOAD ORDERS =============
     async function loadOrders() {
         if (!ordersList) return;
@@ -97,13 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (result.status === 'success') {
                 allOrders = result.data;
+                updateFilterTabsVisibility();
                 filterOrders(currentFilter);
             } else {
-                ordersList.innerHTML = '<div class="empty-orders"><p>Failed to load orders. Please try again.</p></div>';
+                allOrders = [];
+                updateFilterTabsVisibility();
+                ordersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Failed to load orders. Please try again.</p></div></div>';
             }
         } catch (error) {
             console.error('Error loading orders:', error);
-            ordersList.innerHTML = '<div class="empty-orders"><p>Network error. Please check your connection.</p></div>';
+            allOrders = [];
+            updateFilterTabsVisibility();
+            ordersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Network error. Please check your connection.</p></div></div>';
         }
     }
 
@@ -120,21 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
-    // ============= FIXED: GET IMAGE PATH FOR THUMBNAIL 1 =============
+    // ============= GET IMAGE PATH =============
     function getProductImageUrl(mediaPath) {
         if (!mediaPath) {
             return '../assets/image/icons/package.svg';
         }
         
-        // Check if it's a directory path (ends with /media/)
         if (mediaPath.includes('/media/')) {
-            // Ensure trailing slash
             const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
-            // Return URL with thumbnail_1.png (or .jpg) - let PHP handle finding the actual file
             return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
         }
         
-        // Direct file path
         if (mediaPath.startsWith('assets/')) {
             return '../' + mediaPath;
         }
@@ -162,8 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
-                <div class="empty-orders">
-                    <p>No orders found.</p>
+                <div class="empty-state">
+                    <div class="empty-state-content">
+                        <img src="../assets/image/icons/order.svg" alt="No orders" class="empty-state-icon">
+                        <h2>No Orders Found</h2>
+                        <p>You haven't received any orders yet.</p>
+                    </div>
                 </div>
             `;
             return;
@@ -176,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
             const statusClass = order.status.toLowerCase();
             
-            // FIXED: Use the new function to get image URL
             const imagePath = getProductImageUrl(order.image_path);
             
             const customerName = `${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')}`.trim() || 'Customer';
@@ -184,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const subtotal = Number(order.subtotal).toFixed(2);
             const total = Number(order.subtotal).toFixed(2);
 
-            // Build event activity – includes placed, delivered, cancelled timestamps
             let eventHtml = '';
             eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
 
@@ -198,37 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cancelledBy = order.cancelled_by === 'customer' ? 'Customer' : 'Seller';
                 eventHtml += `<div class="event-item cancelled-event"><span class="event-icon"><img src="../assets/image/icons/cancel.svg" alt="Cancelled" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">${cancelledBy} cancelled: ${cancelledDate}</span></div>`;
             }
-           // Shipping column
-            const shippingHtml = `
-                <div class="order-shipping-column">
-                    <div class="column-title">Customer Details</div>
-                    <div class="shipping-details">
-                        <p class="customer-name">
-                            <strong>Name:</strong> ${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')}
-                        </p>
-                        <p class="shipping-address-text">
-                            <strong>Address:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}
-                        </p>
-                        <p class="customer-contact">
-                            <strong>Contact:</strong> ${escapeHtml(order.contact_number || 'N/A')}
-                        </p>
-                        <p class="customer-email">
-                            <strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}
-                        </p>
-                        <!-- Edit controls hidden (not needed for seller) -->
-                        <div class="shipping-edit-controls" style="display: none;">
-                            <textarea class="shipping-edit-textarea" style="display: none;">${escapeHtml(order.shipping_address || '')}</textarea>
-                            <div class="shipping-buttons">
-                                <button class="action-btn edit-shipping" style="display: none;">Edit</button>
-                                <button class="action-btn save-shipping" style="display: none;">Save</button>
-                                <button class="action-btn reset-shipping" style="display: none;">Reset</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
 
-            // Start order card
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
@@ -237,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="order-date">${orderDate}</span>
                         </div>
                         <div class="order-header-right">
+                            <span class="customer-info">${customerName}</span>
                             <span class="order-status-badge ${statusClass}">${displayStatus}</span>
                         </div>
                     </div>
@@ -250,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                      onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
                                 <div class="product-info">
                                     <h4>${escapeHtml(order.product_name)}</h4>
-                                    <p><span class="info-label">Customer:</span> ${customerName}</p>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
                                     <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>
                                 </div>
@@ -264,7 +249,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
-                        ${shippingHtml}
+                        <div class="order-shipping-column">
+                            <div class="column-title">Customer Details</div>
+                            <div class="shipping-details">
+                                <p><strong>Name:</strong> ${customerName}</p>
+                                <p class="shipping-address-text"><strong>Address:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}</p>
+                                <p><strong>Contact:</strong> ${escapeHtml(order.contact_number || 'N/A')}</p>
+                                <p><strong>Email:</strong> ${escapeHtml(order.email || 'N/A')}</p>
+                            </div>
+                        </div>
 
                         <div class="order-price-summary">
                             <div class="column-title">Order Summary</div>
@@ -285,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
             `;
 
-            // Action buttons – only shown for pending orders
+            // Action buttons - only shown for pending orders
             if (order.status === 'pending') {
                 html += `
                     <div class="order-actions">
@@ -298,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             }
-            // For non-pending orders, no actions are displayed at all
             
             html += `
                         </div>
@@ -313,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============= ATTACH EVENT LISTENERS =============
     function attachEventListeners() {
-        // Deliver button (class "complete" now)
         document.querySelectorAll('.action-btn.complete').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -329,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Cancel button
         document.querySelectorAll('.action-btn.cancel').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -373,9 +363,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification(`Order marked as ${currentAction} successfully`);
                 hideModal(confirmModal);
                 
-                // 1 second delay before reloading orders
                 setTimeout(() => {
-                    loadOrders(); // refresh list
+                    loadOrders();
                 }, 1000);
             } else {
                 showNotification(result.message || 'Failed to update order', true);

@@ -160,7 +160,7 @@ try {
                     <p>Edit, update, or remove your existing listings</p>
                 </a>
 
-                <a href="seller-orders.php" class="action-card">
+                <a href="seller-process-order.php" class="action-card">
                     <div class="action-icon">
                         <img src="../assets/image/icons/order.svg" alt="View orders icon"
                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
@@ -175,7 +175,7 @@ try {
         <div class="recent-activity">
             <h2>
                 Recent Orders
-                <a href="seller-orders.php">View All</a>
+                <a href="seller-process-order.php">View All</a>
             </h2>
             <?php
             if (empty($recentOrders)) {
@@ -193,7 +193,8 @@ try {
                         <?= $order['quantity'] ?>)</p>
                     <small><?= $formattedDate ?></small>
                 </div>
-                <a href="seller-orders.php#order-<?= $order['order_id'] ?>" class="activity-link">View Details</a>
+                <a href="seller-process-order.php#order-<?= $order['order_id'] ?>" class="activity-link">View
+                    Details</a>
             </li>
             <?php
                 }

@@ -1,5 +1,5 @@
-/* Crooks-Cart-Collectives/styles/seller-orders.css */
-/* Revised with smooth modal animation and empty state from products.css */
+/* Crooks-Cart-Collectives/styles/seller-process-order.css */
+/* Unified styling with consistent page-title-header, cards, and empty state */
 
 * {
     margin: 0;
@@ -7,41 +7,50 @@
     box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e4eaf2;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .content {
-    width: 100%;
-    max-width: 100%;
+    flex: 1;
+    max-width: 1200px;
     margin: 100px auto 40px;
     padding: 0 20px;
-}
-
-.seller-header {
+    width: 100%;
+    min-height: calc(100vh - 200px);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 15px;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: column;
 }
 
-.page-title {
+/* ===== PAGE TITLE HEADER - Unified across all pages ===== */
+.page-title-header {
+    width: 100%;
+    margin: 20px 0 30px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #FF8246;
+}
+
+.page-title-header h1 {
     font-size: 2rem;
     color: #000000;
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
+    font-weight: 600;
+    margin: 0;
 }
 
+/* ===== FILTER TABS - Consistent styling ===== */
 .filter-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 30px;
-    flex-wrap: wrap;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    width: 100%;
 }
 
 .filter-tab {
@@ -51,9 +60,18 @@
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
-    border: 1px solid #e0e0e0;
-    color: #000000;
+    color: #666666;
     transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.filter-tab:hover {
+    background: #FF8246;
+    color: #ffffff;
+    border-color: #FF8246;
+    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
 }
 
 .filter-tab.active {
@@ -62,55 +80,27 @@
     border-color: #FF8246;
 }
 
-.seller-orders-list {
+/* ===== ORDERS LIST ===== */
+.orders-list {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 }
 
-/* ===== EMPTY STATE (copied from products.css) ===== */
-.empty-orders {
-    text-align: center;
-    padding: 50px 20px;
-    color: #666;
-    background: #f9f9f9;
-    border-radius: 8px;
-    margin: 20px 0;
-}
-
-.empty-orders p {
-    margin: 10px 0;
-    font-size: 16px;
-}
-
-.empty-orders .btn-primary {
-    display: inline-block;
-    padding: 12px 35px;
-    background: #FF8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 600;
-    border: 1px solid #FF8246;
-    transition: all 0.3s ease;
-}
-
-.empty-orders .btn-primary:hover {
-    background: #000000;
-    color: #ffffff;
-    border-color: #000000;
-}
-
-/* ===== ORDER CARD ===== */
+/* ===== ORDER CARD - Consistent styling with product cards ===== */
 .order-card {
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #e0e0e0;
     overflow: hidden;
     width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .order-header {
@@ -141,7 +131,7 @@
 }
 
 .order-date {
-    color: #000000;
+    color: #666666;
     font-size: 0.85rem;
     background: #e0e0e0;
     padding: 3px 10px;
@@ -164,7 +154,6 @@
     font-size: 0.9rem;
 }
 
-/* Status badge colors */
 .order-status-badge {
     padding: 4px 12px;
     border-radius: 30px;
@@ -196,7 +185,7 @@
     border-color: #000000;
 }
 
-/* ===== ORDER BODY - FULL WIDTH GRID ===== */
+/* ===== ORDER BODY - Four column layout ===== */
 .order-body {
     display: grid;
     grid-template-columns: 1.2fr 1.2fr 1.4fr 1fr;
@@ -205,11 +194,7 @@
     width: 100%;
 }
 
-/* Column Titles - consistent max-width underline for all */
-.order-product-column .column-title,
-.order-event-column .column-title,
-.order-shipping-column .column-title,
-.order-price-summary .column-title {
+.column-title {
     font-size: 1rem;
     font-weight: 600;
     color: #000000;
@@ -217,15 +202,13 @@
     padding-bottom: 8px;
     border-bottom: 2px solid #FF8246;
     display: block;
-    max-width: 100%;
+    width: 100%;
 }
 
 /* Column 1: Product Details */
 .order-product-column {
     background: #ffffff;
     padding: 20px;
-    min-height: 100%;
-    width: 100%;
     border-right: 1px solid #f0f0f0;
 }
 
@@ -255,7 +238,6 @@
 
 .product-info {
     flex: 1;
-    width: 100%;
 }
 
 .product-info h4 {
@@ -267,24 +249,20 @@
 
 .product-info p {
     font-size: 0.9rem;
-    color: #000000;
+    color: #666666;
     margin: 4px 0;
-    opacity: 0.8;
 }
 
 .info-label {
     font-weight: 500;
     color: #000000;
     margin-right: 5px;
-    opacity: 0.9;
 }
 
 /* Column 2: Event Activity */
 .order-event-column {
     background: #ffffff;
     padding: 20px;
-    min-height: 100%;
-    width: 100%;
     border-right: 1px solid #f0f0f0;
 }
 
@@ -296,7 +274,6 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    width: 100%;
 }
 
 .event-item {
@@ -306,7 +283,6 @@
     padding: 10px;
     border-radius: 8px;
     border: 1px solid transparent;
-    width: 100%;
 }
 
 .event-item.customer-event {
@@ -314,21 +290,17 @@
     border-color: #FF8246;
 }
 
-.event-item.cancelled-event {
-    background: #f0f0f0;
-    border-color: #000000;
-}
-
+.event-item.cancelled-event,
 .event-item.delivered-event {
     background: #f0f0f0;
     border-color: #000000;
 }
+
 .event-icon {
     font-size: 1.2rem;
     flex-shrink: 0;
     width: 20px;
     text-align: center;
-    color: #000000;
 }
 
 .event-text {
@@ -339,22 +311,18 @@
     word-break: break-word;
 }
 
-/* Column 3: Shipping */
+/* Column 3: Customer Details */
 .order-shipping-column {
     background: #ffffff;
     padding: 20px;
-    min-height: 100%;
-    width: 100%;
     border-right: 1px solid #f0f0f0;
 }
 
-/* Shipping details container - styled to match other content boxes */
 .shipping-details {
     background: #f9f9f9;
     border-radius: 10px;
     padding: 15px;
     border: 1px solid #f0f0f0;
-    width: 100%;
 }
 
 .shipping-details p {
@@ -380,19 +348,12 @@
     font-weight: 500;
 }
 
-.customer-contact,
-.customer-email {
-    opacity: 0.9;
-}
-
 /* Column 4: Price Summary */
 .order-price-summary {
     background: #f9f9f9;
     padding: 20px;
-    min-height: 100%;
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 
 .price-summary-details {
@@ -401,7 +362,6 @@
     padding: 15px;
     border: 1px solid #f0f0f0;
     margin-bottom: 15px;
-    width: 100%;
 }
 
 .price-row {
@@ -421,7 +381,6 @@
 .price-row.price-total {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #000000;
     margin-top: 5px;
     padding-top: 10px;
 }
@@ -447,7 +406,7 @@
     margin: 12px 0;
 }
 
-/* Order actions - only shown for pending orders */
+/* Order Actions */
 .order-actions {
     display: flex;
     flex-direction: column;
@@ -455,29 +414,41 @@
     margin-top: auto;
 }
 
+/* ===== BUTTONS - Consistent styling ===== */
 .action-btn {
     display: block;
     width: 100%;
     padding: 12px;
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     text-align: center;
-    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
 }
 
 .action-btn.complete {
-    color: #ffffff;
     background: #FF8246;
+    color: #ffffff;
     border-color: #FF8246;
+}
+
+.action-btn.complete:hover {
+    background: #e66a2e;
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
 }
 
 .action-btn.cancel {
     background: #000000;
     color: #ffffff;
+    border-color: #000000;
+}
+
+.action-btn.cancel:hover {
+    background: #333333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .action-btn:disabled {
@@ -488,36 +459,78 @@
     border-color: #cccccc;
 }
 
-.action-disabled {
-    display: block;
+/* ===== EMPTY STATE - Full width container with proper spacing ===== */
+.empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    padding: 12px;
-    background: #f0f0f0;
-    color: #666666;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 0.9rem;
+    min-height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    margin: 20px 0;
 }
 
-.loading {
+.empty-state-content {
     text-align: center;
     padding: 40px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.empty-state h2 {
+    font-size: 1.8rem;
     color: #000000;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-state p {
     font-size: 1rem;
-    opacity: 0.7;
+    color: #666666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* ===== LOADING STATE ===== */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666666;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.loading::after {
+    content: '...';
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 /* ===== MODAL STYLES ===== */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    backdrop-filter: blur(5px);
 }
 
 .modal-content {
@@ -528,8 +541,13 @@
     max-width: 400px;
     width: 90%;
     text-align: center;
-    animation: modalFadeIn 0.3s ease-out;
-    transform-origin: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeScale 0.3s ease;
+}
+
+@keyframes fadeScale {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 .modal-icon {
@@ -550,11 +568,10 @@
 }
 
 .modal-message {
-    color: #000000;
+    color: #666666;
     font-size: 1rem;
     margin-bottom: 25px;
     line-height: 1.5;
-    opacity: 0.8;
 }
 
 .modal-actions {
@@ -565,101 +582,58 @@
 
 .modal-btn {
     padding: 12px 25px;
-    border: 1px solid transparent;
-    border-radius: 8px;
+    border: none;
+    border-radius: 6px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     flex: 1;
     max-width: 130px;
+    transition: all 0.3s ease;
 }
 
 .modal-btn-cancel {
     background: #000000;
     color: #ffffff;
+    border: 1px solid #000000;
 }
 
 .modal-btn-cancel:hover {
-    background: #000000;
-    color: #ffffff;
+    background: #333333;
 }
 
 .modal-btn-confirm {
     background: #FF8246;
     color: #ffffff;
-    border-color: #FF8246;
+    border: 1px solid #FF8246;
 }
 
-@keyframes modalFadeIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+.modal-btn-confirm:hover {
+    background: #e66a2e;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1400px) {
-    .order-body {
-        grid-template-columns: 1.2fr 1.1fr 1.3fr 1fr;
-    }
-}
-
-@media (max-width: 1300px) {
-    .order-body {
-        grid-template-columns: 1.1fr 1fr 1.2fr 0.9fr;
-    }
-}
-
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1200px) {
     .order-body {
-        grid-template-columns: 1fr 0.9fr 1.1fr 0.8fr;
-    }
-    
-    .event-text {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 1100px) {
-    .order-body {
-        grid-template-columns: 1fr 0.9fr 1fr 0.8fr;
-    }
-    
-    .product-details {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .product-thumbnail {
-        margin-bottom: 10px;
-    }
-    
-    .event-text {
-        font-size: 0.85rem;
+        grid-template-columns: 1.1fr 1.1fr 1.3fr 0.9fr;
     }
 }
 
 @media (max-width: 1000px) {
+    .content {
+        margin-top: 90px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.8rem;
+    }
+    
     .order-body {
         grid-template-columns: 1fr;
-        gap: 0;
     }
     
-    .order-product-column {
-        border-right: none;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .order-event-column {
-        border-right: none;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    
+    .order-product-column,
+    .order-event-column,
     .order-shipping-column {
         border-right: none;
         border-bottom: 1px solid #f0f0f0;
@@ -668,27 +642,6 @@
     .product-details {
         flex-direction: row;
         text-align: left;
-        max-width: 100%;
-        margin: 0;
-    }
-    
-    .product-thumbnail {
-        margin-bottom: 0;
-    }
-    
-    .event-activity-content {
-        max-width: 100%;
-        margin: 0;
-    }
-    
-    .shipping-details {
-        max-width: 100%;
-        margin: 0;
-    }
-    
-    .price-summary-details {
-        max-width: 100%;
-        margin: 0;
     }
 }
 
@@ -698,8 +651,23 @@
         padding: 0 15px;
     }
     
-    .page-title {
+    .page-title-header {
+        margin: 15px 0 25px 0;
+        padding-bottom: 12px;
+    }
+    
+    .page-title-header h1 {
         font-size: 1.6rem;
+    }
+    
+    .filter-tabs {
+        margin-bottom: 25px;
+        padding: 8px 0;
+    }
+    
+    .filter-tab {
+        padding: 6px 16px;
+        font-size: 0.9rem;
     }
     
     .order-header {
@@ -728,28 +696,41 @@
         flex-direction: column;
     }
     
-    .event-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+    .empty-state {
+        min-height: 350px;
     }
     
-    .event-icon {
-        margin-bottom: 5px;
+    .empty-state h2 {
+        font-size: 1.6rem;
     }
     
-    .event-text {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 576px) {
     .modal-actions {
         flex-direction: column;
+        gap: 10px;
     }
     
     .modal-btn {
         max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .filter-tabs {
+        gap: 8px;
+    }
+    
+    .filter-tab {
+        padding: 5px 12px;
+        font-size: 0.85rem;
     }
     
     .order-status-badge {
@@ -757,31 +738,51 @@
         font-size: 0.7rem;
     }
     
-    .event-text {
+    .customer-info {
         font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    
-    .shipping-details p {
-        font-size: 0.85rem;
-    }
-}
-
-/* Extra small devices */
-@media (max-width: 375px) {
-    .event-text {
-        font-size: 0.8rem;
+        padding: 3px 10px;
     }
     
     .product-info h4 {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
     
     .product-info p {
+        font-size: 0.85rem;
+    }
+    
+    .event-text {
+        font-size: 0.85rem;
+    }
+    
+    .empty-state-content {
+        padding: 30px 20px;
+    }
+    
+    .empty-state-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .empty-state h2 {
+        font-size: 1.4rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .page-title-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .event-text {
         font-size: 0.8rem;
     }
     
-    .price-row {
+    .shipping-details p {
         font-size: 0.85rem;
     }
 }

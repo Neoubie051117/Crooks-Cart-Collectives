@@ -35,7 +35,7 @@ try {
 }
 
 if (!$product) {
-    header('Location: products.php');
+    header('Location: product.php');
     exit;
 }
 
@@ -64,21 +64,23 @@ if (!empty($mediaDir)) {
     }
 }
 
-// Fallback if no thumbnails
+// If no thumbnails found, use placeholder
 if (empty($thumbnailUrls)) {
     $thumbnailUrls[] = '../assets/image/icons/PlaceholderAssetProduct.png';
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($product['name']); ?> - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/product-details.css">
+    <link rel="stylesheet" href="../styles/product-detail.css">
     <link rel="stylesheet" href="../styles/footer.css">
 </head>
+
 <body>
     <?php include_once('header.php'); ?>
 
@@ -90,26 +92,41 @@ if (empty($thumbnailUrls)) {
                 <div class="product-image-column right-column">
                     <!-- Main Preview Box (hoverable) -->
                     <div class="preview-box" id="mainPreviewBox">
-                        <div class="preview-placeholder" id="previewPlaceholder" style="<?php echo !empty($thumbnailUrls[0]) ? 'display: none;' : ''; ?>">
+                        <div class="preview-placeholder" id="previewPlaceholder"
+                            style="<?php echo !empty($thumbnailUrls[0]) && $thumbnailUrls[0] !== '../assets/image/icons/PlaceholderAssetProduct.png' ? 'display: none;' : ''; ?>">
                             <img src="../assets/image/icons/package.svg" alt="Product image">
-                            <span>Product image</span>
+                            <span>No image available</span>
                         </div>
-                        <div class="preview-image" id="previewImage" style="<?php echo !empty($thumbnailUrls[0]) ? 'background-image: url(' . $thumbnailUrls[0] . '); display: block;' : 'display: none;'; ?>"></div>
+                        <div class="preview-image" id="previewImage"
+                            style="<?php echo !empty($thumbnailUrls[0]) && $thumbnailUrls[0] !== '../assets/image/icons/PlaceholderAssetProduct.png' ? 'background-image: url(' . $thumbnailUrls[0] . '); display: block;' : 'display: none;'; ?>">
+                        </div>
                     </div>
 
-                    <!-- Thumbnail Navigation (like seller-new-product) -->
-                    <?php if (count($thumbnailUrls) > 0): ?>
+                    <!-- Thumbnail Navigation - Only shows actual images, no empty slots -->
+                    <?php 
+                    // Filter out placeholder images
+                    $actualImages = array_filter($thumbnailUrls, function($url) {
+                        return $url !== '../assets/image/icons/PlaceholderAssetProduct.png';
+                    });
+                    
+                    if (!empty($actualImages)): 
+                    ?>
                     <div class="thumbnail-navigation" id="thumbnailNavigation">
-                        <?php foreach ($thumbnailUrls as $index => $url): ?>
-                        <button type="button" class="thumbnail-image-btn <?php echo $index === 0 ? 'active' : ''; ?>" data-index="<?php echo $index; ?>" style="background-image: url('<?php echo $url; ?>');">
+                        <?php 
+                        $counter = 0;
+                        foreach ($thumbnailUrls as $index => $url): 
+                            $isPlaceholder = ($url === '../assets/image/icons/PlaceholderAssetProduct.png');
+                            // Skip placeholder images entirely - only show real images
+                            if (!$isPlaceholder):
+                        ?>
+                        <button type="button" class="thumbnail-image-btn <?php echo $counter === 0 ? 'active' : ''; ?>"
+                            data-index="<?php echo $index; ?>" style="background-image: url('<?php echo $url; ?>');">
                         </button>
-                        <?php endforeach; ?>
-                        <!-- Fill remaining slots with empty placeholders if less than 5 -->
-                        <?php for ($i = count($thumbnailUrls); $i < 5; $i++): ?>
-                        <button type="button" class="thumbnail-image-btn empty-slot" data-index="<?php echo $i; ?>">
-                            <img src="../assets/image/icons/package.svg" alt="Empty slot" class="thumbnail-image">
-                        </button>
-                        <?php endfor; ?>
+                        <?php 
+                                $counter++;
+                            endif;
+                        endforeach; 
+                        ?>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -134,7 +151,8 @@ if (empty($thumbnailUrls)) {
                             <span class="product-price">₱<?php echo number_format($product['price'], 2); ?></span>
                         </div>
 
-                        <div class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
+                        <div
+                            class="stock-status <?php echo $product['stock_quantity'] > 0 ? 'in-stock' : 'out-of-stock'; ?>">
                             <span class="status-indicator"></span>
                             <span class="status-text">
                                 <?php if ($product['stock_quantity'] > 0): ?>
@@ -156,18 +174,18 @@ if (empty($thumbnailUrls)) {
                         <div class="product-actions">
                             <?php if (isset($_SESSION['user_id'])): ?>
                             <button class="btn btn-primary add-to-cart-btn"
-                                    data-product-id="<?php echo $product['product_id']; ?>"
-                                    <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
+                                data-product-id="<?php echo $product['product_id']; ?>"
+                                <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
                                 <span class="btn-text">Add to Cart</span>
                             </button>
                             <button class="btn btn-secondary buy-now-btn"
-                                    data-product-id="<?php echo $product['product_id']; ?>"
-                                    <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
+                                data-product-id="<?php echo $product['product_id']; ?>"
+                                <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
                                 <span class="btn-text">Buy Now</span>
                             </button>
                             <?php else: ?>
                             <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
-                               class="btn btn-primary login-to-purchase-btn">
+                                class="btn btn-primary login-to-purchase-btn">
                                 <span class="btn-text">Login to Purchase</span>
                             </a>
                             <?php endif; ?>
@@ -192,8 +210,8 @@ if (empty($thumbnailUrls)) {
                             <div class="reviewer-profile">
                                 <?php if (!empty($review['profile_picture'])): ?>
                                 <img src="<?php echo htmlspecialchars($review['profile_picture']); ?>"
-                                     alt="<?php echo htmlspecialchars($review['first_name']); ?>"
-                                     onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                                    alt="<?php echo htmlspecialchars($review['first_name']); ?>"
+                                    onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
                                 <?php else: ?>
                                 <img src="../assets/image/icons/user-profile-circle.svg" alt="Profile">
                                 <?php endif; ?>
@@ -210,7 +228,7 @@ if (empty($thumbnailUrls)) {
                         <div class="review-rating">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <img src="../assets/image/icons/<?php echo $i <= $review['rating'] ? 'star-filled.svg' : 'star-empty.svg'; ?>"
-                                 alt="Star" class="star">
+                                alt="Star" class="star">
                             <?php endfor; ?>
                         </div>
                         <?php if (!empty($review['comment'])): ?>
@@ -231,6 +249,7 @@ if (empty($thumbnailUrls)) {
 
     <?php include_once('footer.php'); ?>
 
-    <script src="../scripts/product-details.js"></script>
+    <script src="../scripts/product-detail.js"></script>
 </body>
+
 </html>

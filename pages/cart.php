@@ -41,7 +41,6 @@ try {
     error_log("Error fetching cart: " . $e->getMessage());
 }
 
-// Helper function to get product image
 function getProductImageUrl($mediaPath) {
     if (empty($mediaPath)) {
         return '../assets/image/icons/package.svg';
@@ -67,24 +66,21 @@ function getProductImageUrl($mediaPath) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/cart.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/cart.css">
 </head>
 
 <body>
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <h1 class="pageTitleHeader">Shopping Cart</h1>
+        <div class="page-title-header">
+            <h1>Shopping Cart</h1>
+        </div>
 
+        <?php if (!empty($cartItems)): ?>
+        <!-- Cart Items -->
         <div class="cart-container">
-            <?php if (empty($cartItems)): ?>
-            <div class="empty-cart">
-                <p class="empty-cart-message">Your cart is empty.</p>
-                <a href="product.php" class="btn-primary">Continue Shopping</a>
-            </div>
-            <?php else: ?>
-
             <div class="cart-items" id="cartItems">
                 <?php foreach ($cartItems as $item): 
                         $imageUrl = getProductImageUrl($item['media_path'] ?? '');
@@ -92,9 +88,8 @@ function getProductImageUrl($mediaPath) {
                     ?>
                 <div class="cart-item" data-id="<?= $item['cart_id'] ?>">
                     <div class="cart-item-image">
-                        <img src="<?= htmlspecialchars($imageUrl) ?>" 
-                             alt="<?= htmlspecialchars($item['name']) ?>"
-                             onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
+                            onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
                     </div>
                     <div class="cart-item-details">
                         <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
@@ -107,7 +102,7 @@ function getProductImageUrl($mediaPath) {
                                 <input type="number" id="quantity-<?= $item['cart_id'] ?>" class="quantity-input"
                                     value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
                                     data-id="<?= $item['cart_id'] ?>">
-                                <button class="remove-btn" data-id="<?= $item['cart_id'] ?>">
+                                <button class="btn btn-secondary remove-btn" data-id="<?= $item['cart_id'] ?>">
                                     Remove
                                 </button>
                             </div>
@@ -130,8 +125,18 @@ function getProductImageUrl($mediaPath) {
                     <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
                 </div>
             </div>
-            <?php endif; ?>
         </div>
+        <?php else: ?>
+        <!-- Empty State - Full width container -->
+        <div class="empty-state">
+            <div class="empty-state-content">
+                <img src="../assets/image/icons/cart-shopping.svg" alt="Empty cart" class="empty-state-icon">
+                <h2>Your Cart is Empty</h2>
+                <p>Looks like you haven't added any items to your cart yet.</p>
+                <a href="product.php" class="btn btn-primary">Start Shopping</a>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 
     <?php include_once('footer.php'); ?>

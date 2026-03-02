@@ -18,17 +18,27 @@ $customer_id = $_SESSION['customer_id'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders - Crooks Cart Collectives</title>
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/orders.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/orders.css">
 </head>
 
 <body>
     <?php include_once('header.php'); ?>
 
     <main class="content">
-        <div class="customer-header">
-            <h1 class="page-title">My Orders</h1>
+        <div class="page-title-header">
+            <h1>My Orders</h1>
         </div>
+
+        <!-- Filter Tabs - Will be shown/hidden by JavaScript based on orders data -->
+        <div class="filter-tabs" id="filterTabs" style="display: none;">
+            <span class="filter-tab active" data-filter="all">All Orders</span>
+            <span class="filter-tab" data-filter="pending">Pending</span>
+            <span class="filter-tab" data-filter="delivered">Delivered</span>
+            <span class="filter-tab" data-filter="cancelled">Cancelled</span>
+        </div>
+
+        <!-- Orders Container - Will be populated by JavaScript -->
         <div id="ordersList" class="orders-list">
             <div class="loading">Loading orders...</div>
         </div>
@@ -38,8 +48,7 @@ $customer_id = $_SESSION['customer_id'];
     <div id="reviewModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <img src="../assets/image/icons/star-filled.svg" alt="Review"
-                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
+                <img src="../assets/image/icons/star-filled.svg" alt="Review">
             </div>
             <h2 class="modal-title">Write a Review</h2>
             <form id="reviewForm">
@@ -77,8 +86,7 @@ $customer_id = $_SESSION['customer_id'];
     <div id="cancelModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <img src="../assets/image/icons/cancel.svg" alt="Cancel"
-                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
+                <img src="../assets/image/icons/cancel.svg" alt="Cancel">
             </div>
             <h2 class="modal-title">Cancel Order</h2>
             <p class="modal-message">Are you sure you want to cancel this order? This action cannot be undone.</p>
@@ -93,8 +101,7 @@ $customer_id = $_SESSION['customer_id'];
     <div id="notificationModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">
-                <img src="../assets/image/icons/mail.svg" alt="Notification"
-                    style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);">
+                <img src="../assets/image/icons/mail.svg" alt="Notification">
             </div>
             <p id="notificationMessage" class="modal-message"></p>
             <div class="modal-actions">

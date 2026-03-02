@@ -1,11 +1,12 @@
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Fixed version with proper image fetching for thumbnail 1 */
+/* Fixed version with empty state handling and filter tabs visibility */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // ============= DOM ELEMENTS =============
     const ordersList = document.getElementById('ordersList');
+    const filterTabs = document.getElementById('filterTabs');
     
     // Review Modal Elements
     const reviewModal = document.getElementById('reviewModal');
@@ -32,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRating = 0;
     let currentCancelOrderId = null;
     let stars = [];
+    let allOrders = [];
+    let currentFilter = 'all';
 
     // ============= INITIALIZE STAR RATING =============
     function initStarRating() {
@@ -95,6 +98,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ============= FILTER FUNCTIONS =============
+    function setActiveFilter(filter) {
+        if (!filterTabs) return;
+        
+        const tabs = filterTabs.querySelectorAll('.filter-tab');
+        tabs.forEach(tab => {
+            const tabFilter = tab.dataset.filter;
+            if (tabFilter === filter) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+    }
+
+    function filterOrders(filter) {
+        currentFilter = filter;
+        setActiveFilter(filter);
+        
+        if (filter === 'all') {
+            renderOrders(allOrders);
+        } else {
+            const filtered = allOrders.filter(order => order.status === filter);
+            renderOrders(filtered);
+        }
+    }
+
     // ============= MODAL FUNCTIONS =============
     function showModal(modal) {
         if (modal) {
@@ -131,40 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============= AUTO-RESIZE TEXTAREA =============
-    function autoResizeTextarea(textarea) {
-        if (!textarea) return;
-        
-        textarea.style.height = 'auto';
-        const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
-        const minHeight = Math.max(60, lineHeight * 3);
-        const maxHeight = 200;
-        
-        let newHeight = textarea.scrollHeight;
-        newHeight = Math.min(Math.max(newHeight, minHeight), maxHeight);
-        
-        textarea.style.height = newHeight + 'px';
-        
-        if (textarea.scrollHeight > maxHeight) {
-            textarea.style.overflowY = 'auto';
-        } else {
-            textarea.style.overflowY = 'hidden';
-        }
-    }
-
-    // ============= SETUP AUTO-RESIZE FOR ALL EDIT TEXTAREAS =============
-    function setupAutoResize() {
-        document.querySelectorAll('.shipping-edit-textarea').forEach(textarea => {
-            textarea.removeEventListener('input', handleTextareaInput);
-            textarea.addEventListener('input', handleTextareaInput);
-            autoResizeTextarea(textarea);
-        });
-    }
-
-    function handleTextareaInput(e) {
-        autoResizeTextarea(e.target);
-    }
-
     // ============= LOAD ORDERS =============
     async function loadOrders() {
         if (!ordersList) return;
@@ -176,13 +172,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             
             if (result.status === 'success') {
-                renderOrders(result.data);
+                allOrders = result.data;
+                
+                // Show/hide filter tabs based on orders data
+                if (filterTabs) {
+                    if (allOrders && allOrders.length > 0) {
+                        filterTabs.style.display = 'flex';
+                    } else {
+                        filterTabs.style.display = 'none';
+                    }
+                }
+                
+                filterOrders(currentFilter);
             } else {
-                ordersList.innerHTML = '<div class="empty-orders"><p>Failed to load orders. Please try again.</p></div>';
+                ordersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Failed to load orders. Please try again.</p><a href="product.php" class="btn btn-primary">Start Shopping</a></div></div>';
+                if (filterTabs) filterTabs.style.display = 'none';
             }
         } catch (error) {
             console.error('Error loading orders:', error);
-            ordersList.innerHTML = '<div class="empty-orders"><p>Network error. Please check your connection.</p></div>';
+            ordersList.innerHTML = '<div class="empty-state"><div class="empty-state-content"><p>Network error. Please check your connection.</p><a href="product.php" class="btn btn-primary">Start Shopping</a></div></div>';
+            if (filterTabs) filterTabs.style.display = 'none';
         }
     }
 
@@ -199,26 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
-    // ============= FIXED: GET IMAGE PATH FOR THUMBNAIL 1 =============
+    // ============= GET IMAGE PATH =============
     function getProductImageUrl(mediaPath) {
         if (!mediaPath) {
             return '../assets/image/icons/package.svg';
         }
         
-        // If it's already a URL with data-storage-handler, use it as is
         if (mediaPath.includes('data-storage-handler.php')) {
             return mediaPath;
         }
         
-        // Check if it's a media directory path (from products table)
         if (mediaPath.includes('/media/')) {
-            // Ensure trailing slash
             const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
-            // Use the data-storage-handler to serve thumbnail 1
             return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
         }
         
-        // Direct file path
         if (mediaPath.startsWith('assets/')) {
             return '../' + mediaPath;
         }
@@ -246,9 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
             ordersList.innerHTML = `
-                <div class="empty-orders">
-                    <p>You haven't placed any orders yet.</p>
-                    <a href="product.php" class="btn-primary">Start Shopping</a>
+                <div class="empty-state">
+                    <div class="empty-state-content">
+                        <img src="../assets/image/icons/order.svg" alt="No orders" class="empty-state-icon">
+                        <h2>No Orders Found</h2>
+                        <p>You haven't placed any orders yet.</p>
+                        <a href="product.php" class="btn btn-primary">Start Shopping</a>
+                    </div>
                 </div>
             `;
             return;
@@ -261,7 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayStatus = order.status === 'pending' ? 'Pending' : order.status;
             const statusClass = order.status.toLowerCase();
             
-            // FIXED: Use the new function to get image URL
             const imagePath = getProductImageUrl(order.image_path);
             
             const isEditable = order.status === 'pending';
@@ -269,7 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const subtotal = Number(order.subtotal).toFixed(2);
             const total = Number(order.subtotal).toFixed(2);
 
-            // Build event activity with required messages
             let eventHtml = '';
             eventHtml += `<div class="event-item customer-event"><span class="event-icon"><img src="../assets/image/icons/order.svg" alt="Order placed" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%); vertical-align: middle;"></span><span class="event-text">Order placed: ${orderDate}</span></div>`;
                     
@@ -283,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cancelledBy = order.cancelled_by === 'customer' ? 'Customer' : 'Seller';
                 eventHtml += `<div class="event-item cancelled-event"><span class="event-icon"><img src="../assets/image/icons/cancel.svg" alt="Cancelled" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) brightness(0%) contrast(100%); vertical-align: middle;"></span><span class="event-text">${cancelledBy} cancelled: ${cancelledDate}</span></div>`;
             }
+            
             html += `
                 <div class="order-card" data-order-id="${order.order_id}">
                     <div class="order-header">
@@ -306,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4>${escapeHtml(order.product_name)}</h4>
                                     <p><span class="info-label">Seller:</span> ${escapeHtml(order.seller_name || 'Unknown Seller')}</p>
                                     <p><span class="info-label">Quantity:</span> ${order.quantity}</p>
-                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>  <!-- changed from price_at_time to price -->
+                                    <p><span class="info-label">Price:</span> ₱${Number(order.price).toFixed(2)}</p>
                                 </div>
                             </div>
                         </div>
@@ -323,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="shipping-details" data-order-id="${order.order_id}" data-original="${escapeHtml(order.shipping_address || 'No address provided')}">
                                 <p class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</p>
                                 <div class="shipping-edit-controls" style="${isEditable ? 'display: flex;' : 'display: none;'}">
-                                    <textarea class="shipping-edit-textarea" rows="3" style="display: none; width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none; overflow: hidden;">${escapeHtml(order.shipping_address || '')}</textarea>
+                                    <textarea class="shipping-edit-textarea" rows="3" style="display: none;">${escapeHtml(order.shipping_address || '')}</textarea>
                                     <div class="shipping-buttons">
                                         <button class="action-btn edit-shipping" data-order-id="${order.order_id}" ${!isEditable ? 'style="display: none;"' : ''}>
                                             <img src="../assets/image/icons/edit.svg" alt="Edit" class="btn-icon">
@@ -405,24 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ordersList.innerHTML = html;
         attachEventListeners();
-        setupAutoResize();
-    }
-
-    // ============= FETCH DEFAULT ADDRESS =============
-    async function fetchDefaultAddress() {
-        try {
-            const response = await fetch('../database/order-handler.php?action=get_default_address');
-            const result = await response.json();
-            
-            if (result.status === 'success') {
-                return result.address;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching default address:', error);
-            return null;
-        }
     }
 
     // ============= ATTACH EVENT LISTENERS =============
@@ -466,7 +455,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     resetBtn.style.display = 'inline-flex';
                     
                     textarea.focus();
-                    autoResizeTextarea(textarea);
                 }
             });
         });
@@ -560,7 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!textarea) return;
                 
                 textarea.value = originalAddress;
-                autoResizeTextarea(textarea);
                 
                 const originalBtnText = btn.innerHTML;
                 btn.innerHTML = '<span class="btn-text">Reset!</span>';
@@ -570,6 +557,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.innerHTML = originalBtnText;
                     btn.disabled = false;
                 }, 500);
+            });
+        });
+    }
+
+    // ============= FILTER TAB CLICK HANDLERS =============
+    if (filterTabs) {
+        filterTabs.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const filter = tab.dataset.filter;
+                filterOrders(filter);
             });
         });
     }
@@ -695,10 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') hideAllModals();
     });
 
-    window.addEventListener('resize', () => {
-        setupAutoResize();
-    });
-
+    // ============= INITIAL LOAD =============
     initStarRating();
     loadOrders();
 });
