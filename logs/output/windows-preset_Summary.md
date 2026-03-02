@@ -2,7 +2,7 @@
 
 **Preset:** windows-preset
 
-**Generated:** 2026-03-02 19:37:22
+**Generated:** 2026-03-02 21:18:48
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-02 19:37:20
+**Generated:** 2026-03-02 21:18:44
 **Mode:** all
 
 ```
@@ -391,7 +391,7 @@ Crooks-Cart-Collectives/
 ```php
 <?php
 // Crooks-Cart-Collectives/index.php
-// FIXED VERSION - Fixed image fetching for featured products
+// FIXED VERSION - Fixed image fetching with proper path handling for root location
 ?>
 <?php
 session_start();
@@ -405,7 +405,7 @@ try {
         SELECT p.*, s.business_name 
         FROM products p 
         JOIN sellers s ON p.seller_id = s.seller_id 
-        WHERE p.is_active = 1 
+        WHERE p.is_active = 1 AND p.stock_quantity > 0
         ORDER BY RAND() 
         LIMIT 5
     ");
@@ -415,17 +415,32 @@ try {
     error_log("Error fetching featured products: " . $e->getMessage());
 }
 
-// Helper function to get product image URL for index page
+// Helper function to get product image URL for index page (root folder)
 function getIndexProductImageUrl($mediaPath) {
+    // Default fallback icon
+    $fallbackIcon = 'assets/image/icons/package.svg';
+    
     if (empty($mediaPath)) {
-        return 'assets/image/icons/PlaceholderAssetProduct.png';
+        return $fallbackIcon;
     }
     
     // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        // Use data-storage-handler to serve thumbnail 1
-        return 'database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . 'thumbnail_1.png');
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            // Found a thumbnail file – get its basename and build URL via data-storage-handler
+            $thumbFile = basename($thumbFiles[0]);
+            // Root folder path to database handler
+            return 'database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . $thumbFile);
+        }
+        
+        // No thumbnail found – use fallback icon
+        return $fallbackIcon;
     }
     
     // Check if it's already a full URL
@@ -433,7 +448,7 @@ function getIndexProductImageUrl($mediaPath) {
         return $mediaPath;
     }
     
-    // Check if it's a relative path starting with assets/
+    // Check if it's a relative path starting with assets/ (root folder can access directly)
     if (strpos($mediaPath, 'assets/') === 0) {
         return $mediaPath;
     }
@@ -443,7 +458,12 @@ function getIndexProductImageUrl($mediaPath) {
         return 'assets/image/icons/' . $mediaPath;
     }
     
-    // Any other relative path
+    // Any other relative path - try to use it as is, but ensure it starts from root
+    if (strpos($mediaPath, '../') === 0) {
+        // Remove ../ from paths that try to go up from pages
+        $mediaPath = str_replace('../', '', $mediaPath);
+    }
+    
     return $mediaPath;
 }
 ?>
@@ -465,30 +485,6 @@ function getIndexProductImageUrl($mediaPath) {
     <link rel="stylesheet" href="styles/header.css">
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/footer.css">
-
-    <style>
-    /* Feature icon styling */
-    .feature-icon {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .feature-icon img {
-        width: 48px;
-        height: 48px;
-        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-        transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover .feature-icon img {
-        transform: scale(1.1);
-    }
-    </style>
-
     <script defer src="scripts/header.js"></script>
     <script defer src="scripts/showcase-slider.js"></script>
     <script defer src="scripts/index.js"></script>
@@ -522,7 +518,7 @@ function getIndexProductImageUrl($mediaPath) {
             </div>
         </section>
 
-        <!-- Features Section - FIXED: Replaced emojis with SVG icons -->
+        <!-- Features Section -->
         <section class="features-section">
             <div class="features-container">
                 <h2>Why Choose Our Platform?</h2>
@@ -573,13 +569,12 @@ function getIndexProductImageUrl($mediaPath) {
                     <div class="product-card">
                         <div class="product-image-container">
                             <?php 
-                    // FIXED: Use the helper function to get image URL
-                    $imageUrl = getIndexProductImageUrl($product['media_path'] ?? '');
-                    ?>
+                            // Get image URL with proper fallback
+                            $imageUrl = getIndexProductImageUrl($product['media_path'] ?? '');
+                            ?>
                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                 alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image"
-                                loading="lazy"
-                                onerror="this.onerror=null; this.src='assets/image/icons/PlaceholderAssetProduct.png';">
+                                loading="lazy" onerror="this.onerror=null; this.src='assets/image/icons/package.svg';">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
@@ -587,8 +582,7 @@ function getIndexProductImageUrl($mediaPath) {
                             <p class="product-seller">
                                 Seller: <?php echo htmlspecialchars($product['business_name']); ?>
                             </p>
-                            <!-- FIXED: Changed from products.php to product.php -->
-                            <a href="pages/product-details.php?id=<?php echo $product['product_id']; ?>"
+                            <a href="pages/product-detail.php?id=<?php echo $product['product_id']; ?>"
                                 class="view-product-btn">
                                 View Details
                             </a>
@@ -605,7 +599,6 @@ function getIndexProductImageUrl($mediaPath) {
                     </div>
                     <?php endif; ?>
                 </div>
-                <!-- FIXED: Changed from products.php to product.php -->
                 <a href="pages/product.php" class="view-all-products-btn">View All Products</a>
             </div>
         </section>
@@ -2551,7 +2544,7 @@ if (empty($thumbnailUrls)) {
                                 <span class="btn-text">Buy Now</span>
                             </button>
                             <?php else: ?>
-                            <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
+                            <a href="sign-in.php?redirect=<?php echo urlencode('product-detail.php?id=' . $product['product_id']); ?>"
                                 class="btn btn-primary login-to-purchase-btn">
                                 <span class="btn-text">Login to Purchase</span>
                             </a>
@@ -2634,22 +2627,27 @@ session_start();
 require_once('../database/database-connect.php');
 require_once('../database/data-storage-handler.php');
 
-// Fetch all active products
+// Fetch all active products that are in stock
 $products = [];
 $categories = [];
 
 try {
-    // Get all categories for filter
-    $catStmt = $connection->prepare("SELECT DISTINCT category FROM products WHERE is_active = 1 ORDER BY category");
+    // Get all categories for filter (only from active and in-stock products)
+    $catStmt = $connection->prepare("
+        SELECT DISTINCT category 
+        FROM products 
+        WHERE is_active = 1 AND stock_quantity > 0 
+        ORDER BY category
+    ");
     $catStmt->execute();
     $categories = $catStmt->fetchAll(PDO::FETCH_COLUMN);
     
-    // Get all active products
+    // Get all active products that are in stock
     $prodStmt = $connection->prepare("
         SELECT p.*, s.business_name 
         FROM products p 
         JOIN sellers s ON p.seller_id = s.seller_id 
-        WHERE p.is_active = 1 
+        WHERE p.is_active = 1 AND p.stock_quantity > 0
         ORDER BY p.date_added DESC
     ");
     $prodStmt->execute();
@@ -2671,10 +2669,19 @@ function getProductPageImageUrl($mediaPath) {
     // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        // Use data-storage-handler to serve thumbnail 1
-        // Build the path without double slashes
-        $fullPath = $mediaDir . 'thumbnail_1.png';
-        return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($fullPath);
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            // Found a thumbnail file – get its basename and build URL via data-storage-handler
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        } else {
+            // No thumbnail found – use fallback
+            return $fallbackImage;
+        }
     }
     
     // Check if it's already a full URL
@@ -2706,6 +2713,19 @@ function getProductPageImageUrl($mediaPath) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/product.css">
+    <style>
+    /* Optional: Style for out of stock message if you want to show them separately */
+    .out-of-stock-badge {
+        display: inline-block;
+        background: #000000;
+        color: #ffffff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+    </style>
 </head>
 
 <body>
@@ -2933,6 +2953,43 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 }
 
 $customer_id = $_SESSION['customer_id'];
+
+// Helper function to get product image URL for orders page
+function getOrdersImageUrl($mediaPath) {
+    // Default fallback
+    $fallbackImage = '../assets/image/icons/package.svg';
+    
+    if (empty($mediaPath)) {
+        return $fallbackImage;
+    }
+    
+    // Check if it's a media directory path
+    if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
+        $mediaDir = rtrim($mediaPath, '/') . '/';
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        }
+        
+        return $fallbackImage;
+    }
+    
+    // Direct file path
+    if (strpos($mediaPath, 'assets/') === 0) {
+        return '../' . $mediaPath;
+    }
+    
+    if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
+        return $mediaPath;
+    }
+    
+    return $fallbackImage;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -4104,9 +4161,19 @@ function getSellerManageImageUrl($mediaPath) {
     // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        // Use data-storage-handler to serve thumbnail 1
-        $fullPath = $mediaDir . 'thumbnail_1.png';
-        return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($fullPath);
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            // Found a thumbnail file – get its basename and build URL via data-storage-handler
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        } else {
+            // No thumbnail found – use fallback
+            return $fallbackImage;
+        }
     }
     
     // Check if it's already a full URL
@@ -4427,6 +4494,43 @@ $stmt = $connection->prepare("SELECT business_name FROM sellers WHERE seller_id 
 $stmt->execute([$seller_id]);
 $seller = $stmt->fetch();
 $business_name = $seller['business_name'] ?? 'Your Store';
+
+// Helper function to get product image URL for seller process orders
+function getSellerProcessImageUrl($mediaPath) {
+    // Default fallback
+    $fallbackImage = '../assets/image/icons/package.svg';
+    
+    if (empty($mediaPath)) {
+        return $fallbackImage;
+    }
+    
+    // Check if it's a media directory path
+    if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
+        $mediaDir = rtrim($mediaPath, '/') . '/';
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        }
+        
+        return $fallbackImage;
+    }
+    
+    // Direct file path
+    if (strpos($mediaPath, 'assets/') === 0) {
+        return '../' . $mediaPath;
+    }
+    
+    if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
+        return $mediaPath;
+    }
+    
+    return $fallbackImage;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -4508,7 +4612,7 @@ $business_name = $seller['business_name'] ?? 'Your Store';
 // Hero Slider Functionality
 class HeroSlider {
     constructor() {
-        this.slides = document.querySelectorAll('.slide');
+        this.slides = document.querySelectorAll('.showcase-slide');
         this.prevBtn = document.querySelector('.prev-slide');
         this.nextBtn = document.querySelector('.next-slide');
         this.currentSlide = 0;
@@ -4542,7 +4646,7 @@ class HeroSlider {
         }
         
         // Pause on hover
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (slider) {
             slider.addEventListener('mouseenter', () => this.stopAutoSlide());
             slider.addEventListener('mouseleave', () => this.startAutoSlide());
@@ -4550,6 +4654,10 @@ class HeroSlider {
         
         // Touch/swipe support for mobile
         this.initTouchEvents();
+        
+        // Adjust slider height based on header
+        this.adjustSliderHeight();
+        window.addEventListener('resize', () => this.adjustSliderHeight());
     }
     
     showSlide(index) {
@@ -4588,16 +4696,18 @@ class HeroSlider {
         let touchStartX = 0;
         let touchEndX = 0;
         
-        const slider = document.querySelector('.hero-slider');
+        const slider = document.querySelector('.showcase-slider');
         if (!slider) return;
         
         slider.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
+            this.stopAutoSlide();
         });
         
         slider.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
+            this.startAutoSlide();
         });
     }
     
@@ -4609,41 +4719,59 @@ class HeroSlider {
         } else if (endX - startX > minSwipeDistance) {
             this.prevSlide();
         }
-        this.resetAutoSlide();
+    }
+    
+    adjustSliderHeight() {
+        const header = document.querySelector('.header-bar');
+        const showcaseSection = document.querySelector('.showcase-section');
+        if (header && showcaseSection) {
+            const headerHeight = header.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            showcaseSection.style.height = `calc(${viewportHeight * 0.6}px - ${headerHeight}px)`;
+        }
     }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new HeroSlider();
-    
-    // REMOVE the loadFeaturedProducts() call - PHP handles this
-    // loadFeaturedProducts();
 });
 
-// REMOVE or comment out the loadFeaturedProducts function entirely
-// It's conflicting with PHP-generated content
-/*
-async function loadFeaturedProducts() {
-    // This will be replaced with actual API call
-    const productsGrid = document.querySelector('.products-grid');
-    if (!productsGrid) return;
+// ===== FALLBACK FOR ANY IMAGES THAT STILL FAIL TO LOAD =====
+document.addEventListener('DOMContentLoaded', () => {
+    // Add global image error handler for all product images
+    document.querySelectorAll('.product-image').forEach(img => {
+        // If image already failed to load, ensure it uses fallback
+        if (img.complete && img.naturalHeight === 0) {
+            img.src = 'assets/image/icons/package.svg';
+        }
+        
+        // Add error handler for future errors
+        img.addEventListener('error', function() {
+            this.src = 'assets/image/icons/package.svg';
+        });
+    });
+});
+
+// ===== FIX FOR HEADER PATH ISSUES =====
+// This ensures header links work correctly when on root vs pages
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we're in root or pages folder
+    const isRoot = window.location.pathname === '/' || 
+                   window.location.pathname.endsWith('index.php') ||
+                   window.location.pathname.split('/').pop() === '';
     
-    // Placeholder - replace with actual API call
-    setTimeout(() => {
-        productsGrid.innerHTML = `
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250x200" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Sample Product 1</h3>
-                    <p class="product-price">₱999.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-            </div>
-        `;
-    }, 1000);
-}
-*/
+    // Fix any navigation links that might have incorrect paths
+    document.querySelectorAll('.nav-link, .social-button, .footer a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('pages/') && !isRoot) {
+            // Already in pages folder, need to adjust
+            if (window.location.pathname.includes('/pages/')) {
+                link.setAttribute('href', href.replace('pages/', ''));
+            }
+        }
+    });
+});
 ```
 
 ---
@@ -7157,13 +7285,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return '../assets/image/icons/package.svg';
         }
         
+        // If it's already a data-storage-handler URL, return as is
         if (mediaPath.includes('data-storage-handler.php')) {
             return mediaPath;
         }
         
-        if (mediaPath.includes('/media/')) {
+        // Check if it's a media directory path
+        if (mediaPath.includes('Crooks-Data-Storage/products/')) {
             const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
-            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
+            // We need to let the server find the actual file extension
+            // So we encode the base path and let the handler do the glob search
+            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.*');
         }
         
         if (mediaPath.startsWith('assets/')) {
@@ -8450,9 +8582,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return '../assets/image/icons/package.svg';
         }
         
-        if (mediaPath.includes('/media/')) {
+        // If it's already a data-storage-handler URL, return as is
+        if (mediaPath.includes('data-storage-handler.php')) {
+            return mediaPath;
+        }
+        
+        // Check if it's a media directory path
+        if (mediaPath.includes('Crooks-Data-Storage/products/')) {
             const baseDir = mediaPath.endsWith('/') ? mediaPath : mediaPath + '/';
-            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.png');
+            // We need to let the server find the actual file extension
+            // So we encode the base path and let the handler do the glob search
+            return '../database/data-storage-handler.php?action=serve&path=' + encodeURIComponent(baseDir + 'thumbnail_1.*');
         }
         
         if (mediaPath.startsWith('assets/')) {

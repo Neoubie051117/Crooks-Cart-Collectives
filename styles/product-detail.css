@@ -381,10 +381,7 @@ body {
     color: #ffffff;
 }
 
-.btn-primary:hover:not(:disabled) {
-    background: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
+
 
 .btn-secondary {
     background: #000000;

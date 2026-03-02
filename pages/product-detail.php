@@ -19,9 +19,9 @@ try {
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($product) {
-        // Fetch reviews for this product with user profile and username
+        // Fetch reviews for this product with user profile
         $reviewStmt = $connection->prepare("
-            SELECT pr.*, u.first_name, u.last_name, u.username, u.profile_picture
+            SELECT pr.*, u.first_name, u.last_name, u.username, u.user_id, u.profile_picture
             FROM product_reviews pr
             JOIN users u ON pr.user_id = u.user_id
             WHERE pr.product_id = ?
@@ -37,6 +37,40 @@ try {
 if (!$product) {
     header('Location: product.php');
     exit;
+}
+
+// Helper function to format username with user ID (like @username #00001)
+function formatUsername($username, $userId) {
+    // Format: @username #00001 (padded to 5 digits)
+    return '@' . htmlspecialchars($username) . ' #' . str_pad($userId, 5, '0', STR_PAD_LEFT);
+}
+
+// Helper function to get profile picture URL
+function getProfilePictureUrl($picture) {
+    if (empty($picture)) {
+        return '../assets/image/icons/user-profile-circle.svg';
+    }
+    
+    // If it's already a full URL
+    if (filter_var($picture, FILTER_VALIDATE_URL)) {
+        return $picture;
+    }
+    
+    // Check if it's a path from data storage
+    if (strpos($picture, 'Crooks-Data-Storage/users/') === 0) {
+        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($picture);
+    }
+    
+    // If it's a relative path
+    if (strpos($picture, '../') === 0) {
+        return $picture;
+    }
+    
+    if (strpos($picture, 'assets/') === 0) {
+        return '../' . $picture;
+    }
+    
+    return $picture;
 }
 
 // Determine media files
@@ -79,6 +113,86 @@ if (empty($thumbnailUrls)) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/product-detail.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <style>
+    /* Review section fixes */
+    .review-card {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background: #ffffff;
+    }
+
+    .review-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .reviewer-profile {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #FF8246;
+    }
+
+    .reviewer-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .reviewer-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .reviewer-username {
+        font-size: 1rem;
+        color: #000000;
+    }
+
+    .review-rating {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+
+    .star {
+        width: 18px;
+        height: 18px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    }
+
+    .review-comment {
+        color: #333333;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+
+    .review-date {
+        font-size: 0.8rem;
+        color: #999999;
+    }
+
+    .no-reviews-message {
+        text-align: center;
+        padding: 40px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        color: #666666;
+        font-size: 1rem;
+    }
+    </style>
 </head>
 
 <body>
@@ -184,7 +298,7 @@ if (empty($thumbnailUrls)) {
                                 <span class="btn-text">Buy Now</span>
                             </button>
                             <?php else: ?>
-                            <a href="sign-in.php?redirect=<?php echo urlencode('product-details.php?id=' . $product['product_id']); ?>"
+                            <a href="sign-in.php?redirect=<?php echo urlencode('product-detail.php?id=' . $product['product_id']); ?>"
                                 class="btn btn-primary login-to-purchase-btn">
                                 <span class="btn-text">Login to Purchase</span>
                             </a>
@@ -194,7 +308,7 @@ if (empty($thumbnailUrls)) {
                 </div>
             </div>
 
-            <!-- Reviews Section (full width below) -->
+            <!-- Reviews Section (full width below) - FIXED: Only show username with user ID, no full name -->
             <div class="reviews-section">
                 <h2 class="reviews-title">Customer Reviews (<?php echo count($reviews); ?>)</h2>
 
@@ -208,20 +322,16 @@ if (empty($thumbnailUrls)) {
                     <div class="review-card">
                         <div class="review-header">
                             <div class="reviewer-profile">
-                                <?php if (!empty($review['profile_picture'])): ?>
-                                <img src="<?php echo htmlspecialchars($review['profile_picture']); ?>"
-                                    alt="<?php echo htmlspecialchars($review['first_name']); ?>"
+                                <?php 
+                                $profilePic = getProfilePictureUrl($review['profile_picture'] ?? '');
+                                ?>
+                                <img src="<?php echo htmlspecialchars($profilePic); ?>"
+                                    alt="<?php echo htmlspecialchars($review['username']); ?>"
                                     onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
-                                <?php else: ?>
-                                <img src="../assets/image/icons/user-profile-circle.svg" alt="Profile">
-                                <?php endif; ?>
                             </div>
                             <div class="reviewer-info">
-                                <div class="reviewer-name">
-                                    <?php echo htmlspecialchars($review['first_name'] . ' ' . $review['last_name']); ?>
-                                </div>
                                 <div class="reviewer-username">
-                                    @<?php echo htmlspecialchars($review['username']); ?>
+                                    <?php echo formatUsername($review['username'], $review['user_id']); ?>
                                 </div>
                             </div>
                         </div>
