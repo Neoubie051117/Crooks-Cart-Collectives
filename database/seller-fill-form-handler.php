@@ -36,12 +36,12 @@ function handleSellerUpdate() {
     $userId = $_SESSION['user_id'];
     
     // Check if user is already a seller
-    $stmt = $connection->prepare("SELECT seller_id FROM sellers WHERE user_id = ?");
+    $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
     $stmt->execute([$userId]);
     $existingSeller = $stmt->fetch(PDO::FETCH_ASSOC);
     $isSeller = !empty($existingSeller);
     
-    // Validate required fields - INCLUDING BUSINESS NAME NOW
+    // Validate required fields
     $requiredFields = ['first_name', 'last_name', 'birthdate', 'gender', 'address', 'business_name'];
     $missingFields = [];
     
@@ -51,7 +51,6 @@ function handleSellerUpdate() {
         }
     }
     
-    // If there are missing required fields, return error
     if (!empty($missingFields)) {
         echo json_encode([
             'status' => 'error',
@@ -96,6 +95,7 @@ function handleSellerUpdate() {
             $uploadResult = processVerificationUpload($userId, $_FILES['identity_photo'], 'identity');
             if ($uploadResult['status'] === 'success') {
                 $identityPath = $uploadResult['path'];
+                error_log("Identity photo saved: " . $identityPath);
             } else {
                 throw new Exception('Identity photo upload failed: ' . $uploadResult['message']);
             }
@@ -106,6 +106,7 @@ function handleSellerUpdate() {
             $uploadResult = processVerificationUpload($userId, $_FILES['id_document'], 'id_document');
             if ($uploadResult['status'] === 'success') {
                 $idDocumentPath = $uploadResult['path'];
+                error_log("ID document saved: " . $idDocumentPath);
             } else {
                 throw new Exception('ID document upload failed: ' . $uploadResult['message']);
             }
@@ -113,7 +114,7 @@ function handleSellerUpdate() {
         
         // Update or insert seller record
         if ($isSeller) {
-            // Update existing seller - business_name is required
+            // Update existing seller
             $updateSellerSQL = "
                 UPDATE sellers SET
                     business_name = :business_name
@@ -127,11 +128,16 @@ function handleSellerUpdate() {
                 $updateSellerSQL .= ", id_document_path = :id_document_path";
             }
             
+            // Reset verification status to pending if files were updated
+            if ($identityPath || $idDocumentPath) {
+                $updateSellerSQL .= ", is_verified = 0, verification_date = NULL";
+            }
+            
             $updateSellerSQL .= " WHERE user_id = :user_id";
             
             $stmt = $connection->prepare($updateSellerSQL);
             $params = [
-                ':business_name' => trim($_POST['business_name']), // Required now
+                ':business_name' => trim($_POST['business_name']),
                 ':user_id' => $userId
             ];
             
@@ -144,7 +150,7 @@ function handleSellerUpdate() {
             
             $stmt->execute($params);
         } else {
-            // Insert new seller - business_name is required
+            // Insert new seller - always set is_verified = 0 (pending)
             $insertSellerSQL = "
                 INSERT INTO sellers (
                     user_id, 
@@ -166,7 +172,7 @@ function handleSellerUpdate() {
             $stmt = $connection->prepare($insertSellerSQL);
             $stmt->execute([
                 ':user_id' => $userId,
-                ':business_name' => trim($_POST['business_name']), // Required now
+                ':business_name' => trim($_POST['business_name']),
                 ':identity_path' => $identityPath,
                 ':id_document_path' => $idDocumentPath
             ]);
@@ -174,7 +180,7 @@ function handleSellerUpdate() {
         
         $connection->commit();
         
-        // Update session if needed
+        // Update session
         if (!$isSeller) {
             $_SESSION['is_seller'] = true;
             // Get the new seller_id
@@ -194,7 +200,7 @@ function handleSellerUpdate() {
         
         echo json_encode([
             'status' => 'success',
-            'message' => $isSeller ? 'Seller information updated successfully!' : 'Seller application submitted successfully!',
+            'message' => $isSeller ? 'Seller information updated successfully!' : 'Seller application submitted successfully! Your application is now pending admin verification.',
             'data' => [
                 'first_name' => $userData['first_name'],
                 'last_name' => $userData['last_name']

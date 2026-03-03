@@ -23,35 +23,30 @@ if (session_status() === PHP_SESSION_NONE) {
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-// If already logged out, just return success
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
+// ===== FIXED: Only clear user sessions, leave admin sessions intact =====
+// If no user session exists, just return success
+if (!isset($_SESSION['user_id'])) {
     if ($isAjax) {
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Already logged out',
-            'redirect' => $baseUrl . 'pages/sign-in.php'  // CHANGED: index.php → pages/sign-in.php
+            'redirect' => $baseUrl . 'pages/sign-in.php'
         ]);
         exit;
     }
-    header("Location: " . $baseUrl . "pages/sign-in.php");  // CHANGED: index.php → pages/sign-in.php
+    header("Location: " . $baseUrl . "pages/sign-in.php");
     exit;
 }
 
-// Clear all session variables
-$_SESSION = array();
+// ===== Clear ONLY user-related session variables =====
+// Keep admin session if it exists
+$userKeys = ['user_id', 'customer_id', 'seller_id', 'username', 'email', 
+             'is_customer', 'is_seller', 'seller_verified'];
 
-// Destroy the session cookie
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
+foreach ($userKeys as $key) {
+    unset($_SESSION[$key]);
 }
-
-// Destroy the session
-session_destroy();
 
 // Return success for AJAX
 if ($isAjax) {
@@ -59,12 +54,12 @@ if ($isAjax) {
     echo json_encode([
         'status' => 'success',
         'message' => 'Logged out successfully',
-        'redirect' => $baseUrl . 'pages/sign-in.php'  // CHANGED: index.php → pages/sign-in.php
+        'redirect' => $baseUrl . 'pages/sign-in.php'
     ]);
     exit;
 }
 
 // Regular request - redirect
-header("Location: " . $baseUrl . "pages/sign-in.php");  // CHANGED: index.php → pages/sign-in.php
+header("Location: " . $baseUrl . "pages/sign-in.php");
 exit;
 ?>

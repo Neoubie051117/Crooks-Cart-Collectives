@@ -40,39 +40,8 @@ function handleSignin() {
     
     $identifier = trim($identifier);
     
-    // Check for admin
-    try {
-        $stmt = $connection->prepare("
-            SELECT admin_id, username, email, password 
-            FROM administrators 
-            WHERE email = ? OR username = ?
-        ");
-        $stmt->execute([$identifier, $identifier]);
-        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($admin) {
-            if (!password_verify($password, $admin['password'])) {
-                echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
-                exit;
-            }
-            
-            $_SESSION['admin_id'] = $admin['admin_id'];
-            $_SESSION['username'] = $admin['username'];
-            $_SESSION['email'] = $admin['email'];
-            $_SESSION['is_admin'] = true;
-            $_SESSION['is_customer'] = false;
-            $_SESSION['is_seller'] = false;
-            
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Login successful',
-                'redirect' => '../pages/admin-dashboard.php'
-            ]);
-            exit;
-        }
-    } catch (PDOException $e) {
-        error_log("Admin check error: " . $e->getMessage());
-    }
+    // ===== REMOVED ADMIN CHECK - Admins must use admin sign-in page =====
+    // Regular users only from this point
     
     // Check regular user
     try {
@@ -121,7 +90,9 @@ function handleSignin() {
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['is_customer'] = true;
-        $_SESSION['is_admin'] = false;
+        // Explicitly unset admin session if it exists
+        unset($_SESSION['admin_id']);
+        unset($_SESSION['is_admin']);
         
         if ($seller) {
             $_SESSION['seller_id'] = $seller['seller_id'];

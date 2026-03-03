@@ -69,6 +69,23 @@ filesToCheck = [
     "/admin/scripts/admin-sign-out.js",
     "/admin/scripts/admin-sign-up.js",
     "/admin/scripts/admin-verify-sellers.js",
+    
+    # =========================
+    # ADMIN STYLES
+    # =========================
+    
+    # "/admin/styles/admin-dashboard.css",
+    # "/admin/styles/admin-footer.css",
+    # "/admin/styles/admin-header.css",
+    # "/admin/styles/admin-index.css",
+    # "/admin/styles/admin-logs.css",
+    # "/admin/styles/admin-privacy-policy.css",
+    # "/admin/styles/admin-profile.css",
+    # "/admin/styles/admin-sign-in.css",
+    # "/admin/styles/admin-sign-out.css",
+    # "/admin/styles/admin-sign-up.css",
+    # "/admin/styles/admin-terms-and-conditions.css",
+    # "/admin/styles/admin-verify-sellers.css"
 
     "/database/database-connect.php",
     "/database/sign-in-handler.php",

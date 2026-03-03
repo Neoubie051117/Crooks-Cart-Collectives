@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_POST['action'] ?? '';
 }
 
-// Check if admin is logged in for all actions except maybe public ones
+// Check if admin is logged in for all actions
 if (!isset($_SESSION['admin_id'])) {
     http_response_code(401);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
@@ -21,30 +21,22 @@ if (!isset($_SESSION['admin_id'])) {
 // Get all sellers with their verification status
 if ($action === 'get_all_sellers') {
     try {
-        // First check if sellers table exists and has data
+        // First check if sellers table exists
         $checkTable = $connection->query("SHOW TABLES LIKE 'sellers'");
         if ($checkTable->rowCount() == 0) {
             echo json_encode(['status' => 'success', 'data' => [], 'message' => 'Sellers table does not exist']);
             exit;
         }
         
-        // Check if there are any sellers
-        $countStmt = $connection->query("SELECT COUNT(*) as count FROM sellers");
-        $count = $countStmt->fetch()['count'];
-        
-        if ($count == 0) {
-            echo json_encode(['status' => 'success', 'data' => [], 'message' => 'No sellers found']);
-            exit;
-        }
-        
         // Get all sellers with user information
+        // IMPORTANT: is_verified = 0 means pending verification
         $stmt = $connection->prepare("
             SELECT 
                 s.seller_id, 
                 s.business_name, 
-                s.created_at, 
+                s.date_applied as created_at, 
                 s.is_verified,
-                s.verified_at,
+                s.verification_date as verified_at,
                 u.user_id,
                 u.first_name, 
                 u.last_name, 
@@ -54,15 +46,29 @@ if ($action === 'get_all_sellers') {
             LEFT JOIN users u ON s.user_id = u.user_id
             ORDER BY 
                 CASE 
-                    WHEN s.is_verified = 0 THEN 1
-                    WHEN s.is_verified = 1 THEN 2
-                    WHEN s.is_verified = 2 THEN 3
+                    WHEN s.is_verified = 0 THEN 1  -- Pending first
+                    WHEN s.is_verified = 1 THEN 2  -- Verified second
+                    WHEN s.is_verified = 2 THEN 3  -- Rejected third
                     ELSE 4
                 END,
-                s.created_at DESC
+                s.date_applied DESC
         ");
         $stmt->execute();
         $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        error_log("Found " . count($sellers) . " sellers total");
+        
+        // Count pending for debugging
+        $pendingCount = 0;
+        foreach ($sellers as $seller) {
+            if ($seller['is_verified'] == 0) {
+                $pendingCount++;
+                error_log("Pending seller: ID=" . $seller['seller_id'] . 
+                         ", Business=" . $seller['business_name'] . 
+                         ", Name=" . $seller['first_name'] . " " . $seller['last_name']);
+            }
+        }
+        error_log("Pending sellers count: " . $pendingCount);
         
         // Format the data for display
         foreach ($sellers as &$seller) {
@@ -80,7 +86,8 @@ if ($action === 'get_all_sellers') {
         echo json_encode([
             'status' => 'success', 
             'data' => $sellers,
-            'count' => count($sellers)
+            'count' => count($sellers),
+            'pending' => $pendingCount
         ]);
         
     } catch (PDOException $e) {
@@ -98,17 +105,17 @@ if ($action === 'get_stats') {
     try {
         $stats = [];
         
-        // Count pending verifications
+        // Count pending verifications (is_verified = 0)
         $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 0");
         $stmt->execute();
         $stats['pending_verifications'] = $stmt->fetch()['count'];
         
-        // Count verified sellers
+        // Count verified sellers (is_verified = 1)
         $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 1");
         $stmt->execute();
         $stats['verified_sellers'] = $stmt->fetch()['count'];
         
-        // Count rejected sellers
+        // Count rejected sellers (is_verified = 2)
         $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 2");
         $stmt->execute();
         $stats['rejected_sellers'] = $stmt->fetch()['count'];
@@ -131,8 +138,10 @@ if ($action === 'get_stats') {
 if ($action === 'verify' && isset($_POST['seller_id'])) {
     $seller_id = (int)$_POST['seller_id'];
     try {
-        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 1, verified_at = NOW() WHERE seller_id = ?");
+        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 1, verification_date = NOW() WHERE seller_id = ?");
         $stmt->execute([$seller_id]);
+        $rowCount = $stmt->rowCount();
+        error_log("Verified seller ID $seller_id, rows affected: $rowCount");
         echo json_encode(['status' => 'success', 'message' => 'Seller verified successfully']);
     } catch (PDOException $e) {
         error_log("Verify error: " . $e->getMessage());
@@ -144,8 +153,10 @@ if ($action === 'verify' && isset($_POST['seller_id'])) {
 if ($action === 'reject' && isset($_POST['seller_id'])) {
     $seller_id = (int)$_POST['seller_id'];
     try {
-        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 2, verified_at = NOW() WHERE seller_id = ?");
+        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 2, verification_date = NOW() WHERE seller_id = ?");
         $stmt->execute([$seller_id]);
+        $rowCount = $stmt->rowCount();
+        error_log("Rejected seller ID $seller_id, rows affected: $rowCount");
         echo json_encode(['status' => 'success', 'message' => 'Seller rejected']);
     } catch (PDOException $e) {
         error_log("Reject error: " . $e->getMessage());

@@ -4,9 +4,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Force check if session is valid
-$isLoggedIn = isset($_SESSION['user_id']) || isset($_SESSION['admin_id']);
+// ===== FIXED: Separate user login from admin login =====
+// Check if user is logged in (regular user/customer/seller)
+$isUserLoggedIn = isset($_SESSION['user_id']);
+
+// Check if user is a seller
 $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+
+// ===== IMPORTANT: DO NOT check for admin_id in public header =====
+// Admin users should use the admin panel, not the public interface
+// If an admin tries to access public pages, treat them as NOT logged in
+// This prevents admin session from affecting public navigation
 
 // Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -55,14 +63,14 @@ if ($is_root) {
 
         <div class="nav-container">
             <nav class="nav-bar">
-                <?php if (!$isLoggedIn): ?>
+                <?php if (!$isUserLoggedIn): ?>
                 <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
                 <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
                 <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
                 <?php else: ?>
-                <!-- LOGGED IN: No Home, About, Contact -->
+                <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
                 <?php if ($isSeller): ?>
                 <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
@@ -80,7 +88,7 @@ if ($is_root) {
                 <?php endif; ?>
             </nav>
 
-            <?php if ($isLoggedIn): ?>
+            <?php if ($isUserLoggedIn): ?>
             <a href="#" class="social-button logout-trigger">LOG OUT</a>
             <?php else: ?>
             <a href="<?php echo $pathPrefix; ?>pages/sign-in.php" class="social-button">SIGN IN</a>
@@ -89,14 +97,14 @@ if ($is_root) {
     </header>
 
     <nav class="mobile-nav no-transition" id="mobileNav">
-        <?php if (!$isLoggedIn): ?>
+        <?php if (!$isUserLoggedIn): ?>
         <!-- NOT LOGGED IN: Home, Shop, About, Contact -->
         <a href="<?php echo $pathPrefix; ?>index.php" class="nav-link">HOME</a>
         <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
         <?php else: ?>
-        <!-- LOGGED IN: No Home, About, Contact -->
+        <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
         <?php if ($isSeller): ?>
         <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
@@ -113,14 +121,14 @@ if ($is_root) {
         <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($isLoggedIn): ?>
+        <?php if ($isUserLoggedIn): ?>
         <a href="#" class="social-button logout-trigger">LOG OUT</a>
         <?php else: ?>
         <a href="<?php echo $pathPrefix; ?>pages/sign-in.php" class="social-button">SIGN IN</a>
         <?php endif; ?>
     </nav>
 
-    <?php if ($isLoggedIn): ?>
+    <?php if ($isUserLoggedIn): ?>
     <div id="logoutModal" class="logout-modal" style="display: none;">
         <div class="logout-modal-content">
             <div class="logout-modal-icon">

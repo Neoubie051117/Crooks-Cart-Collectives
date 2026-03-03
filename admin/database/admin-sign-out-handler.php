@@ -22,7 +22,8 @@ if (session_status() === PHP_SESSION_NONE) {
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-// If already logged out, just return success
+// ===== FIXED: Only clear admin sessions, leave user sessions intact =====
+// If no admin session exists, just return success
 if (!isset($_SESSION['admin_id'])) {
     if ($isAjax) {
         header('Content-Type: application/json');
@@ -37,20 +38,14 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// Clear all session variables
-$_SESSION = array();
+// ===== Clear ONLY admin-related session variables =====
+// Keep user session if it exists
+$adminKeys = ['admin_id', 'admin_first_name', 'admin_last_name', 
+              'admin_username', 'admin_email', 'is_admin'];
 
-// Destroy the session cookie
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
+foreach ($adminKeys as $key) {
+    unset($_SESSION[$key]);
 }
-
-// Destroy the session
-session_destroy();
 
 // Return success for AJAX
 if ($isAjax) {
