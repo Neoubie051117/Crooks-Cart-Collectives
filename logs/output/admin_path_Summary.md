@@ -2,7 +2,7 @@
 
 **Preset:** admin_path
 
-**Generated:** 2026-03-03 18:38:17
+**Generated:** 2026-03-03 21:38:55
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-03 18:38:16
+**Generated:** 2026-03-03 21:38:52
 **Mode:** all
 
 ```
@@ -258,6 +258,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs-handler.php
 │   │   ├── admin-profile-handler.php
 │   │   ├── admin-reports-handler.php
+│   │   ├── admin-seller-profile-handler.php
 │   │   ├── admin-sign-in-handler.php
 │   │   ├── admin-sign-out-handler.php
 │   │   ├── admin-sign-up-handler.php
@@ -273,6 +274,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs.php
 │   │   ├── admin-manage-report.php
 │   │   ├── admin-profile.php
+│   │   ├── admin-seller-profile.php
 │   │   ├── admin-sign-in.php
 │   │   ├── admin-sign-up.php
 │   │   └── admin-verify-sellers.php
@@ -280,6 +282,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-header.js
 │   │   ├── admin-logs.js
 │   │   ├── admin-profile.js
+│   │   ├── admin-seller-profile.js
 │   │   ├── admin-sign-in.js
 │   │   ├── admin-sign-out.js
 │   │   ├── admin-sign-up.js
@@ -292,6 +295,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs.css
 │   │   ├── admin-privacy-policy.css
 │   │   ├── admin-profile.css
+│   │   ├── admin-seller-profile.css
 │   │   ├── admin-sign-in.css
 │   │   ├── admin-sign-out.css
 │   │   ├── admin-sign-up.css
@@ -374,6 +378,7 @@ Crooks-Cart-Collectives/
 │   ├── customer-profile-handler.php
 │   ├── data-storage-handler.php
 │   ├── database-connect.php
+│   ├── error_log.txt
 │   ├── order-handler.php
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
@@ -391,9 +396,7 @@ Crooks-Cart-Collectives/
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
-│   │   ├── admin_path_Summary.md
-│   │   ├── all_path_Summary.md
-│   │   └── Project_Structure.md
+│   │   └── admin_path_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -479,16 +482,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 59 |
-| CSS Files | 35 |
-| JavaScript Files | 27 |
+| PHP Files | 61 |
+| CSS Files | 36 |
+| JavaScript Files | 28 |
 | JSON Files | 0 |
-| Text/Markdown | 7 |
+| Text/Markdown | 6 |
 | Image Files | 121 |
 | Other Files | 14 |
 
 **Total Directories:** 25
-**Total Files:** 262
+**Total Files:** 265
 
 ---
 
@@ -909,16 +912,14 @@ function serveAdminFile($relativePath) {
     // Security: Prevent directory traversal
     $relativePath = str_replace(['../', '..\\', './', '.\\'], '', $relativePath);
     
-    // Ensure path starts with administrators/ (after removing Crooks-Data-Storage/ prefix if present)
+    // Parse the path to extract the directory structure
+    // Path can be: administrators/1/profile/profile.jpg OR users/123/identity/identity.jpg OR sellers/456/document.jpg etc.
     $pathForValidation = str_replace('Crooks-Data-Storage/', '', $relativePath);
-    if (strpos($pathForValidation, 'administrators/') !== 0) {
-        error_log("Admin storage: Invalid file path - not in administrators directory: " . $relativePath);
-        http_response_code(403);
-        die('Invalid file path');
-    }
     
-    // Parse the path to verify admin owns this file
+    // Split path into parts
     $pathParts = explode('/', $pathForValidation);
+    
+    // Check if this is an administrators file (owned by admin)
     if (count($pathParts) >= 2 && $pathParts[0] === 'administrators') {
         $fileAdminId = (int)$pathParts[1];
         if ($fileAdminId !== $_SESSION['admin_id']) {
@@ -926,6 +927,18 @@ function serveAdminFile($relativePath) {
             http_response_code(403);
             die('Access denied: You do not own this file.');
         }
+    }
+    // Allow access to user/seller files for viewing by admin (read-only)
+    else if ($pathParts[0] === 'users' || $pathParts[0] === 'sellers') {
+        // Admin can view any user/seller file for verification purposes
+        error_log("Admin storage: Admin {$_SESSION['admin_id']} accessing {$pathParts[0]} file: " . $relativePath);
+        // Continue serving the file
+    }
+    else {
+        // Any other path structure - deny access
+        error_log("Admin storage: Invalid file path - unknown directory structure: " . $relativePath);
+        http_response_code(403);
+        die('Invalid file path');
     }
     
     // ===== WILDCARD SEARCH FOR PROFILE PICTURES =====
@@ -1665,6 +1678,252 @@ if ($action === 'resolve' && isset($_POST['report_id'])) {
 }
 
 echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/admin/database/admin-seller-profile-handler.php`
+
+**Status:** `FOUND`
+
+```php
+<?php
+// Admin Seller Profile Handler
+session_start();
+require_once(__DIR__ . '/admin-database-connect.php');
+require_once(__DIR__ . '/admin-data-storage-handler.php');
+
+// Always return JSON
+header('Content-Type: application/json');
+
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error_log.txt');
+
+// Check authentication
+if (!isset($_SESSION['admin_id'])) {
+    http_response_code(401);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
+$action = $_GET['action'] ?? $_POST['action'] ?? '';
+
+if ($action === 'get_seller_details' && isset($_GET['seller_id'])) {
+    getSellerDetails($_GET['seller_id']);
+    exit;
+}
+
+if ($action === 'verify_seller' && isset($_POST['seller_id'])) {
+    verifySeller($_POST['seller_id']);
+    exit;
+}
+
+if ($action === 'reject_seller' && isset($_POST['seller_id'])) {
+    rejectSeller($_POST['seller_id']);
+    exit;
+}
+
+// If no valid action
+http_response_code(400);
+echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+
+/**
+ * Get complete seller details including user information and document paths
+ */
+function getSellerDetails($sellerId) {
+    global $connection;
+    
+    try {
+        // Get seller with user information - FIXED: Changed u.date_joined to u.date_created
+        $stmt = $connection->prepare("
+            SELECT 
+                s.seller_id,
+                s.business_name,
+                s.date_applied,
+                s.is_verified,
+                s.verification_date,
+                s.identity_path,
+                s.id_document_path,
+                u.user_id,
+                u.first_name,
+                u.middle_name,
+                u.last_name,
+                u.email,
+                u.contact_number,
+                u.username,
+                u.birthdate,
+                u.gender,
+                u.address,
+                u.profile_picture,
+                u.date_created
+            FROM sellers s
+            LEFT JOIN users u ON s.user_id = u.user_id
+            WHERE s.seller_id = ?
+        ");
+        $stmt->execute([$sellerId]);
+        $seller = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$seller) {
+            echo json_encode(['status' => 'error', 'message' => 'Seller not found']);
+            return;
+        }
+        
+        // Format dates
+        if (!empty($seller['birthdate'])) {
+            $seller['birthdate_formatted'] = date('F j, Y', strtotime($seller['birthdate']));
+        }
+        if (!empty($seller['date_applied'])) {
+            $seller['date_applied_formatted'] = date('F j, Y', strtotime($seller['date_applied']));
+        }
+        if (!empty($seller['verification_date']) && $seller['verification_date'] !== 'NULL' && $seller['verification_date'] !== null) {
+            $seller['verification_date_formatted'] = date('F j, Y', strtotime($seller['verification_date']));
+        }
+        if (!empty($seller['date_created'])) {
+            $seller['date_joined_formatted'] = date('F j, Y', strtotime($seller['date_created']));
+        }
+        
+        // Calculate age from birthdate
+        if (!empty($seller['birthdate'])) {
+            $birthdate = new DateTime($seller['birthdate']);
+            $today = new DateTime();
+            $age = $today->diff($birthdate)->y;
+            $seller['age'] = $age;
+        }
+        
+        // Get document URLs using the admin data storage handler
+        // These paths are from sellers table: identity_path and id_document_path
+        // They point to files in Crooks-Data-Storage/users/...
+        $seller['identity_url'] = '';
+        $seller['id_document_url'] = '';
+        
+        if (!empty($seller['identity_path'])) {
+            // Check if it's already a full path with Crooks-Data-Storage prefix
+            if (strpos($seller['identity_path'], 'Crooks-Data-Storage/') === 0) {
+                // Use the admin file serving mechanism
+                $seller['identity_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['identity_path']);
+            } else {
+                // For backward compatibility, assume it's a relative path
+                $seller['identity_url'] = '../../' . $seller['identity_path'];
+            }
+        }
+        
+        if (!empty($seller['id_document_path'])) {
+            if (strpos($seller['id_document_path'], 'Crooks-Data-Storage/') === 0) {
+                $seller['id_document_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['id_document_path']);
+            } else {
+                $seller['id_document_url'] = '../../' . $seller['id_document_path'];
+            }
+        }
+        
+        // Profile picture from users table
+        $seller['profile_picture_url'] = '';
+        if (!empty($seller['profile_picture'])) {
+            if (strpos($seller['profile_picture'], 'Crooks-Data-Storage/') === 0) {
+                $seller['profile_picture_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['profile_picture']);
+            } else {
+                $seller['profile_picture_url'] = '../../' . $seller['profile_picture'];
+            }
+        }
+        
+        // Get full name
+        $fullName = ($seller['first_name'] ?? '');
+        if (!empty($seller['middle_name'])) {
+            $fullName .= ' ' . $seller['middle_name'];
+        }
+        if (!empty($seller['last_name'])) {
+            $fullName .= ' ' . $seller['last_name'];
+        }
+        $seller['full_name'] = trim($fullName) ?: 'Unknown User';
+        
+        // Format contact number for display
+        if (!empty($seller['contact_number'])) {
+            $phone = preg_replace('/[^0-9]/', '', $seller['contact_number']);
+            if (strlen($phone) === 11 && $phone[0] === '0') {
+                $seller['contact_number_formatted'] = substr($phone, 0, 4) . ' ' . substr($phone, 4, 3) . ' ' . substr($phone, 7, 4);
+            } else {
+                $seller['contact_number_formatted'] = $seller['contact_number'];
+            }
+        } else {
+            $seller['contact_number_formatted'] = '-';
+        }
+        
+        echo json_encode([
+            'status' => 'success',
+            'data' => $seller
+        ]);
+        
+    } catch (PDOException $e) {
+        error_log("Error fetching seller details: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    }
+}
+
+/**
+ * Verify a seller (set is_verified = 1)
+ */
+function verifySeller($sellerId) {
+    global $connection;
+    
+    try {
+        $stmt = $connection->prepare("
+            UPDATE sellers 
+            SET is_verified = 1, verification_date = NOW() 
+            WHERE seller_id = ?
+        ");
+        $stmt->execute([$sellerId]);
+        
+        if ($stmt->rowCount() > 0) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Seller verified successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Seller not found or already verified'
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        error_log("Error verifying seller: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+}
+
+/**
+ * Reject a seller (set is_verified = 2)
+ */
+function rejectSeller($sellerId) {
+    global $connection;
+    
+    try {
+        $stmt = $connection->prepare("
+            UPDATE sellers 
+            SET is_verified = 2, verification_date = NOW() 
+            WHERE seller_id = ?
+        ");
+        $stmt->execute([$sellerId]);
+        
+        if ($stmt->rowCount() > 0) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Seller rejected'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Seller not found'
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        error_log("Error rejecting seller: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    }
+}
+?>
 ```
 
 ---
@@ -2575,9 +2834,9 @@ try {
         exit;
     }
     
-    // Format date joined
-    if (!empty($admin['created_at'])) {
-        $dateJoined = date('F j, Y', strtotime($admin['created_at']));
+    // Format date joined - FIXED: Changed from created_at to date_joined
+    if (!empty($admin['date_joined'])) {
+        $dateJoined = date('F j, Y', strtotime($admin['date_joined']));
     }
     
     // Get profile picture URL using admin-data-storage-handler
@@ -2783,6 +3042,253 @@ try {
     </div>
 
     <?php include_once(__DIR__ . '/../includes/admin-footer.php'); ?>
+</body>
+
+</html>
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/admin/pages/admin-seller-profile.php`
+
+**Status:** `FOUND`
+
+```php
+<?php
+session_start();
+require_once('../database/admin-database-connect.php');
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: admin-sign-in.php');
+    exit;
+}
+
+// Get seller ID from URL
+$sellerId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($sellerId === 0) {
+    header('Location: admin-verify-sellers.php');
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile - Admin - Crooks Cart Collectives</title>
+    <link rel="stylesheet" href="../styles/admin-header.css">
+    <link rel="stylesheet" href="../styles/admin-seller-profile.css">
+    <link rel="stylesheet" href="../styles/admin-footer.css">
+</head>
+
+<body>
+    <?php include_once('../includes/admin-header.php'); ?>
+
+    <div class="content">
+        <div class="page-title-header">
+            <h1>Seller Profile</h1>
+            <a href="admin-verify-sellers.php" class="back-link">
+                <img src="../assets/image/icons/cancel.svg" alt="Back" class="back-icon">
+                Back to Sellers
+            </a>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading seller information...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <div class="error-content">
+                <img src="../assets/image/icons/info-empty.svg" alt="Error" class="error-icon">
+                <h2>Error Loading Profile</h2>
+                <p id="errorMessage">Unable to load seller information.</p>
+                <a href="admin-verify-sellers.php" class="btn btn-primary">Return to Sellers</a>
+            </div>
+        </div>
+
+        <!-- Seller Profile Container (hidden initially) -->
+        <div id="sellerProfileContainer" class="seller-profile-container" style="display: none;">
+            <!-- Hidden seller ID field -->
+            <input type="hidden" id="sellerId" value="<?php echo $sellerId; ?>">
+
+            <!-- Profile Header Card - Restructured with nested divs for consistent layout -->
+            <div class="profile-header-card">
+                <!-- Main header wrapper -->
+                <div class="header-main-wrapper">
+                    <!-- Top row: Business Name and Status -->
+                    <div class="header-top-row">
+                        <div class="header-business-name">
+                            <h1 id="sellerBusinessName" class="profile-business-name-header">Loading...</h1>
+                        </div>
+                        <div class="header-status">
+                            <span id="sellerStatus" class="status-badge pending">Pending</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom row: Profile Pic, Full Name, and Action Buttons -->
+                    <div class="header-bottom-row">
+                        <!-- Left: Profile Picture -->
+                        <div class="header-profile-pic">
+                            <div class="profile-avatar-wrapper">
+                                <img id="profileAvatar" src="../assets/image/icons/user-profile-circle.svg"
+                                    alt="Profile">
+                            </div>
+                        </div>
+
+                        <!-- Middle: Full Name -->
+                        <div class="header-full-name">
+                            <span id="sellerFullName" class="profile-full-name">Loading...</span>
+                        </div>
+
+                        <!-- Right: Action Buttons (Verify/Reject) will be inserted here by JS -->
+                        <div class="header-actions" id="profileActions"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Three-column layout based on seller-fill-form -->
+            <div class="profile-grid">
+                <!-- Column 1: Credential Information (Uploaded Documents) -->
+                <div class="profile-card credential-card">
+                    <div class="card-header">
+                        <h3>Credential Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="document-row">
+                            <div class="document-box">
+                                <div class="upload-icon">
+                                    <img src="../assets/image/icons/user-profile-circle.svg" alt="Formal picture">
+                                </div>
+                                <div class="upload-preview" id="identityPreview"></div>
+                                <div class="document-label">Formal Picture</div>
+                                <p class="document-status" id="identityStatus">Not uploaded</p>
+                                <a href="#" id="identityLink" class="document-link" target="_blank"
+                                    style="display: none;">View Full Image</a>
+                            </div>
+                            <div class="document-box">
+                                <div class="upload-icon">
+                                    <img src="../assets/image/icons/submit-valid-id-icon.png" alt="Valid ID">
+                                </div>
+                                <div class="upload-preview" id="idDocumentPreview"></div>
+                                <div class="document-label">Valid ID</div>
+                                <p class="document-status" id="idDocumentStatus">Not uploaded</p>
+                                <a href="#" id="idDocumentLink" class="document-link" target="_blank"
+                                    style="display: none;">View Full Image</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Personal Information -->
+                <div class="profile-card personal-card">
+                    <div class="card-header">
+                        <h3>Personal Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="middle_name">Middle Name</label>
+                            <input type="text" id="middle_name" name="middle_name" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthdate">Birthdate</label>
+                            <input type="text" id="birthdate" name="birthdate" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <input type="text" id="gender" name="gender" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Account & Seller Information -->
+                <div class="profile-card account-card">
+                    <div class="card-header">
+                        <h3>Account & Seller Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number</label>
+                            <input type="text" id="contactNumber" name="contactNumber" disabled>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" rows="3" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessName">Store Name</label>
+                            <input type="text" id="businessName" name="businessName" disabled>
+                        </div>
+
+                        <!-- New Date Fields -->
+                        <div class="form-group">
+                            <label for="dateApplied">Date Applied</label>
+                            <input type="text" id="dateApplied" name="dateApplied" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateVerified">Date Verified</label>
+                            <input type="text" id="dateVerified" name="dateVerified" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberSince">Member Since</label>
+                            <input type="text" id="memberSince" name="memberSince" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal for Verify/Reject -->
+    <div id="confirmationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <img src="../assets/image/icons/info-empty.svg" alt="Confirm">
+            </div>
+            <h3 id="modalTitle" class="modal-title">Confirm Action</h3>
+            <p id="modalMessage" class="modal-message">Are you sure you want to perform this action?</p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="modal-btn modal-btn-secondary">Cancel</button>
+                <button id="modalConfirmBtn" class="modal-btn modal-btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <img src="../assets/image/icons/mail.svg" alt="Notification">
+            </div>
+            <p id="notificationMessage" class="modal-message"></p>
+            <div class="modal-actions">
+                <button id="notificationCloseBtn" class="modal-btn modal-btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <?php include_once('../includes/admin-footer.php'); ?>
+
+    <script src="../scripts/admin-seller-profile.js"></script>
 </body>
 
 </html>
@@ -3221,7 +3727,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
             <h2>Confirm Logout</h2>
             <p>Are you sure you want to logout?</p>
             <div class="logout-modal-buttons">
-                <button id="cancelLogout" class="logout-modal-btn btn-cancel">Cancel</button>
+                <button id="cancelLogout" class="logout-modal-btn btn-cancel"
+                    style="background: #000000; color: #ffffff;">Cancel</button>
                 <button id="confirmLogout" class="logout-modal-btn btn-confirm">Logout</button>
             </div>
         </div>
@@ -4083,6 +4590,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isEditMode = false;
     let originalValues = {};
     let pictureChanged = false;
+    let autoCloseTimer = null;
 
     // ============= PHONE NUMBER FORMATTING =============
     function formatPhilippineNumber(input) {
@@ -4110,6 +4618,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ============= MODAL FUNCTIONS =============
     function showModal(message, isError = false) {
+        // Clear any existing auto-close timer
+        if (autoCloseTimer) {
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = null;
+        }
+        
         modalMessage.textContent = message;
         const modalIcon = document.querySelector('.modal-icon');
         if (modalIcon) {
@@ -4120,12 +4634,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        // Auto-close after 5 seconds if user doesn't click
+        autoCloseTimer = setTimeout(() => {
+            hideModal();
+        }, 5000);
     }
 
     function hideModal() {
-        z
         modal.style.display = 'none';
         document.body.style.overflow = '';
+        
+        // Clear timer if exists
+        if (autoCloseTimer) {
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = null;
+        }
     }
 
     if (modalClose) {
@@ -4639,6 +5163,336 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ============= INITIAL STORE =============
     storeOriginalValues();
+});
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/admin/scripts/admin-seller-profile.js`
+
+**Status:** `FOUND`
+
+```javascript
+// Admin Seller Profile JavaScript
+// Handles loading seller data, displaying documents, and verify/reject actions
+
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+
+    // ============= DOM ELEMENTS =============
+    const sellerId = document.getElementById('sellerId')?.value;
+    const loadingState = document.getElementById('loadingState');
+    const errorState = document.getElementById('errorState');
+    const errorMessage = document.getElementById('errorMessage');
+    const sellerProfileContainer = document.getElementById('sellerProfileContainer');
+    const profileActions = document.getElementById('profileActions');
+
+    // Profile header elements
+    const profileAvatar = document.getElementById('profileAvatar');
+    const sellerFullName = document.getElementById('sellerFullName');
+    const sellerBusinessName = document.getElementById('sellerBusinessName');
+    const sellerStatus = document.getElementById('sellerStatus');
+
+    // Document elements
+    const identityPreview = document.getElementById('identityPreview');
+    const identityStatus = document.getElementById('identityStatus');
+    const identityLink = document.getElementById('identityLink');
+    const idDocumentPreview = document.getElementById('idDocumentPreview');
+    const idDocumentStatus = document.getElementById('idDocumentStatus');
+    const idDocumentLink = document.getElementById('idDocumentLink');
+
+    // Personal information fields
+    const firstName = document.getElementById('first_name');
+    const middleName = document.getElementById('middle_name');
+    const lastName = document.getElementById('last_name');
+    const birthdate = document.getElementById('birthdate');
+    const gender = document.getElementById('gender');
+
+    // Account information fields
+    const email = document.getElementById('email');
+    const username = document.getElementById('username');
+    const contactNumber = document.getElementById('contactNumber');
+    const address = document.getElementById('address');
+    const businessName = document.getElementById('businessName');
+    
+    // New date fields
+    const dateApplied = document.getElementById('dateApplied');
+    const dateVerified = document.getElementById('dateVerified');
+    const memberSince = document.getElementById('memberSince');
+
+    // Modal elements
+    const confirmationModal = document.getElementById('confirmationModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const notificationCloseBtn = document.getElementById('notificationCloseBtn');
+
+    // ============= STATE =============
+    let currentAction = null;
+    let currentSellerId = sellerId;
+
+    // ============= MODAL FUNCTIONS =============
+    function showNotification(message, isError = false) {
+        if (!notificationModal || !notificationMessage) return;
+        notificationMessage.textContent = message;
+        notificationModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        if (!isError) {
+            setTimeout(() => {
+                hideNotification();
+            }, 3000);
+        }
+    }
+
+    function hideNotification() {
+        if (!notificationModal) return;
+        notificationModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    if (notificationCloseBtn) {
+        notificationCloseBtn.addEventListener('click', hideNotification);
+    }
+
+    function showConfirmationModal(title, message, action) {
+        if (!confirmationModal || !modalTitle || !modalMessage) return;
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        currentAction = action;
+        confirmationModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideConfirmationModal() {
+        if (!confirmationModal) return;
+        confirmationModal.style.display = 'none';
+        document.body.style.overflow = '';
+        currentAction = null;
+    }
+
+    if (modalCancelBtn) {
+        modalCancelBtn.addEventListener('click', hideConfirmationModal);
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === confirmationModal) hideConfirmationModal();
+        if (e.target === notificationModal) hideNotification();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (confirmationModal.style.display === 'flex') hideConfirmationModal();
+            if (notificationModal.style.display === 'flex') hideNotification();
+        }
+    });
+
+    // ============= LOAD SELLER DATA =============
+    async function loadSellerData() {
+        if (!sellerId) {
+            showError('No seller ID provided');
+            return;
+        }
+
+        try {
+            const response = await fetch(`../database/admin-seller-profile-handler.php?action=get_seller_details&seller_id=${sellerId}&t=${Date.now()}`);
+            const result = await response.json();
+
+            if (result.status === 'success' && result.data) {
+                populateSellerData(result.data);
+                loadingState.style.display = 'none';
+                sellerProfileContainer.style.display = 'block';
+            } else {
+                showError(result.message || 'Failed to load seller data');
+            }
+        } catch (error) {
+            console.error('Error loading seller:', error);
+            showError('Network error. Please check your connection and try again.');
+        }
+    }
+
+    function showError(message) {
+        if (loadingState) loadingState.style.display = 'none';
+        if (errorState) {
+            errorState.style.display = 'flex';
+            if (errorMessage) errorMessage.textContent = message;
+        }
+    }
+
+    // ============= POPULATE SELLER DATA =============
+    function populateSellerData(data) {
+        // Profile header
+        if (sellerFullName) sellerFullName.textContent = data.full_name || 'Unknown User';
+        if (sellerBusinessName) sellerBusinessName.textContent = data.business_name || 'No Business Name';
+        
+        // Status badge
+        if (sellerStatus) {
+            sellerStatus.textContent = data.is_verified === 0 ? 'Pending' :
+                                      data.is_verified === 1 ? 'Verified' : 'Rejected';
+            sellerStatus.className = 'status-badge ' + 
+                (data.is_verified === 0 ? 'pending' :
+                 data.is_verified === 1 ? 'verified' : 'rejected');
+        }
+
+        // Profile avatar
+        if (profileAvatar && data.profile_picture_url) {
+            profileAvatar.src = data.profile_picture_url;
+            profileAvatar.onerror = function() {
+                this.src = '../assets/image/icons/user-profile-circle.svg';
+            };
+        }
+
+        // Document images
+        if (data.identity_url) {
+            identityPreview.style.backgroundImage = `url('${data.identity_url}')`;
+            identityStatus.textContent = 'Uploaded';
+            identityLink.href = data.identity_url;
+            identityLink.style.display = 'inline-block';
+        } else {
+            identityStatus.textContent = 'Not uploaded';
+        }
+
+        if (data.id_document_url) {
+            idDocumentPreview.style.backgroundImage = `url('${data.id_document_url}')`;
+            idDocumentStatus.textContent = 'Uploaded';
+            idDocumentLink.href = data.id_document_url;
+            idDocumentLink.style.display = 'inline-block';
+        } else {
+            idDocumentStatus.textContent = 'Not uploaded';
+        }
+
+        // Personal Information fields
+        if (firstName) firstName.value = data.first_name || '';
+        if (middleName) middleName.value = data.middle_name || '';
+        if (lastName) lastName.value = data.last_name || '';
+        if (birthdate) birthdate.value = data.birthdate_formatted || data.birthdate || '';
+        if (gender) gender.value = data.gender || '';
+
+        // Account Information fields
+        if (email) email.value = data.email || '';
+        if (username) username.value = data.username || '';
+        if (contactNumber) contactNumber.value = data.contact_number_formatted || data.contact_number || '';
+        if (address) address.value = data.address || '';
+        if (businessName) businessName.value = data.business_name || '';
+
+        // New date fields - populate as inputs
+        if (dateApplied) {
+            dateApplied.value = data.date_applied_formatted || '';
+            if (!data.date_applied_formatted) dateApplied.placeholder = 'Not applied yet';
+        }
+        
+        if (dateVerified) {
+            dateVerified.value = data.verification_date_formatted || '';
+            if (!data.verification_date_formatted) dateVerified.placeholder = 'Not verified yet';
+        }
+        
+        if (memberSince) {
+            memberSince.value = data.date_joined_formatted || '';
+            if (!data.date_joined_formatted) memberSince.placeholder = 'N/A';
+        }
+
+        // Show verify/reject buttons only for pending sellers
+        if (profileActions) {
+            if (data.is_verified === 0) {
+                // For pending sellers, show both buttons
+                profileActions.innerHTML = `
+                    <button class="btn btn-secondary" id="rejectSellerBtn">
+                        <img src="../assets/image/icons/cancel.svg" alt="Reject" class="btn-icon">
+                        Reject
+                    </button>
+                    <button class="btn btn-primary" id="verifySellerBtn">
+                        <img src="../assets/image/icons/verified-empty.svg" alt="Verify" class="btn-icon">
+                        Verify
+                    </button>
+                `;
+            } else {
+                // For non-pending sellers, clear any buttons
+                profileActions.innerHTML = '';
+            }
+
+            // Add event listeners to buttons
+            const verifyBtn = document.getElementById('verifySellerBtn');
+            const rejectBtn = document.getElementById('rejectSellerBtn');
+
+            if (verifyBtn) {
+                verifyBtn.addEventListener('click', () => {
+                    showConfirmationModal(
+                        'Verify Seller',
+                        'Are you sure you want to verify this seller? They will be able to start selling immediately.',
+                        'verify'
+                    );
+                });
+            }
+
+            if (rejectBtn) {
+                rejectBtn.addEventListener('click', () => {
+                    showConfirmationModal(
+                        'Reject Seller',
+                        'Are you sure you want to reject this seller application? This action cannot be undone.',
+                        'reject'
+                    );
+                });
+            }
+        }
+    }
+
+    // ============= HANDLE VERIFY/REJECT =============
+    if (modalConfirmBtn) {
+        modalConfirmBtn.addEventListener('click', async function() {
+            if (!currentAction || !currentSellerId) return;
+
+            const action = currentAction === 'verify' ? 'verify_seller' : 'reject_seller';
+            const originalText = this.textContent;
+            this.textContent = 'Processing...';
+            this.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('action', action);
+                formData.append('seller_id', currentSellerId);
+
+                const response = await fetch('../database/admin-seller-profile-handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showNotification(result.message);
+                    
+                    // Reload seller data after a short delay
+                    setTimeout(() => {
+                        hideConfirmationModal();
+                        loadSellerData();
+                    }, 1500);
+                } else {
+                    showNotification(result.message || 'Action failed', true);
+                    hideConfirmationModal();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Network error. Please try again.', true);
+                hideConfirmationModal();
+            } finally {
+                this.textContent = originalText;
+                this.disabled = false;
+            }
+        });
+    }
+
+    // ============= INITIAL LOAD =============
+    if (sellerId) {
+        loadSellerData();
+    } else {
+        showError('Invalid seller ID');
+    }
 });
 ```
 
@@ -5577,6 +6431,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === notificationModal) hideNotification();
     });
 
+    // Format date with time
+    function formatDateTime(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'Invalid date';
+        
+        return date.toLocaleString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        }).replace(',', '');
+    }
+
     // Filter functions
     function setActiveFilter(filter) {
         filterTabs.forEach(tab => {
@@ -5635,19 +6505,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderSellers(sellers) {
-        let html = '<div class="sellers-grid">';
+        let html = '<div class="sellers-container">';
 
         sellers.forEach(seller => {
-            const createdDate = seller.created_at ? new Date(seller.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            }) : 'N/A';
-
-            const statusBadge = seller.is_verified === 0 ? 'pending' : 
-                               seller.is_verified === 1 ? 'verified' : 'rejected';
+            const appliedDate = formatDateTime(seller.created_at);
+            
             const statusText = seller.is_verified === 0 ? 'Pending' : 
-                              seller.is_verified === 1 ? 'Verified' : 'Rejected';
+                               seller.is_verified === 1 ? 'Verified' : 'Rejected';
+            
+            const statusClass = seller.is_verified === 0 ? 'pending' : 
+                                seller.is_verified === 1 ? 'verified' : 'rejected';
 
             const fullName = (seller.first_name && seller.first_name !== 'Unknown' ? seller.first_name : '') + 
                             (seller.last_name && seller.last_name !== 'User' ? ' ' + seller.last_name : '');
@@ -5656,45 +6523,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             html += `
                 <div class="seller-card" data-id="${seller.seller_id}">
-                    <div class="seller-header">
-                        <h3>${escapeHtml(seller.business_name)}</h3>
-                        <span class="status-badge ${statusBadge}">${statusText}</span>
+                    <!-- Header Row: Business Name + Applied Date + Status -->
+                    <div class="seller-row header-row">
+                        <div class="business-name">${escapeHtml(seller.business_name)}</div>
+                        <div class="date-applied">Applied ${appliedDate}</div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                     </div>
-                    <div class="seller-body">
-                        <p><strong>Name:</strong> ${escapeHtml(displayName)}</p>
-                        <p><strong>Email:</strong> ${escapeHtml(seller.email)}</p>
-                        <p><strong>Contact:</strong> ${escapeHtml(seller.contact_number)}</p>
-                        <p><strong>Applied:</strong> ${createdDate}</p>
+
+                    <!-- Details Row: Name, Email, Contact, and View Details Button -->
+                    <div class="seller-row details-row">
+                        <div class="detail-item name-item">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">${escapeHtml(displayName)}</span>
+                        </div>
+                        <div class="detail-item email-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value email-value">${escapeHtml(seller.email)}</span>
+                        </div>
+                        <div class="detail-item contact-item">
+                            <span class="detail-label">Contact:</span>
+                            <span class="detail-value">${escapeHtml(seller.contact_number)}</span>
+                        </div>
+                        <a href="admin-seller-profile.php?id=${seller.seller_id}" class="btn-view-details">
+                            <img src="../assets/image/icons/user-profile-circle.svg" alt="View" class="btn-icon">
+                            View Details
+                        </a>
                     </div>
+                </div>
             `;
-
-            if (seller.is_verified === 0) {
-                html += `
-                    <div class="seller-actions">
-                        <button class="btn-verify" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/verified-filled.svg" alt="Verify" class="btn-icon">
-                            Verify
-                        </button>
-                        <button class="btn-reject" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/cancel.svg" alt="Reject" class="btn-icon">
-                            Reject
-                        </button>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="seller-actions">
-                        <span class="status-message">Already ${statusText.toLowerCase()}</span>
-                    </div>
-                `;
-            }
-
-            html += '</div>';
         });
 
         html += '</div>';
         sellersList.innerHTML = html;
-        attachEventListeners();
     }
 
     function escapeHtml(text) {
@@ -5704,74 +6564,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    function attachEventListeners() {
-        document.querySelectorAll('.btn-verify').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'verify');
-            });
-        });
-
-        document.querySelectorAll('.btn-reject').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'reject');
-            });
-        });
-    }
-
-    async function handleVerification(sellerId, action) {
-        // Disable button to prevent double submission
-        const buttons = document.querySelectorAll(`.btn-${action}[data-id="${sellerId}"]`);
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = 'Processing...';
-            btn.dataset.originalText = originalText;
-        });
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', action);
-            formData.append('seller_id', sellerId);
-
-            const response = await fetch('../database/admin-auth-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                showNotification(result.message);
-                await loadSellers(); // Reload the list
-            } else {
-                showNotification(result.message || 'Action failed', true);
-                // Re-enable buttons
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.innerHTML = btn.dataset.originalText || (action === 'verify' ? 'Verify' : 'Reject');
-                });
-            }
-        } catch (error) {
-            console.error('Verification error:', error);
-            showNotification('Network error. Please try again.', true);
-            // Re-enable buttons
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.innerHTML = btn.dataset.originalText || (action === 'verify' ? 'Verify' : 'Reject');
-            });
-        }
-    }
-
     async function loadSellers() {
         sellersList.innerHTML = '<div class="loading">Loading sellers...</div>';
 
         try {
-            const response = await fetch('../database/admin-auth-handler.php?action=get_all_sellers');
+            const response = await fetch('../database/admin-auth-handler.php?action=get_all_sellers&t=' + Date.now());
             const result = await response.json();
 
             if (result.status === 'success') {
@@ -8118,7 +8915,7 @@ body {
     --profile-primary-dark: #e66a2e;
     --profile-bg: #f2f4f6;
     --profile-card-bg: #ffffff;
-    --profile-text-primary: #000000;
+   --profile-text-primary: #000000;
     --profile-text-secondary: #666666;
     --profile-border: #e0e0e0;
     --profile-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -8215,7 +9012,7 @@ body {
 .file-upload-label img {
     width: 20px;
     height: 20px;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1); /* Makes SVG white */
 }
 
 #profile_picture {
@@ -8283,6 +9080,7 @@ body {
 .profile-actions-header .btn .btn-icon {
     width: 18px;
     height: 18px;
+    filter: brightness(0) invert(1); /* Makes all action button SVGs white */
 }
 
 .profile-actions-header .btn .btn-text {
@@ -8314,22 +9112,40 @@ body {
 .btn-edit .btn-icon {
     width: 18px;
     height: 18px;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1); /* Makes edit icon white */
 }
 
-/* Save Button */
-.btn-primary {
-    background: var(--profile-primary);
+/* Upload Button - Black with white text (matching cancel button style) */
+.btn-upload {
+    background: #000000;
     color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.btn-upload:hover {
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-upload .btn-icon {
+    filter: brightness(0) invert(1); /* Ensures upload icon is white */
+}
+
+/* Save Button - Black with white text (matching cancel button style) */
+.btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: var(--profile-primary-dark);
+    background: #333333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Cancel Button */
+/* Cancel Button - Black with white text */
 .btn-secondary {
     background: #000000;
     color: #ffffff;
@@ -8340,6 +9156,10 @@ body {
     background: #333333;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary .btn-icon {
+    filter: brightness(0) invert(1); /* Makes cancel icon white instead of black */
 }
 
 .btn:disabled {
@@ -8369,7 +9189,7 @@ body {
     margin-bottom: 25px;
 }
 
-/* Profile Cards */
+/* Profile Cards - Make both cards equal height in desktop view */
 .profile-card {
     background: var(--profile-card-bg);
     border-radius: var(--profile-radius);
@@ -8377,7 +9197,9 @@ body {
     border: 1px solid var(--profile-border);
     overflow: hidden;
     transition: var(--profile-transition);
-    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make cards take full height of grid cell */
 }
 
 .profile-card:hover {
@@ -8391,6 +9213,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .card-header h3 {
@@ -8400,6 +9223,7 @@ body {
     margin: 0;
 }
 
+/* FIXED: Badge styling - gets smaller on narrow screens */
 .card-header .badge {
     background: #e0e0e0;
     color: var(--profile-text-secondary);
@@ -8409,10 +9233,97 @@ body {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: font-size 0.2s ease;
+}
+
+/* Responsive badge sizing for the "Cannot be changed" text */
+@media (max-width: 600px) {
+    .card-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .card-header .badge {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+    }
+}
+
+@media (max-width: 450px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .card-header .badge {
+        font-size: 0.55rem; /* Smaller font when width below 450px */
+        padding: 3px 6px;
+        white-space: normal; /* Allow wrapping if needed */
+        word-break: break-word;
+        text-align: left;
+    }
+}
+
+@media (max-width: 350px) {
+    .card-header .badge {
+        font-size: 0.5rem;
+    }
 }
 
 .card-body {
     padding: 25px;
+    flex: 1; /* Allow body to expand and fill available space */
+}
+
+/* Personal Info Card - Form groups take full height */
+.personal-info-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-info-card .form-group {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.personal-info-card .form-group:last-child {
+    margin-bottom: 0;
+    flex: 1; /* Make last form group take remaining space */
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-info-card .form-group:last-child input {
+    flex: 1; /* Make input in last group take remaining space */
+}
+
+/* Account Info Card - Info groups distribute evenly */
+.account-info-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.account-info-card .info-display-group {
+    display: flex;
+    align-items: center; /* Keep icons centered vertically */
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--profile-border);
+    flex: 1;
+    min-height: 70px; /* Give a consistent minimum height */
+}
+
+.account-info-card .info-display-group:first-child {
+    padding-top: 0;
+}
+
+.account-info-card .info-display-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 /* Form Groups */
@@ -8442,9 +9353,10 @@ body {
     filter: brightness(0.6);
 }
 
+/* ===== FIXED: ALL INPUTS NOW HAVE EXACTLY THE SAME HEIGHT ===== */
 .form-group input {
     width: 100%;
-    height: 45px;
+    height: 45px; /* Fixed consistent height for all inputs */
     padding: 0 15px;
     border: 1px solid var(--profile-border);
     border-radius: 8px;
@@ -8452,20 +9364,44 @@ body {
     background: #ffffff;
     color: var(--profile-text-primary);
     transition: var(--profile-transition);
+    box-sizing: border-box; /* Critical: ensures padding doesn't add to height */
+    line-height: normal; /* Reset line height */
+    margin: 0; /* Remove any default margins */
 }
 
-.form-group input:focus {
+/* FIXED: Specific override for contact number input - force same height */
+#contact_number,
+input[name="contact_number"],
+input[type="tel"] {
+    height: 45px !important; /* Force exact same height */
+    min-height: 45px;
+    max-height: 45px;
+    padding: 0 15px !important;
+    line-height: 45px; /* Helps with vertical alignment of text */
+    box-sizing: border-box;
+}
+
+/* Focus state for all inputs including contact */
+.form-group input:focus,
+#contact_number:focus {
     border-color: var(--profile-primary);
     outline: none;
     box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
 }
 
-.form-group input:disabled {
+/* Disabled state for all inputs including contact */
+.form-group input:disabled,
+#contact_number:disabled {
     background: #f9f9f9;
     border-color: var(--profile-border);
     color: var(--profile-text-primary);
     cursor: default;
     opacity: 1;
+}
+
+/* Error state for contact input */
+#contact_number.error {
+    border-color: #e74c3c;
 }
 
 .error-message {
@@ -8475,13 +9411,15 @@ body {
     min-height: 18px;
 }
 
-/* Info Display Groups (for account info) */
+/* Info Display Groups (for account info) - FIXED ALIGNMENT - SVG STAYS LEFT */
 .info-display-group {
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* Keep icons centered vertically */
     gap: 15px;
     padding: 12px 0;
     border-bottom: 1px solid var(--profile-border);
+    /* Ensure the layout doesn't change on resize */
+    flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .info-display-group:last-child {
@@ -8496,18 +9434,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    /* Keep icon fixed on left */
+    margin-right: 0;
 }
 
 .info-icon img {
     width: 18px;
     height: 18px;
     filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    display: block; /* Remove any extra spacing */
 }
 
 .info-content {
-    flex: 1;
-    min-width: 0;
+    flex: 1; /* Take remaining space */
+    min-width: 0; /* Allow content to shrink if needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    line-height: 1.3; /* Consistent line height */
 }
 
 .info-label {
@@ -8517,6 +9462,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.3px;
     margin-bottom: 2px;
+    line-height: 1.2;
 }
 
 .info-value {
@@ -8525,6 +9471,7 @@ body {
     color: var(--profile-text-primary);
     font-weight: 500;
     word-break: break-word;
+    line-height: 1.3;
 }
 
 /* ===== FORM ACTIONS (DEPRECATED - KEPT FOR BACKWARD COMPATIBILITY) ===== */
@@ -8624,12 +9571,12 @@ body {
 }
 
 .modal-btn-primary {
-    background: var(--profile-primary);
+    background: #000000; /* Changed from orange to black */
     color: #ffffff;
 }
 
 .modal-btn-primary:hover {
-    background: var(--profile-primary-dark);
+    background: #333333;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -8694,12 +9641,48 @@ body {
         gap: 20px;
     }
     
+    /* Reset height-related styles for mobile */
+    .profile-card {
+        height: auto;
+    }
+    
+    .personal-info-card .form-group:last-child {
+        flex: 0 0 auto; /* Reset flex grow on mobile */
+    }
+    
+    .account-info-card .info-display-group {
+        flex: 0 0 auto; /* Reset flex grow on mobile */
+        padding: 12px 0;
+        min-height: auto; /* Remove min-height on mobile */
+    }
+    
     .card-body {
         padding: 20px;
     }
     
     .file-name {
         max-width: 100%;
+    }
+    
+    /* Mobile - Keep SVG on left, text wraps naturally */
+    .info-display-group {
+        align-items: flex-start; /* Better for mobile when text wraps */
+        flex-wrap: nowrap; /* Keep icon and text on same line */
+    }
+    
+    .info-icon {
+        flex-shrink: 0; /* Keep icon from shrinking */
+        margin-top: 2px; /* Small adjustment for text wrap */
+    }
+    
+    /* Ensure contact input maintains height on mobile */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
     }
 }
 
@@ -8736,15 +9719,17 @@ body {
         padding: 15px;
     }
     
+    /* Even on very small screens, keep SVG left */
     .info-display-group {
-        flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        flex-wrap: nowrap;
+        gap: 12px; /* Slightly smaller gap on mobile */
     }
     
     .info-icon {
         width: 32px;
         height: 32px;
+        flex-shrink: 0;
     }
     
     .info-value {
@@ -8762,6 +9747,38 @@ body {
     
     .modal-content {
         padding: 25px 20px;
+    }
+    
+    /* Keep contact height consistent */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
+    }
+}
+
+@media (max-width: 450px) {
+    /* Badge gets smaller as per requirement */
+    .card-header .badge {
+        font-size: 0.55rem;
+        padding: 3px 6px;
+    }
+    
+    .profile-full-name {
+        font-size: 1.3rem;
+    }
+    
+    /* Contact input still 45px */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
     }
 }
 
@@ -8784,6 +9801,16 @@ body {
         width: 16px;
         height: 16px;
     }
+    
+    /* Contact input still 45px */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
+    }
 }
 
 /* Print Styles */
@@ -8803,6 +9830,854 @@ body {
     .profile-avatar-wrapper {
         border: 2px solid #000;
     }
+}
+```
+
+---
+
+## File: `Crooks-Cart-Collectives/admin/styles/admin-seller-profile.css`
+
+**Status:** `FOUND`
+
+```css
+/* Admin Seller Profile Styles - Matching seller-fill-form design with disabled inputs */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Form Layout */
+    --form-section-gap: 30px;
+    --input-height: 50px;
+    --border-radius: 12px;
+
+    /* Effects */
+    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --effect-transition-default: all 0.3s ease;
+    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e4eaf2;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    max-width: 1400px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+    width: 100%;
+    min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== PAGE TITLE HEADER ===== */
+.page-title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0 30px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #FF8246;
+}
+
+.page-title-header h1 {
+    font-size: 2rem;
+    color: #000000;
+    font-weight: 600;
+    margin: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--effect-transition-default);
+    flex-shrink: 0;
+}
+
+.back-link:hover {
+    background: #333333;
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.back-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+/* ===== LOADING & ERROR STATES ===== */
+.loading-state,
+.error-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    width: 100%;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f0f0f0;
+    border-top-color: #FF8246;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-content {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.error-content h2 {
+    font-size: 1.5rem;
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.error-content p {
+    font-size: 1rem;
+    color: #666666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+/* ===== PROFILE HEADER CARD - RESTRUCTURED ===== */
+.profile-header-card {
+    background: #f2f4f6;
+    border: 1px solid #363940;
+    border-radius: var(--border-radius);
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--effect-box-shadow-default);
+    transition: var(--effect-transition-default);
+}
+
+.profile-header-card:hover {
+    box-shadow: var(--effect-box-shadow-hover);
+}
+
+/* Main wrapper for header content */
+.header-main-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Top row: Business Name on left, Status on right */
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-business-name {
+    flex: 1;
+}
+
+.profile-business-name-header {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.2;
+    word-break: break-word;
+    margin: 0;
+}
+
+.header-status {
+    flex-shrink: 0;
+    margin-left: 20px;
+}
+
+/* Bottom row: Profile Pic (left), Full Name (middle), Actions (right) */
+.header-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Left column - Profile Picture */
+.header-profile-pic {
+    flex-shrink: 0;
+}
+
+.profile-avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #FF8246;
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+    background: #ffffff;
+}
+
+.profile-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Middle column - Full Name */
+.header-full-name {
+    flex: 1;
+    text-align: left;
+}
+
+.profile-full-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+/* Right column - Action Buttons */
+.header-actions {
+    display: flex;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+/* Status Badge - Updated styling */
+.status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.status-badge.pending {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.status-badge.verified {
+    background: #000000;
+    color: #ffffff;
+}
+
+.status-badge.rejected {
+    background: #666666;
+    color: #ffffff;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--effect-transition-default);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.btn-primary {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #e8693d;
+    box-shadow: var(--effect-glow-B);
+}
+
+.btn-secondary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.btn-secondary:hover {
+    background: #333333;
+    box-shadow: var(--effect-box-shadow-default);
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+/* ===== THREE-COLUMN GRID ===== */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--form-section-gap);
+    width: 100%;
+    align-items: stretch;
+}
+
+/* Profile Cards */
+.profile-card {
+    background: #f2f4f6;
+    border: 1px solid #363940;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--effect-box-shadow-default);
+    transition: var(--effect-transition-default);
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+.profile-card:hover {
+    box-shadow: var(--effect-box-shadow-hover);
+}
+
+.card-header {
+    border-bottom: 2px solid #FF8246;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.card-header h3 {
+    font-size: 1.5rem;
+    color: #1e2e2f;
+    margin: 0;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===== CREDENTIAL CARD - DOCUMENT BOXES ===== */
+.document-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.document-box {
+    flex: 1 1 200px;
+    text-align: center;
+    padding: 15px;
+    border: 2px dashed #363940;
+    border-radius: 8px;
+    transition: var(--effect-transition-default);
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.document-box:hover {
+    border-color: #FF8246;
+}
+
+.upload-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.upload-preview {
+    width: 100%;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    background-color: #f8f8f8;
+}
+
+.document-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e2e2f;
+    margin-bottom: 5px;
+}
+
+.document-status {
+    font-size: 0.8rem;
+    color: #666666;
+    margin: 5px 0;
+}
+
+.document-link {
+    color: #FF8246;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: var(--effect-transition-default);
+}
+
+.document-link:hover {
+    background: rgba(255, 130, 70, 0.1);
+    text-decoration: underline;
+}
+
+/* ===== FORM GROUPS ===== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e2e2f;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 12px;
+    border: 1px solid #363940;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    color: #000000;
+    transition: var(--effect-transition-default);
+}
+
+.form-group textarea {
+    height: auto;
+    min-height: 80px;
+    padding: 12px;
+    resize: vertical;
+    overflow-y: auto;
+    font-family: inherit;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Fix for address textarea - make it display as single line in desktop */
+.form-group textarea#address {
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: var(--input-height);
+    padding: 12px;
+    line-height: 1.5;
+}
+
+/* Allow text wrapping in all textareas on hover/focus for editing */
+.form-group textarea#address:focus {
+    white-space: pre-wrap;
+    overflow-y: auto;
+    min-height: 100px;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+    background-color: #f0f0f0;
+    border-color: #cccccc;
+    color: #333333;
+    cursor: default;
+    opacity: 0.8;
+}
+
+.form-group input:disabled#address,
+.form-group textarea:disabled#address {
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.form-group.full-width {
+    width: 100%;
+}
+
+/* Placeholder styling for disabled inputs */
+.form-group input:disabled::placeholder,
+.form-group textarea:disabled::placeholder {
+    color: #999999;
+    font-style: italic;
+}
+
+/* ===== MODAL ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeScale 0.3s ease;
+}
+
+@keyframes fadeScale {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.modal-icon {
+    margin-bottom: 20px;
+}
+
+.modal-icon img {
+    width: 60px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+.modal-message {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-primary {
+    background: #FF8246;
+    color: #ffffff;
+}
+
+.modal-btn-primary:hover {
+    background: #e66a2e;
+}
+
+.modal-btn-secondary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.modal-btn-secondary:hover {
+    background: #333333;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1000px) {
+    .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .profile-card {
+        min-height: 500px;
+    }
+    
+    /* Header adjustments */
+    .header-bottom-row {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .header-full-name {
+        flex: 1 1 auto;
+        min-width: 200px;
+    }
+    
+    .header-actions {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .page-title-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    /* Mobile header layout - centered */
+    .header-top-row {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .header-business-name {
+        flex: 0 0 100%;
+        text-align: center;
+    }
+    
+    .profile-business-name-header {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    
+    .header-status {
+        margin-left: 0;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    /* Bottom row centered on mobile */
+    .header-bottom-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    .header-profile-pic {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .profile-avatar-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .header-full-name {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .profile-full-name {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+        min-width: 0;
+    }
+    
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .profile-card {
+        min-height: auto;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .document-row {
+        flex-direction: column;
+    }
+    
+    .document-box {
+        width: 100%;
+    }
+    
+    /* Fix address textarea for mobile */
+    .form-group textarea#address,
+    .form-group input:disabled#address,
+    .form-group textarea:disabled#address {
+        white-space: pre-wrap;
+        overflow-y: auto;
+        min-height: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .back-link {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .profile-business-name-header {
+        font-size: 1.4rem;
+    }
+    
+    .profile-full-name {
+        font-size: 1.2rem;
+    }
+    
+    .profile-avatar-wrapper {
+        width: 80px;
+        height: 80px;
+        border-width: 2px;
+    }
+    
+    .card-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.9rem;
+        height: 45px;
+    }
+    
+    .form-group textarea {
+        min-height: 70px;
+    }
+    
+    .btn {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    .page-title-header {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .back-link {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .profile-business-name-header {
+        font-size: 1.2rem;
+    }
+    
+    .profile-full-name {
+        font-size: 1.1rem;
+    }
+    
+    .profile-avatar-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .btn {
+        padding: 10px;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.seller-profile-container {
+    animation: slideIn 0.3s ease forwards;
 }
 ```
 
@@ -10070,7 +11945,7 @@ body {
 **Status:** `FOUND`
 
 ```css
-/* Admin Verify Sellers Styles */
+/* Admin Verify Sellers Styles - Restructured Card Layout */
 
 * {
     margin: 0;
@@ -10078,14 +11953,26 @@ body {
     box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e4eaf2;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .content {
     max-width: 1200px;
     margin: 100px auto 40px;
     padding: 0 20px;
+    width: 100%;
     min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
 }
 
-/* Page Title Header */
+/* ===== PAGE TITLE HEADER ===== */
 .page-title-header {
     width: 100%;
     margin: 20px 0 30px 0;
@@ -10100,7 +11987,7 @@ body {
     margin: 0;
 }
 
-/* Filter Tabs */
+/* ===== FILTER TABS ===== */
 .filter-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -10138,52 +12025,84 @@ body {
     border-color: #FF8246;
 }
 
-/* Sellers Grid */
-.sellers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 20px 0;
+/* ===== SELLERS LIST CONTAINER ===== */
+.sellers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    min-height: 400px;
 }
 
-/* Seller Card */
+/* ===== SELLERS CONTAINER ===== */
+.sellers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+/* ===== SELLER CARD - REVISED LAYOUT ===== */
 .seller-card {
     background: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .seller-card:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     border-color: #FF8246;
+    transform: translateY(-2px);
 }
 
-.seller-header {
-    padding: 20px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #e0e0e0;
+/* ===== SELLER ROWS ===== */
+.seller-row {
+    width: 100%;
+}
+
+/* Header Row - Desktop: Business Name + Applied Date + Status in one line */
+.header-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
 }
 
-.seller-header h3 {
+.business-name {
     font-size: 1.2rem;
-    color: #000000;
-    margin: 0;
     font-weight: 600;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 150px;
+}
+
+.date-applied {
+    font-size: 0.9rem;
+    color: #666666;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .status-badge {
+    display: inline-block;
     padding: 4px 12px;
     border-radius: 30px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .status-badge.pending {
@@ -10201,89 +12120,109 @@ body {
     color: #ffffff;
 }
 
-.seller-body {
-    padding: 20px;
-}
-
-.seller-body p {
-    margin: 8px 0;
-    font-size: 0.95rem;
-    color: #000000;
-}
-
-.seller-body strong {
-    color: #666666;
-    min-width: 70px;
-    display: inline-block;
-}
-
-.seller-actions {
-    padding: 15px 20px;
-    background: #f8f8f8;
-    border-top: 1px solid #e0e0e0;
+/* Details Row - Four items in one line on desktop (Name, Email, Contact, Button) */
+.details-row {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 5px 0;
 }
 
-.btn-verify,
-.btn-reject {
+/* Detail Items with Background Color for Depth */
+.detail-item {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    flex: 1 1 auto;
+    min-width: 160px;
+    transition: background-color 0.2s ease;
+}
+
+.seller-card:hover .detail-item {
+    background-color: #eaeaea;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555555;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    color: #000000;
+    word-break: break-word;
+    flex: 1;
+    min-width: 100px;
+    font-weight: 500;
+}
+
+.detail-value.email-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* View Details Button - Now part of details row */
+.btn-view-details {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 8px 16px;
+    background: #FF8246;
+    color: #ffffff;
+    text-decoration: none;
     border: none;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    height: 38px; /* Match the height of detail items with padding */
 }
 
-.btn-verify {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-verify:hover {
+.btn-view-details:hover {
     background: #e66a2e;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+    transform: translateY(-2px);
 }
 
-.btn-reject {
-    background: #000000;
-    color: #ffffff;
-}
-
-.btn-reject:hover {
-    background: #333333;
-}
-
-.btn-icon {
+.btn-view-details .btn-icon {
     width: 16px;
     height: 16px;
     filter: brightness(0) invert(1);
 }
 
-.status-message {
-    color: #666666;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* Empty State */
+/* ===== EMPTY STATE ===== */
 .empty-state {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
     width: 100%;
+    min-height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    margin: 20px 0;
 }
 
 .empty-state-content {
     text-align: center;
     padding: 40px;
     max-width: 500px;
+    width: 100%;
 }
 
 .empty-state-icon {
@@ -10296,40 +12235,54 @@ body {
 .empty-state h2 {
     font-size: 1.5rem;
     color: #000000;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 600;
 }
 
 .empty-state p {
-    color: #666666;
     font-size: 1rem;
+    color: #666666;
+    margin-bottom: 10px;
     line-height: 1.6;
 }
 
 .empty-state-hint {
-    margin-top: 15px;
     font-style: italic;
     color: #999999;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
 }
 
-/* Loading State */
+/* ===== LOADING STATE ===== */
 .loading {
     text-align: center;
     padding: 60px 20px;
     color: #666666;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .loading::after {
-    content: '...';
-    animation: pulse 1.5s infinite;
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f0f0;
+    border-top-color: #FF8246;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-/* Modal */
+/* ===== MODAL ===== */
 .modal {
     position: fixed;
     inset: 0;
@@ -10399,28 +12352,290 @@ body {
     background: #e66a2e;
 }
 
-/* Responsive */
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.seller-card {
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+}
+
+.seller-card:nth-child(1) { animation-delay: 0.1s; }
+.seller-card:nth-child(2) { animation-delay: 0.15s; }
+.seller-card:nth-child(3) { animation-delay: 0.2s; }
+.seller-card:nth-child(4) { animation-delay: 0.25s; }
+.seller-card:nth-child(5) { animation-delay: 0.3s; }
+.seller-card:nth-child(6) { animation-delay: 0.35s; }
+.seller-card:nth-child(7) { animation-delay: 0.4s; }
+.seller-card:nth-child(8) { animation-delay: 0.45s; }
+.seller-card:nth-child(9) { animation-delay: 0.5s; }
+.seller-card:nth-child(10) { animation-delay: 0.55s; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Desktop: 1200px and above */
+@media (min-width: 1200px) {
+    .content {
+        margin-top: 100px;
+    }
+}
+
+/* Tablet and below */
+@media (max-width: 992px) {
+    .content {
+        margin-top: 90px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .details-row {
+        gap: 12px;
+    }
+    
+    .detail-item {
+        min-width: 140px;
+        padding: 6px 10px;
+    }
+    
+    .btn-view-details {
+        min-width: 110px;
+        padding: 6px 12px;
+    }
+}
+
+/* Mobile breakpoint - Stack vertically */
 @media (max-width: 768px) {
     .content {
         margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .page-title-header {
+        margin: 15px 0 25px 0;
+        padding-bottom: 12px;
     }
     
     .page-title-header h1 {
         font-size: 1.6rem;
     }
     
-    .sellers-grid {
-        grid-template-columns: 1fr;
+    .filter-tabs {
+        margin-bottom: 25px;
+        padding: 8px 0;
     }
     
-    .seller-actions {
+    .filter-tab {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .seller-card {
+        padding: 18px;
+        gap: 12px;
+    }
+    
+    /* Mobile Header Row - Stacked */
+    .header-row {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
     
-    .btn-verify,
-    .btn-reject {
+    .business-name {
+        font-size: 1.2rem;
+        white-space: normal;
+        width: 100%;
+    }
+    
+    .date-applied {
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    
+    .status-badge {
+        align-self: flex-start;
+    }
+    
+    /* Mobile Details Row - Stacked vertically */
+    .details-row {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0;
+    }
+    
+    .detail-item {
+        width: 100%;
+        min-width: auto;
+        padding: 10px 12px;
+    }
+    
+    .detail-label {
+        min-width: 55px;
+        font-size: 0.9rem;
+    }
+    
+    .detail-value {
+        min-width: auto;
+        font-size: 0.95rem;
+    }
+    
+    .detail-value.email-value {
+        white-space: normal;
+        word-break: break-all;
+    }
+    
+    /* Mobile Button - Full width, below details */
+    .btn-view-details {
         width: 100%;
         justify-content: center;
+        padding: 12px;
+        min-width: auto;
+        height: auto;
+        margin-top: 5px;
+    }
+    
+    .empty-state {
+        min-height: 350px;
+    }
+    
+    .empty-state h2 {
+        font-size: 1.3rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 576px) {
+    .content {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .filter-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+        gap: 8px;
+    }
+    
+    .filter-tab {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    .seller-card {
+        padding: 15px;
+    }
+    
+    .business-name {
+        font-size: 1.1rem;
+    }
+    
+    .date-applied {
+        font-size: 0.8rem;
+    }
+    
+    .status-badge {
+        padding: 3px 10px;
+        font-size: 0.7rem;
+    }
+    
+    .detail-item {
+        padding: 8px 10px;
+    }
+    
+    .detail-label {
+        font-size: 0.85rem;
+        min-width: 50px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+    }
+    
+    .btn-view-details {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    
+    .empty-state-content {
+        padding: 30px 20px;
+    }
+    
+    .empty-state-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .empty-state h2 {
+        font-size: 1.2rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 375px) {
+    .page-title-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .filter-tab {
+        padding: 4px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .seller-card {
+        padding: 12px;
+    }
+    
+    .business-name {
+        font-size: 1rem;
+    }
+    
+    .detail-item {
+        padding: 6px 8px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .filter-tabs,
+    .btn-view-details,
+    .modal {
+        display: none !important;
+    }
+    
+    .seller-card {
+        break-inside: avoid;
+        border: 1px solid #000000;
+        box-shadow: none;
+    }
+    
+    .detail-item {
+        background-color: transparent !important;
+        border: 1px solid #ccc;
     }
 }
 ```

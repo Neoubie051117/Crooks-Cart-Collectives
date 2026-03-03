@@ -25,9 +25,9 @@ try {
         exit;
     }
     
-    // Format date joined
-    if (!empty($admin['created_at'])) {
-        $dateJoined = date('F j, Y', strtotime($admin['created_at']));
+    // Format date joined - FIXED: Changed from created_at to date_joined
+    if (!empty($admin['date_joined'])) {
+        $dateJoined = date('F j, Y', strtotime($admin['date_joined']));
     }
     
     // Get profile picture URL using admin-data-storage-handler

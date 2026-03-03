@@ -1,4 +1,4 @@
-/* Admin Verify Sellers Styles */
+/* Admin Verify Sellers Styles - Restructured Card Layout */
 
 * {
     margin: 0;
@@ -6,14 +6,26 @@
     box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e4eaf2;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .content {
     max-width: 1200px;
     margin: 100px auto 40px;
     padding: 0 20px;
+    width: 100%;
     min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
 }
 
-/* Page Title Header */
+/* ===== PAGE TITLE HEADER ===== */
 .page-title-header {
     width: 100%;
     margin: 20px 0 30px 0;
@@ -28,7 +40,7 @@
     margin: 0;
 }
 
-/* Filter Tabs */
+/* ===== FILTER TABS ===== */
 .filter-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -66,52 +78,84 @@
     border-color: #FF8246;
 }
 
-/* Sellers Grid */
-.sellers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 20px 0;
+/* ===== SELLERS LIST CONTAINER ===== */
+.sellers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    min-height: 400px;
 }
 
-/* Seller Card */
+/* ===== SELLERS CONTAINER ===== */
+.sellers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+/* ===== SELLER CARD - REVISED LAYOUT ===== */
 .seller-card {
     background: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .seller-card:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     border-color: #FF8246;
+    transform: translateY(-2px);
 }
 
-.seller-header {
-    padding: 20px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #e0e0e0;
+/* ===== SELLER ROWS ===== */
+.seller-row {
+    width: 100%;
+}
+
+/* Header Row - Desktop: Business Name + Applied Date + Status in one line */
+.header-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
 }
 
-.seller-header h3 {
+.business-name {
     font-size: 1.2rem;
-    color: #000000;
-    margin: 0;
     font-weight: 600;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 150px;
+}
+
+.date-applied {
+    font-size: 0.9rem;
+    color: #666666;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .status-badge {
+    display: inline-block;
     padding: 4px 12px;
     border-radius: 30px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .status-badge.pending {
@@ -129,89 +173,109 @@
     color: #ffffff;
 }
 
-.seller-body {
-    padding: 20px;
-}
-
-.seller-body p {
-    margin: 8px 0;
-    font-size: 0.95rem;
-    color: #000000;
-}
-
-.seller-body strong {
-    color: #666666;
-    min-width: 70px;
-    display: inline-block;
-}
-
-.seller-actions {
-    padding: 15px 20px;
-    background: #f8f8f8;
-    border-top: 1px solid #e0e0e0;
+/* Details Row - Four items in one line on desktop (Name, Email, Contact, Button) */
+.details-row {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 5px 0;
 }
 
-.btn-verify,
-.btn-reject {
+/* Detail Items with Background Color for Depth */
+.detail-item {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    flex: 1 1 auto;
+    min-width: 160px;
+    transition: background-color 0.2s ease;
+}
+
+.seller-card:hover .detail-item {
+    background-color: #eaeaea;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555555;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    color: #000000;
+    word-break: break-word;
+    flex: 1;
+    min-width: 100px;
+    font-weight: 500;
+}
+
+.detail-value.email-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* View Details Button - Now part of details row */
+.btn-view-details {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 8px 16px;
+    background: #FF8246;
+    color: #ffffff;
+    text-decoration: none;
     border: none;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    height: 38px; /* Match the height of detail items with padding */
 }
 
-.btn-verify {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-verify:hover {
+.btn-view-details:hover {
     background: #e66a2e;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+    transform: translateY(-2px);
 }
 
-.btn-reject {
-    background: #000000;
-    color: #ffffff;
-}
-
-.btn-reject:hover {
-    background: #333333;
-}
-
-.btn-icon {
+.btn-view-details .btn-icon {
     width: 16px;
     height: 16px;
     filter: brightness(0) invert(1);
 }
 
-.status-message {
-    color: #666666;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* Empty State */
+/* ===== EMPTY STATE ===== */
 .empty-state {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
     width: 100%;
+    min-height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    margin: 20px 0;
 }
 
 .empty-state-content {
     text-align: center;
     padding: 40px;
     max-width: 500px;
+    width: 100%;
 }
 
 .empty-state-icon {
@@ -224,40 +288,54 @@
 .empty-state h2 {
     font-size: 1.5rem;
     color: #000000;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 600;
 }
 
 .empty-state p {
-    color: #666666;
     font-size: 1rem;
+    color: #666666;
+    margin-bottom: 10px;
     line-height: 1.6;
 }
 
 .empty-state-hint {
-    margin-top: 15px;
     font-style: italic;
     color: #999999;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
 }
 
-/* Loading State */
+/* ===== LOADING STATE ===== */
 .loading {
     text-align: center;
     padding: 60px 20px;
     color: #666666;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .loading::after {
-    content: '...';
-    animation: pulse 1.5s infinite;
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f0f0;
+    border-top-color: #FF8246;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-/* Modal */
+/* ===== MODAL ===== */
 .modal {
     position: fixed;
     inset: 0;
@@ -327,27 +405,289 @@
     background: #e66a2e;
 }
 
-/* Responsive */
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.seller-card {
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+}
+
+.seller-card:nth-child(1) { animation-delay: 0.1s; }
+.seller-card:nth-child(2) { animation-delay: 0.15s; }
+.seller-card:nth-child(3) { animation-delay: 0.2s; }
+.seller-card:nth-child(4) { animation-delay: 0.25s; }
+.seller-card:nth-child(5) { animation-delay: 0.3s; }
+.seller-card:nth-child(6) { animation-delay: 0.35s; }
+.seller-card:nth-child(7) { animation-delay: 0.4s; }
+.seller-card:nth-child(8) { animation-delay: 0.45s; }
+.seller-card:nth-child(9) { animation-delay: 0.5s; }
+.seller-card:nth-child(10) { animation-delay: 0.55s; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Desktop: 1200px and above */
+@media (min-width: 1200px) {
+    .content {
+        margin-top: 100px;
+    }
+}
+
+/* Tablet and below */
+@media (max-width: 992px) {
+    .content {
+        margin-top: 90px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .details-row {
+        gap: 12px;
+    }
+    
+    .detail-item {
+        min-width: 140px;
+        padding: 6px 10px;
+    }
+    
+    .btn-view-details {
+        min-width: 110px;
+        padding: 6px 12px;
+    }
+}
+
+/* Mobile breakpoint - Stack vertically */
 @media (max-width: 768px) {
     .content {
         margin-top: 80px;
+        padding: 0 15px;
+    }
+    
+    .page-title-header {
+        margin: 15px 0 25px 0;
+        padding-bottom: 12px;
     }
     
     .page-title-header h1 {
         font-size: 1.6rem;
     }
     
-    .sellers-grid {
-        grid-template-columns: 1fr;
+    .filter-tabs {
+        margin-bottom: 25px;
+        padding: 8px 0;
     }
     
-    .seller-actions {
+    .filter-tab {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .seller-card {
+        padding: 18px;
+        gap: 12px;
+    }
+    
+    /* Mobile Header Row - Stacked */
+    .header-row {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
     
-    .btn-verify,
-    .btn-reject {
+    .business-name {
+        font-size: 1.2rem;
+        white-space: normal;
+        width: 100%;
+    }
+    
+    .date-applied {
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    
+    .status-badge {
+        align-self: flex-start;
+    }
+    
+    /* Mobile Details Row - Stacked vertically */
+    .details-row {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0;
+    }
+    
+    .detail-item {
+        width: 100%;
+        min-width: auto;
+        padding: 10px 12px;
+    }
+    
+    .detail-label {
+        min-width: 55px;
+        font-size: 0.9rem;
+    }
+    
+    .detail-value {
+        min-width: auto;
+        font-size: 0.95rem;
+    }
+    
+    .detail-value.email-value {
+        white-space: normal;
+        word-break: break-all;
+    }
+    
+    /* Mobile Button - Full width, below details */
+    .btn-view-details {
         width: 100%;
         justify-content: center;
+        padding: 12px;
+        min-width: auto;
+        height: auto;
+        margin-top: 5px;
+    }
+    
+    .empty-state {
+        min-height: 350px;
+    }
+    
+    .empty-state h2 {
+        font-size: 1.3rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 576px) {
+    .content {
+        margin-top: 70px;
+        padding: 0 12px;
+    }
+    
+    .page-title-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .filter-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+        gap: 8px;
+    }
+    
+    .filter-tab {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    .seller-card {
+        padding: 15px;
+    }
+    
+    .business-name {
+        font-size: 1.1rem;
+    }
+    
+    .date-applied {
+        font-size: 0.8rem;
+    }
+    
+    .status-badge {
+        padding: 3px 10px;
+        font-size: 0.7rem;
+    }
+    
+    .detail-item {
+        padding: 8px 10px;
+    }
+    
+    .detail-label {
+        font-size: 0.85rem;
+        min-width: 50px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+    }
+    
+    .btn-view-details {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    
+    .empty-state-content {
+        padding: 30px 20px;
+    }
+    
+    .empty-state-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .empty-state h2 {
+        font-size: 1.2rem;
+    }
+    
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 375px) {
+    .page-title-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .filter-tab {
+        padding: 4px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .seller-card {
+        padding: 12px;
+    }
+    
+    .business-name {
+        font-size: 1rem;
+    }
+    
+    .detail-item {
+        padding: 6px 8px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .filter-tabs,
+    .btn-view-details,
+    .modal {
+        display: none !important;
+    }
+    
+    .seller-card {
+        break-inside: avoid;
+        border: 1px solid #000000;
+        box-shadow: none;
+    }
+    
+    .detail-item {
+        background-color: transparent !important;
+        border: 1px solid #ccc;
     }
 }

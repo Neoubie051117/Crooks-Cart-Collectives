@@ -13,12 +13,14 @@ $current_dir = dirname($_SERVER['PHP_SELF']);
 // Check if we're in a subdirectory
 $is_includes = strpos($current_dir, '/includes') !== false;
 $is_pages = strpos($current_dir, '/pages') !== false;
+$is_database = strpos($current_dir, '/database') !== false;
 
-if ($is_includes) {
-    $pathPrefix = '../';
-} elseif ($is_pages) {
+// Calculate correct path prefix based on current location
+if ($is_includes || $is_pages || $is_database) {
+    // If we're in includes/, pages/, or database/ directory, go up one level
     $pathPrefix = '../';
 } else {
+    // We're in the admin root
     $pathPrefix = '';
 }
 
@@ -26,22 +28,78 @@ if ($is_includes) {
 $adminName = '';
 $adminProfilePic = $pathPrefix . 'assets/image/icons/user-profile-circle.svg';
 
-if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
-    $adminName = $_SESSION['admin_first_name'] . ' ' . ($_SESSION['admin_last_name'] ?? '');
+// ===== FIXED: Load admin profile picture from database and handle external storage =====
+if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
+    $adminId = $_SESSION['admin_id'];
+    $adminFirstName = $_SESSION['admin_first_name'] ?? '';
+    $adminLastName = $_SESSION['admin_last_name'] ?? '';
+    $adminName = trim($adminFirstName . ' ' . $adminLastName);
     
-    // Get profile picture from session or database
-    if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
-        // Include the data storage handler to use the function
-        require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
-        
-        // Check if the function exists before calling it
-        if (function_exists('getAdminProfilePictureUrl')) {
-            $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_picture']);
-        } else {
-            // Fallback if function doesn't exist
-            $adminProfilePic = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($_SESSION['admin_profile_picture']);
+    // If name is empty or we need to fetch profile picture, try to fetch from database
+    if (empty($adminName) || $adminName === ' ' || !isset($_SESSION['admin_profile_picture'])) {
+        try {
+            // Include database connection
+            require_once(dirname(__FILE__) . '/../database/admin-database-connect.php');
+            
+            // Fetch admin data including profile picture
+            $stmt = $connection->prepare("SELECT first_name, last_name, profile_picture FROM administrators WHERE admin_id = ?");
+            $stmt->execute([$adminId]);
+            $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($adminData) {
+                $adminName = trim(($adminData['first_name'] ?? '') . ' ' . ($adminData['last_name'] ?? ''));
+                
+                // Store in session for future use
+                $_SESSION['admin_first_name'] = $adminData['first_name'] ?? '';
+                $_SESSION['admin_last_name'] = $adminData['last_name'] ?? '';
+                
+                // Handle profile picture - store the path in session
+                if (!empty($adminData['profile_picture'])) {
+                    $_SESSION['admin_profile_picture'] = $adminData['profile_picture'];
+                    
+                    // ===== FIXED: Handle external storage path =====
+                    // The profile_picture path is stored as: "Crooks-Data-Storage/administrators/1/profile/profile.jpg"
+                    $profilePath = $adminData['profile_picture'];
+                    
+                    // Check if it's an external storage path (starts with Crooks-Data-Storage/)
+                    if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                        // Use the admin-data-storage-handler.php to serve the file
+                        // The handler is at: ../database/admin-data-storage-handler.php
+                        $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                    } else {
+                        // It's a relative path within the project
+                        $adminProfilePic = $pathPrefix . $profilePath;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error fetching admin data in header: " . $e->getMessage());
+        }
+    } else {
+        // Use session data if available
+        if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
+            $profilePath = $_SESSION['admin_profile_picture'];
+            
+            // ===== FIXED: Handle external storage path =====
+            if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                // Use the admin-data-storage-handler.php to serve the file
+                $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+            } else {
+                // It's a relative path within the project
+                $adminProfilePic = $pathPrefix . $profilePath;
+            }
         }
     }
+}
+
+// ===== FIXED: Consistent logo link for all pages =====
+// For logged-in users, always link to dashboard
+// For logged-out users, always link to admin-index.php
+$logoLink = $pathPrefix;
+if ($isAdminLoggedIn) {
+    $logoLink .= 'pages/admin-dashboard.php';
+} else {
+    $logoLink .= 'admin-index.php';
 }
 ?>
 <!DOCTYPE html>
@@ -61,12 +119,12 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
     <header class="header-bar no-transition">
         <div class="header-logo">
             <?php if ($isAdminLoggedIn): ?>
-            <!-- Show profile picture and admin name -->
-            <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="logo-link"
+            <!-- Show profile picture and admin name - FIXED: Consistent logo link -->
+            <a href="<?php echo $logoLink; ?>" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <div class="admin-profile-mini">
-                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar"
-                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg';">
+                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar" onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg'; 
+                                 console.log('Failed to load profile image: ' + this.src);">
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
@@ -76,8 +134,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
                 </div>
             </a>
             <?php else: ?>
-            <!-- Show logo for non-logged in visitors -->
-            <a href="<?php echo $pathPrefix; ?>admin-index.php" class="logo-link"
+            <!-- Show logo for non-logged in visitors - FIXED: Consistent logo link -->
+            <a href="<?php echo $logoLink; ?>" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
                     style="height: 40px; width: auto;">
@@ -136,7 +194,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
             <h2>Confirm Logout</h2>
             <p>Are you sure you want to logout?</p>
             <div class="logout-modal-buttons">
-                <button id="cancelLogout" class="logout-modal-btn btn-cancel">Cancel</button>
+                <button id="cancelLogout" class="logout-modal-btn btn-cancel"
+                    style="background: #000000; color: #ffffff;">Cancel</button>
                 <button id="confirmLogout" class="logout-modal-btn btn-confirm">Logout</button>
             </div>
         </div>

@@ -212,16 +212,14 @@ function serveAdminFile($relativePath) {
     // Security: Prevent directory traversal
     $relativePath = str_replace(['../', '..\\', './', '.\\'], '', $relativePath);
     
-    // Ensure path starts with administrators/ (after removing Crooks-Data-Storage/ prefix if present)
+    // Parse the path to extract the directory structure
+    // Path can be: administrators/1/profile/profile.jpg OR users/123/identity/identity.jpg OR sellers/456/document.jpg etc.
     $pathForValidation = str_replace('Crooks-Data-Storage/', '', $relativePath);
-    if (strpos($pathForValidation, 'administrators/') !== 0) {
-        error_log("Admin storage: Invalid file path - not in administrators directory: " . $relativePath);
-        http_response_code(403);
-        die('Invalid file path');
-    }
     
-    // Parse the path to verify admin owns this file
+    // Split path into parts
     $pathParts = explode('/', $pathForValidation);
+    
+    // Check if this is an administrators file (owned by admin)
     if (count($pathParts) >= 2 && $pathParts[0] === 'administrators') {
         $fileAdminId = (int)$pathParts[1];
         if ($fileAdminId !== $_SESSION['admin_id']) {
@@ -229,6 +227,18 @@ function serveAdminFile($relativePath) {
             http_response_code(403);
             die('Access denied: You do not own this file.');
         }
+    }
+    // Allow access to user/seller files for viewing by admin (read-only)
+    else if ($pathParts[0] === 'users' || $pathParts[0] === 'sellers') {
+        // Admin can view any user/seller file for verification purposes
+        error_log("Admin storage: Admin {$_SESSION['admin_id']} accessing {$pathParts[0]} file: " . $relativePath);
+        // Continue serving the file
+    }
+    else {
+        // Any other path structure - deny access
+        error_log("Admin storage: Invalid file path - unknown directory structure: " . $relativePath);
+        http_response_code(403);
+        die('Invalid file path');
     }
     
     // ===== WILDCARD SEARCH FOR PROFILE PICTURES =====

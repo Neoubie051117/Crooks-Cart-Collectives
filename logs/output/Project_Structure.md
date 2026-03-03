@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-03 18:38:16
+**Generated:** 2026-03-03 21:38:52
 **Mode:** all
 
 ```
@@ -81,6 +81,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs-handler.php
 │   │   ├── admin-profile-handler.php
 │   │   ├── admin-reports-handler.php
+│   │   ├── admin-seller-profile-handler.php
 │   │   ├── admin-sign-in-handler.php
 │   │   ├── admin-sign-out-handler.php
 │   │   ├── admin-sign-up-handler.php
@@ -96,6 +97,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs.php
 │   │   ├── admin-manage-report.php
 │   │   ├── admin-profile.php
+│   │   ├── admin-seller-profile.php
 │   │   ├── admin-sign-in.php
 │   │   ├── admin-sign-up.php
 │   │   └── admin-verify-sellers.php
@@ -103,6 +105,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-header.js
 │   │   ├── admin-logs.js
 │   │   ├── admin-profile.js
+│   │   ├── admin-seller-profile.js
 │   │   ├── admin-sign-in.js
 │   │   ├── admin-sign-out.js
 │   │   ├── admin-sign-up.js
@@ -115,6 +118,7 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-logs.css
 │   │   ├── admin-privacy-policy.css
 │   │   ├── admin-profile.css
+│   │   ├── admin-seller-profile.css
 │   │   ├── admin-sign-in.css
 │   │   ├── admin-sign-out.css
 │   │   ├── admin-sign-up.css
@@ -197,6 +201,7 @@ Crooks-Cart-Collectives/
 │   ├── customer-profile-handler.php
 │   ├── data-storage-handler.php
 │   ├── database-connect.php
+│   ├── error_log.txt
 │   ├── order-handler.php
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
@@ -214,9 +219,7 @@ Crooks-Cart-Collectives/
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
-│   │   ├── admin_path_Summary.md
-│   │   ├── all_path_Summary.md
-│   │   └── Project_Structure.md
+│   │   └── admin_path_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -302,16 +305,16 @@ Crooks-Cart-Collectives/
 | File Type | Count |
 |-----------|-------|
 | HTML Files | 0 |
-| PHP Files | 59 |
-| CSS Files | 35 |
-| JavaScript Files | 27 |
+| PHP Files | 61 |
+| CSS Files | 36 |
+| JavaScript Files | 28 |
 | JSON Files | 0 |
-| Text/Markdown | 7 |
+| Text/Markdown | 6 |
 | Image Files | 121 |
 | Other Files | 14 |
 
 **Total Directories:** 25
-**Total Files:** 262
+**Total Files:** 265
 
 ---
 

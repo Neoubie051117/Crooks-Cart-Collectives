@@ -84,6 +84,37 @@ html {
   width: auto;
 }
 
+/* ===== PROFILE PICTURE STYLES - FIXED TO BE CIRCULAR ===== */
+.admin-profile-mini {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--color-accent-A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: var(--effect-transition-default);
+}
+
+.admin-profile-mini:hover {
+  border-color: var(--color-hover-A);
+  transform: scale(1.05);
+  box-shadow: var(--effect-glow-B);
+}
+
+.admin-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== END PROFILE PICTURE STYLES ===== */
+
 .title {
   color: var(--color-text-A);
   font-size: var(--font-size-title);
@@ -95,6 +126,14 @@ html {
 
 .title span {
   color: var(--color-accent-A);
+}
+
+.admin-name {
+  font-size: 14px;
+  opacity: 0;
+  color: var(--color-text-C);
+  margin-left: 5px;
+  font-weight: normal;
 }
 
 /* Navigation Styles */
@@ -325,6 +364,12 @@ html {
   .title {
     font-size: 20px;
   }
+  
+  /* Keep profile picture circular on mobile */
+  .admin-profile-mini {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -334,6 +379,10 @@ html {
   
   .title {
     font-size: 18px;
+  }
+  
+  .admin-name {
+    font-size: 13px;
   }
   
   .mobile-nav {
@@ -348,6 +397,12 @@ html {
     right: 10px;
     width: calc(100% - 20px);
   }
+  
+  /* Adjust profile picture size for mobile */
+  .admin-profile-mini {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -357,6 +412,15 @@ html {
   
   .title {
     font-size: 16px;
+  }
+  
+  .admin-name {
+    font-size: 12px;
+    display: inline-block;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .mobile-nav {
@@ -376,6 +440,13 @@ html {
     left: 10px;
     right: 10px;
     width: calc(100% - 20px);
+  }
+  
+  /* Adjust profile picture size for small mobile */
+  .admin-profile-mini {
+    width: 30px;
+    height: 30px;
+    border-width: 1.5px;
   }
 }
 
@@ -413,3 +484,61 @@ html {
 .nav-link.active::after {
   width: 100%;
 }
+
+/* ===== PROFILE PICTURE STYLES - FIXED TO FIT WITHOUT EMPTY SPACE ===== */
+.admin-profile-mini {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--color-accent-A);
+  background-color: #f0f0f0;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: var(--effect-transition-default);
+  /* Remove display: flex as it can interfere with image positioning */
+  position: relative;
+}
+
+.admin-profile-mini img.admin-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.admin-profile-mini:hover {
+  border-color: var(--color-hover-A);
+  transform: scale(1.05);
+  box-shadow: var(--effect-glow-B);
+}
+
+/* Handle SVG icons - center them with padding */
+.admin-profile-mini img.admin-avatar[src$=".svg"] {
+  object-fit: contain !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  background-color: transparent;
+}
+
+/* Fallback for when image fails to load */
+.admin-profile-mini img.admin-avatar[src=""], 
+.admin-profile-mini img.admin-avatar:not([src]),
+.admin-profile-mini img.admin-avatar[src="undefined"] {
+  display: none;
+}
+
+/* ===== END PROFILE PICTURE STYLES ===== */

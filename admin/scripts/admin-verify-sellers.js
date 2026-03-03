@@ -39,6 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === notificationModal) hideNotification();
     });
 
+    // Format date with time
+    function formatDateTime(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'Invalid date';
+        
+        return date.toLocaleString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        }).replace(',', '');
+    }
+
     // Filter functions
     function setActiveFilter(filter) {
         filterTabs.forEach(tab => {
@@ -97,19 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderSellers(sellers) {
-        let html = '<div class="sellers-grid">';
+        let html = '<div class="sellers-container">';
 
         sellers.forEach(seller => {
-            const createdDate = seller.created_at ? new Date(seller.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            }) : 'N/A';
-
-            const statusBadge = seller.is_verified === 0 ? 'pending' : 
-                               seller.is_verified === 1 ? 'verified' : 'rejected';
+            const appliedDate = formatDateTime(seller.created_at);
+            
             const statusText = seller.is_verified === 0 ? 'Pending' : 
-                              seller.is_verified === 1 ? 'Verified' : 'Rejected';
+                               seller.is_verified === 1 ? 'Verified' : 'Rejected';
+            
+            const statusClass = seller.is_verified === 0 ? 'pending' : 
+                                seller.is_verified === 1 ? 'verified' : 'rejected';
 
             const fullName = (seller.first_name && seller.first_name !== 'Unknown' ? seller.first_name : '') + 
                             (seller.last_name && seller.last_name !== 'User' ? ' ' + seller.last_name : '');
@@ -118,45 +131,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             html += `
                 <div class="seller-card" data-id="${seller.seller_id}">
-                    <div class="seller-header">
-                        <h3>${escapeHtml(seller.business_name)}</h3>
-                        <span class="status-badge ${statusBadge}">${statusText}</span>
+                    <!-- Header Row: Business Name + Applied Date + Status -->
+                    <div class="seller-row header-row">
+                        <div class="business-name">${escapeHtml(seller.business_name)}</div>
+                        <div class="date-applied">Applied ${appliedDate}</div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                     </div>
-                    <div class="seller-body">
-                        <p><strong>Name:</strong> ${escapeHtml(displayName)}</p>
-                        <p><strong>Email:</strong> ${escapeHtml(seller.email)}</p>
-                        <p><strong>Contact:</strong> ${escapeHtml(seller.contact_number)}</p>
-                        <p><strong>Applied:</strong> ${createdDate}</p>
+
+                    <!-- Details Row: Name, Email, Contact, and View Details Button -->
+                    <div class="seller-row details-row">
+                        <div class="detail-item name-item">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">${escapeHtml(displayName)}</span>
+                        </div>
+                        <div class="detail-item email-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value email-value">${escapeHtml(seller.email)}</span>
+                        </div>
+                        <div class="detail-item contact-item">
+                            <span class="detail-label">Contact:</span>
+                            <span class="detail-value">${escapeHtml(seller.contact_number)}</span>
+                        </div>
+                        <a href="admin-seller-profile.php?id=${seller.seller_id}" class="btn-view-details">
+                            <img src="../assets/image/icons/user-profile-circle.svg" alt="View" class="btn-icon">
+                            View Details
+                        </a>
                     </div>
+                </div>
             `;
-
-            if (seller.is_verified === 0) {
-                html += `
-                    <div class="seller-actions">
-                        <button class="btn-verify" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/verified-filled.svg" alt="Verify" class="btn-icon">
-                            Verify
-                        </button>
-                        <button class="btn-reject" data-id="${seller.seller_id}">
-                            <img src="../assets/image/icons/cancel.svg" alt="Reject" class="btn-icon">
-                            Reject
-                        </button>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="seller-actions">
-                        <span class="status-message">Already ${statusText.toLowerCase()}</span>
-                    </div>
-                `;
-            }
-
-            html += '</div>';
         });
 
         html += '</div>';
         sellersList.innerHTML = html;
-        attachEventListeners();
     }
 
     function escapeHtml(text) {
@@ -166,74 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    function attachEventListeners() {
-        document.querySelectorAll('.btn-verify').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'verify');
-            });
-        });
-
-        document.querySelectorAll('.btn-reject').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const sellerId = btn.dataset.id;
-                await handleVerification(sellerId, 'reject');
-            });
-        });
-    }
-
-    async function handleVerification(sellerId, action) {
-        // Disable button to prevent double submission
-        const buttons = document.querySelectorAll(`.btn-${action}[data-id="${sellerId}"]`);
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = 'Processing...';
-            btn.dataset.originalText = originalText;
-        });
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', action);
-            formData.append('seller_id', sellerId);
-
-            const response = await fetch('../database/admin-auth-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
-                showNotification(result.message);
-                await loadSellers(); // Reload the list
-            } else {
-                showNotification(result.message || 'Action failed', true);
-                // Re-enable buttons
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.innerHTML = btn.dataset.originalText || (action === 'verify' ? 'Verify' : 'Reject');
-                });
-            }
-        } catch (error) {
-            console.error('Verification error:', error);
-            showNotification('Network error. Please try again.', true);
-            // Re-enable buttons
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.innerHTML = btn.dataset.originalText || (action === 'verify' ? 'Verify' : 'Reject');
-            });
-        }
-    }
-
     async function loadSellers() {
         sellersList.innerHTML = '<div class="loading">Loading sellers...</div>';
 
         try {
-            const response = await fetch('../database/admin-auth-handler.php?action=get_all_sellers');
+            const response = await fetch('../database/admin-auth-handler.php?action=get_all_sellers&t=' + Date.now());
             const result = await response.json();
 
             if (result.status === 'success') {

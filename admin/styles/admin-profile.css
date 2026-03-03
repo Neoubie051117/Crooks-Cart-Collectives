@@ -14,7 +14,7 @@
     --profile-primary-dark: #e66a2e;
     --profile-bg: #f2f4f6;
     --profile-card-bg: #ffffff;
-    --profile-text-primary: #000000;
+   --profile-text-primary: #000000;
     --profile-text-secondary: #666666;
     --profile-border: #e0e0e0;
     --profile-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -111,7 +111,7 @@ body {
 .file-upload-label img {
     width: 20px;
     height: 20px;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1); /* Makes SVG white */
 }
 
 #profile_picture {
@@ -179,6 +179,7 @@ body {
 .profile-actions-header .btn .btn-icon {
     width: 18px;
     height: 18px;
+    filter: brightness(0) invert(1); /* Makes all action button SVGs white */
 }
 
 .profile-actions-header .btn .btn-text {
@@ -210,22 +211,40 @@ body {
 .btn-edit .btn-icon {
     width: 18px;
     height: 18px;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1); /* Makes edit icon white */
 }
 
-/* Save Button */
-.btn-primary {
-    background: var(--profile-primary);
+/* Upload Button - Black with white text (matching cancel button style) */
+.btn-upload {
+    background: #000000;
     color: #ffffff;
+    border: 1px solid #000000;
+}
+
+.btn-upload:hover {
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-upload .btn-icon {
+    filter: brightness(0) invert(1); /* Ensures upload icon is white */
+}
+
+/* Save Button - Black with white text (matching cancel button style) */
+.btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: var(--profile-primary-dark);
+    background: #333333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Cancel Button */
+/* Cancel Button - Black with white text */
 .btn-secondary {
     background: #000000;
     color: #ffffff;
@@ -236,6 +255,10 @@ body {
     background: #333333;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary .btn-icon {
+    filter: brightness(0) invert(1); /* Makes cancel icon white instead of black */
 }
 
 .btn:disabled {
@@ -265,7 +288,7 @@ body {
     margin-bottom: 25px;
 }
 
-/* Profile Cards */
+/* Profile Cards - Make both cards equal height in desktop view */
 .profile-card {
     background: var(--profile-card-bg);
     border-radius: var(--profile-radius);
@@ -273,7 +296,9 @@ body {
     border: 1px solid var(--profile-border);
     overflow: hidden;
     transition: var(--profile-transition);
-    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make cards take full height of grid cell */
 }
 
 .profile-card:hover {
@@ -287,6 +312,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .card-header h3 {
@@ -296,6 +322,7 @@ body {
     margin: 0;
 }
 
+/* FIXED: Badge styling - gets smaller on narrow screens */
 .card-header .badge {
     background: #e0e0e0;
     color: var(--profile-text-secondary);
@@ -305,10 +332,97 @@ body {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: font-size 0.2s ease;
+}
+
+/* Responsive badge sizing for the "Cannot be changed" text */
+@media (max-width: 600px) {
+    .card-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .card-header .badge {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+    }
+}
+
+@media (max-width: 450px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .card-header .badge {
+        font-size: 0.55rem; /* Smaller font when width below 450px */
+        padding: 3px 6px;
+        white-space: normal; /* Allow wrapping if needed */
+        word-break: break-word;
+        text-align: left;
+    }
+}
+
+@media (max-width: 350px) {
+    .card-header .badge {
+        font-size: 0.5rem;
+    }
 }
 
 .card-body {
     padding: 25px;
+    flex: 1; /* Allow body to expand and fill available space */
+}
+
+/* Personal Info Card - Form groups take full height */
+.personal-info-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-info-card .form-group {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.personal-info-card .form-group:last-child {
+    margin-bottom: 0;
+    flex: 1; /* Make last form group take remaining space */
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-info-card .form-group:last-child input {
+    flex: 1; /* Make input in last group take remaining space */
+}
+
+/* Account Info Card - Info groups distribute evenly */
+.account-info-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.account-info-card .info-display-group {
+    display: flex;
+    align-items: center; /* Keep icons centered vertically */
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--profile-border);
+    flex: 1;
+    min-height: 70px; /* Give a consistent minimum height */
+}
+
+.account-info-card .info-display-group:first-child {
+    padding-top: 0;
+}
+
+.account-info-card .info-display-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 /* Form Groups */
@@ -338,9 +452,10 @@ body {
     filter: brightness(0.6);
 }
 
+/* ===== FIXED: ALL INPUTS NOW HAVE EXACTLY THE SAME HEIGHT ===== */
 .form-group input {
     width: 100%;
-    height: 45px;
+    height: 45px; /* Fixed consistent height for all inputs */
     padding: 0 15px;
     border: 1px solid var(--profile-border);
     border-radius: 8px;
@@ -348,20 +463,44 @@ body {
     background: #ffffff;
     color: var(--profile-text-primary);
     transition: var(--profile-transition);
+    box-sizing: border-box; /* Critical: ensures padding doesn't add to height */
+    line-height: normal; /* Reset line height */
+    margin: 0; /* Remove any default margins */
 }
 
-.form-group input:focus {
+/* FIXED: Specific override for contact number input - force same height */
+#contact_number,
+input[name="contact_number"],
+input[type="tel"] {
+    height: 45px !important; /* Force exact same height */
+    min-height: 45px;
+    max-height: 45px;
+    padding: 0 15px !important;
+    line-height: 45px; /* Helps with vertical alignment of text */
+    box-sizing: border-box;
+}
+
+/* Focus state for all inputs including contact */
+.form-group input:focus,
+#contact_number:focus {
     border-color: var(--profile-primary);
     outline: none;
     box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
 }
 
-.form-group input:disabled {
+/* Disabled state for all inputs including contact */
+.form-group input:disabled,
+#contact_number:disabled {
     background: #f9f9f9;
     border-color: var(--profile-border);
     color: var(--profile-text-primary);
     cursor: default;
     opacity: 1;
+}
+
+/* Error state for contact input */
+#contact_number.error {
+    border-color: #e74c3c;
 }
 
 .error-message {
@@ -371,13 +510,15 @@ body {
     min-height: 18px;
 }
 
-/* Info Display Groups (for account info) */
+/* Info Display Groups (for account info) - FIXED ALIGNMENT - SVG STAYS LEFT */
 .info-display-group {
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* Keep icons centered vertically */
     gap: 15px;
     padding: 12px 0;
     border-bottom: 1px solid var(--profile-border);
+    /* Ensure the layout doesn't change on resize */
+    flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .info-display-group:last-child {
@@ -392,18 +533,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    /* Keep icon fixed on left */
+    margin-right: 0;
 }
 
 .info-icon img {
     width: 18px;
     height: 18px;
     filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    display: block; /* Remove any extra spacing */
 }
 
 .info-content {
-    flex: 1;
-    min-width: 0;
+    flex: 1; /* Take remaining space */
+    min-width: 0; /* Allow content to shrink if needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    line-height: 1.3; /* Consistent line height */
 }
 
 .info-label {
@@ -413,6 +561,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.3px;
     margin-bottom: 2px;
+    line-height: 1.2;
 }
 
 .info-value {
@@ -421,6 +570,7 @@ body {
     color: var(--profile-text-primary);
     font-weight: 500;
     word-break: break-word;
+    line-height: 1.3;
 }
 
 /* ===== FORM ACTIONS (DEPRECATED - KEPT FOR BACKWARD COMPATIBILITY) ===== */
@@ -520,12 +670,12 @@ body {
 }
 
 .modal-btn-primary {
-    background: var(--profile-primary);
+    background: #000000; /* Changed from orange to black */
     color: #ffffff;
 }
 
 .modal-btn-primary:hover {
-    background: var(--profile-primary-dark);
+    background: #333333;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -590,12 +740,48 @@ body {
         gap: 20px;
     }
     
+    /* Reset height-related styles for mobile */
+    .profile-card {
+        height: auto;
+    }
+    
+    .personal-info-card .form-group:last-child {
+        flex: 0 0 auto; /* Reset flex grow on mobile */
+    }
+    
+    .account-info-card .info-display-group {
+        flex: 0 0 auto; /* Reset flex grow on mobile */
+        padding: 12px 0;
+        min-height: auto; /* Remove min-height on mobile */
+    }
+    
     .card-body {
         padding: 20px;
     }
     
     .file-name {
         max-width: 100%;
+    }
+    
+    /* Mobile - Keep SVG on left, text wraps naturally */
+    .info-display-group {
+        align-items: flex-start; /* Better for mobile when text wraps */
+        flex-wrap: nowrap; /* Keep icon and text on same line */
+    }
+    
+    .info-icon {
+        flex-shrink: 0; /* Keep icon from shrinking */
+        margin-top: 2px; /* Small adjustment for text wrap */
+    }
+    
+    /* Ensure contact input maintains height on mobile */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
     }
 }
 
@@ -632,15 +818,17 @@ body {
         padding: 15px;
     }
     
+    /* Even on very small screens, keep SVG left */
     .info-display-group {
-        flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        flex-wrap: nowrap;
+        gap: 12px; /* Slightly smaller gap on mobile */
     }
     
     .info-icon {
         width: 32px;
         height: 32px;
+        flex-shrink: 0;
     }
     
     .info-value {
@@ -658,6 +846,38 @@ body {
     
     .modal-content {
         padding: 25px 20px;
+    }
+    
+    /* Keep contact height consistent */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
+    }
+}
+
+@media (max-width: 450px) {
+    /* Badge gets smaller as per requirement */
+    .card-header .badge {
+        font-size: 0.55rem;
+        padding: 3px 6px;
+    }
+    
+    .profile-full-name {
+        font-size: 1.3rem;
+    }
+    
+    /* Contact input still 45px */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
     }
 }
 
@@ -679,6 +899,16 @@ body {
     .profile-actions-header .btn .btn-icon {
         width: 16px;
         height: 16px;
+    }
+    
+    /* Contact input still 45px */
+    #contact_number,
+    input[name="contact_number"],
+    input[type="tel"] {
+        height: 45px !important;
+        min-height: 45px;
+        max-height: 45px;
+        line-height: 45px;
     }
 }
 

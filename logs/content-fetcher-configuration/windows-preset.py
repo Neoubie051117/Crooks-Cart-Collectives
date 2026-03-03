@@ -100,7 +100,7 @@ filesToCheck = [
     # "/styles/profile.css",
     # "/styles/report-seller.css",
     # "/styles/seller-process-order.css",
-    # "/styles/seller-registration.css",
+    "/styles/seller-registration.css",
     # "/styles/seller-dashboard.css",
     # "/styles/seller-manage-product.css",
     # "/styles/seller-new-product.css",

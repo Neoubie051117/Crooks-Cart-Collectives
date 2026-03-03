@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isEditMode = false;
     let originalValues = {};
     let pictureChanged = false;
+    let autoCloseTimer = null;
 
     // ============= PHONE NUMBER FORMATTING =============
     function formatPhilippineNumber(input) {
@@ -66,6 +67,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ============= MODAL FUNCTIONS =============
     function showModal(message, isError = false) {
+        // Clear any existing auto-close timer
+        if (autoCloseTimer) {
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = null;
+        }
+        
         modalMessage.textContent = message;
         const modalIcon = document.querySelector('.modal-icon');
         if (modalIcon) {
@@ -76,12 +83,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        // Auto-close after 5 seconds if user doesn't click
+        autoCloseTimer = setTimeout(() => {
+            hideModal();
+        }, 5000);
     }
 
     function hideModal() {
-        z
         modal.style.display = 'none';
         document.body.style.overflow = '';
+        
+        // Clear timer if exists
+        if (autoCloseTimer) {
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = null;
+        }
     }
 
     if (modalClose) {
