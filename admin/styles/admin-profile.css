@@ -53,10 +53,6 @@ body {
     transition: var(--profile-transition);
 }
 
-.profile-header-card:hover {
-    box-shadow: var(--profile-shadow-hover);
-}
-
 .profile-header-left {
     display: flex;
     align-items: center;
@@ -87,7 +83,7 @@ body {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
-    display: none; /* Hidden by default, shown in edit mode via JS */
+    display: none;
     align-items: center;
     justify-content: center;
     transition: var(--profile-transition);
@@ -151,14 +147,14 @@ body {
     width: fit-content;
 }
 
-/* Header right section */
+/* Header right section - where edit button lives */
 .profile-header-right {
     display: flex;
     align-items: center;
     flex-shrink: 0;
 }
 
-/* ===== PROFILE HEADER ACTIONS ===== */
+/* Profile Actions in header */
 .profile-actions-header {
     display: flex;
     align-items: center;
@@ -214,22 +210,6 @@ body {
 .btn-edit .btn-icon {
     width: 18px;
     height: 18px;
-    filter: brightness(0) invert(1);
-}
-
-/* Upload Photo Button */
-.btn-upload {
-    background: var(--profile-upload-blue);
-    color: #ffffff;
-}
-
-.btn-upload:hover {
-    background: var(--profile-upload-blue-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
-}
-
-.btn-upload .btn-icon {
     filter: brightness(0) invert(1);
 }
 

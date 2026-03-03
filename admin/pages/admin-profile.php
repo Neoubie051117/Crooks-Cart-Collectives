@@ -1,4 +1,46 @@
 <?php
+session_start();
+require_once(__DIR__ . '/../database/admin-database-connect.php');
+require_once(__DIR__ . '/../database/admin-data-storage-handler.php');
+
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: admin-sign-in.php');
+    exit;
+}
+
+$adminId = $_SESSION['admin_id'];
+$admin = [];
+$dateJoined = '';
+$profilePicUrl = '../assets/image/icons/user-profile-circle.svg'; // Default
+
+try {
+    // Fetch admin data
+    $stmt = $connection->prepare("SELECT * FROM administrators WHERE admin_id = ?");
+    $stmt->execute([$adminId]);
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$admin) {
+        session_destroy();
+        header('Location: admin-sign-in.php');
+        exit;
+    }
+    
+    // Format date joined
+    if (!empty($admin['created_at'])) {
+        $dateJoined = date('F j, Y', strtotime($admin['created_at']));
+    }
+    
+    // Get profile picture URL using admin-data-storage-handler
+    // The path stored in DB should be like: 'Crooks-Data-Storage/administrators/1/profile/profile.jpg'
+    if (!empty($admin['profile_picture'])) {
+        $profilePicUrl = getAdminFileUrl($admin['profile_picture']);
+        error_log("Admin profile page - using URL: " . $profilePicUrl);
+    }
+    
+} catch (PDOException $e) {
+    error_log("Error fetching admin profile: " . $e->getMessage());
+    $error = "Unable to load profile data. Please try again later.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +56,7 @@
 </head>
 
 <body>
-    <?php include_once('../includes/admin-header.php'); ?>
+    <?php include_once(__DIR__ . '/../includes/admin-header.php'); ?>
 
     <div class="content">
         <?php if (isset($error)): ?>
@@ -32,19 +74,25 @@
             <div id="successMessage" class="message success" style="display: none;"></div>
             <div id="errorMessage" class="message error" style="display: none;"></div>
 
-            <div class="profile-header-card" id="profileHeaderCard">
+            <!-- Profile Header Card - Matches design but with stacked avatar and name -->
+            <!-- Profile Header Card - With edit button on right -->
+            <div class="profile-header-card">
                 <div class="profile-header-left">
+                    <!-- Profile Avatar -->
                     <div class="profile-avatar-wrapper">
                         <img id="profilePicturePreview" src="<?php echo $profilePicUrl; ?>" alt="Profile Picture"
                             onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
-                        <div class="profile-avatar-edit" id="profilePictureUpload">
+
+                        <div class="profile-avatar-edit" id="profilePictureUpload" style="display: none;">
                             <label for="profile_picture" class="file-upload-label" title="Upload profile picture">
-                                <img src="../assets/image/icons/camera.svg" alt="Upload">
+                                <img src="../assets/image/icons/add.svg" alt="Upload">
                             </label>
                             <input type="file" id="profile_picture" name="profile_picture"
                                 accept="image/jpeg,image/png,image/gif,image/webp">
                         </div>
                     </div>
+
+                    <!-- Admin Name and Role -->
                     <div class="profile-name-role">
                         <h1 class="profile-full-name">
                             <?php echo htmlspecialchars($admin['first_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
@@ -55,19 +103,20 @@
                     </div>
                 </div>
 
-                <div class="profile-header-right">
+                <!-- Edit Actions - Right side -->
+                <div class="profile-header-right" id="profileActions">
                     <button type="button" id="editProfileBtn" class="btn btn-edit">
                         <img src="../assets/image/icons/edit.svg" alt="Edit" class="btn-icon">
                         Edit Profile
                     </button>
 
-                    <div id="profileActions" class="profile-actions-header" style="display: none;">
+                    <div id="editActions" style="display: none;" class="profile-actions-header">
                         <button type="button" id="uploadPhotoBtn" class="btn btn-upload" title="Upload Profile Photo">
-                            <img src="../assets/image/icons/camera.svg" alt="Upload" class="btn-icon">
+                            <img src="../assets/image/icons/update.svg" alt="Upload" class="btn-icon">
                             <span class="btn-text">Upload Photo</span>
                         </button>
                         <button type="button" id="saveProfileBtn" class="btn btn-primary" disabled>
-                            <img src="../assets/image/icons/check.svg" alt="Save" class="btn-icon">
+                            <img src="../assets/image/icons/add.svg" alt="Save" class="btn-icon">
                             <span class="btn-text">Save</span>
                         </button>
                         <button type="button" id="cancelEditBtn" class="btn btn-secondary">
@@ -78,7 +127,9 @@
                 </div>
             </div>
 
+            <!-- Two-column grid for Personal Info and Account Info -->
             <div class="profile-grid">
+                <!-- Personal Information Card -->
                 <div class="profile-card personal-info-card">
                     <div class="card-header">
                         <h3>Personal Information</h3>
@@ -119,6 +170,7 @@
                     </div>
                 </div>
 
+                <!-- Account Information Card -->
                 <div class="profile-card account-info-card">
                     <div class="card-header">
                         <h3>Account Information</h3>
@@ -138,7 +190,7 @@
 
                         <div class="info-display-group">
                             <div class="info-icon">
-                                <img src="../assets/image/icons/user.svg" alt="">
+                                <img src="../assets/image/icons/profile.svg" alt="">
                             </div>
                             <div class="info-content">
                                 <span class="info-label">Username</span>
@@ -149,7 +201,7 @@
 
                         <div class="info-display-group">
                             <div class="info-icon">
-                                <img src="../assets/image/icons/calendar.svg" alt="">
+                                <img src="../assets/image/icons/time-update.svg" alt="">
                             </div>
                             <div class="info-content">
                                 <span class="info-label">Member Since</span>
@@ -160,16 +212,18 @@
                 </div>
             </div>
 
+            <!-- Hidden file input for profile picture (kept for form submission) -->
             <input type="file" id="profile_picture_trigger" name="profile_picture"
                 accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
         </form>
         <?php endif; ?>
     </div>
 
+    <!-- Feedback Modal -->
     <div id="feedbackModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon success-icon">
-                <img src="../assets/image/icons/check-circle.svg" alt="Success">
+                <img src="../assets/image/icons/info-empty.svg" alt="Success">
             </div>
             <p id="modalMessage" class="modal-message"></p>
             <div class="modal-actions">
@@ -178,7 +232,7 @@
         </div>
     </div>
 
-    <?php include_once('../includes/admin-footer.php'); ?>
+    <?php include_once(__DIR__ . '/../includes/admin-footer.php'); ?>
 </body>
 
 </html>
