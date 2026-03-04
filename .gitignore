@@ -1,5 +1,6 @@
 *.txt
 database/error_log.txt
-logs\output\linux-path_Summary.md
-logs\output\windows-preset_Summary.md
-logs\output\Project_Structure.md
+logs/output/linux-path_Summary.md
+logs/output/windows-preset_Summary.md
+logs/output/Project_Structure.md
+logs/output/admin_path_Summary.md

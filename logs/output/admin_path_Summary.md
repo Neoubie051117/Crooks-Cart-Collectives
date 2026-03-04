@@ -2,7 +2,7 @@
 
 **Preset:** admin_path
 
-**Generated:** 2026-03-03 21:38:55
+**Generated:** 2026-03-04 09:07:28
 
 ---
 
@@ -178,7 +178,7 @@ Before you output your response, verify ALL of these:
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-03 21:38:52
+**Generated:** 2026-03-04 09:07:27
 **Mode:** all
 
 ```
@@ -278,6 +278,11 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-sign-in.php
 │   │   ├── admin-sign-up.php
 │   │   └── admin-verify-sellers.php
+│   ├── schema/
+│   │   ├── dbCreation.sql
+│   │   ├── dummyAdmin.sql
+│   │   ├── dummySeller.sql
+│   │   └── dummyUser.sql
 │   ├── scripts/
 │   │   ├── admin-header.js
 │   │   ├── admin-logs.js
@@ -368,17 +373,11 @@ Crooks-Cart-Collectives/
 │       │   └── william-aranez.png
 │       └── Logo.png
 ├── database/
-│   ├── schema/
-│   │   ├── dbCreation.sql
-│   │   ├── dummyAdmin.sql
-│   │   ├── dummySeller.sql
-│   │   └── dummyUser.sql
 │   ├── cart-handler.php
 │   ├── checkout-handler.php
 │   ├── customer-profile-handler.php
 │   ├── data-storage-handler.php
 │   ├── database-connect.php
-│   ├── error_log.txt
 │   ├── order-handler.php
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
@@ -396,7 +395,9 @@ Crooks-Cart-Collectives/
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
-│   │   └── admin_path_Summary.md
+│   │   ├── admin_path_Summary.md
+│   │   ├── Project_Structure.md
+│   │   └── windows-preset_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -486,12 +487,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 36 |
 | JavaScript Files | 28 |
 | JSON Files | 0 |
-| Text/Markdown | 6 |
+| Text/Markdown | 7 |
 | Image Files | 121 |
 | Other Files | 14 |
 
 **Total Directories:** 25
-**Total Files:** 265
+**Total Files:** 266
 
 ---
 
@@ -699,66 +700,315 @@ echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 
 ```php
 <?php
-// admin-data-storage-handler.php - Handles admin file operations including serving files
+// admin-data-storage-handler.php - Handles admin file operations
 // Files stored at: /Crooks-Data-Storage/administrators/admin_id/profile/profile.extension
-// (outside the project root not admin/, at same level as Crooks-Cart-Collectives/ meaning it's root of root)
+// (outside the project root - same level as Crooks-Cart-Collectives/)
 
 // Check if session is not already started before starting
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Error logging
+// ===== FIXED: Ensure error logging is configured properly =====
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/error_log.txt');
+$logFile = __DIR__ . '/error_log.txt';
+ini_set('error_log', $logFile);
 
-/**
- * Get the absolute path to the Crooks-Data-Storage directory (outside project root)
- * 
- * Current file: /Crooks-Cart-Collectives/admin/database/admin-data-storage-handler.php
- * Need to go up 3 levels to get to root (/), then add Crooks-Data-Storage/
- * 
- * / (root)
- *   ├── Crooks-Data-Storage/
- *   └── Crooks-Cart-Collectives/
- *        └── admin/
- *            └── database/
- *                └── admin-data-storage-handler.php
- */
-function getDataStorageRoot() {
-    // Go up 3 levels from current file to reach the server root
-    // /Crooks-Cart-Collectives/admin/database/ -> 3 levels up = /
-    $serverRoot = dirname(__DIR__, 3); // This gets to the server root (/)
-    return $serverRoot . '/Crooks-Data-Storage/';
+// Verify log file is writable
+if (!file_exists($logFile)) {
+    touch($logFile);
+    chmod($logFile, 0666);
+}
+if (!is_writable($logFile)) {
+    // Try to set permissions
+    @chmod($logFile, 0666);
 }
 
 /**
- * Process admin file upload and return result array
+ * Log messages with caller information - writes to error_log.txt
+ */
+function logStorageMessage($message, $level = 'INFO', $data = null) {
+    global $logFile;
+    
+    $caller = '';
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    
+    if (isset($backtrace[1]['file'])) {
+        $callerFile = basename($backtrace[1]['file']);
+        $callerLine = $backtrace[1]['line'] ?? '?';
+        $callerFunction = $backtrace[1]['function'] ?? '';
+        $caller = " [{$callerFile}:{$callerLine} - {$callerFunction}()]";
+    } elseif (isset($backtrace[0]['file'])) {
+        $callerFile = basename($backtrace[0]['file']);
+        $callerLine = $backtrace[0]['line'] ?? '?';
+        $callerFunction = $backtrace[0]['function'] ?? '';
+        $caller = " [{$callerFile}:{$callerLine} - {$callerFunction}()]";
+    }
+    
+    $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
+    $requestUri = $_SERVER['REQUEST_URI'] ?? 'UNKNOWN';
+    $ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+             strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? ' AJAX' : '';
+    
+    $sessionInfo = '';
+    if (isset($_SESSION['admin_id'])) {
+        $sessionInfo = " [Admin ID: {$_SESSION['admin_id']}]";
+    }
+    
+    $logMessage = date('Y-m-d H:i:s') . " [{$level}]{$ajax}{$caller}{$sessionInfo} - {$message} (Method: {$requestMethod}, URI: {$requestUri})";
+    
+    if ($data !== null) {
+        $logMessage .= "\n" . date('Y-m-d H:i:s') . " [DATA] - " . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+    
+    // Write to error_log.txt
+    error_log($logMessage);
+    
+    // For critical errors, also write directly to file as backup
+    if ($level === 'CRITICAL' || $level === 'ERROR') {
+        $fh = fopen($logFile, 'a');
+        if ($fh) {
+            fwrite($fh, $logMessage . "\n");
+            fclose($fh);
+        }
+    }
+}
+
+// Test logging on startup
+logStorageMessage("=== ADMIN DATA STORAGE HANDLER LOADED ===", "INFO", [
+    'log_file' => $logFile,
+    'log_writable' => is_writable($logFile),
+    'log_exists' => file_exists($logFile),
+    'storage_root' => getDataStorageRoot()
+]);
+
+/**
+ * Get the absolute path to the Crooks-Data-Storage directory
+ */
+function getDataStorageRoot() {
+    $currentDir = __DIR__;  // /.../Crooks-Cart-Collectives/admin/database/
+    $projectRoot = dirname($currentDir, 2);  // /.../Crooks-Cart-Collectives/
+    $parentDir = dirname($projectRoot);  // /.../ (parent of project root)
+    
+    $storagePath = $parentDir . '/Crooks-Data-Storage/';
+    
+    logStorageMessage("Path calculation", "DEBUG", [
+        'current_dir' => $currentDir,
+        'project_root' => $projectRoot,
+        'parent_dir' => $parentDir,
+        'storage_path' => $storagePath
+    ]);
+    
+    return $storagePath;
+}
+
+/**
+ * Ensure the data storage directory exists and is writable
  * 
- * @param string $type 'profile' (only type for now)
- * @param int $adminId Admin ID
- * @param array $file $_FILES['file'] array
- * @return array ['status' => 'success'|'error', 'message' => string, 'path' => string (if success)]
+ * @return array ['success' => bool, 'path' => string, 'message' => string, 'details' => array]
+ */
+function ensureDataStorageExists() {
+    $storageRoot = getDataStorageRoot();
+    $result = [
+        'success' => false,
+        'path' => $storageRoot,
+        'message' => '',
+        'details' => [
+            'exists' => false,
+            'created' => false,
+            'writable' => false,
+            'permissions' => null
+        ]
+    ];
+    
+    logStorageMessage("Checking storage directory", "INFO", ['path' => $storageRoot]);
+    
+    // Check if it's trying to write to filesystem root
+    $isFilesystemRoot = false;
+    if (DIRECTORY_SEPARATOR === '/') { // Unix/Linux/Mac
+        $isFilesystemRoot = ($storageRoot === '/Crooks-Data-Storage/');
+    } else { // Windows
+        $isFilesystemRoot = preg_match('/^[A-Z]:\\\\Crooks-Data-Storage\\\\$/', $storageRoot);
+    }
+    
+    if ($isFilesystemRoot) {
+        $result['message'] = 'Cannot create storage at filesystem root';
+        $result['details']['error'] = 'filesystem_root_detected';
+        logStorageMessage("CRITICAL: Attempting to create storage at filesystem root", "CRITICAL", $result);
+        return $result;
+    }
+    
+    // Check if directory exists
+    if (is_dir($storageRoot)) {
+        $result['details']['exists'] = true;
+        $result['details']['writable'] = is_writable($storageRoot);
+        $result['details']['permissions'] = substr(sprintf('%o', fileperms($storageRoot)), -4);
+        
+        logStorageMessage("Storage directory already exists", "INFO", $result['details']);
+        
+        $result['success'] = true;
+        $result['message'] = 'Storage directory already exists';
+        return $result;
+    }
+    
+    // Create directory
+    logStorageMessage("Creating storage directory", "INFO", ['path' => $storageRoot]);
+    
+    $oldMask = umask(0);
+    $created = mkdir($storageRoot, 0755, true);
+    umask($oldMask);
+    
+    if ($created) {
+        $result['details']['exists'] = true;
+        $result['details']['created'] = true;
+        $result['details']['writable'] = is_writable($storageRoot);
+        $result['details']['permissions'] = substr(sprintf('%o', fileperms($storageRoot)), -4);
+        
+        // Create security files
+        file_put_contents($storageRoot . 'index.html', '<!DOCTYPE html><html><head><title>Access Denied</title></head><body><h1>Access Denied</h1></body></html>');
+        file_put_contents($storageRoot . '.htaccess', "Order Deny,Allow\nDeny from all");
+        
+        logStorageMessage("Successfully created storage directory", "INFO", $result['details']);
+        
+        $result['success'] = true;
+        $result['message'] = 'Storage directory created successfully';
+    } else {
+        $error = error_get_last();
+        $result['message'] = 'Failed to create storage directory: ' . ($error['message'] ?? 'Unknown error');
+        $result['details']['error'] = $error;
+        
+        logStorageMessage("FAILED to create storage directory", "ERROR", $result);
+    }
+    
+    return $result;
+}
+
+/**
+ * Create directory structure for a specific admin
+ * 
+ * @param int $adminId
+ * @return array ['success' => bool, 'path' => string, 'message' => string, 'details' => array]
+ */
+function createAdminStorage($adminId) {
+    logStorageMessage("Creating admin storage structure", "INFO", ['admin_id' => $adminId]);
+    
+    if (empty($adminId) || !is_numeric($adminId)) {
+        return [
+            'success' => false,
+            'message' => 'Invalid admin ID',
+            'details' => ['admin_id' => $adminId]
+        ];
+    }
+    
+    // First ensure root storage exists
+    $rootCheck = ensureDataStorageExists();
+    if (!$rootCheck['success']) {
+        return [
+            'success' => false,
+            'message' => 'Root storage directory check failed: ' . $rootCheck['message'],
+            'details' => $rootCheck
+        ];
+    }
+    
+    $storageRoot = getDataStorageRoot();
+    $adminDir = $storageRoot . 'administrators/' . $adminId . '/';
+    $profileDir = $adminDir . 'profile/';
+    
+    $result = [
+        'success' => false,
+        'root_path' => $storageRoot,
+        'admin_path' => $adminDir,
+        'profile_path' => $profileDir,
+        'message' => '',
+        'details' => [
+            'admin_dir_created' => false,
+            'profile_dir_created' => false,
+            'admin_dir_exists' => is_dir($adminDir),
+            'profile_dir_exists' => is_dir($profileDir)
+        ]
+    ];
+    
+    logStorageMessage("Creating directories for admin {$adminId}", "INFO", [
+        'admin_dir' => $adminDir,
+        'profile_dir' => $profileDir
+    ]);
+    
+    $oldMask = umask(0);
+    
+    // Create admin directory if needed
+    if (!is_dir($adminDir)) {
+        if (mkdir($adminDir, 0755, true)) {
+            $result['details']['admin_dir_created'] = true;
+            $result['details']['admin_dir_exists'] = true;
+            logStorageMessage("Created admin directory", "INFO", ['path' => $adminDir]);
+        } else {
+            $error = error_get_last();
+            $result['message'] = 'Failed to create admin directory: ' . ($error['message'] ?? 'Unknown');
+            logStorageMessage("Failed to create admin directory", "ERROR", ['path' => $adminDir, 'error' => $error]);
+            umask($oldMask);
+            return $result;
+        }
+    }
+    
+    // Create profile directory if needed
+    if (!is_dir($profileDir)) {
+        if (mkdir($profileDir, 0755, true)) {
+            $result['details']['profile_dir_created'] = true;
+            $result['details']['profile_dir_exists'] = true;
+            logStorageMessage("Created profile directory", "INFO", ['path' => $profileDir]);
+        } else {
+            $error = error_get_last();
+            $result['message'] = 'Failed to create profile directory: ' . ($error['message'] ?? 'Unknown');
+            logStorageMessage("Failed to create profile directory", "ERROR", ['path' => $profileDir, 'error' => $error]);
+            umask($oldMask);
+            return $result;
+        }
+    }
+    
+    umask($oldMask);
+    
+    $result['success'] = true;
+    $result['message'] = 'Admin storage structure created successfully';
+    
+    logStorageMessage("Admin storage structure created", "INFO", $result);
+    
+    return $result;
+}
+
+/**
+ * Process admin file upload
  */
 function processAdminFileUpload($type, $adminId, $file) {
+    logStorageMessage("Processing file upload", "INFO", [
+        'type' => $type,
+        'admin_id' => $adminId,
+        'file_name' => $file['name'] ?? 'N/A',
+        'file_size' => $file['size'] ?? 'N/A'
+    ]);
     
     if (empty($type) || empty($adminId) || !is_numeric($adminId)) {
-        return ['status' => 'error', 'message' => 'Missing required parameters'];
+        return [
+            'status' => 'error',
+            'message' => 'Missing required parameters',
+            'details' => ['type' => $type, 'admin_id' => $adminId]
+        ];
     }
 
-    // Only profile type is supported for now
     if ($type !== 'profile') {
+        logStorageMessage("Invalid file type", "ERROR", ['type' => $type]);
         return ['status' => 'error', 'message' => 'Invalid file type'];
     }
 
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
-        error_log("Admin storage: File upload error");
+        $errorCode = $file['error'] ?? 'NO_FILE';
+        logStorageMessage("File upload error", "ERROR", ['error_code' => $errorCode]);
         return ['status' => 'error', 'message' => 'File upload failed'];
     }
 
     if ($file['size'] > 2 * 1024 * 1024) {
+        logStorageMessage("File size exceeds limit", "ERROR", ['size' => $file['size']]);
         return ['status' => 'error', 'message' => 'File size exceeds 2MB'];
     }
 
@@ -768,274 +1018,105 @@ function processAdminFileUpload($type, $adminId, $file) {
     finfo_close($finfo);
 
     if (!in_array($detectedType, $allowedTypes)) {
+        logStorageMessage("Invalid file type", "ERROR", ['detected' => $detectedType]);
         return ['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, WEBP allowed.'];
     }
 
-    // Get extension from detected MIME type for security
+    // Get extension from detected MIME type
     $extension = '';
     switch ($detectedType) {
-        case 'image/jpeg':
-            $extension = 'jpg';
-            break;
-        case 'image/png':
-            $extension = 'png';
-            break;
-        case 'image/gif':
-            $extension = 'gif';
-            break;
-        case 'image/webp':
-            $extension = 'webp';
-            break;
-        default:
-            $extension = 'jpg';
+        case 'image/jpeg': $extension = 'jpg'; break;
+        case 'image/png': $extension = 'png'; break;
+        case 'image/gif': $extension = 'gif'; break;
+        case 'image/webp': $extension = 'webp'; break;
+        default: $extension = 'jpg';
     }
     
-    // ===== FIXED: Using getDataStorageRoot() to get outside project root =====
-    // This creates: /Crooks-Data-Storage/administrators/123/profile/
-    $baseDir = getDataStorageRoot() . 'administrators/' . $adminId . '/';
+    // Create admin storage structure
+    $storageResult = createAdminStorage($adminId);
+    if (!$storageResult['success']) {
+        return [
+            'status' => 'error',
+            'message' => 'Failed to create storage directory: ' . $storageResult['message'],
+            'details' => $storageResult
+        ];
+    }
     
-    if ($type === 'profile') {
-        $targetDir = $baseDir . 'profile/';
-        $filename = 'profile.' . $extension;
-    }
-
-    // Create directories if they don't exist
-    if (!is_dir($targetDir)) {
-        if (!mkdir($targetDir, 0755, true)) {
-            error_log("Admin storage: Failed to create directory $targetDir");
-            return ['status' => 'error', 'message' => 'Server error: cannot create storage directory'];
-        }
-    }
-
-    // Delete any existing profile file with same base name but different extension
+    $targetDir = $storageResult['profile_path'];
+    $filename = 'profile.' . $extension;
+    
+    // Delete any existing profile files
     $pattern = $targetDir . 'profile.*';
-    array_map('unlink', glob($pattern));
+    $existingFiles = glob($pattern);
+    if (!empty($existingFiles)) {
+        logStorageMessage("Removing existing profile files", "DEBUG", ['files' => $existingFiles]);
+        array_map('unlink', $existingFiles);
+    }
 
     $targetPath = $targetDir . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        error_log("Admin storage: Failed to move uploaded file to $targetPath");
+        $error = error_get_last();
+        logStorageMessage("Failed to move uploaded file", "ERROR", ['target' => $targetPath, 'error' => $error]);
         return ['status' => 'error', 'message' => 'Failed to save file'];
     }
 
     chmod($targetPath, 0644);
 
-    // Return path relative to Crooks-Data-Storage/ (for database storage)
-    // Format: Crooks-Data-Storage/administrators/123/profile/profile.jpg
     $relativePath = 'Crooks-Data-Storage/administrators/' . $adminId . '/profile/' . $filename;
 
-    error_log("Admin storage: File saved successfully at: $targetPath");
-    error_log("Admin storage: Database path: $relativePath");
+    logStorageMessage("File saved successfully", "INFO", [
+        'full_path' => $targetPath,
+        'relative_path' => $relativePath,
+        'storage_root' => getDataStorageRoot()
+    ]);
 
     return [
         'status' => 'success',
         'message' => 'File uploaded successfully',
-        'path' => $relativePath
+        'path' => $relativePath,
+        'full_path' => $targetPath,
+        'storage_root' => getDataStorageRoot(),
+        'admin_storage' => $storageResult
     ];
 }
 
-/**
- * Get the full server path for a stored admin file
- * 
- * @param string $relativePath Path relative to Crooks-Data-Storage/ (e.g., "administrators/1/profile/profile.jpg")
- * @return string Full server path to the file
- */
-function getAdminStorageFullPath($relativePath) {
-    if (empty($relativePath)) {
-        return null;
-    }
-    
-    // Remove 'Crooks-Data-Storage/' prefix if present
-    $pathWithoutPrefix = str_replace('Crooks-Data-Storage/', '', $relativePath);
-    
-    // Build full path: /Crooks-Data-Storage/administrators/1/profile/profile.jpg
-    return getDataStorageRoot() . $pathWithoutPrefix;
-}
+// Export functions for other files
+$storageFunctions = [
+    'logStorageMessage',
+    'getDataStorageRoot',
+    'ensureDataStorageExists',
+    'createAdminStorage',
+    'processAdminFileUpload',
+    'processAdminProfileUpload',
+    'getAdminStorageFullPath',
+    'adminStorageFileExists',
+    'getAdminFileUrl',
+    'serveAdminFile',
+    'deleteAdminMedia'
+];
 
-/**
- * Check if an admin file exists in storage
- * 
- * @param string $relativePath Path relative to Crooks-Data-Storage/
- * @return bool True if file exists
- */
-function adminStorageFileExists($relativePath) {
-    if (empty($relativePath)) {
-        return false;
-    }
+// Handle direct requests
+if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    logStorageMessage("Direct access to admin-data-storage-handler.php", "INFO");
     
-    $fullPath = getAdminStorageFullPath($relativePath);
-    return file_exists($fullPath);
-}
-
-/**
- * Get the URL to access an admin file (using this script to serve files)
- * 
- * @param string $path Path to the file (e.g., "Crooks-Data-Storage/administrators/1/profile/profile.jpg")
- * @return string URL to access the file
- */
-function getAdminFileUrl($path) {
-    if (empty($path)) {
-        // Return default admin avatar if no path
-        return '../assets/image/icons/user-profile-circle.svg';
-    }
+    $action = $_GET['action'] ?? $_POST['action'] ?? '';
     
-    // For files in Crooks-Data-Storage, use this same file as a server
-    if (strpos($path, 'Crooks-Data-Storage/') === 0) {
-        return '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($path);
-    }
-    
-    return '../' . $path;
-}
-
-/**
- * Serve an admin file from storage (outputs file directly)
- * 
- * @param string $relativePath Path relative to Crooks-Data-Storage/ (e.g., "administrators/1/profile/profile.jpg")
- */
-function serveAdminFile($relativePath) {
-    error_log("Admin storage: Serving file: " . $relativePath);
-    
-    if (empty($relativePath)) {
-        http_response_code(400);
-        die('File path required');
-    }
-    
-    // ===== CRITICAL: Authentication check =====
-    if (!isset($_SESSION['admin_id'])) {
-        error_log("Admin storage: Unauthorized access attempt to: " . $relativePath);
-        http_response_code(401);
+    // Special debug action to test logging
+    if ($action === 'test_log') {
         header('Content-Type: application/json');
-        echo json_encode(['status' => 'error', 'message' => 'Authentication required']);
+        $result = [
+            'status' => 'success',
+            'message' => 'Log test',
+            'log_file' => $logFile,
+            'log_writable' => is_writable($logFile),
+            'storage_root' => getDataStorageRoot(),
+            'storage_exists' => is_dir(getDataStorageRoot())
+        ];
+        logStorageMessage("Test log message", "INFO", $result);
+        echo json_encode($result);
         exit;
     }
-    
-    // Security: Prevent directory traversal
-    $relativePath = str_replace(['../', '..\\', './', '.\\'], '', $relativePath);
-    
-    // Parse the path to extract the directory structure
-    // Path can be: administrators/1/profile/profile.jpg OR users/123/identity/identity.jpg OR sellers/456/document.jpg etc.
-    $pathForValidation = str_replace('Crooks-Data-Storage/', '', $relativePath);
-    
-    // Split path into parts
-    $pathParts = explode('/', $pathForValidation);
-    
-    // Check if this is an administrators file (owned by admin)
-    if (count($pathParts) >= 2 && $pathParts[0] === 'administrators') {
-        $fileAdminId = (int)$pathParts[1];
-        if ($fileAdminId !== $_SESSION['admin_id']) {
-            error_log("Admin storage: Access denied - admin {$_SESSION['admin_id']} tried to access file owned by $fileAdminId");
-            http_response_code(403);
-            die('Access denied: You do not own this file.');
-        }
-    }
-    // Allow access to user/seller files for viewing by admin (read-only)
-    else if ($pathParts[0] === 'users' || $pathParts[0] === 'sellers') {
-        // Admin can view any user/seller file for verification purposes
-        error_log("Admin storage: Admin {$_SESSION['admin_id']} accessing {$pathParts[0]} file: " . $relativePath);
-        // Continue serving the file
-    }
-    else {
-        // Any other path structure - deny access
-        error_log("Admin storage: Invalid file path - unknown directory structure: " . $relativePath);
-        http_response_code(403);
-        die('Invalid file path');
-    }
-    
-    // ===== WILDCARD SEARCH FOR PROFILE PICTURES =====
-    // Check if path contains wildcard (*) for extension search
-    if (strpos($relativePath, 'profile.*') !== false) {
-        // Extract the base directory
-        $baseDir = str_replace('profile.*', '', $relativePath);
-        $baseDir = str_replace('Crooks-Data-Storage/', '', $baseDir);
-        $fullBaseDir = getDataStorageRoot() . $baseDir;
-        
-        // Search for any profile file
-        $profileFiles = glob($fullBaseDir . 'profile.*');
-        if (!empty($profileFiles)) {
-            $actualFile = basename($profileFiles[0]);
-            // Reconstruct the full path with Crooks-Data-Storage/ prefix
-            $relativePath = 'Crooks-Data-Storage/' . $baseDir . $actualFile;
-            error_log("Admin storage: Resolved profile.* to: " . $relativePath);
-        } else {
-            error_log("Admin storage: Profile not found in: " . $fullBaseDir);
-            http_response_code(404);
-            die('Profile picture not found');
-        }
-    }
-    
-    // Get full path using our helper
-    $fullPath = getAdminStorageFullPath($relativePath);
-    error_log("Admin storage: Full path: " . $fullPath);
-    
-    if (!$fullPath || !file_exists($fullPath)) {
-        error_log("Admin storage: File not found: " . $fullPath);
-        http_response_code(404);
-        die('File not found');
-    }
-    
-    $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
-    
-    $contentTypes = [
-        'jpg' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'png' => 'image/png',
-        'gif' => 'image/gif',
-        'webp' => 'image/webp',
-        'svg' => 'image/svg+xml'
-    ];
-    
-    $contentType = $contentTypes[$extension] ?? 'application/octet-stream';
-    header('Content-Type: ' . $contentType);
-    header('Content-Length: ' . filesize($fullPath));
-    header('Cache-Control: public, max-age=86400'); // Cache for 1 day
-    header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
-    
-    readfile($fullPath);
-    exit;
-}
-
-/**
- * Delete all media for an admin (profile pictures)
- * 
- * @param int $adminId
- * @return bool
- */
-function deleteAdminMedia($adminId) {
-    if (empty($adminId) || !is_numeric($adminId)) {
-        return false;
-    }
-    
-    // Verify authentication
-    if (!isset($_SESSION['admin_id']) || $_SESSION['admin_id'] != $adminId) {
-        return false;
-    }
-    
-    $profileDir = getDataStorageRoot() . 'administrators/' . $adminId . '/profile/';
-    if (is_dir($profileDir)) {
-        array_map('unlink', glob($profileDir . '*'));
-        rmdir($profileDir);
-        
-        // Try to remove admin directory if empty
-        $adminDir = getDataStorageRoot() . 'administrators/' . $adminId . '/';
-        if (is_dir($adminDir) && count(glob($adminDir . '*')) === 0) {
-            rmdir($adminDir);
-        }
-        return true;
-    }
-    return false;
-}
-
-/**
- * Convenience function for admin profile uploads
- */
-function processAdminProfileUpload($adminId, $file) {
-    return processAdminFileUpload('profile', $adminId, $file);
-}
-
-// Handle direct requests to this file
-if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
-    // Check for serve action
-    $action = $_GET['action'] ?? $_POST['action'] ?? '';
     
     if ($action === 'serve') {
         $path = $_GET['path'] ?? '';
@@ -1043,25 +1124,17 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
         exit;
     }
     
-    // Handle file upload via POST
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'upload') {
         header('Content-Type: application/json');
         
         if (!isset($_SESSION['admin_id'])) {
+            logStorageMessage("Upload attempted without authentication", "WARNING");
             http_response_code(401);
             echo json_encode(['status' => 'error', 'message' => 'Authentication required']);
             exit;
         }
         
-        $adminId = $_SESSION['admin_id'];
-        $file = $_FILES['file'] ?? null;
-        
-        if (!$file) {
-            echo json_encode(['status' => 'error', 'message' => 'No file uploaded']);
-            exit;
-        }
-        
-        $result = processAdminProfileUpload($adminId, $file);
+        $result = processAdminProfileUpload($_SESSION['admin_id'], $_FILES['file'] ?? null);
         
         if ($result['status'] === 'error') {
             http_response_code(400);
@@ -1071,7 +1144,6 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
         exit;
     }
     
-    // If no valid action, output 404
     http_response_code(404);
     echo 'Not found';
     exit;
@@ -1934,7 +2006,7 @@ function rejectSeller($sellerId) {
 
 ```php
 <?php
-// Admin Sign In Handler
+// Admin Sign In Handler - MODIFIED for better error logging
 session_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
@@ -1963,12 +2035,14 @@ handleAdminSignin();
 function handleAdminSignin() {
     global $connection;
     
-    error_log("Admin signin attempt for identifier: " . ($_POST['identifier'] ?? ''));
-    
     $identifier = $_POST['identifier'] ?? '';
     $password = $_POST['password'] ?? '';
     
+    // Log the attempt (but don't log passwords)
+    error_log("Admin signin attempt - Identifier: " . $identifier);
+    
     if (empty($identifier) || empty($password)) {
+        error_log("Signin failed: Empty fields");
         echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
@@ -1976,7 +2050,7 @@ function handleAdminSignin() {
     $identifier = trim($identifier);
     
     try {
-        // Check for admin
+        // Check ONLY administrators table - both email and username
         $stmt = $connection->prepare("
             SELECT admin_id, first_name, last_name, username, email, password 
             FROM administrators 
@@ -1986,12 +2060,16 @@ function handleAdminSignin() {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$admin) {
+            error_log("Signin failed: No admin found with identifier: " . $identifier);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
         
+        error_log("Admin found: ID=" . $admin['admin_id'] . ", Username=" . $admin['username'] . ", Email=" . $admin['email']);
+        
         // Verify password
         if (!password_verify($password, $admin['password'])) {
+            error_log("Signin failed: Password verification failed for admin ID: " . $admin['admin_id']);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
@@ -2004,6 +2082,8 @@ function handleAdminSignin() {
         $_SESSION['admin_email'] = $admin['email'];
         $_SESSION['is_admin'] = true;
         
+        error_log("Signin successful for admin ID: " . $admin['admin_id']);
+        
         echo json_encode([
             'status' => 'success',
             'message' => 'Login successful',
@@ -2011,7 +2091,7 @@ function handleAdminSignin() {
         ]);
         
     } catch (PDOException $e) {
-        error_log("Admin signin error: " . $e->getMessage());
+        error_log("Admin signin database error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Login service unavailable']);
     }
 }
@@ -2105,36 +2185,69 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/error_log.txt');
+$logFile = __DIR__ . '/error_log.txt';
+ini_set('error_log', $logFile);
 
-require_once(__DIR__ . '/admin-database-connect.php');
+// Include the data storage handler
+require_once(__DIR__ . '/admin-data-storage-handler.php');
 
-// ===== ADD THIS TEST ENDPOINT =====
+/**
+ * Log messages for signup handler
+ */
+function logSignupMessage($message, $level = 'INFO', $data = null) {
+    $caller = '';
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+    if (isset($backtrace[0]['file'])) {
+        $callerFile = basename($backtrace[0]['file']);
+        $callerLine = $backtrace[0]['line'] ?? '?';
+        $callerFunction = $backtrace[0]['function'] ?? '';
+        $caller = " [{$callerFile}:{$callerLine} - {$callerFunction}()]";
+    }
+    
+    $logMessage = date('Y-m-d H:i:s') . " [{$level}]{$caller} - {$message}";
+    
+    if ($data !== null) {
+        $logMessage .= "\n" . date('Y-m-d H:i:s') . " [DATA] - " . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+    
+    error_log($logMessage);
+}
+
+logSignupMessage("=== ADMIN SIGN-UP HANDLER LOADED ===", "INFO");
+
+// Test endpoint
 if (isset($_GET['ping'])) {
     echo json_encode([
         'status' => 'ok', 
         'message' => 'Signup handler is reachable',
         'time' => date('Y-m-d H:i:s'),
-        'session' => isset($_SESSION['admin_id']) ? 'active' : 'inactive'
+        'session' => isset($_SESSION['admin_id']) ? 'active' : 'inactive',
+        'log_file' => $logFile,
+        'log_writable' => is_writable($logFile)
     ]);
     exit;
 }
-// ===== END TEST ENDPOINT =====
 
-// Allow testing
-if (isset($_GET['test'])) {
-    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
-    exit;
-}
-
-// Allow testing
-if (isset($_GET['test'])) {
-    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
+// Test endpoint for storage
+if (isset($_GET['test_storage'])) {
+    $result = [
+        'storage_root' => function_exists('getDataStorageRoot') ? getDataStorageRoot() : 'FUNCTION_NOT_FOUND',
+        'storage_exists' => function_exists('ensureDataStorageExists') ? ensureDataStorageExists() : 'FUNCTION_NOT_FOUND',
+        'functions_available' => []
+    ];
+    
+    $functions = ['logStorageMessage', 'getDataStorageRoot', 'ensureDataStorageExists', 'createAdminStorage'];
+    foreach ($functions as $func) {
+        $result['functions_available'][$func] = function_exists($func);
+    }
+    
+    echo json_encode(['status' => 'success', 'data' => $result]);
     exit;
 }
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    logSignupMessage("Method not allowed: " . $_SERVER['REQUEST_METHOD'], "ERROR");
     http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
     exit;
@@ -2143,6 +2256,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $action = $_POST['action'] ?? '';
 
 if ($action !== 'signup') {
+    logSignupMessage("Invalid action: " . $action, "ERROR");
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Invalid action: ' . $action]);
     exit;
@@ -2157,21 +2271,42 @@ $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 $confirm = $_POST['confirm_password'] ?? '';
 
+logSignupMessage("Processing signup request", "INFO", [
+    'first_name' => $first_name,
+    'last_name' => $last_name,
+    'email' => $email,
+    'contact' => $contact,
+    'username' => $username
+]);
+
+// ===== FIXED: Only check for empty username =====
+if (empty($username)) {
+    logSignupMessage("Username is empty", "ERROR");
+    echo json_encode(['status' => 'error', 'message' => 'username-required']);
+    exit;
+}
+
 // Check required fields
-if (empty($first_name) || empty($last_name) || empty($email) || empty($contact) || empty($username) || empty($password)) {
+if (empty($first_name) || empty($last_name) || empty($email) || empty($contact) || empty($password)) {
+    logSignupMessage("Missing required fields", "ERROR");
     echo json_encode(['status' => 'error', 'message' => 'missing-field']);
     exit;
 }
 
 // Validate email
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    logSignupMessage("Invalid email", "ERROR", ['email' => $email]);
     echo json_encode(['status' => 'error', 'message' => 'invalid-email']);
     exit;
 }
 
-// Validate password
+// Validate password - match JS validation exactly
 if (strlen($password) < 8) {
     echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
+    exit;
+}
+if (strlen($password) > 16) {
+    echo json_encode(['status' => 'error', 'message' => 'password-too-long']);
     exit;
 }
 if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password)) {
@@ -2187,12 +2322,19 @@ if ($password !== $confirm) {
     exit;
 }
 
-// Validate username
-if (strlen($username) < 3 || strlen($username) > 20) {
-    echo json_encode(['status' => 'error', 'message' => 'username-length']);
+// ===== FIXED: Username validation - match your JS validation =====
+if (strlen($username) < 3) {
+    logSignupMessage("Username too short", "ERROR", ['username' => $username, 'length' => strlen($username)]);
+    echo json_encode(['status' => 'error', 'message' => 'username-too-short']);
+    exit;
+}
+if (strlen($username) > 20) {
+    logSignupMessage("Username too long", "ERROR", ['username' => $username, 'length' => strlen($username)]);
+    echo json_encode(['status' => 'error', 'message' => 'username-too-long']);
     exit;
 }
 if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+    logSignupMessage("Username contains invalid characters", "ERROR", ['username' => $username]);
     echo json_encode(['status' => 'error', 'message' => 'username-invalid-chars']);
     exit;
 }
@@ -2208,15 +2350,21 @@ if (strlen($phone) === 10 && $phone[0] === '9') {
 }
 
 if (!preg_match('/^09\d{9}$/', $phone)) {
+    logSignupMessage("Invalid contact number", "ERROR", ['original' => $contact, 'formatted' => $phone]);
     echo json_encode(['status' => 'error', 'message' => 'invalid-contact']);
     exit;
 }
 
 try {
-    // Check duplicates
+    require_once(__DIR__ . '/admin-database-connect.php');
+    
+    logSignupMessage("Checking username availability", "INFO", ['username' => $username]);
+    
+    // ===== FIXED: Only check for exact duplicates =====
     $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE username = ?");
     $stmt->execute([$username]);
     if ($stmt->fetch()) {
+        logSignupMessage("Username already taken", "ERROR", ['username' => $username]);
         echo json_encode(['status' => 'error', 'message' => 'username-unavailable']);
         exit;
     }
@@ -2224,6 +2372,7 @@ try {
     $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
+        logSignupMessage("Email already registered", "ERROR", ['email' => $email]);
         echo json_encode(['status' => 'error', 'message' => 'duplicate-email']);
         exit;
     }
@@ -2231,31 +2380,75 @@ try {
     $stmt = $connection->prepare("SELECT admin_id FROM administrators WHERE contact_number = ?");
     $stmt->execute([$phone]);
     if ($stmt->fetch()) {
+        logSignupMessage("Contact number already registered", "ERROR", ['contact' => $phone]);
         echo json_encode(['status' => 'error', 'message' => 'duplicate-contact']);
         exit;
     }
+    
+    logSignupMessage("Inserting admin with values", "INFO", [
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'email' => $email,
+        'contact_number' => $phone,
+        'username' => $username
+    ]);
     
     // Create admin
     $hashed = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $connection->prepare("INSERT INTO administrators (first_name, last_name, email, contact_number, username, password, date_joined) VALUES (?, ?, ?, ?, ?, ?, NOW())");
     $stmt->execute([$first_name, $last_name, $email, $phone, $username, $hashed]);
     
-    // Create storage directory
     $admin_id = $connection->lastInsertId();
-    $storage_dir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/administrators/' . $admin_id . '/profile/';
-    if (!is_dir($storage_dir)) {
-        mkdir($storage_dir, 0755, true);
-    }
     
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Admin account created successfully!',
-        'redirect' => 'admin-sign-in.php'
+    logSignupMessage("Admin account created", "INFO", [
+        'admin_id' => $admin_id,
+        'username' => $username,
+        'email' => $email
     ]);
     
+    // Use the storage handler to create directories
+    $storageResult = null;
+    $storageSuccess = false;
+    
+    if (function_exists('createAdminStorage')) {
+        logSignupMessage("Calling createAdminStorage from storage handler", "INFO", ['admin_id' => $admin_id]);
+        $storageResult = createAdminStorage($admin_id);
+        $storageSuccess = $storageResult['success'];
+        
+        logSignupMessage("Storage creation result", $storageSuccess ? "INFO" : "ERROR", $storageResult);
+    } else {
+        logSignupMessage("createAdminStorage function not found!", "WARNING");
+        $storageResult = [
+            'success' => false,
+            'message' => 'Storage handler function not available'
+        ];
+    }
+    
+    // Prepare response
+    $response = [
+        'status' => 'success',
+        'message' => 'Admin account created successfully!',
+        'redirect' => 'admin-sign-in.php',
+        'admin_id' => $admin_id,
+        'username' => $username
+    ];
+    
+    logSignupMessage("Signup complete", "INFO", $response);
+    
+    echo json_encode($response);
+    
+} catch (PDOException $e) {
+    logSignupMessage("Database error: " . $e->getMessage(), "CRITICAL", [
+        'error' => $e->getMessage(),
+        'code' => $e->getCode()
+    ]);
+    echo json_encode(['status' => 'error', 'message' => 'database-error']);
 } catch (Exception $e) {
-    error_log("Signup error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    logSignupMessage("Unexpected error: " . $e->getMessage(), "CRITICAL", [
+        'error' => $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ]);
+    echo json_encode(['status' => 'error', 'message' => 'server-error']);
 }
 ?>
 ```
@@ -3604,12 +3797,14 @@ $current_dir = dirname($_SERVER['PHP_SELF']);
 // Check if we're in a subdirectory
 $is_includes = strpos($current_dir, '/includes') !== false;
 $is_pages = strpos($current_dir, '/pages') !== false;
+$is_database = strpos($current_dir, '/database') !== false;
 
-if ($is_includes) {
-    $pathPrefix = '../';
-} elseif ($is_pages) {
+// Calculate correct path prefix based on current location
+if ($is_includes || $is_pages || $is_database) {
+    // If we're in includes/, pages/, or database/ directory, go up one level
     $pathPrefix = '../';
 } else {
+    // We're in the admin root
     $pathPrefix = '';
 }
 
@@ -3617,22 +3812,78 @@ if ($is_includes) {
 $adminName = '';
 $adminProfilePic = $pathPrefix . 'assets/image/icons/user-profile-circle.svg';
 
-if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
-    $adminName = $_SESSION['admin_first_name'] . ' ' . ($_SESSION['admin_last_name'] ?? '');
+// ===== FIXED: Load admin profile picture from database and handle external storage =====
+if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
+    $adminId = $_SESSION['admin_id'];
+    $adminFirstName = $_SESSION['admin_first_name'] ?? '';
+    $adminLastName = $_SESSION['admin_last_name'] ?? '';
+    $adminName = trim($adminFirstName . ' ' . $adminLastName);
     
-    // Get profile picture from session or database
-    if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
-        // Include the data storage handler to use the function
-        require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
-        
-        // Check if the function exists before calling it
-        if (function_exists('getAdminProfilePictureUrl')) {
-            $adminProfilePic = getAdminProfilePictureUrl($_SESSION['admin_profile_picture']);
-        } else {
-            // Fallback if function doesn't exist
-            $adminProfilePic = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($_SESSION['admin_profile_picture']);
+    // If name is empty or we need to fetch profile picture, try to fetch from database
+    if (empty($adminName) || $adminName === ' ' || !isset($_SESSION['admin_profile_picture'])) {
+        try {
+            // Include database connection
+            require_once(dirname(__FILE__) . '/../database/admin-database-connect.php');
+            
+            // Fetch admin data including profile picture
+            $stmt = $connection->prepare("SELECT first_name, last_name, profile_picture FROM administrators WHERE admin_id = ?");
+            $stmt->execute([$adminId]);
+            $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($adminData) {
+                $adminName = trim(($adminData['first_name'] ?? '') . ' ' . ($adminData['last_name'] ?? ''));
+                
+                // Store in session for future use
+                $_SESSION['admin_first_name'] = $adminData['first_name'] ?? '';
+                $_SESSION['admin_last_name'] = $adminData['last_name'] ?? '';
+                
+                // Handle profile picture - store the path in session
+                if (!empty($adminData['profile_picture'])) {
+                    $_SESSION['admin_profile_picture'] = $adminData['profile_picture'];
+                    
+                    // ===== FIXED: Handle external storage path =====
+                    // The profile_picture path is stored as: "Crooks-Data-Storage/administrators/1/profile/profile.jpg"
+                    $profilePath = $adminData['profile_picture'];
+                    
+                    // Check if it's an external storage path (starts with Crooks-Data-Storage/)
+                    if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                        // Use the admin-data-storage-handler.php to serve the file
+                        // The handler is at: ../database/admin-data-storage-handler.php
+                        $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                    } else {
+                        // It's a relative path within the project
+                        $adminProfilePic = $pathPrefix . $profilePath;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error fetching admin data in header: " . $e->getMessage());
+        }
+    } else {
+        // Use session data if available
+        if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
+            $profilePath = $_SESSION['admin_profile_picture'];
+            
+            // ===== FIXED: Handle external storage path =====
+            if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                // Use the admin-data-storage-handler.php to serve the file
+                $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+            } else {
+                // It's a relative path within the project
+                $adminProfilePic = $pathPrefix . $profilePath;
+            }
         }
     }
+}
+
+// ===== FIXED: Consistent logo link for all pages =====
+// For logged-in users, always link to dashboard
+// For logged-out users, always link to admin-index.php
+$logoLink = $pathPrefix;
+if ($isAdminLoggedIn) {
+    $logoLink .= 'pages/admin-dashboard.php';
+} else {
+    $logoLink .= 'admin-index.php';
 }
 ?>
 <!DOCTYPE html>
@@ -3652,12 +3903,12 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
     <header class="header-bar no-transition">
         <div class="header-logo">
             <?php if ($isAdminLoggedIn): ?>
-            <!-- Show profile picture and admin name -->
-            <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="logo-link"
+            <!-- Show profile picture and admin name - FIXED: Consistent logo link -->
+            <a href="<?php echo $logoLink; ?>" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <div class="admin-profile-mini">
-                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar"
-                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg';">
+                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar" onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg'; 
+                                 console.log('Failed to load profile image: ' + this.src);">
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
@@ -3667,8 +3918,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_first_name'])) {
                 </div>
             </a>
             <?php else: ?>
-            <!-- Show logo for non-logged in visitors -->
-            <a href="<?php echo $pathPrefix; ?>admin-index.php" class="logo-link"
+            <!-- Show logo for non-logged in visitors - FIXED: Consistent logo link -->
+            <a href="<?php echo $logoLink; ?>" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
                     style="height: 40px; width: auto;">
@@ -5622,6 +5873,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const formData = new FormData(form);
+            
+            // Log what we're sending (for debugging)
+            console.log('Sending identifier:', identifierInput.value.trim());
 
             const response = await fetch('../database/admin-sign-in-handler.php', {
                 method: 'POST',
@@ -5630,6 +5884,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
+            console.log('Server response:', result);
 
             if (result.status === 'success') {
                 showNotifier('Login successful! Redirecting...');
@@ -5638,12 +5893,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = result.redirect;
                 }, 1500);
             } else {
+                // Handle specific error messages
                 if (result.message === 'invalid-credentials') {
-                    showNotifier('Invalid credentials. Please try again.');
+                    showNotifier('Invalid email/username or password. Please try again.');
                     identifierInput.classList.add('error');
                     passwordInput.classList.add('error');
+                } else if (result.message === 'All fields are required') {
+                    showNotifier('Please fill in all fields.');
                 } else {
-                    showNotifier('Login failed. Please try again.');
+                    showNotifier(result.message || 'Login failed. Please try again.');
                 }
             }
         } catch (error) {
@@ -6614,6030 +6872,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load
     loadSellers();
 });
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-dashboard.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== DASHBOARD LAYOUT ===== */
-.content {
-    max-width: 1200px;
-    margin: 80px auto 20px;
-    padding: 20px;
-    min-height: calc(100vh - 200px);
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== WELCOME SECTION ===== */
-.welcome-section {
-    background: linear-gradient(135deg, #f2f4f6 0%, #ffffff 100%);
-    padding: 50px 40px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    border: 1px solid #363940;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.welcome-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #ff8246, #e8693d);
-}
-
-.welcome-section h1 {
-    font-size: 2.2rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-}
-
-.welcome-section h1 span {
-    color: #ff8246;
-}
-
-.welcome-section p {
-    font-size: 1.1rem;
-    color: #000000;
-    opacity: 0.8;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* ===== DASHBOARD GRID ===== */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== DASHBOARD CARDS ===== */
-.dashboard-card {
-    background: #f2f4f6;
-    border-radius: 12px;
-    padding: 30px 25px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    text-align: center;
-    transition: box-shadow 0.3s ease-in-out;
-    border: 1px solid #363940;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.dashboard-card:hover {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    border-color: #ff8246;
-}
-
-.dashboard-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.dashboard-card h3 {
-    font-size: 1.4rem;
-    color: #1e2e2f;
-    margin-bottom: 15px;
-    font-weight: 400;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.dashboard-card h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 2px;
-    background: #ff8246;
-    transition: width 0.3s ease;
-}
-
-.dashboard-card:hover h3::after {
-    width: 80px;
-}
-
-.dashboard-card p {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 25px;
-    line-height: 1.6;
-    flex-grow: 1;
-    opacity: 0.8;
-}
-
-.card-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 12px;
-}
-
-.card-icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-/* ===== BUTTON STYLES ===== */
-.btn-primary {
-    display: inline-block;
-    background: #ff8246;
-    color: #ffffff;
-    padding: 12px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1rem;
-    transition: background-color 0.3s ease-in-out;
-    border: 2px solid transparent;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: auto;
-    align-self: center;
-    min-width: 140px;
-    box-sizing: border-box;
-}
-
-.btn-primary:hover {
-    background: #e8693d;
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (min-width: 1200px) {
-    .content {
-        margin-top: 100px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .welcome-section h1 {
-        font-size: 2.5rem;
-    }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .content {
-        margin-top: 70px;
-        padding: 15px;
-    }
-    
-    .welcome-section {
-        padding: 40px 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 2rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 767px) {
-    body {
-        overflow-x: hidden;
-    }
-    
-    .content {
-        margin-top: 60px;
-        padding: 15px;
-        max-width: 100%;
-    }
-    
-    .welcome-section {
-        padding: 30px 20px;
-        margin-bottom: 30px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.8rem;
-    }
-    
-    .welcome-section p {
-        font-size: 1rem;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        width: 100%;
-    }
-    
-    .dashboard-card {
-        padding: 25px 20px;
-        max-width: 100%;
-        margin: 0 auto;
-        width: 100%;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-primary {
-        padding: 10px 25px;
-        min-width: 120px;
-        font-size: 0.95rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 55px;
-        padding: 12px;
-    }
-    
-    .welcome-section {
-        padding: 25px 15px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.5rem;
-    }
-    
-    .welcome-section p {
-        font-size: 0.95rem;
-    }
-    
-    .dashboard-card {
-        padding: 20px 15px;
-    }
-    
-    .dashboard-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-    
-    .dashboard-card p {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-    }
-    
-    .btn-primary {
-        padding: 10px 20px;
-        min-width: 110px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .content {
-        margin-top: 50px;
-        padding: 10px;
-    }
-    
-    .welcome-section {
-        padding: 20px 12px;
-    }
-    
-    .welcome-section h1 {
-        font-size: 1.3rem;
-    }
-    
-    .dashboard-card {
-        padding: 18px 12px;
-    }
-    
-    .btn-primary {
-        padding: 8px 16px;
-        min-width: 100px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .content {
-        margin-top: 50px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .welcome-section {
-        padding: 20px;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dashboard-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
-}
-
-.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
-.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
-.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
-.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
-.dashboard-card:nth-child(7) { animation-delay: 0.7s; }
-
-@media print {
-    .btn-primary {
-        display: none;
-    }
-    
-    .dashboard-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-footer.css`
-
-**Status:** `FOUND`
-
-```css
-.footer {
-  background-color: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-top: 2px solid var(--color-border-A);
-  width: 100vw !important;
-  max-width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  left: 0;
-  margin: 0 !important;
-}
-
-.footer-upper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--size-navigation-gap);
-  margin: 0;
-  color: var(--color-text-B);
-}
-
-.queries {
-  max-width: 50%;
-  color: var(--color-text-A);
-}
-
-.queries h2 {
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-}
-
-.queries span {
-  color: var(--color-accent-A);
-}
-
-.socials {
-  display: flex;
-  gap: var(--size-navigation-gap);
-}
-
-.socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-}
-
-.socials a img {
-  width:  40px;
-  height: 40px;
-}
-
-.footer-lower {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px 0;
-  font-size: var(--font-size-base);
-  margin-top: 20px;
-  border-top: 2px solid var(--color-border-A);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.mail-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  color: var(--color-text-A);
-}
-
-.mail-button img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0);
-}
-
-.policy-links {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  padding: 5px 0;
-}
-
-.policy-links a {
-  color: var(--color-text-A);
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.policy-links a:hover {
-  color: var(--color-accent-A);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .policy-links {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .footer-lower {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mail-button {
-    margin-bottom: 10px;
-  }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-header.css`
-
-**Status:** `FOUND`
-
-```css
-/* CSS File Content */
-:root {
-  /* Sizes & Spacing */
-  --size-logo-height: 40px;
-  --size-button-padding: 10px 20px;
-  --size-button-radius: 5px;
-  --size-navigation-gap: 30px;
-  --size-header-padding: 15px 40px;
-  --size-mobile-menu-max-width: 270px;
-
-  /* Color Palette - Light Theme */
-  --color-background-A: #e4eaf2;        /* body background */
-  --color-background-B: #f2f4f6;        /* header background */
-  --color-background-C: #000000;  
-  --color-linear-gradient-A: #a49bf8, #b8b9fa, #dbd5fd, #43c9fb;      /* mobile menu bg or secondary light bg */
-  --color-text-A: #000000;              /* main text */
-  --color-text-B: #ffffff;              /* button text on orange */
-  --color-text-C: #1e2e2f;
-  --color-accent-A: #ff8246;            /* primary orange */
-  --color-hover-A: #e8693d;             /* hover orange variant */
-  --color-border-A: #363940;            /* border */
-
-  /* Effects */
-  --effect-glow-A: 0 0 10px rgba(0, 0, 0, 0.2);                /* soft shadow */
-  --effect-glow-B: 0 0 10px rgba(211, 94, 53, 0.7);            /* orange glow */
-  --effect-box-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);  /* lighter shadow */
-  --effect-transition-default: all 0.3s ease-in-out;
-
-  /* Typography */
-  --font-family-base: Arial, sans-serif;
-  --font-size-base: 16px;
-  --font-size-title: 22px;
-  --font-weight-bold: 400;
-}
-
-/* Global Styles */
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background-color: var(--color-background-A);
-  color: var(--color-text-A);
-  font-family: var(--font-family-base);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-/* Scrollbar Removal */
-html {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Header Styles */
-.header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--color-background-B);
-  padding: var(--size-header-padding);
-  box-shadow: var(--effect-box-shadow-default);
-  border-bottom: 2px solid var(--color-border-A);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-sizing: border-box;
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  max-width: 100%;
-}
-
-.header-logo img {
-  height: var(--size-logo-height);
-  width: auto;
-}
-
-.title {
-  color: var(--color-text-A);
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.title span {
-  color: var(--color-accent-A);
-}
-
-/* Navigation Styles */
-.nav-container {
-  display: flex;
-  align-items: center;
-  gap: var(--size-navigation-gap);
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.nav-bar {
-  display: flex;
-  gap: var(--size-navigation-gap);
-  overflow: hidden;
-}
-
-/* Desktop Navigation Link Styles */
-.nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  transition: var(--effect-transition-default);
-  white-space: nowrap;
-  position: relative;
-  padding: 5px 0;
-}
-
-.nav-link:hover, 
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Desktop hover underline effect */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-accent-A);
-  transition: var(--effect-transition-default);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 100%;
-}
-
-/* Button Styles */
-.social-button {
-  background: var(--color-accent-A);
-  color: var(--color-text-B);
-  padding: var(--size-button-padding);
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-}
-
-.social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Mobile Menu Styles */
-.hamburger-menu {
-  display: none;
-  cursor: pointer;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  z-index: 1001;
-}
-
-.hamburger-icon {
-  width: 30px;
-  height: 30px;
-  transition: var(--effect-transition-default);
-}
-
-.mobile-nav {
-    position: fixed;
-    top: 80px;
-    right: 0;
-    width: 50%;
-    max-width: var(--size-mobile-menu-max-width);
-    text-align: center;
-    height: calc(100vh - 80px);
-    background-color: var(--color-background-B);
-    z-index: 1000;
-    transform: translateX(100%); /* This is the key - hidden off-screen */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 20px;
-    overflow-y: auto;
-    border-left: 2px solid var(--color-border-A);
-    border-radius: 15px 0 0 15px;
-    box-shadow: none;
-    visibility: visible;
-    opacity: 1;
-}
-
-.mobile-nav.open {
-    transform: translateX(0) !important; /* ensure it overrides any leftover inline */
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
-}
-/* Mobile Navigation Link Styles - RESTORED ORIGINAL HOVER EFFECT */
-.mobile-nav .nav-link {
-  color: var(--color-text-A);
-  text-decoration: none;
-  font-size: 16px;
-  padding: 15px 10px; /* Increased padding for better touch targets */
-  position: relative;
-  transition: var(--effect-transition-default);
-  border-bottom: 1px solid var(--color-border-A);
-  display: block; /* Make it block level for full width */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* RESTORED: Underline hover effect for mobile nav - properly aligned */
-.mobile-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; /* Adjusted to sit right on the border */
-  left: 10px; /* Start after padding */
-  right: 10px; /* End before padding */
-  width: calc(100% - 20px); /* Full width minus left/right padding */
-  height: 2px;
-  background: var(--color-accent-A);
-  transform: scaleX(0);
-  transition: transform 0.3s ease-in-out;
-  transform-origin: left;
-}
-
-.mobile-nav .nav-link:hover::after,
-.mobile-nav .nav-link.active::after {
-  transform: scaleX(1);
-}
-
-.mobile-nav .nav-link:hover,
-.mobile-nav .nav-link.active {
-  color: var(--color-hover-A);
-}
-
-/* Special styling for the social button in mobile nav */
-.mobile-nav .social-button {
-  margin-top: 20px;
-  background-color: var(--color-accent-A);
-  color: var(--color-text-A);
-  padding: 15px 10px; /* Match nav link padding */
-  border-radius: var(--size-button-radius);
-  text-decoration: none;
-  font-weight: var(--font-weight-bold);
-  transition: var(--effect-transition-default);
-  border: 2px solid transparent;
-  text-align: center;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Remove the after element for social button */
-.mobile-nav .social-button::after {
-  display: none;
-}
-
-.mobile-nav .social-button:hover {
-  background: var(--color-hover-A);
-  box-shadow: var(--effect-glow-B);
-  color: var(--color-text-B);
-}
-
-/* Backdrop for mobile menu */
-.menu-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.menu-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Cart count badge */
-.cart-count {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: var(--color-accent-A);
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 50%;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Responsive Design */
-@media (max-width: 1005px) {
-  .hamburger-menu {
-    display: block;
-  }
-  
-  .nav-container {
-    display: none;
-  }
-  
-  .header-logo {
-    gap: 5px;
-  }
-  
-  .title {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-bar {
-    padding: 12px 25px;
-  }
-  
-  .title {
-    font-size: 18px;
-  }
-  
-  .mobile-nav {
-    width: 65%;
-    top: 70px;
-    height: calc(100vh - 70px);
-  }
-  
-  /* Adjust underline for smaller screens */
-  .mobile-nav .nav-link::after {
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-@media (max-width: 480px) {
-  .header-bar {
-    padding: 10px 20px;
-  }
-  
-  .title {
-    font-size: 16px;
-  }
-  
-  .mobile-nav {
-    width: 80%;
-    top: 65px;
-    height: calc(100vh - 65px);
-    padding: 15px;
-  }
-  
-  .mobile-nav .nav-link {
-    padding: 12px 10px;
-  }
-  
-  /* Adjust underline for mobile */
-  .mobile-nav .nav-link::after {
-    bottom: -1px;
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-  }
-}
-
-/* Animation Enhancements */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.5s ease-in-out forwards;
-}
-
-.fade-out {
-  opacity: 1;
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.header-bar.header-delay,
-.mobile-nav.header-delay {
-  transition: none !important;
-}
-
-/* Fix for active link in desktop navigation */
-.nav-link.active {
-  color: var(--color-hover-A);
-}
-
-.nav-link.active::after {
-  width: 100%;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-index.css`
-
-**Status:** `FOUND`
-
-```css
-/* ===== RESET & BASE STYLES ===== */
-.content {
-    margin-top: 100px;
-}
-
-/* ===== SHOWCASE SECTION ===== */
-.showcase-section {
-    position: relative;
-    height: 70vh;
-    overflow: hidden;
-    margin-top: 70px;
-    margin-bottom: 40px;
-}
-
-.showcase-slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.showcase-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: top center;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.showcase-slide.active {
-    opacity: 1;
-}
-
-.showcase-content {
-    position: absolute;
-    bottom: 20%;
-    left: 10%;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    max-width: 600px;
-}
-
-.showcase-content h1 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-}
-
-.showcase-content p {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-}
-
-.showcase-button {
-    display: inline-block;
-    padding: 15px 40px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.showcase-button:hover {
-    background-color: #e8693d;
-}
-
-.slider-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.slider-controls button {
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.slider-controls button:hover {
-    background: #ff8246;
-}
-
-/* ===== FEATURES SECTION ===== */
-.features-section {
-    padding: 40px 0;
-    background-color: #f2f4f6;
-    margin-bottom: 20px;
-}
-
-.features-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.features-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.feature-card {
-    text-align: center;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-.feature-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.feature-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.feature-icon img {
-    width: 48px;
-    height: 48px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: filter 0.3s ease;
-}
-
-
-
-.feature-card h3 {
-    margin-bottom: 10px;
-    color: #1e2e2f;
-    font-size: 1.2rem;
-}
-
-.feature-card p {
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* ===== FEATURED PRODUCTS SECTION ===== */
-.featured-products-section {
-    padding: 30px 0;
-}
-
-.products-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.featured-products-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2rem;
-    color: #1e2e2f;
-}
-
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-    padding: 0 10px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.product-image-container {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background-color: #f5f5f5;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.product-info {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-title {
-    margin: 0 0 8px 0;
-    font-size: 1.1rem;
-    color: #1e2e2f;
-    line-height: 1.4;
-    min-height: 2.8em;
-    overflow: hidden;
-    display: -webkit-box;
-    --webkit-line-clamp: 2;
-    --webkit-box-orient: vertical;
-}
-
-.product-price {
-    color: #ff8246;
-    font-weight: 400;
-    font-size: 1.3rem;
-    margin: 8px 0;
-}
-
-.product-seller {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 5px 0 12px 0;
-}
-
-.view-product-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
-    margin-top: auto;
-    font-size: 0.9rem;
-}
-
-.view-product-btn:hover {
-    background-color: #e8693d;
-}
-
-.no-products-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 30px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.no-products-message p {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.become-seller-link {
-    color: #ff8246;
-    text-decoration: none;
-    font-weight: 400;
-}
-
-.become-seller-link:hover {
-    text-decoration: underline;
-}
-
-.view-all-products-btn {
-    display: block;
-    width: fit-content;
-    margin: 20px auto 0;
-    padding: 12px 35px;
-    background-color: #ff8246;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 400;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.view-all-products-btn:hover {
-    background-color: #e8693d;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 70px;
-    }
-    
-    .showcase-section {
-        height: 60vh;
-        margin-top: -70px;
-        margin-bottom: 30px;
-    }
-    
-    .showcase-content {
-        left: 5%;
-        max-width: 90%;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1.2rem;
-    }
-    
-    .features-section {
-        padding: 30px 0;
-        margin-bottom: 15px;
-    }
-    
-    .features-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .featured-products-section {
-        padding: 20px 0;
-    }
-    
-    .featured-products-section h2 {
-        margin-bottom: 20px;
-        font-size: 2rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    }
-    
-    .product-image-container {
-        height: 180px;
-    }
-    
-    .view-all-products-btn {
-        margin: 15px auto 0;
-        padding: 10px 30px;
-    }
-}
-
-@media (max-width: 480px) {
-    .content {
-        margin-top: 60px;
-    }
-    
-    .showcase-section {
-        height: 50vh;
-        margin-top: -60px;
-        margin-bottom: 20px;
-    }
-    
-    .showcase-content h1 {
-        font-size: 2rem;
-    }
-    
-    .showcase-content p {
-        font-size: 1rem;
-    }
-    
-    .showcase-button {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-    
-    .features-section h2,
-    .featured-products-section h2 {
-        font-size: 1.8rem;
-    }
-    
-    .products-grid {
-        grid-template-columns: 1fr;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .view-all-products-btn {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .showcase-slide {
-        background-position: center center;
-    }
-}
-
-.features-section {
-    position: relative;
-}
-
-.features-section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #ff8246, transparent);
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-logs.css`
-
-**Status:** `FOUND`
-
-```css
-/* Admin Logs Styles */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e4eaf2;
-    color: #000000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    width: 100%;
-    min-height: calc(100vh - 200px);
-    display: flex;
-    flex-direction: column;
-}
-
-/* ===== PAGE TITLE HEADER - Unified with admin dashboard ===== */
-.page-title-header {
-    width: 100%;
-    margin: 20px 0 30px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.page-title-header h1 {
-    font-size: 2rem;
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* ===== FILTER TABS - Consistent with verify sellers ===== */
-.filter-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-}
-
-.filter-tab {
-    padding: 8px 20px;
-    background: #ffffff;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #666666;
-    transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.filter-tab:hover {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
-}
-
-.filter-tab.active {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-}
-
-/* ===== LOGS LIST ===== */
-.logs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    min-height: 400px;
-}
-
-/* ===== LOGS CONTAINER ===== */
-.logs-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px 0;
-}
-
-/* ===== LOG ENTRY CARD ===== */
-.log-entry {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px;
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.log-entry:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #FF8246;
-    transform: translateY(-2px);
-}
-
-/* ===== LOG ICON ===== */
-.log-icon {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 130, 70, 0.1);
-    border-radius: 50%;
-    padding: 12px;
-}
-
-.log-icon img {
-    width: 36px;
-    height: 36px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    transition: transform 0.3s ease;
-}
-
-.log-entry:hover .log-icon img {
-    transform: scale(1.1);
-}
-
-/* ===== LOG CONTENT ===== */
-.log-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.log-description {
-    font-size: 1rem;
-    color: #000000;
-    line-height: 1.5;
-    font-weight: 500;
-}
-
-.log-time {
-    font-size: 0.85rem;
-    color: #999999;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.log-time::before {
-    content: '🕒';
-    font-size: 0.8rem;
-    opacity: 0.7;
-}
-
-/* ===== LOG TYPE BADGES (Optional - can be added in future) ===== */
-.log-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-left: 10px;
-    background: #f0f0f0;
-    color: #666666;
-}
-
-.log-badge.user {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.log-badge.seller {
-    background: #000000;
-    color: #ffffff;
-}
-
-.log-badge.product {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.log-badge.order {
-    background: #000000;
-    color: #ffffff;
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 400px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 20px 0;
-}
-
-.empty-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.empty-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.empty-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.empty-state p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.empty-state-hint {
-    font-style: italic;
-    color: #999999;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed #e0e0e0;
-}
-
-/* ===== LOADING STATE ===== */
-.loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666666;
-    font-size: 1.1rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.loading::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f0f0f0;
-    border-top-color: #FF8246;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== ERROR STATE ===== */
-.error-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 400px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 20px 0;
-}
-
-.error-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.error-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.error-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.error-state p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-.error-state .btn {
-    display: inline-block;
-    padding: 10px 25px;
-    background: #FF8246;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.error-state .btn:hover {
-    background: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-    transform: translateY(-2px);
-}
-
-/* ===== STATS SUMMARY (Optional - can be added at top) ===== */
-.logs-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.summary-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.summary-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #FF8246;
-    line-height: 1.2;
-    margin-bottom: 5px;
-}
-
-.summary-label {
-    font-size: 0.85rem;
-    color: #666666;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 992px) {
-    .content {
-        margin-top: 90px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 0 15px;
-    }
-    
-    .page-title-header {
-        margin: 15px 0 25px 0;
-        padding-bottom: 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .filter-tabs {
-        margin-bottom: 25px;
-        padding: 8px 0;
-    }
-    
-    .filter-tab {
-        padding: 6px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .log-entry {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-        padding: 25px 20px;
-    }
-    
-    .log-icon {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 5px;
-    }
-    
-    .log-icon img {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .log-description {
-        font-size: 0.95rem;
-    }
-    
-    .log-time {
-        justify-content: center;
-    }
-    
-    .empty-state {
-        min-height: 350px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.3rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.95rem;
-    }
-    
-    .logs-summary {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 70px;
-        padding: 0 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.4rem;
-    }
-    
-    .filter-tabs {
-        gap: 8px;
-    }
-    
-    .filter-tab {
-        padding: 5px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .log-entry {
-        padding: 20px 15px;
-    }
-    
-    .log-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .log-icon img {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .log-description {
-        font-size: 0.9rem;
-        word-break: break-word;
-    }
-    
-    .log-time {
-        font-size: 0.8rem;
-    }
-    
-    .empty-state-content {
-        padding: 30px 20px;
-    }
-    
-    .empty-state-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.2rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.9rem;
-    }
-    
-    .logs-summary {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .summary-card {
-        padding: 12px;
-    }
-    
-    .summary-number {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .page-title-header h1 {
-        font-size: 1.3rem;
-    }
-    
-    .filter-tab {
-        padding: 4px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .log-entry {
-        padding: 15px 12px;
-    }
-    
-    .log-icon {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .log-icon img {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* ===== PRINT STYLES ===== */
-@media print {
-    .filter-tabs,
-    .logs-summary,
-    .btn {
-        display: none;
-    }
-    
-    .log-entry {
-        break-inside: avoid;
-        border: 1px solid #000000;
-        box-shadow: none;
-    }
-    
-    .log-icon img {
-        filter: none;
-    }
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.log-entry {
-    animation: slideIn 0.3s ease forwards;
-    opacity: 0;
-}
-
-.log-entry:nth-child(1) { animation-delay: 0.1s; }
-.log-entry:nth-child(2) { animation-delay: 0.15s; }
-.log-entry:nth-child(3) { animation-delay: 0.2s; }
-.log-entry:nth-child(4) { animation-delay: 0.25s; }
-.log-entry:nth-child(5) { animation-delay: 0.3s; }
-.log-entry:nth-child(6) { animation-delay: 0.35s; }
-.log-entry:nth-child(7) { animation-delay: 0.4s; }
-.log-entry:nth-child(8) { animation-delay: 0.45s; }
-.log-entry:nth-child(9) { animation-delay: 0.5s; }
-.log-entry:nth-child(10) { animation-delay: 0.55s; }
-
-/* ===== SCROLLBAR STYLING ===== */
-.logs-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.logs-list::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 3px;
-}
-
-.logs-list::-webkit-scrollbar-thumb {
-    background: #FF8246;
-    border-radius: 3px;
-}
-
-.logs-list::-webkit-scrollbar-thumb:hover {
-    background: #e66a2e;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-privacy-policy.css`
-
-**Status:** `FOUND`
-
-```css
-/* /REVISE THIS FOR ADMIN PRIVACY POLOCY/ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.privacy-policy-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.policy-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.policy-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.policy-hero__highlight {
-    color: #ff8246;
-}
-
-.policy-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.policy-intro {
-    margin-bottom: 40px;
-}
-
-.policy-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-intro__last-updated {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== POLICY SECTIONS ===== */
-.policy-sections {
-    width: 100%;
-}
-
-.policy-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.policy-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.policy-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.policy-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.policy-section__body {
-    padding-left: 19px; /* Aligns with accent line */
-}
-
-.policy-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.policy-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.policy-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.policy-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.policy-section__note {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    font-style: italic;
-    color: #666;
-}
-
-.policy-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.policy-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.policy-contact__item {
-    margin-bottom: 8px;
-}
-
-.policy-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .privacy-policy-page {
-        margin-top: 80px;
-    }
-    
-    .policy-hero {
-        padding: 40px 20px;
-    }
-    
-    .policy-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .policy-section {
-        padding: 25px 20px;
-    }
-    
-    .policy-section__body {
-        padding-left: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .policy-hero {
-        padding: 30px 15px;
-    }
-    
-    .policy-hero__title {
-        font-size: 2rem;
-    }
-    
-    .policy-intro__card {
-        padding: 20px;
-    }
-    
-    .policy-intro__text {
-        font-size: 1rem;
-    }
-    
-    .policy-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .policy-section__accent {
-        height: 25px;
-    }
-    
-    .policy-section {
-        padding: 20px 15px;
-    }
-    
-    .policy-section__body {
-        padding-left: 9px;
-    }
-    
-    .policy-section__body p,
-    .policy-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .policy-contact {
-        padding: 15px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-profile.css`
-
-**Status:** `FOUND`
-
-```css
-/* ============================================
-   ADMIN PROFILE STYLES - REVISED
-   Better space utilization, modern admin panel theme
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --profile-primary: #FF8246;
-    --profile-primary-dark: #e66a2e;
-    --profile-bg: #f2f4f6;
-    --profile-card-bg: #ffffff;
-   --profile-text-primary: #000000;
-    --profile-text-secondary: #666666;
-    --profile-border: #e0e0e0;
-    --profile-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    --profile-shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.2);
-    --profile-radius: 12px;
-    --profile-transition: all 0.3s ease;
-    --profile-upload-blue: #4a90e2;
-    --profile-upload-blue-dark: #357abd;
-}
-
-body {
-    background-color: var(--profile-bg);
-    color: var(--profile-text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.5;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 20px;
-    min-height: calc(100vh - 200px);
-}
-
-/* ===== PROFILE HEADER CARD ===== */
-.profile-header-card {
-    background: var(--profile-card-bg);
-    border-radius: var(--profile-radius);
-    box-shadow: var(--profile-shadow);
-    border: 1px solid var(--profile-border);
-    padding: 25px 30px;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: var(--profile-transition);
-}
-
-.profile-header-left {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    flex: 1;
-}
-
-/* Avatar with edit overlay */
-.profile-avatar-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--profile-primary);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-    flex-shrink: 0;
-}
-
-.profile-avatar-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background: #f0f0f0;
-}
-
-.profile-avatar-edit {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    transition: var(--profile-transition);
-    cursor: pointer;
-    border-radius: 50%;
-}
-
-.file-upload-label {
-    width: 40px;
-    height: 40px;
-    background: var(--profile-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--profile-transition);
-}
-
-.file-upload-label:hover {
-    background: var(--profile-primary-dark);
-    transform: scale(1.1);
-}
-
-.file-upload-label img {
-    width: 20px;
-    height: 20px;
-    filter: brightness(0) invert(1); /* Makes SVG white */
-}
-
-#profile_picture {
-    display: none;
-}
-
-/* Profile name and role */
-.profile-name-role {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    min-width: 0;
-}
-
-.profile-full-name {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--profile-text-primary);
-    line-height: 1.2;
-    word-break: break-word;
-}
-
-.profile-role-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background: var(--profile-primary);
-    color: #ffffff;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    width: fit-content;
-}
-
-/* Header right section - where edit button lives */
-.profile-header-right {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-/* Profile Actions in header */
-.profile-actions-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.profile-actions-header .btn {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-    min-width: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--profile-transition);
-}
-
-.profile-actions-header .btn .btn-icon {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(1); /* Makes all action button SVGs white */
-}
-
-.profile-actions-header .btn .btn-text {
-    display: inline-block;
-}
-
-/* Edit Button */
-.btn-edit {
-    background: var(--profile-primary);
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 24px;
-    font-size: 1rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: var(--profile-transition);
-}
-
-.btn-edit:hover {
-    background: var(--profile-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.btn-edit .btn-icon {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(1); /* Makes edit icon white */
-}
-
-/* Upload Button - Black with white text (matching cancel button style) */
-.btn-upload {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.btn-upload:hover {
-    background: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-upload .btn-icon {
-    filter: brightness(0) invert(1); /* Ensures upload icon is white */
-}
-
-/* Save Button - Black with white text (matching cancel button style) */
-.btn-primary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Cancel Button - Black with white text */
-.btn-secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.btn-secondary:hover {
-    background: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-secondary .btn-icon {
-    filter: brightness(0) invert(1); /* Makes cancel icon white instead of black */
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* File name display */
-.file-name {
-    font-size: 0.75rem;
-    color: var(--profile-primary);
-    margin-top: 4px;
-    font-weight: 500;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* ===== PROFILE GRID LAYOUT ===== */
-.profile-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-/* Profile Cards - Make both cards equal height in desktop view */
-.profile-card {
-    background: var(--profile-card-bg);
-    border-radius: var(--profile-radius);
-    box-shadow: var(--profile-shadow);
-    border: 1px solid var(--profile-border);
-    overflow: hidden;
-    transition: var(--profile-transition);
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Make cards take full height of grid cell */
-}
-
-.profile-card:hover {
-    box-shadow: var(--profile-shadow-hover);
-}
-
-.card-header {
-    padding: 18px 25px;
-    background: #f8f8f8;
-    border-bottom: 1px solid var(--profile-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0; /* Prevent header from shrinking */
-}
-
-.card-header h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--profile-text-primary);
-    margin: 0;
-}
-
-/* FIXED: Badge styling - gets smaller on narrow screens */
-.card-header .badge {
-    background: #e0e0e0;
-    color: var(--profile-text-secondary);
-    padding: 4px 10px;
-    border-radius: 30px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    transition: font-size 0.2s ease;
-}
-
-/* Responsive badge sizing for the "Cannot be changed" text */
-@media (max-width: 600px) {
-    .card-header {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    
-    .card-header .badge {
-        font-size: 0.6rem;
-        padding: 3px 8px;
-    }
-}
-
-@media (max-width: 450px) {
-    .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    
-    .card-header .badge {
-        font-size: 0.55rem; /* Smaller font when width below 450px */
-        padding: 3px 6px;
-        white-space: normal; /* Allow wrapping if needed */
-        word-break: break-word;
-        text-align: left;
-    }
-}
-
-@media (max-width: 350px) {
-    .card-header .badge {
-        font-size: 0.5rem;
-    }
-}
-
-.card-body {
-    padding: 25px;
-    flex: 1; /* Allow body to expand and fill available space */
-}
-
-/* Personal Info Card - Form groups take full height */
-.personal-info-card .card-body {
-    display: flex;
-    flex-direction: column;
-}
-
-.personal-info-card .form-group {
-    margin-bottom: 20px;
-    flex-shrink: 0;
-}
-
-.personal-info-card .form-group:last-child {
-    margin-bottom: 0;
-    flex: 1; /* Make last form group take remaining space */
-    display: flex;
-    flex-direction: column;
-}
-
-.personal-info-card .form-group:last-child input {
-    flex: 1; /* Make input in last group take remaining space */
-}
-
-/* Account Info Card - Info groups distribute evenly */
-.account-info-card .card-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
-}
-
-.account-info-card .info-display-group {
-    display: flex;
-    align-items: center; /* Keep icons centered vertically */
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--profile-border);
-    flex: 1;
-    min-height: 70px; /* Give a consistent minimum height */
-}
-
-.account-info-card .info-display-group:first-child {
-    padding-top: 0;
-}
-
-.account-info-card .info-display-group:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-/* Form Groups */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group:last-child {
-    margin-bottom: 0;
-}
-
-.field-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--profile-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.field-icon {
-    width: 14px;
-    height: 14px;
-    filter: brightness(0.6);
-}
-
-/* ===== FIXED: ALL INPUTS NOW HAVE EXACTLY THE SAME HEIGHT ===== */
-.form-group input {
-    width: 100%;
-    height: 45px; /* Fixed consistent height for all inputs */
-    padding: 0 15px;
-    border: 1px solid var(--profile-border);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    background: #ffffff;
-    color: var(--profile-text-primary);
-    transition: var(--profile-transition);
-    box-sizing: border-box; /* Critical: ensures padding doesn't add to height */
-    line-height: normal; /* Reset line height */
-    margin: 0; /* Remove any default margins */
-}
-
-/* FIXED: Specific override for contact number input - force same height */
-#contact_number,
-input[name="contact_number"],
-input[type="tel"] {
-    height: 45px !important; /* Force exact same height */
-    min-height: 45px;
-    max-height: 45px;
-    padding: 0 15px !important;
-    line-height: 45px; /* Helps with vertical alignment of text */
-    box-sizing: border-box;
-}
-
-/* Focus state for all inputs including contact */
-.form-group input:focus,
-#contact_number:focus {
-    border-color: var(--profile-primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-/* Disabled state for all inputs including contact */
-.form-group input:disabled,
-#contact_number:disabled {
-    background: #f9f9f9;
-    border-color: var(--profile-border);
-    color: var(--profile-text-primary);
-    cursor: default;
-    opacity: 1;
-}
-
-/* Error state for contact input */
-#contact_number.error {
-    border-color: #e74c3c;
-}
-
-.error-message {
-    color: #e74c3c;
-    font-size: 0.8rem;
-    margin-top: 4px;
-    min-height: 18px;
-}
-
-/* Info Display Groups (for account info) - FIXED ALIGNMENT - SVG STAYS LEFT */
-.info-display-group {
-    display: flex;
-    align-items: center; /* Keep icons centered vertically */
-    gap: 15px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--profile-border);
-    /* Ensure the layout doesn't change on resize */
-    flex-wrap: nowrap; /* Prevent wrapping */
-}
-
-.info-display-group:last-child {
-    border-bottom: none;
-}
-
-.info-icon {
-    width: 36px;
-    height: 36px;
-    background: #f0f0f0;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* Prevent icon from shrinking */
-    /* Keep icon fixed on left */
-    margin-right: 0;
-}
-
-.info-icon img {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    display: block; /* Remove any extra spacing */
-}
-
-.info-content {
-    flex: 1; /* Take remaining space */
-    min-width: 0; /* Allow content to shrink if needed */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    line-height: 1.3; /* Consistent line height */
-}
-
-.info-label {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--profile-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 2px;
-    line-height: 1.2;
-}
-
-.info-value {
-    display: block;
-    font-size: 1rem;
-    color: var(--profile-text-primary);
-    font-weight: 500;
-    word-break: break-word;
-    line-height: 1.3;
-}
-
-/* ===== FORM ACTIONS (DEPRECATED - KEPT FOR BACKWARD COMPATIBILITY) ===== */
-.profile-actions-wrapper {
-    display: none; /* Hidden - actions moved to header */
-}
-
-.form-note {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.85rem;
-    color: var(--profile-text-secondary);
-    font-style: italic;
-}
-
-/* ===== MESSAGES ===== */
-.message {
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 4px solid;
-}
-
-.message.success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border-left-color: #2e7d32;
-}
-
-.message.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border-left-color: #c62828;
-}
-
-/* ===== MODAL ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-content {
-    background: var(--profile-card-bg);
-    padding: 30px 40px;
-    border-radius: var(--profile-radius);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeScale 0.3s ease;
-}
-
-@keyframes fadeScale {
-    0% { opacity: 0; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.modal-icon {
-    margin-bottom: 20px;
-}
-
-.modal-icon img {
-    width: 60px;
-    height: 60px;
-}
-
-.modal-icon.success-icon img {
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.modal-message {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-    color: var(--profile-text-primary);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--profile-transition);
-}
-
-.modal-btn-primary {
-    background: #000000; /* Changed from orange to black */
-    color: #ffffff;
-}
-
-.modal-btn-primary:hover {
-    background: #333333;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1200px) {
-    .profile-full-name {
-        font-size: 1.6rem;
-    }
-}
-
-@media (max-width: 992px) {
-    .content {
-        margin-top: 90px;
-    }
-    
-    .profile-actions-header {
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 15px;
-    }
-    
-    .profile-header-card {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 20px;
-        padding: 20px;
-    }
-    
-    .profile-header-left {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .profile-header-right {
-        width: 100%;
-    }
-    
-    .profile-actions-header {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .profile-actions-header .btn {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
-    }
-    
-    .btn-edit {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .profile-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    /* Reset height-related styles for mobile */
-    .profile-card {
-        height: auto;
-    }
-    
-    .personal-info-card .form-group:last-child {
-        flex: 0 0 auto; /* Reset flex grow on mobile */
-    }
-    
-    .account-info-card .info-display-group {
-        flex: 0 0 auto; /* Reset flex grow on mobile */
-        padding: 12px 0;
-        min-height: auto; /* Remove min-height on mobile */
-    }
-    
-    .card-body {
-        padding: 20px;
-    }
-    
-    .file-name {
-        max-width: 100%;
-    }
-    
-    /* Mobile - Keep SVG on left, text wraps naturally */
-    .info-display-group {
-        align-items: flex-start; /* Better for mobile when text wraps */
-        flex-wrap: nowrap; /* Keep icon and text on same line */
-    }
-    
-    .info-icon {
-        flex-shrink: 0; /* Keep icon from shrinking */
-        margin-top: 2px; /* Small adjustment for text wrap */
-    }
-    
-    /* Ensure contact input maintains height on mobile */
-    #contact_number,
-    input[name="contact_number"],
-    input[type="tel"] {
-        height: 45px !important;
-        min-height: 45px;
-        max-height: 45px;
-        line-height: 45px;
-    }
-}
-
-@media (max-width: 576px) {
-    .profile-header-left {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-    }
-    
-    .profile-name-role {
-        align-items: center;
-    }
-    
-    .profile-full-name {
-        font-size: 1.4rem;
-    }
-    
-    .profile-avatar-wrapper {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .card-header {
-        padding: 15px 20px;
-    }
-    
-    .card-header h3 {
-        font-size: 1.1rem;
-    }
-    
-    .card-body {
-        padding: 15px;
-    }
-    
-    /* Even on very small screens, keep SVG left */
-    .info-display-group {
-        align-items: flex-start;
-        flex-wrap: nowrap;
-        gap: 12px; /* Slightly smaller gap on mobile */
-    }
-    
-    .info-icon {
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
-    }
-    
-    .info-value {
-        font-size: 0.95rem;
-    }
-    
-    .profile-actions-header .btn .btn-text {
-        display: inline-block;
-    }
-    
-    .profile-actions-header .btn {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .modal-content {
-        padding: 25px 20px;
-    }
-    
-    /* Keep contact height consistent */
-    #contact_number,
-    input[name="contact_number"],
-    input[type="tel"] {
-        height: 45px !important;
-        min-height: 45px;
-        max-height: 45px;
-        line-height: 45px;
-    }
-}
-
-@media (max-width: 450px) {
-    /* Badge gets smaller as per requirement */
-    .card-header .badge {
-        font-size: 0.55rem;
-        padding: 3px 6px;
-    }
-    
-    .profile-full-name {
-        font-size: 1.3rem;
-    }
-    
-    /* Contact input still 45px */
-    #contact_number,
-    input[name="contact_number"],
-    input[type="tel"] {
-        height: 45px !important;
-        min-height: 45px;
-        max-height: 45px;
-        line-height: 45px;
-    }
-}
-
-@media (max-width: 375px) {
-    .profile-full-name {
-        font-size: 1.2rem;
-    }
-    
-    .profile-role-badge {
-        font-size: 0.7rem;
-        padding: 3px 10px;
-    }
-    
-    .profile-actions-header .btn {
-        padding: 8px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .profile-actions-header .btn .btn-icon {
-        width: 16px;
-        height: 16px;
-    }
-    
-    /* Contact input still 45px */
-    #contact_number,
-    input[name="contact_number"],
-    input[type="tel"] {
-        height: 45px !important;
-        min-height: 45px;
-        max-height: 45px;
-        line-height: 45px;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .profile-header-right,
-    .profile-actions-header,
-    .btn-edit,
-    .modal {
-        display: none !important;
-    }
-    
-    .profile-header-card {
-        box-shadow: none;
-        border: 1px solid #000;
-    }
-    
-    .profile-avatar-wrapper {
-        border: 2px solid #000;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-seller-profile.css`
-
-**Status:** `FOUND`
-
-```css
-/* Admin Seller Profile Styles - Matching seller-fill-form design with disabled inputs */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    /* Form Layout */
-    --form-section-gap: 30px;
-    --input-height: 50px;
-    --border-radius: 12px;
-
-    /* Effects */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e4eaf2;
-    color: #000000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    max-width: 1400px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    width: 100%;
-    min-height: calc(100vh - 200px);
-    display: flex;
-    flex-direction: column;
-}
-
-/* ===== PAGE TITLE HEADER ===== */
-.page-title-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin: 20px 0 30px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.page-title-header h1 {
-    font-size: 2rem;
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #000000;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: var(--effect-transition-default);
-    flex-shrink: 0;
-}
-
-.back-link:hover {
-    background: #333333;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.back-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1);
-}
-
-/* ===== LOADING & ERROR STATES ===== */
-.loading-state,
-.error-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    width: 100%;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f0f0f0;
-    border-top-color: #FF8246;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.error-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.error-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.error-content h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-}
-
-.error-content p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-/* ===== PROFILE HEADER CARD - RESTRUCTURED ===== */
-.profile-header-card {
-    background: #f2f4f6;
-    border: 1px solid #363940;
-    border-radius: var(--border-radius);
-    padding: 25px 30px;
-    margin-bottom: 30px;
-    box-shadow: var(--effect-box-shadow-default);
-    transition: var(--effect-transition-default);
-}
-
-.profile-header-card:hover {
-    box-shadow: var(--effect-box-shadow-hover);
-}
-
-/* Main wrapper for header content */
-.header-main-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 20px;
-}
-
-/* Top row: Business Name on left, Status on right */
-.header-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.header-business-name {
-    flex: 1;
-}
-
-.profile-business-name-header {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #000000;
-    line-height: 1.2;
-    word-break: break-word;
-    margin: 0;
-}
-
-.header-status {
-    flex-shrink: 0;
-    margin-left: 20px;
-}
-
-/* Bottom row: Profile Pic (left), Full Name (middle), Actions (right) */
-.header-bottom-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    gap: 20px;
-}
-
-/* Left column - Profile Picture */
-.header-profile-pic {
-    flex-shrink: 0;
-}
-
-.profile-avatar-wrapper {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #FF8246;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-    background: #ffffff;
-}
-
-.profile-avatar-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Middle column - Full Name */
-.header-full-name {
-    flex: 1;
-    text-align: left;
-}
-
-.profile-full-name {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #000000;
-    line-height: 1.3;
-    word-break: break-word;
-}
-
-/* Right column - Action Buttons */
-.header-actions {
-    display: flex;
-    gap: 15px;
-    flex-shrink: 0;
-}
-
-/* Status Badge - Updated styling */
-.status-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-}
-
-.status-badge.pending {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.status-badge.verified {
-    background: #000000;
-    color: #ffffff;
-}
-
-.status-badge.rejected {
-    background: #666666;
-    color: #ffffff;
-}
-
-/* Button Styles */
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--effect-transition-default);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-width: 100px;
-}
-
-.btn-primary {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-primary:hover {
-    background: #e8693d;
-    box-shadow: var(--effect-glow-B);
-}
-
-.btn-secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.btn-secondary:hover {
-    background: #333333;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.btn-icon {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(1);
-}
-
-/* ===== THREE-COLUMN GRID ===== */
-.profile-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--form-section-gap);
-    width: 100%;
-    align-items: stretch;
-}
-
-/* Profile Cards */
-.profile-card {
-    background: #f2f4f6;
-    border: 1px solid #363940;
-    border-radius: var(--border-radius);
-    padding: 25px;
-    box-shadow: var(--effect-box-shadow-default);
-    transition: var(--effect-transition-default);
-    display: flex;
-    flex-direction: column;
-    min-height: 600px;
-}
-
-.profile-card:hover {
-    box-shadow: var(--effect-box-shadow-hover);
-}
-
-.card-header {
-    border-bottom: 2px solid #FF8246;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-}
-
-.card-header h3 {
-    font-size: 1.5rem;
-    color: #1e2e2f;
-    margin: 0;
-}
-
-.card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* ===== CREDENTIAL CARD - DOCUMENT BOXES ===== */
-.document-row {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.document-box {
-    flex: 1 1 200px;
-    text-align: center;
-    padding: 15px;
-    border: 2px dashed #363940;
-    border-radius: 8px;
-    transition: var(--effect-transition-default);
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.document-box:hover {
-    border-color: #FF8246;
-}
-
-.upload-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.upload-icon img {
-    width: 48px;
-    height: 48px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.upload-preview {
-    width: 100%;
-    height: 120px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    border: 1px solid #000000;
-    background-color: #f8f8f8;
-}
-
-.document-label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1e2e2f;
-    margin-bottom: 5px;
-}
-
-.document-status {
-    font-size: 0.8rem;
-    color: #666666;
-    margin: 5px 0;
-}
-
-.document-link {
-    color: #FF8246;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: var(--effect-transition-default);
-}
-
-.document-link:hover {
-    background: rgba(255, 130, 70, 0.1);
-    text-decoration: underline;
-}
-
-/* ===== FORM GROUPS ===== */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.form-group label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1e2e2f;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    height: var(--input-height);
-    padding: 0 12px;
-    border: 1px solid #363940;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    background-color: #ffffff;
-    color: #000000;
-    transition: var(--effect-transition-default);
-}
-
-.form-group textarea {
-    height: auto;
-    min-height: 80px;
-    padding: 12px;
-    resize: vertical;
-    overflow-y: auto;
-    font-family: inherit;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-/* Fix for address textarea - make it display as single line in desktop */
-.form-group textarea#address {
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    min-height: var(--input-height);
-    padding: 12px;
-    line-height: 1.5;
-}
-
-/* Allow text wrapping in all textareas on hover/focus for editing */
-.form-group textarea#address:focus {
-    white-space: pre-wrap;
-    overflow-y: auto;
-    min-height: 100px;
-}
-
-.form-group input:disabled,
-.form-group textarea:disabled {
-    background-color: #f0f0f0;
-    border-color: #cccccc;
-    color: #333333;
-    cursor: default;
-    opacity: 0.8;
-}
-
-.form-group input:disabled#address,
-.form-group textarea:disabled#address {
-    white-space: nowrap;
-    overflow-x: auto;
-}
-
-.form-group.full-width {
-    width: 100%;
-}
-
-/* Placeholder styling for disabled inputs */
-.form-group input:disabled::placeholder,
-.form-group textarea:disabled::placeholder {
-    color: #999999;
-    font-style: italic;
-}
-
-/* ===== MODAL ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeScale 0.3s ease;
-}
-
-@keyframes fadeScale {
-    0% { opacity: 0; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.modal-icon {
-    margin-bottom: 20px;
-}
-
-.modal-icon img {
-    width: 60px;
-    height: 60px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.modal-title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #000000;
-}
-
-.modal-message {
-    font-size: 1rem;
-    margin-bottom: 25px;
-    color: #666666;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.modal-btn-primary {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.modal-btn-primary:hover {
-    background: #e66a2e;
-}
-
-.modal-btn-secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
-}
-
-.modal-btn-secondary:hover {
-    background: #333333;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1000px) {
-    .profile-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .profile-card {
-        min-height: 500px;
-    }
-    
-    /* Header adjustments */
-    .header-bottom-row {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    
-    .header-full-name {
-        flex: 1 1 auto;
-        min-width: 200px;
-    }
-    
-    .header-actions {
-        flex: 0 0 auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 0 15px;
-    }
-    
-    .page-title-header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    /* Mobile header layout - centered */
-    .header-top-row {
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        text-align: center;
-    }
-    
-    .header-business-name {
-        flex: 0 0 100%;
-        text-align: center;
-    }
-    
-    .profile-business-name-header {
-        font-size: 1.5rem;
-        text-align: center;
-    }
-    
-    .header-status {
-        margin-left: 0;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    /* Bottom row centered on mobile */
-    .header-bottom-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-        justify-content: center;
-    }
-    
-    .header-profile-pic {
-        display: flex;
-        justify-content: center;
-    }
-    
-    .profile-avatar-wrapper {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .header-full-name {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .profile-full-name {
-        font-size: 1.3rem;
-        text-align: center;
-    }
-    
-    .header-actions {
-        width: 100%;
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-    }
-    
-    .btn {
-        width: 100%;
-        justify-content: center;
-        padding: 14px;
-        min-width: 0;
-    }
-    
-    .profile-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .profile-card {
-        min-height: auto;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-    }
-    
-    .document-row {
-        flex-direction: column;
-    }
-    
-    .document-box {
-        width: 100%;
-    }
-    
-    /* Fix address textarea for mobile */
-    .form-group textarea#address,
-    .form-group input:disabled#address,
-    .form-group textarea:disabled#address {
-        white-space: pre-wrap;
-        overflow-y: auto;
-        min-height: 100px;
-    }
-}
-
-@media (max-width: 576px) {
-    .content {
-        margin-top: 70px;
-        padding: 0 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.4rem;
-    }
-    
-    .back-link {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .profile-business-name-header {
-        font-size: 1.4rem;
-    }
-    
-    .profile-full-name {
-        font-size: 1.2rem;
-    }
-    
-    .profile-avatar-wrapper {
-        width: 80px;
-        height: 80px;
-        border-width: 2px;
-    }
-    
-    .card-header h3 {
-        font-size: 1.3rem;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-        font-size: 0.9rem;
-        height: 45px;
-    }
-    
-    .form-group textarea {
-        min-height: 70px;
-    }
-    
-    .btn {
-        padding: 12px;
-    }
-}
-
-@media (max-width: 375px) {
-    .page-title-header {
-        flex-direction: row;
-        gap: 8px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.2rem;
-    }
-    
-    .back-link {
-        padding: 5px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .profile-business-name-header {
-        font-size: 1.2rem;
-    }
-    
-    .profile-full-name {
-        font-size: 1.1rem;
-    }
-    
-    .profile-avatar-wrapper {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .btn {
-        padding: 10px;
-    }
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.seller-profile-container {
-    animation: slideIn 0.3s ease forwards;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-in.css`
-
-**Status:** `FOUND`
-
-```css
-/* /REVISE THIS AS PART OF ADMIN/ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    min-height: calc(100vh - 200px);
-}
-
-/* ===== PAGE TITLE ===== */
-.pageTitleHeader {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #1e2e2f;
-    margin: 110px auto 20px;
-    padding-bottom: 15px;
-}
-
-/* ===== FORM CONTAINER ===== */
-.signin-container {
-    max-width: 450px;
-    margin: 0 auto;
-    background: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* ===== FORM GROUPS ===== */
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #000000;
-    font-size: 0.95rem;
-}
-
-.form-group input {
-    width: 100%;
-    height: 50px;
-    padding: 0 15px;
-    border: 1px solid #363940;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: #FF8246;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
-}
-
-.form-group input.error {
-    border-color: #FF8246;
-}
-
-.error-message {
-    color: #FF8246;
-    font-size: 0.85rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-/* ===== PASSWORD TOGGLE ===== */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* ===== BUTTONS ===== */
-.btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    width: 100%;
-    background: #000000;
-    color: #ffffff;
-}
-
-.btn-primary {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.btn-secondary {
-    background: #000000;
-    color: #ffffff;
-    border: 1px solid #363940;
-}
-
-/* ===== LINKS ===== */
-.signup-link,
-.forgot-password-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.95rem;
-    color: #000000;
-}
-
-.signup-link a,
-.forgot-password-link a {
-    color: #FF8246;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.signup-link a:hover,
-.forgot-password-link a:hover { 
-    text-decoration: underline;
-}
-
-/* ===== NOTIFIER MODAL ===== */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 30px 40px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.3s ease-out;
-}
-
-.notifier-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    color: #000000;
-    line-height: 1.5;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 2rem;
-    }
-    
-    .signin-container {
-        padding: 30px 25px;
-    }
-}
-
-@media (max-width: 480px) {
-    .pageTitleHeader {
-        font-size: 1.8rem;
-    }
-    
-    .signin-container {
-        padding: 25px 20px;
-    }
-    
-    .btn {
-        padding: 12px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-out.css`
-
-**Status:** `FOUND`
-
-```css
-/* REVISE THIS AS PART OF ADMIN */
-
-:root {
-    /* Use the same variables as sign-up.css for consistency */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-}
-
-/* Logout Confirmation Modal - MATCHING SIGN-UP STYLE */
-.logout-modal {
-    position: fixed;
-    inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; */
-    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
-    backdrop-filter: blur(5px); /* Blur effect like sign-up modal */
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.logout-modal.active {
-    display: flex;
-}
-
-.logout-modal-content {
-    background-color: white;
-    padding: 30px 25px;
-    border-radius: 12px; /* Matching sign-up border-radius */
-    box-shadow: var(--effect-box-shadow-default);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeScale 0.3s ease-in-out; /* Match sign-up animation */
-}
-
-/* Animation - EXACTLY matching sign-up modal */
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.logout-modal-icon {
-    margin-bottom: 20px;
-}
-
-.logout-modal-icon svg {
-    width: 70px;
-    height: 70px;
-    stroke: #FF8246; /* Your accent color */
-    stroke-width: 1.8;
-}
-
-.logout-modal h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.logout-modal p {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.logout-modal-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.logout-modal-btn {
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px; /* Matching sign-up input border-radius */
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--effect-transition-default);
-    flex: 1;
-    max-width: 150px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn-cancel {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-.btn-cancel:hover {
-    background-color: #d0d0d0;
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.btn-confirm {
-    background-color: #FF8246;
-    color: white;
-}
-
-.btn-confirm:hover {
-    background-color: #e66a2e;
-    box-shadow: var(--effect-glow-B);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .logout-modal-content {
-        padding: 25px 20px;
-        width: 85%;
-    }
-    
-    .logout-modal-icon svg {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 22px;
-    }
-    
-    .logout-modal p {
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .logout-modal-btn {
-        padding: 10px 20px;
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .logout-modal-content {
-        padding: 20px 15px;
-        width: 90%;
-    }
-    
-    .logout-modal-icon svg {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .logout-modal h2 {
-        font-size: 20px;
-    }
-    
-    .logout-modal p {
-        font-size: 14px;
-        margin-bottom: 18px;
-    }
-    
-    .logout-modal-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .logout-modal-btn {
-        max-width: 100%;
-        padding: 12px;
-        font-size: 14px;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-sign-up.css`
-
-**Status:** `FOUND`
-
-```css
-/* REVISE THIS AS PART OF ADMIN */
-
-:root {
-    /* Form Layout */
-    --form-section-gap: 30px;
-    --form-group-gap: 20px;
-    --input-height: 50px;
-    --border-radius: 12px;
-    
-    /* Effects */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
-    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    outline: none;
-}
-
-body {
-    font-family: var(--font-family-base);
-    background-color: var(--color-background-A);
-    color: var(--color-text-A);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-::-webkit-scrollbar {
-    display: none;
-}
-
-.content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.pageTitleHeader {
-    font-size: calc(15px + var(--font-size-title));
-    padding: var(--size-header-padding);
-    margin: 20px auto 50px;
-    text-align: center;
-    width: 100%;
-    color: var(--color-text-C);
-    font-weight: var(--font-weight-bold);
-}
-
-/* Form Container */
-.signup-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--form-section-gap);
-    padding: 0 20px;
-    width: 100%;
-    max-width: 100%;
-}
-
-/* Form Sections - Barangay Style */
-.form-section {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    padding: 25px 30px;
-    border-radius: var(--border-radius);
-    border: 1px solid;
-    margin-bottom: var(--form-section-gap);
-    transition: var(--effect-transition-default);
-    display: flex;
-    flex-direction: column;
-}
-
-.form-section:hover {
-    box-shadow: var(--effect-box-shadow-default);
-}
-
-.form-section h3 {
-    font-size: 1.5rem;
-    color: var(--color-text-C);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--color-accent-A);
-}
-
-/* Form Groups - Barangay Style */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px; /* Reduced from 20px */
-    width: 100%;
-}
-
-.form-group label {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--color-text-C);
-    margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    height: var(--input-height);
-    font-size: var(--font-size-base);
-    padding: 0 15px;
-    border: 1px solid;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: var(--color-text-A);
-    transition: var(--effect-transition-default);
-}
-
-/* Address textarea - fixed initial size, auto-expands */
-.form-group textarea#address {
-    height: 100px;
-    min-height: 100px;
-    max-height: 300px;
-    padding: 15px;
-    resize: none;
-    overflow-y: hidden;
-    line-height: 1.5;
-    transition: height 0.2s ease;
-}
-
-.form-group textarea#address.expanding {
-    height: auto;
-    min-height: 100px;
-    overflow-y: auto;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-    outline: none;
-}
-
-.form-group.error input,
-.form-group.error select,
-.form-group.error textarea {
-    border-color: #e74c3c;
-}
-
-.form-group.error label {
-    color: #e74c3c;
-}
-
-/* Error Messages */
-.error-message {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    min-height: 20px;
-}
-
-/* Button Container - Always Stacked */
-.btn-container {
-    display: flex;
-    flex-direction: column; /* always vertical */
-    justify-content: center;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    width: 100%;
-}
-
-.btn {
-    padding: var(--size-button-padding);
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    border-radius: var(--size-button-radius);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    width: 100%; /* Full width when stacked */
-    min-width: unset; /* Remove min-width constraint */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-}
-
-
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-secondary {
-    background-color: var(--color-background-C);
-    border: 1px solid;
-    border-color: var(--color-border-A);
-    color: var(--color-text-B);
-}
-
-/* Remove extra spacing from button wrapper */
-.form-section .form-group:last-of-type {
-    margin-bottom: 10px;
-}
-
-/* Links Group - Better Spacing */
-.links-group {
-    text-align: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--color-border-A);
-    width: 100%;
-}
-
-.login-link,
-.seller-link {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--color-text-C);
-}
-
-.login-link a,
-.seller-link a {
-    text-decoration: none;
-    color: var(--color-accent-A);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.login-link a:hover,
-.seller-link a:hover {
-    color: var(--color-hover-A);
-    background-color: rgba(255, 130, 70, 0.1);
-}
-
-/* Notifier Modal - Barangay Style */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background-color: var(--color-background-B);
-    color: var(--color-text-A);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: var(--effect-box-shadow-default);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-.notifier-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Last Form Section (Contact & Registration) Layout Fix */
-.form-section:last-child {
-    padding-bottom: 25px;
-}
-
-/* Form submitted state - Barangay Style */
-.signup-container.submitted .form-group:has(input:invalid),
-.signup-container.submitted .form-group:has(select:invalid),
-.signup-container.submitted .form-group:has(textarea:invalid) {
-    animation: pulseWarning 0.5s ease-in-out;
-}
-
-@keyframes pulseWarning {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-/* Barangay-style color themes for form sections */
-.form-section {
-    background-color: var(--color-background-B);
-    border-color: var(--color-border-A);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    border-color: var(--color-border-A);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-}
-
-/* Responsive Design - Barangay Style Adjustments */
-@media (max-width: 1024px) {
-    .signup-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .form-section {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        padding: 20px 15px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 1.5rem;
-        padding: 15px 10px;
-        margin: 10px auto 30px;
-    }
-    
-    .form-section {
-        padding: 20px;
-        min-width: 100%;
-        margin: 0 0 10px;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 20px;
-    }
-    
-    .form-section h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-container {
-        margin-top: 15px;
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 14px;
-        font-size: 1rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-        height: 45px;
-        font-size: 0.95rem;
-    }
-    
-    .form-group textarea#address {
-        height: 90px;
-        min-height: 90px;
-    }
-    
-    .links-group {
-        margin-top: 12px;
-        padding-top: 12px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.9rem;
-        margin: 5px 0;
-    }
-    
-    .signup-container {
-        padding: 0 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-section {
-        padding: 18px 15px;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 18px;
-    }
-    
-    .btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
-    
-    .btn-container {
-        gap: 8px;
-        margin-top: 12px;
-    }
-    
-    .links-group {
-        margin-top: 10px;
-        padding-top: 10px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.85rem;
-        margin: 4px 0;
-    }
-}
-
-/* Password toggle styles */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-    padding-right: 45px;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    padding: 0;
-    z-index: 2;
-}
-
-.password-toggle img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-}
-
-.password-toggle:hover img {
-    opacity: 1;
-}
-
-/* Ensure password fields have proper padding */
-.form-group input[type="password"] {
-    padding-right: 45px;
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-terms-and-conditions.css`
-
-**Status:** `FOUND`
-
-```css
-/* NOTE REVISE THIS IF ONLY NEEDED */
-
-/* ============================================
-   TERMS AND CONDITIONS PAGE STYLES
-   Class naming convention: BEM (Block Element Modifier)
-   Block: terms-page, terms-hero, terms-intro, terms-section, terms-agreement
-============================================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.terms-page {
-    max-width: 1000px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.terms-hero {
-    margin-top: 100px;
-    width: 100%;
-    padding: 60px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-hero__container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.terms-hero__title {
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.terms-hero__highlight {
-    color: #ff8246;
-}
-
-.terms-hero__subtitle {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #666;
-}
-
-/* ===== INTRO SECTION ===== */
-.terms-intro {
-    margin-bottom: 40px;
-}
-
-.terms-intro__card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-intro__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-intro__effective-date {
-    font-size: 0.95rem;
-    color: #ff8246;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ===== TERMS SECTIONS ===== */
-.terms-sections {
-    width: 100%;
-}
-
-.terms-section {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terms-section__header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.terms-section__accent {
-    width: 4px;
-    height: 30px;
-    background-color: #ff8246;
-    margin-right: 15px;
-    border-radius: 2px;
-}
-
-.terms-section__title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0;
-    font-weight: 600;
-}
-
-.terms-section__body {
-    padding-left: 19px;
-}
-
-.terms-section__body p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.terms-section__list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 15px;
-}
-
-.terms-section__list-item {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.terms-section__list-item::before {
-    content: "•";
-    color: #ff8246;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.terms-section__important {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 6px;
-    border-left: 3px solid #ff8246;
-    margin-bottom: 15px;
-}
-
-/* Contact Details */
-.terms-contact {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: normal;
-}
-
-.terms-contact__item {
-    margin-bottom: 8px;
-}
-
-.terms-contact__item:last-child {
-    margin-bottom: 0;
-}
-
-/* ===== AGREEMENT SECTION ===== */
-.terms-agreement {
-    margin-top: 40px;
-}
-
-.terms-agreement__box {
-    background: white;
-    border-radius: 10px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-.terms-agreement__text {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 30px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.terms-agreement__actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.terms-agreement__btn {
-    display: inline-block;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-}
-
-.terms-agreement__btn--primary {
-    background-color: #ff8246;
-    color: white;
-}
-
-.terms-agreement__btn--primary:hover {
-    background-color: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-}
-
-.terms-agreement__btn--secondary {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.terms-agreement__btn--secondary:hover {
-    background-color: #000000;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .terms-page {
-        margin-top: 80px;
-    }
-    
-    .terms-hero {
-        padding: 40px 20px;
-    }
-    
-    .terms-section__title {
-        font-size: 1.3rem;
-    }
-    
-    .terms-section {
-        padding: 25px 20px;
-    }
-    
-    .terms-section__body {
-        padding-left: 14px;
-    }
-    
-    .terms-agreement__box {
-        padding: 30px 20px;
-    }
-    
-    .terms-agreement__actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .terms-agreement__btn {
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .terms-hero {
-        padding: 30px 15px;
-    }
-    
-    .terms-hero__title {
-        font-size: 2rem;
-    }
-    
-    .terms-intro__card {
-        padding: 20px;
-    }
-    
-    .terms-intro__text {
-        font-size: 1rem;
-    }
-    
-    .terms-section__title {
-        font-size: 1.2rem;
-    }
-    
-    .terms-section__accent {
-        height: 25px;
-    }
-    
-    .terms-section {
-        padding: 20px 15px;
-    }
-    
-    .terms-section__body {
-        padding-left: 9px;
-    }
-    
-    .terms-section__body p,
-    .terms-section__list-item {
-        font-size: 0.95rem;
-    }
-    
-    .terms-agreement__box {
-        padding: 25px 15px;
-    }
-    
-    .terms-agreement__text {
-        font-size: 1rem;
-    }
-}
-```
-
----
-
-## File: `Crooks-Cart-Collectives/admin/styles/admin-verify-sellers.css`
-
-**Status:** `FOUND`
-
-```css
-/* Admin Verify Sellers Styles - Restructured Card Layout */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e4eaf2;
-    color: #000000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    max-width: 1200px;
-    margin: 100px auto 40px;
-    padding: 0 20px;
-    width: 100%;
-    min-height: calc(100vh - 200px);
-    display: flex;
-    flex-direction: column;
-}
-
-/* ===== PAGE TITLE HEADER ===== */
-.page-title-header {
-    width: 100%;
-    margin: 20px 0 30px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #FF8246;
-}
-
-.page-title-header h1 {
-    font-size: 2rem;
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* ===== FILTER TABS ===== */
-.filter-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-}
-
-.filter-tab {
-    padding: 8px 20px;
-    background: #ffffff;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #666666;
-    transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.filter-tab:hover {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-    box-shadow: 0 4px 8px rgba(255, 130, 70, 0.2);
-}
-
-.filter-tab.active {
-    background: #FF8246;
-    color: #ffffff;
-    border-color: #FF8246;
-}
-
-/* ===== SELLERS LIST CONTAINER ===== */
-.sellers-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    min-height: 400px;
-}
-
-/* ===== SELLERS CONTAINER ===== */
-.sellers-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px 0;
-}
-
-/* ===== SELLER CARD - REVISED LAYOUT ===== */
-.seller-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    width: 100%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.seller-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: #FF8246;
-    transform: translateY(-2px);
-}
-
-/* ===== SELLER ROWS ===== */
-.seller-row {
-    width: 100%;
-}
-
-/* Header Row - Desktop: Business Name + Applied Date + Status in one line */
-.header-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: nowrap;
-}
-
-.business-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #000000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    min-width: 150px;
-}
-
-.date-applied {
-    font-size: 0.9rem;
-    color: #666666;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.status-badge.pending {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.status-badge.verified {
-    background: #000000;
-    color: #ffffff;
-}
-
-.status-badge.rejected {
-    background: #666666;
-    color: #ffffff;
-}
-
-/* Details Row - Four items in one line on desktop (Name, Email, Contact, Button) */
-.details-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    padding: 5px 0;
-}
-
-/* Detail Items with Background Color for Depth */
-.detail-item {
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-    padding: 8px 12px;
-    background-color: #f5f5f5;
-    border-radius: 6px;
-    flex: 1 1 auto;
-    min-width: 160px;
-    transition: background-color 0.2s ease;
-}
-
-.seller-card:hover .detail-item {
-    background-color: #eaeaea;
-}
-
-.detail-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #555555;
-    white-space: nowrap;
-    letter-spacing: 0.3px;
-}
-
-.detail-value {
-    font-size: 0.9rem;
-    color: #000000;
-    word-break: break-word;
-    flex: 1;
-    min-width: 100px;
-    font-weight: 500;
-}
-
-.detail-value.email-value {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* View Details Button - Now part of details row */
-.btn-view-details {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #FF8246;
-    color: #ffffff;
-    text-decoration: none;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 120px;
-    height: 38px; /* Match the height of detail items with padding */
-}
-
-.btn-view-details:hover {
-    background: #e66a2e;
-    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
-    transform: translateY(-2px);
-}
-
-.btn-view-details .btn-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1);
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 400px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    margin: 20px 0;
-}
-
-.empty-state-content {
-    text-align: center;
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.empty-state-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.empty-state h2 {
-    font-size: 1.5rem;
-    color: #000000;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.empty-state p {
-    font-size: 1rem;
-    color: #666666;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.empty-state-hint {
-    font-style: italic;
-    color: #999999;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed #e0e0e0;
-}
-
-/* ===== LOADING STATE ===== */
-.loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666666;
-    font-size: 1.1rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.loading::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f0f0f0;
-    border-top-color: #FF8246;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== MODAL ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeScale 0.3s ease;
-}
-
-@keyframes fadeScale {
-    0% { opacity: 0; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.modal-icon {
-    margin-bottom: 20px;
-}
-
-.modal-icon img {
-    width: 60px;
-    height: 60px;
-    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-}
-
-.modal-message {
-    font-size: 1rem;
-    margin-bottom: 25px;
-    color: #000000;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.modal-btn {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.modal-btn-confirm {
-    background: #FF8246;
-    color: #ffffff;
-}
-
-.modal-btn-confirm:hover {
-    background: #e66a2e;
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.seller-card {
-    animation: slideIn 0.3s ease forwards;
-    opacity: 0;
-}
-
-.seller-card:nth-child(1) { animation-delay: 0.1s; }
-.seller-card:nth-child(2) { animation-delay: 0.15s; }
-.seller-card:nth-child(3) { animation-delay: 0.2s; }
-.seller-card:nth-child(4) { animation-delay: 0.25s; }
-.seller-card:nth-child(5) { animation-delay: 0.3s; }
-.seller-card:nth-child(6) { animation-delay: 0.35s; }
-.seller-card:nth-child(7) { animation-delay: 0.4s; }
-.seller-card:nth-child(8) { animation-delay: 0.45s; }
-.seller-card:nth-child(9) { animation-delay: 0.5s; }
-.seller-card:nth-child(10) { animation-delay: 0.55s; }
-
-/* ===== RESPONSIVE DESIGN ===== */
-/* Desktop: 1200px and above */
-@media (min-width: 1200px) {
-    .content {
-        margin-top: 100px;
-    }
-}
-
-/* Tablet and below */
-@media (max-width: 992px) {
-    .content {
-        margin-top: 90px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .details-row {
-        gap: 12px;
-    }
-    
-    .detail-item {
-        min-width: 140px;
-        padding: 6px 10px;
-    }
-    
-    .btn-view-details {
-        min-width: 110px;
-        padding: 6px 12px;
-    }
-}
-
-/* Mobile breakpoint - Stack vertically */
-@media (max-width: 768px) {
-    .content {
-        margin-top: 80px;
-        padding: 0 15px;
-    }
-    
-    .page-title-header {
-        margin: 15px 0 25px 0;
-        padding-bottom: 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .filter-tabs {
-        margin-bottom: 25px;
-        padding: 8px 0;
-    }
-    
-    .filter-tab {
-        padding: 6px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .seller-card {
-        padding: 18px;
-        gap: 12px;
-    }
-    
-    /* Mobile Header Row - Stacked */
-    .header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    
-    .business-name {
-        font-size: 1.2rem;
-        white-space: normal;
-        width: 100%;
-    }
-    
-    .date-applied {
-        font-size: 0.85rem;
-        width: 100%;
-    }
-    
-    .status-badge {
-        align-self: flex-start;
-    }
-    
-    /* Mobile Details Row - Stacked vertically */
-    .details-row {
-        flex-direction: column;
-        gap: 10px;
-        padding: 0;
-    }
-    
-    .detail-item {
-        width: 100%;
-        min-width: auto;
-        padding: 10px 12px;
-    }
-    
-    .detail-label {
-        min-width: 55px;
-        font-size: 0.9rem;
-    }
-    
-    .detail-value {
-        min-width: auto;
-        font-size: 0.95rem;
-    }
-    
-    .detail-value.email-value {
-        white-space: normal;
-        word-break: break-all;
-    }
-    
-    /* Mobile Button - Full width, below details */
-    .btn-view-details {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
-        min-width: auto;
-        height: auto;
-        margin-top: 5px;
-    }
-    
-    .empty-state {
-        min-height: 350px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.3rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.95rem;
-    }
-}
-
-/* Small mobile */
-@media (max-width: 576px) {
-    .content {
-        margin-top: 70px;
-        padding: 0 12px;
-    }
-    
-    .page-title-header h1 {
-        font-size: 1.4rem;
-    }
-    
-    .filter-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
-        gap: 8px;
-    }
-    
-    .filter-tab {
-        padding: 5px 12px;
-        font-size: 0.85rem;
-        white-space: nowrap;
-    }
-    
-    .seller-card {
-        padding: 15px;
-    }
-    
-    .business-name {
-        font-size: 1.1rem;
-    }
-    
-    .date-applied {
-        font-size: 0.8rem;
-    }
-    
-    .status-badge {
-        padding: 3px 10px;
-        font-size: 0.7rem;
-    }
-    
-    .detail-item {
-        padding: 8px 10px;
-    }
-    
-    .detail-label {
-        font-size: 0.85rem;
-        min-width: 50px;
-    }
-    
-    .detail-value {
-        font-size: 0.9rem;
-    }
-    
-    .btn-view-details {
-        font-size: 0.9rem;
-        padding: 10px;
-    }
-    
-    .empty-state-content {
-        padding: 30px 20px;
-    }
-    
-    .empty-state-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .empty-state h2 {
-        font-size: 1.2rem;
-    }
-    
-    .empty-state p {
-        font-size: 0.9rem;
-    }
-}
-
-/* Extra small mobile */
-@media (max-width: 375px) {
-    .page-title-header h1 {
-        font-size: 1.3rem;
-    }
-    
-    .filter-tab {
-        padding: 4px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .seller-card {
-        padding: 12px;
-    }
-    
-    .business-name {
-        font-size: 1rem;
-    }
-    
-    .detail-item {
-        padding: 6px 8px;
-    }
-}
-
-/* Print styles */
-@media print {
-    .filter-tabs,
-    .btn-view-details,
-    .modal {
-        display: none !important;
-    }
-    
-    .seller-card {
-        break-inside: avoid;
-        border: 1px solid #000000;
-        box-shadow: none;
-    }
-    
-    .detail-item {
-        background-color: transparent !important;
-        border: 1px solid #ccc;
-    }
-}
 ```
 
 ---

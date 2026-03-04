@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const formData = new FormData(form);
+            
+            // Log what we're sending (for debugging)
+            console.log('Sending identifier:', identifierInput.value.trim());
 
             const response = await fetch('../database/admin-sign-in-handler.php', {
                 method: 'POST',
@@ -125,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
+            console.log('Server response:', result);
 
             if (result.status === 'success') {
                 showNotifier('Login successful! Redirecting...');
@@ -133,12 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = result.redirect;
                 }, 1500);
             } else {
+                // Handle specific error messages
                 if (result.message === 'invalid-credentials') {
-                    showNotifier('Invalid credentials. Please try again.');
+                    showNotifier('Invalid email/username or password. Please try again.');
                     identifierInput.classList.add('error');
                     passwordInput.classList.add('error');
+                } else if (result.message === 'All fields are required') {
+                    showNotifier('Please fill in all fields.');
                 } else {
-                    showNotifier('Login failed. Please try again.');
+                    showNotifier(result.message || 'Login failed. Please try again.');
                 }
             }
         } catch (error) {

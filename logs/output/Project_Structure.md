@@ -1,7 +1,7 @@
 # Web Project Structure
 
 **Project:** Crooks-Cart-Collectives
-**Generated:** 2026-03-03 21:38:52
+**Generated:** 2026-03-04 09:07:27
 **Mode:** all
 
 ```
@@ -101,6 +101,11 @@ Crooks-Cart-Collectives/
 │   │   ├── admin-sign-in.php
 │   │   ├── admin-sign-up.php
 │   │   └── admin-verify-sellers.php
+│   ├── schema/
+│   │   ├── dbCreation.sql
+│   │   ├── dummyAdmin.sql
+│   │   ├── dummySeller.sql
+│   │   └── dummyUser.sql
 │   ├── scripts/
 │   │   ├── admin-header.js
 │   │   ├── admin-logs.js
@@ -191,17 +196,11 @@ Crooks-Cart-Collectives/
 │       │   └── william-aranez.png
 │       └── Logo.png
 ├── database/
-│   ├── schema/
-│   │   ├── dbCreation.sql
-│   │   ├── dummyAdmin.sql
-│   │   ├── dummySeller.sql
-│   │   └── dummyUser.sql
 │   ├── cart-handler.php
 │   ├── checkout-handler.php
 │   ├── customer-profile-handler.php
 │   ├── data-storage-handler.php
 │   ├── database-connect.php
-│   ├── error_log.txt
 │   ├── order-handler.php
 │   ├── product-handler.php
 │   ├── report-seller-handler.php
@@ -219,7 +218,9 @@ Crooks-Cart-Collectives/
 │   │   ├── linux-path.py
 │   │   └── windows-preset.py
 │   ├── output/
-│   │   └── admin_path_Summary.md
+│   │   ├── admin_path_Summary.md
+│   │   ├── Project_Structure.md
+│   │   └── windows-preset_Summary.md
 │   ├── requirement/
 │   │   ├── Apply Tree map.md
 │   │   └── Instructions.md
@@ -309,12 +310,12 @@ Crooks-Cart-Collectives/
 | CSS Files | 36 |
 | JavaScript Files | 28 |
 | JSON Files | 0 |
-| Text/Markdown | 6 |
+| Text/Markdown | 7 |
 | Image Files | 121 |
 | Other Files | 14 |
 
 **Total Directories:** 25
-**Total Files:** 265
+**Total Files:** 266
 
 ---
 

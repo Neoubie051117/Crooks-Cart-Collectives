@@ -23,6 +23,10 @@ try {
             PDO::ATTR_PERSISTENT => false
         ]
     );
+    
+    // Log successful connection
+    error_log("Database connected successfully");
+    
 } catch (PDOException $error) {
     // Log the detailed error
     error_log("Database connection failed: " . $error->getMessage());

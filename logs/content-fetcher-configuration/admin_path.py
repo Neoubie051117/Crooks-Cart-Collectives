@@ -63,18 +63,18 @@ filesToCheck = [
     # ADMIN STYLES
     # =========================
 
-    "/admin/styles/admin-dashboard.css",
-    "/admin/styles/admin-footer.css",
-    "/admin/styles/admin-header.css",
-    "/admin/styles/admin-index.css",
-    "/admin/styles/admin-logs.css",
-    "/admin/styles/admin-privacy-policy.css",
-    "/admin/styles/admin-profile.css",
-    "/admin/styles/admin-seller-profile.css",
-    "/admin/styles/admin-sign-in.css",
-    "/admin/styles/admin-sign-out.css",
-    "/admin/styles/admin-sign-up.css",
-    "/admin/styles/admin-terms-and-conditions.css",
-    "/admin/styles/admin-verify-sellers.css"
+    # "/admin/styles/admin-dashboard.css",
+    # "/admin/styles/admin-footer.css",
+    # "/admin/styles/admin-header.css",
+    # "/admin/styles/admin-index.css",
+    # "/admin/styles/admin-logs.css",
+    # "/admin/styles/admin-privacy-policy.css",
+    # "/admin/styles/admin-profile.css",
+    # "/admin/styles/admin-seller-profile.css",
+    # "/admin/styles/admin-sign-in.css",
+    # "/admin/styles/admin-sign-out.css",
+    # "/admin/styles/admin-sign-up.css",
+    # "/admin/styles/admin-terms-and-conditions.css",
+    # "/admin/styles/admin-verify-sellers.css"
 
 ]

@@ -1,5 +1,5 @@
 <?php
-// Admin Sign In Handler
+// Admin Sign In Handler - MODIFIED for plain text passwords
 session_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
@@ -28,12 +28,14 @@ handleAdminSignin();
 function handleAdminSignin() {
     global $connection;
     
-    error_log("Admin signin attempt for identifier: " . ($_POST['identifier'] ?? ''));
-    
     $identifier = $_POST['identifier'] ?? '';
     $password = $_POST['password'] ?? '';
     
+    // Log the attempt (but don't log passwords)
+    error_log("Admin signin attempt - Identifier: " . $identifier);
+    
     if (empty($identifier) || empty($password)) {
+        error_log("Signin failed: Empty fields");
         echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
@@ -41,7 +43,7 @@ function handleAdminSignin() {
     $identifier = trim($identifier);
     
     try {
-        // Check for admin
+        // Check ONLY administrators table - both email and username
         $stmt = $connection->prepare("
             SELECT admin_id, first_name, last_name, username, email, password 
             FROM administrators 
@@ -51,12 +53,18 @@ function handleAdminSignin() {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$admin) {
+            error_log("Signin failed: No admin found with identifier: " . $identifier);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
         
-        // Verify password
-        if (!password_verify($password, $admin['password'])) {
+        error_log("Admin found: ID=" . $admin['admin_id'] . ", Username=" . $admin['username'] . ", Email=" . $admin['email']);
+        
+        // ===== FIXED: Plain text password comparison (demo only) =====
+        // No hashing - direct string comparison as per instructions
+        if ($password !== $admin['password']) {
+            error_log("Signin failed: Password mismatch for admin ID: " . $admin['admin_id']);
+            error_log("Expected: " . $admin['password'] . ", Received: " . $password);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }
@@ -69,6 +77,8 @@ function handleAdminSignin() {
         $_SESSION['admin_email'] = $admin['email'];
         $_SESSION['is_admin'] = true;
         
+        error_log("Signin successful for admin ID: " . $admin['admin_id']);
+        
         echo json_encode([
             'status' => 'success',
             'message' => 'Login successful',
@@ -76,7 +86,7 @@ function handleAdminSignin() {
         ]);
         
     } catch (PDOException $e) {
-        error_log("Admin signin error: " . $e->getMessage());
+        error_log("Admin signin database error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Login service unavailable']);
     }
 }

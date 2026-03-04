@@ -8,8 +8,9 @@ ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/error_log.txt');
 
 require_once(__DIR__ . '/admin-database-connect.php');
+require_once(__DIR__ . '/admin-data-storage-handler.php');
 
-// ===== ADD THIS TEST ENDPOINT =====
+// ===== TEST ENDPOINT =====
 if (isset($_GET['ping'])) {
     echo json_encode([
         'status' => 'ok', 
@@ -20,18 +21,6 @@ if (isset($_GET['ping'])) {
     exit;
 }
 // ===== END TEST ENDPOINT =====
-
-// Allow testing
-if (isset($_GET['test'])) {
-    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
-    exit;
-}
-
-// Allow testing
-if (isset($_GET['test'])) {
-    echo json_encode(['status' => 'test', 'message' => 'Signup handler is accessible']);
-    exit;
-}
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -87,13 +76,13 @@ if ($password !== $confirm) {
     exit;
 }
 
-// Validate username
-if (strlen($username) < 3 || strlen($username) > 20) {
-    echo json_encode(['status' => 'error', 'message' => 'username-length']);
+// Simple username validation - only length check
+if (strlen($username) < 3) {
+    echo json_encode(['status' => 'error', 'message' => 'username-too-short']);
     exit;
 }
-if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-    echo json_encode(['status' => 'error', 'message' => 'username-invalid-chars']);
+if (strlen($username) > 20) {
+    echo json_encode(['status' => 'error', 'message' => 'username-too-long']);
     exit;
 }
 
@@ -135,26 +124,36 @@ try {
         exit;
     }
     
-    // Create admin
-    $hashed = password_hash($password, PASSWORD_DEFAULT);
+    // Create admin - STORE PASSWORD AS PLAIN TEXT (demo only)
     $stmt = $connection->prepare("INSERT INTO administrators (first_name, last_name, email, contact_number, username, password, date_joined) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-    $stmt->execute([$first_name, $last_name, $email, $phone, $username, $hashed]);
+    $stmt->execute([$first_name, $last_name, $email, $phone, $username, $password]);
     
-    // Create storage directory
+    // Get the new admin ID
     $admin_id = $connection->lastInsertId();
-    $storage_dir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/administrators/' . $admin_id . '/profile/';
-    if (!is_dir($storage_dir)) {
-        mkdir($storage_dir, 0755, true);
+    
+    // Create storage directory using the data storage handler
+    if (function_exists('createAdminStorage')) {
+        createAdminStorage($admin_id);
+    } else {
+        // Fallback to old method if function doesn't exist
+        $storage_dir = dirname(__DIR__, 2) . '/Crooks-Data-Storage/administrators/' . $admin_id . '/profile/';
+        if (!is_dir($storage_dir)) {
+            mkdir($storage_dir, 0755, true);
+        }
     }
     
     echo json_encode([
         'status' => 'success',
         'message' => 'Admin account created successfully!',
-        'redirect' => 'admin-sign-in.php'
+        'redirect' => 'admin-sign-in.php',
+        'admin_id' => $admin_id
     ]);
     
+} catch (PDOException $e) {
+    error_log("Signup error: " . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => 'database-error']);
 } catch (Exception $e) {
     error_log("Signup error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Database error']);
+    echo json_encode(['status' => 'error', 'message' => 'server-error']);
 }
 ?>

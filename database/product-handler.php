@@ -81,13 +81,12 @@ function handleDelete($connection, $seller_id) {
         $cancelledCount = 0;
         
         if (!empty($pendingOrders)) {
-            // Update all pending orders to cancelled
+            // Update all pending orders to cancelled (removed notes column)
             $stmt = $connection->prepare("
                 UPDATE orders 
                 SET status = 'cancelled', 
                     cancelled_at = NOW(), 
-                    cancelled_by = 'seller',
-                    notes = CONCAT(IFNULL(notes, ''), ' Product removed by seller. Order automatically cancelled.')
+                    cancelled_by = 'seller'
                 WHERE product_id = ? AND status = 'pending'
             ");
             $stmt->execute([$product_id]);
@@ -179,13 +178,12 @@ function handleToggleStatus($connection, $seller_id) {
             $pendingOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             if (!empty($pendingOrders)) {
-                // Update all pending orders to cancelled
+                // Update all pending orders to cancelled (removed notes column)
                 $stmt = $connection->prepare("
                     UPDATE orders 
                     SET status = 'cancelled', 
                         cancelled_at = NOW(), 
-                        cancelled_by = 'seller',
-                        notes = CONCAT(IFNULL(notes, ''), ' Product deactivated by seller. Order automatically cancelled.')
+                        cancelled_by = 'seller'
                     WHERE product_id = ? AND status = 'pending'
                 ");
                 $stmt->execute([$product_id]);

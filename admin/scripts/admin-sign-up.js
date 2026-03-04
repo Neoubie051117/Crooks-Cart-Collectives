@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    // ===== FIXED: Simple username validation - only length check =====
     function validateUsername(username) {
         if (username.length < 3) {
             return { valid: false, message: 'Username must be at least 3 characters long.' };
@@ -132,9 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (username.length > 20) {
             return { valid: false, message: 'Username cannot exceed 20 characters.' };
         }
-        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-            return { valid: false, message: 'Username can only contain letters, numbers, and underscore.' };
-        }
+        // NO character restrictions - any username is allowed
         return { valid: true, message: '' };
     }
 
@@ -277,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         validateField(this, emailError, isEmailValid, 'Please enter a valid email address');
     });
 
-    // Username validation
+    // ===== FIXED: Username validation - only length check =====
     usernameField.addEventListener('blur', function() {
         const validation = validateUsername(this.value);
         if (this.value.trim() && !validation.valid) {
@@ -376,9 +375,18 @@ document.addEventListener('DOMContentLoaded', () => {
         emailError.textContent = '';
     });
     
+    // ===== FIXED: Username input handler - preserve exactly what user types =====
     usernameField.addEventListener('input', () => {
+        // Store cursor position
+        const start = usernameField.selectionStart;
+        const end = usernameField.selectionEnd;
+        
+        // Do NOT modify the username - keep exactly as typed
         highlightField(usernameField, false);
         usernameError.textContent = '';
+        
+        // Restore cursor position
+        usernameField.setSelectionRange(start, end);
     });
     
     passwordField.addEventListener('input', () => {
@@ -449,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasErrors = true;
         }
         
+        // ===== FIXED: Simple username validation - only length =====
         if (!usernameField.value.trim()) {
             usernameError.textContent = 'Username is required';
             highlightField(usernameField, true);
@@ -496,6 +505,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Replace phone with normalized version for storage
         const normalizedPhone = normalizePhoneForStorage(contactField.value);
         formData.set('contact_number', normalizedPhone);
+        
+        // IMPORTANT: Do NOT modify username - send exactly as entered
+        // Username is already in formData from the form
         
         // Submit form
         isSubmitting = true;
@@ -554,10 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     usernameError.textContent = 'Username too long';
                     highlightField(usernameField, true);
                     showNotifier('Username cannot exceed 20 characters.');
-                } else if (result.message === 'username-invalid-chars') {
-                    usernameError.textContent = 'Invalid characters';
-                    highlightField(usernameField, true);
-                    showNotifier('Username can only contain letters, numbers, and underscore.');
                 } else if (result.message === 'password-too-short') {
                     passwordError.textContent = 'Password too short';
                     highlightField(passwordField, true);
