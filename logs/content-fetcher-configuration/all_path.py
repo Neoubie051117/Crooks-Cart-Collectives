@@ -16,11 +16,12 @@ filesToCheck = [
     "/database/schema/dummySeller.sql",
     "/database/schema/dummyUser.sql",
     
-     # =========================
+    # =========================
     # ADMIN ROOT
     # =========================
 
     "/admin/admin-index.php",
+    
 
     # =========================
     # ADMIN DATABASE
@@ -32,6 +33,7 @@ filesToCheck = [
     "/admin/database/admin-logs-handler.php",
     "/admin/database/admin-profile-handler.php",
     "/admin/database/admin-reports-handler.php",
+    "/admin/database/admin-seller-profile-handler.php",
     "/admin/database/admin-sign-in-handler.php",
     "/admin/database/admin-sign-out-handler.php",
     "/admin/database/admin-sign-up-handler.php",
@@ -45,6 +47,7 @@ filesToCheck = [
     "/admin/pages/admin-logs.php",
     "/admin/pages/admin-manage-report.php",
     "/admin/pages/admin-profile.php",
+    "/admin/pages/admin-seller-profile.php",
     "/admin/pages/admin-sign-in.php",
     "/admin/pages/admin-sign-up.php",
     "/admin/pages/admin-verify-sellers.php",
@@ -65,15 +68,16 @@ filesToCheck = [
     "/admin/scripts/admin-header.js",
     "/admin/scripts/admin-logs.js",
     "/admin/scripts/admin-profile.js",
+    "/admin/scripts/admin-seller-profile.js",
     "/admin/scripts/admin-sign-in.js",
     "/admin/scripts/admin-sign-out.js",
     "/admin/scripts/admin-sign-up.js",
     "/admin/scripts/admin-verify-sellers.js",
-    
+
     # =========================
     # ADMIN STYLES
     # =========================
-    
+
     # "/admin/styles/admin-dashboard.css",
     # "/admin/styles/admin-footer.css",
     # "/admin/styles/admin-header.css",
@@ -81,6 +85,7 @@ filesToCheck = [
     # "/admin/styles/admin-logs.css",
     # "/admin/styles/admin-privacy-policy.css",
     # "/admin/styles/admin-profile.css",
+    # "/admin/styles/admin-seller-profile.css",
     # "/admin/styles/admin-sign-in.css",
     # "/admin/styles/admin-sign-out.css",
     # "/admin/styles/admin-sign-up.css",
