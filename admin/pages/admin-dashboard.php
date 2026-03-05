@@ -20,13 +20,23 @@ try {
     $firstName = "Admin";
 }
 
-// Fetch stats for dashboard
+// Fetch stats for dashboard - UPDATED for ENUM values
 $stats = [];
 try {
-    // Pending seller verifications
-    $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 0");
+    // Pending seller verifications - now checking for 'pending' enum value
+    $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'pending'");
     $stmt->execute();
     $stats['pending_verifications'] = $stmt->fetch()['count'];
+    
+    // Verified sellers - now checking for 'verified' enum value
+    $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'verified'");
+    $stmt->execute();
+    $stats['verified_sellers'] = $stmt->fetch()['count'];
+    
+    // Rejected sellers - now checking for 'rejected' enum value
+    $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'rejected'");
+    $stmt->execute();
+    $stats['rejected_sellers'] = $stmt->fetch()['count'];
     
     // Total users
     $stmt = $connection->prepare("SELECT COUNT(*) as count FROM users");
@@ -162,7 +172,7 @@ try {
             <p>Manage the marketplace, verify sellers, and monitor system activity.</p>
         </div>
 
-        <!-- Statistics Overview -->
+        <!-- Statistics Overview - UPDATED to show all seller statuses -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number"><?php echo $stats['pending_verifications'] ?? 0; ?></div>
@@ -197,7 +207,7 @@ try {
                 <p>Manage your personal information and account settings</p>
             </a>
 
-            <!-- Verify Sellers Card -->
+            <!-- Verify Sellers Card - UPDATED to show pending count correctly -->
             <a href="admin-verify-sellers.php" class="dashboard-card">
                 <div class="card-icon">
                     <img src="../assets/image/icons/verified-empty.svg" alt="Verify Sellers">

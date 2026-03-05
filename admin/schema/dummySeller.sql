@@ -14,89 +14,130 @@ first_name, last_name, email, username, password, address, contact_number
 ('Lebron', 'James', 'lebron.james@Sellerdummy.com', 'ninja', '123', '15 Delgado St., Purok 2, Brgy. Jaro, Iloilo City', '09333333333');
 
 -- =========================
--- MAKE THEM SELLERS (UPDATED with identity_path and id_document_path)
+-- MAKE THEM SELLERS - ALL VERIFIED NOW
 -- =========================
 
-INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
-SELECT user_id, 'Aling Bebang''s Tiangge', NULL, NULL, TRUE FROM users WHERE username = 'alingbebang';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified, verification_date)
+SELECT user_id, 'Aling Bebang''s Tiangge', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'alingbebang';
 
-INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
-SELECT user_id, 'Totoy Bibo Bargains', NULL, NULL, TRUE FROM users WHERE username = 'totoybibo';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified, verification_date)
+SELECT user_id, 'Totoy Bibo Bargains', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'totoybibo';
 
-INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
-SELECT user_id, 'El Bimbo''s Ukay-Ukay', NULL, NULL, TRUE FROM users WHERE username = 'thelastelbimby';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified, verification_date)
+SELECT user_id, 'El Bimbo''s Ukay-Ukay', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'thelastelbimby';
 
-INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
-SELECT user_id, 'Pure Foods Paninda', NULL, NULL, TRUE FROM users WHERE username = 'hotdog';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified, verification_date)
+SELECT user_id, 'Pure Foods Paninda', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'hotdog';
 
-INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified)
-SELECT user_id, 'Ninja''s Hidden Treasures', NULL, NULL, TRUE FROM users WHERE username = 'ninja';
+INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is_verified, verification_date)
+SELECT user_id, 'Ninja''s Hidden Treasures', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'ninja';
 
 -- =========================
--- INSERT 2 PRODUCTS PER SELLER WITH BUDGET PRICES
+-- INSERT 2 PRODUCTS PER SELLER WITH NAMES MATCHING THEIR FOLDERS
+-- Using the actual directory structure from your file system
 -- =========================
 
--- ALING BEBANG - Budget items
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Second Hand Cellphone', 'Lumang cellphone pero gumagana pa - good for kids', 350.00, 'budget', 8,
-'assets/image/icons/seller-product-placeholder.png'
+-- ALING BEBANG
+-- Folder: bag-for-sale → Product: Bag
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Lumang Bag', 'Second hand na bag - medyo luma pero maganda pa', 120.00, 'Accessories', 15,
+'Crooks-Data-Storage/products/bag-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'alingbebang';
 
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Used School Bag', 'Medyo luma pero matibay pa', 120.00, 'cheap', 15,
-'assets/image/icons/seller-product-placeholder.png'
+-- Folder: ballpen-for-sale → Product: Ballpen
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Second Hand Ballpen', 'Mga lumang ballpen na may tinta pa', 5.00, 'School Supplies', 50,
+'Crooks-Data-Storage/products/ballpen-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'alingbebang';
 
--- TOTOY BIBO - Cheap items
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Lumang T-shirt Bundle', '3 pcs used shirts - iba-ibang sizes', 150.00, 'cheap', 20,
-'assets/image/icons/seller-product-placeholder.png'
+-- TOTOY BIBO
+-- Folder: bed-for-sale → Product: Bed
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Lumang Kama', 'Second hand na kama - wooden frame, may konting gasgas', 800.00, 'Furniture', 3,
+'Crooks-Data-Storage/products/bed-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'totoybibo';
 
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Second Hand Sapatos', 'Gently used rubber shoes', 250.00, 'second hand', 12,
-'assets/image/icons/seller-product-placeholder.png'
+-- Folder: creatine-for-sale → Product: Creatine
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Gamit na Creatine', 'Bukas na pero half pa ang laman - pang-gym', 250.00, 'Sports Supplement', 5,
+'Crooks-Data-Storage/products/creatine-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'totoybibo';
 
--- EL BIMBO - Second hand items
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Ukay Jacket', 'Winter jacket from Korea', 180.00, 'second hand', 10,
-'assets/image/icons/seller-product-placeholder.png'
+-- EL BIMBO
+-- Folder: gpu-for-sale → Product: GPU
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Second Hand GPU', 'Lumang graphics card - GTX 1050 Ti, working condition', 2500.00, 'Electronics', 2,
+'Crooks-Data-Storage/products/gpu-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'thelastelbimby';
 
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Vintage Maong Pants', 'Maong pants - straight cut', 120.00, 'cheap', 18,
-'assets/image/icons/seller-product-placeholder.png'
+-- Folder: hotdogs-for-sale → Product: Hotdogs
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Tender Juicy Hotdogs', 'Bultong hotdogs - 1 kilo pack, malapit na mag-expire', 80.00, 'Food', 25,
+'Crooks-Data-Storage/products/hotdogs-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'thelastelbimby';
 
--- PURE FOODS (HOTDOG) - Budget food items
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Tuyo (Dried Fish)', 'Isang kilo - perfect for breakfast', 80.00, 'budget', 25,
-'assets/image/icons/seller-product-placeholder.png'
+-- PURE FOODS
+-- Folder: ice-for-sale → Product: Ice
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Yelo (Ice)', 'Cracked ice - isang sako, perfect for inuman', 50.00, 'Food', 10,
+'Crooks-Data-Storage/products/ice-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'hotdog';
 
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Itlog na Maalat', 'Maalat na itlog with kamatis', 15.00, 'cheap', 50,
-'assets/image/icons/seller-product-placeholder.png'
+-- Folder: travel-bag-for-sale → Product: Travel Bag
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Lumang Travel Bag', 'Malaking bag pang-travel - may sira ang zipper', 150.00, 'Accessories', 8,
+'Crooks-Data-Storage/products/travel-bag-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'hotdog';
 
--- LEBRON JAMES (NINJA) - Second hand gadgets
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Used Nokia Phone', 'Lumang Nokia - 3310 style', 200.00, 'second hand', 6,
-'assets/image/icons/seller-product-placeholder.png'
+-- LEBRON JAMES
+-- Folder: bag-for-sale → Product: Bag (another seller)
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Second Hand Backpack', 'Lumang backpack - pang-school', 100.00, 'Accessories', 12,
+'Crooks-Data-Storage/products/bag-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'ninja';
 
-INSERT INTO products (seller_id, name, description, price, category, stock_quantity, image_path)
-SELECT s.seller_id, 'Second Hand Charger', 'Universal charger - gumagana pa', 50.00, 'budget', 30,
-'assets/image/icons/seller-product-placeholder.png'
+-- Folder: ballpen-for-sale → Product: Ballpen (another seller)
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Bulk Ballpens', 'Dose-na ballpen - iba-ibang kulay', 30.00, 'School Supplies', 40,
+'Crooks-Data-Storage/products/ballpen-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'ninja';
+
+-- =========================
+-- ADD SELLER PROFILES USING THE PROFILE IMAGES
+-- =========================
+
+UPDATE users 
+SET profile_picture = 'Crooks-Data-Storage/users/dummy/profile/profile.png'
+WHERE username IN ('alingbebang', 'totoybibo', 'thelastelbimby', 'hotdog', 'ninja');
+
+-- =========================
+-- CREATE A STANDALONE ADMINISTRATOR
+-- =========================
+
+INSERT INTO administrators (
+    first_name, 
+    last_name, 
+    email, 
+    contact_number, 
+    username, 
+    password, 
+    profile_picture
+) VALUES (
+    'Admin', 
+    'User', 
+    'admin@crookscart.com', 
+    '09123456789', 
+    'admin', 
+    'admin', 
+    'Crooks-Data-Storage/administrators/dummy/profile/profile.png'
+);

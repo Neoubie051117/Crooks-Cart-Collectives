@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).replace(',', '');
     }
 
-    // Filter functions
+    // Filter functions - MODIFIED: Updated to use string values instead of numbers
     function setActiveFilter(filter) {
         filterTabs.forEach(tab => {
             const tabFilter = tab.dataset.filter;
@@ -78,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let filteredSellers = [];
         if (filter === 'pending') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 0);
+            filteredSellers = allSellers.filter(s => s.is_verified === 'pending');
         } else if (filter === 'verified') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 1);
+            filteredSellers = allSellers.filter(s => s.is_verified === 'verified');
         } else if (filter === 'rejected') {
-            filteredSellers = allSellers.filter(s => s.is_verified === 2);
+            filteredSellers = allSellers.filter(s => s.is_verified === 'rejected');
         }
 
         if (filteredSellers.length === 0) {
@@ -118,11 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sellers.forEach(seller => {
             const appliedDate = formatDateTime(seller.created_at);
             
-            const statusText = seller.is_verified === 0 ? 'Pending' : 
-                               seller.is_verified === 1 ? 'Verified' : 'Rejected';
+            // MODIFIED: Use string values for status
+            const statusText = seller.is_verified === 'pending' ? 'Pending' : 
+                               seller.is_verified === 'verified' ? 'Verified' : 'Rejected';
             
-            const statusClass = seller.is_verified === 0 ? 'pending' : 
-                                seller.is_verified === 1 ? 'verified' : 'rejected';
+            const statusClass = seller.is_verified === 'pending' ? 'pending' : 
+                                seller.is_verified === 'verified' ? 'verified' : 'rejected';
 
             const fullName = (seller.first_name && seller.first_name !== 'Unknown' ? seller.first_name : '') + 
                             (seller.last_name && seller.last_name !== 'User' ? ' ' + seller.last_name : '');

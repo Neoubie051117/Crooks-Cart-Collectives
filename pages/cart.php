@@ -10,11 +10,12 @@ if (!isset($_SESSION['user_id'])) {
 
 $customerId = $_SESSION['customer_id'];
 
-$cartItems = [];
+$activeItems = [];
+$unavailableItems = [];
 $total = 0;
-$hasInactiveItems = false;
+
 try {
-    // Modified query to include product active status
+    // Get all cart items with current product status
     $stmt = $connection->prepare("
         SELECT 
             c.cart_id,
@@ -32,17 +33,24 @@ try {
         JOIN products p ON c.product_id = p.product_id
         JOIN sellers s ON c.seller_id = s.seller_id
         WHERE c.customer_id = ?
-        ORDER BY c.added_at DESC
+        ORDER BY 
+            p.is_active DESC,
+            p.stock_quantity > 0 DESC,
+            c.added_at DESC
     ");
     $stmt->execute([$customerId]);
-    $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $allItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Check for inactive items and calculate total only from active ones
-    foreach ($cartItems as $item) {
-        if ($item['is_active']) {
+    // Separate items into active and unavailable
+    foreach ($allItems as $item) {
+        // Check if product is active AND has stock
+        $isAvailable = $item['is_active'] && $item['stock_quantity'] > 0;
+        
+        if ($isAvailable) {
+            $activeItems[] = $item;
             $total += $item['price'] * $item['quantity'];
         } else {
-            $hasInactiveItems = true;
+            $unavailableItems[] = $item;
         }
     }
 } catch (PDOException $e) {
@@ -77,27 +85,56 @@ function getProductImageUrl($mediaPath) {
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/cart.css">
     <style>
-    /* Inactive product styling */
-    .cart-item.inactive {
+    /* Available items label */
+    .available-label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #000000;
+        margin: 0 0 15px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #FF8246;
+    }
+
+    /* Unavailable items styling within same container */
+    .unavailable-divider {
+        margin: 30px 0 15px 0;
+        padding: 10px 0 5px 0;
+        border-top: 1px dashed #cccccc;
+        color: #666666;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .cart-item.unavailable {
         opacity: 0.6;
-        filter: grayscale(50%);
-        background-color: #f5f5f5;
-        border-color: #cccccc;
-        position: relative;
+        background-color: #f9f9f9;
+        border-color: #dddddd;
     }
 
-    .cart-item.inactive::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.3);
-        pointer-events: none;
+    .cart-item.unavailable:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .inactive-badge {
+    .cart-item.unavailable .quantity-input {
+        display: none;
+    }
+
+    .cart-item.unavailable .item-subtotal {
+        display: none;
+    }
+
+    .cart-item.unavailable .cart-item-price {
+        display: none;
+    }
+
+    .cart-item.unavailable .stock-status {
+        display: none;
+    }
+
+    .unavailable-badge {
         display: inline-block;
         background: #000000;
         color: #ffffff;
@@ -107,36 +144,409 @@ function getProductImageUrl($mediaPath) {
         font-weight: 600;
         text-transform: uppercase;
         margin-top: 5px;
+        width: fit-content;
     }
 
-    .inactive-message {
-        margin-top: 10px;
-        padding: 10px;
-        background: #f0f0f0;
-        border-left: 3px solid #FF8246;
+    .stock-status {
+        color: #28a745;
         font-size: 0.9rem;
+        margin: 5px 0;
     }
 
-    .cart-item.inactive .cart-item-price,
-    .cart-item.inactive .cart-item-seller,
-    .cart-item.inactive .cart-item-title,
-    .cart-item.inactive .item-subtotal {
-        opacity: 0.7;
+    .cart-container {
+        width: 100%;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
     }
 
-    .cart-item.inactive .quantity-input,
-    .cart-item.inactive .remove-btn {
-        pointer-events: none;
-        opacity: 0.5;
+    .cart-items {
+        padding: 20px;
     }
 
-    .inactive-warning {
-        background: #f0f0f0;
-        padding: 15px;
-        margin: 20px 0;
+    .cart-item {
+        display: flex;
+        gap: 25px;
+        padding: 25px;
+        margin-bottom: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .cart-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .cart-item:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .cart-item-image {
+        flex-shrink: 0;
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+    }
+
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .cart-item-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cart-item-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #000000;
+        margin: 0;
+    }
+
+    .cart-item-seller {
+        font-size: 0.95rem;
+        color: #666666;
+        margin: 0;
+    }
+
+    .cart-item-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #FF8246;
+        margin: 0;
+    }
+
+    .cart-item-controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 5px;
+    }
+
+    .cart-item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quantity-input {
+        width: 80px;
+        height: 40px;
+        padding: 0 10px;
+        border: 2px solid #e0e0e0;
         border-radius: 6px;
+        font-size: 1rem;
         text-align: center;
-        border-left: 4px solid #FF8246;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-input:focus {
+        border-color: #FF8246;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+    }
+
+    .quantity-input:disabled {
+        background-color: #f5f5f5;
+        cursor: not-allowed;
+    }
+
+    .item-subtotal {
+        font-size: 1rem;
+        color: #000000;
+        margin: 0;
+    }
+
+    .subtotal-amount {
+        font-weight: 700;
+        color: #000000;
+    }
+
+    .cart-summary {
+        margin-top: 30px;
+        padding: 25px;
+        background: #f9f9f9;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .cart-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e0e0e0;
+        font-size: 1.5rem;
+    }
+
+    .total-label {
+        font-weight: 600;
+        color: #000000;
+    }
+
+    .total-amount {
+        font-weight: 700;
+        color: #FF8246;
+    }
+
+    .cart-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        min-width: 180px;
+    }
+
+    .btn-primary {
+        background-color: #FF8246;
+        color: #ffffff;
+        border: 1px solid #FF8246;
+    }
+
+    .btn-primary:hover {
+        background-color: #e66a2e;
+        box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .btn-secondary {
+        background-color: #000000;
+        color: #ffffff;
+        border: 1px solid #000000;
+    }
+
+    .btn-secondary:hover {
+        background-color: #333333;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .remove-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+
+    .empty-state {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 400px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        margin: 20px 0;
+    }
+
+    .empty-state-content {
+        text-align: center;
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    }
+
+    .empty-state h2 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .empty-state p {
+        font-size: 1rem;
+        color: #666666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .empty-state .btn {
+        display: inline-block;
+        width: auto;
+        min-width: 200px;
+        padding: 12px 30px;
+    }
+
+    .cart-item.loading {
+        opacity: 0.6;
+        pointer-events: none;
+        position: relative;
+    }
+
+    .cart-item.loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(255, 130, 70, 0.3);
+        border-top-color: #FF8246;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    .cart-notifier-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    }
+
+    .cart-notifier-modal.active {
+        display: flex;
+    }
+
+    .cart-notifier-content {
+        background: #ffffff;
+        padding: 35px 30px;
+        border-radius: 16px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        animation: fadeScale 0.3s ease;
+        border: 1px solid #e0e0e0;
+    }
+
+    .cart-notifier-icon {
+        margin-bottom: 20px;
+    }
+
+    .cart-notifier-icon img {
+        width: 60px;
+        height: 60px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    }
+
+    .cart-notifier-content h3 {
+        color: #000000;
+        font-size: 24px;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    .cart-notifier-content p {
+        color: #666666;
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .cart-notifier-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .cart-notifier-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+        max-width: 130px;
+    }
+
+    .cart-notifier-btn.continue-btn {
+        background-color: #000000;
+        color: #ffffff;
+        border: 1px solid #000000;
+    }
+
+    .cart-notifier-btn.continue-btn:hover {
+        background-color: #333333;
+    }
+
+    .cart-notifier-btn.view-cart-btn {
+        background-color: #FF8246;
+        color: #ffffff;
+        border: 1px solid #FF8246;
+    }
+
+    .cart-notifier-btn.view-cart-btn:hover {
+        background-color: #e66a2e;
+    }
+
+    @keyframes fadeScale {
+        0% {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
     }
     </style>
 </head>
@@ -149,90 +559,7 @@ function getProductImageUrl($mediaPath) {
             <h1>Shopping Cart</h1>
         </div>
 
-        <?php if ($hasInactiveItems): ?>
-        <div class="inactive-warning">
-            <p>Some items in your cart are no longer available. These items have been greyed out and cannot be checked
-                out.</p>
-        </div>
-        <?php endif; ?>
-
-        <?php if (!empty($cartItems)): ?>
-        <!-- Cart Items -->
-        <div class="cart-container">
-            <div class="cart-items" id="cartItems">
-                <?php foreach ($cartItems as $item): 
-                        $imageUrl = getProductImageUrl($item['media_path'] ?? '');
-                        $subtotal = $item['price'] * $item['quantity'];
-                        $isActive = $item['is_active'] ? true : false;
-                        $inactiveClass = $isActive ? '' : 'inactive';
-                    ?>
-                <div class="cart-item <?= $inactiveClass ?>" data-id="<?= $item['cart_id'] ?>"
-                    data-active="<?= $isActive ? '1' : '0' ?>">
-                    <div class="cart-item-image">
-                        <img src="<?= htmlspecialchars($imageUrl) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
-                            onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
-                    </div>
-                    <div class="cart-item-details">
-                        <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
-
-                        <?php if ($isActive): ?>
-                        <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
-                        <p class="cart-item-price">₱<?= number_format($item['price'], 2) ?></p>
-                        <p class="stock-status">In Stock: <?= (int)$item['stock_quantity'] ?></p>
-                        <?php else: ?>
-                        <span class="inactive-badge">Product Unavailable</span>
-                        <p class="cart-item-seller" style="display: none;">
-                            <?= htmlspecialchars($item['business_name']) ?></p>
-                        <p class="cart-item-price" style="display: none;">₱<?= number_format($item['price'], 2) ?></p>
-                        <?php endif; ?>
-
-                        <div class="cart-item-controls">
-                            <div class="cart-item-quantity">
-                                <?php if ($isActive): ?>
-                                <label for="quantity-<?= $item['cart_id'] ?>" class="sr-only">Quantity</label>
-                                <input type="number" id="quantity-<?= $item['cart_id'] ?>" class="quantity-input"
-                                    value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
-                                    data-id="<?= $item['cart_id'] ?>">
-                                <button class="btn btn-secondary remove-btn" data-id="<?= $item['cart_id'] ?>">
-                                    Remove
-                                </button>
-                                <?php else: ?>
-                                <span class="inactive-message">This product is no longer available. Please remove it
-                                    from your cart.</span>
-                                <button class="btn btn-secondary remove-btn" data-id="<?= $item['cart_id'] ?>"
-                                    style="margin-top: 10px;">
-                                    Remove Item
-                                </button>
-                                <?php endif; ?>
-                            </div>
-                            <?php if ($isActive): ?>
-                            <p class="item-subtotal">
-                                Subtotal: <span class="subtotal-amount">₱<?= number_format($subtotal, 2) ?></span>
-                            </p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="cart-summary">
-                <div class="cart-total">
-                    <span class="total-label">Total (active items):</span>
-                    <span class="total-amount" id="cartTotal">₱<?= number_format($total, 2) ?></span>
-                </div>
-                <div class="cart-actions">
-                    <a href="product.php" class="btn btn-secondary">Continue Shopping</a>
-                    <?php if ($total > 0): ?>
-                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
-                    <?php else: ?>
-                    <button class="btn btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;">No Active
-                        Items</button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-        <?php else: ?>
+        <?php if (empty($allItems)): ?>
         <!-- Empty State -->
         <div class="empty-state">
             <div class="empty-state-content">
@@ -242,10 +569,122 @@ function getProductImageUrl($mediaPath) {
                 <a href="product.php" class="btn btn-primary">Start Shopping</a>
             </div>
         </div>
+        <?php else: ?>
+
+        <!-- Single Cart Container -->
+        <div class="cart-container">
+            <div class="cart-items" id="cartItems">
+                <!-- Available Items Section -->
+                <?php if (!empty($activeItems)): ?>
+                <div class="available-label">Available Items</div>
+
+                <?php foreach ($activeItems as $item): 
+                        $imageUrl = getProductImageUrl($item['media_path'] ?? '');
+                        $subtotal = $item['price'] * $item['quantity'];
+                    ?>
+                <div class="cart-item" data-id="<?= $item['cart_id'] ?>" data-active="1">
+                    <div class="cart-item-image">
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
+                            onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
+                        <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
+                        <p class="cart-item-price">₱<?= number_format($item['price'], 2) ?></p>
+                        <p class="stock-status">In Stock: <?= (int)$item['stock_quantity'] ?></p>
+
+                        <div class="cart-item-controls">
+                            <div class="cart-item-quantity">
+                                <label for="quantity-<?= $item['cart_id'] ?>" class="sr-only">Quantity</label>
+                                <input type="number" id="quantity-<?= $item['cart_id'] ?>" class="quantity-input"
+                                    value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock_quantity'] ?>"
+                                    data-id="<?= $item['cart_id'] ?>">
+                                <button class="btn btn-secondary remove-btn" data-id="<?= $item['cart_id'] ?>">
+                                    Remove
+                                </button>
+                            </div>
+                            <p class="item-subtotal">
+                                Subtotal: <span class="subtotal-amount">₱<?= number_format($subtotal, 2) ?></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                <?php endif; ?>
+
+                <!-- Unavailable Items Section -->
+                <?php if (!empty($unavailableItems)): ?>
+                <div class="unavailable-divider">Unavailable Items</div>
+
+                <?php foreach ($unavailableItems as $item): 
+                        $imageUrl = getProductImageUrl($item['media_path'] ?? '');
+                        $reason = $item['is_active'] ? 'Out of Stock' : 'Product Unavailable';
+                    ?>
+                <div class="cart-item unavailable" data-id="<?= $item['cart_id'] ?>" data-active="0">
+                    <div class="cart-item-image">
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" alt="<?= htmlspecialchars($item['name']) ?>"
+                            onerror="this.onerror=null; this.src='../assets/image/icons/package.svg';">
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title"><?= htmlspecialchars($item['name']) ?></h3>
+                        <p class="cart-item-seller">Sold by: <?= htmlspecialchars($item['business_name']) ?></p>
+                        <span class="unavailable-badge"><?= $reason ?></span>
+                        <div class="cart-item-controls">
+                            <div class="cart-item-quantity">
+                                <button class="btn btn-secondary remove-btn" data-id="<?= $item['cart_id'] ?>">
+                                    Remove Item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
+            <?php if (!empty($activeItems)): ?>
+            <div class="cart-summary">
+                <div class="cart-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount" id="cartTotal">₱<?= number_format($total, 2) ?></span>
+                </div>
+                <div class="cart-actions">
+                    <a href="product.php" class="btn btn-secondary">Continue Shopping</a>
+                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
+                </div>
+            </div>
+            <?php elseif (!empty($unavailableItems)): ?>
+            <!-- No active items, but have unavailable items - show message but no checkout -->
+            <div class="cart-summary">
+                <div class="cart-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount">₱0.00</span>
+                </div>
+                <div class="cart-actions">
+                    <a href="product.php" class="btn btn-secondary">Continue Shopping</a>
+                    <button class="btn btn-primary" disabled>Cannot Checkout</button>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
         <?php endif; ?>
     </main>
 
     <?php include_once('footer.php'); ?>
+
+    <div class="cart-notifier-modal" id="confirmModal">
+        <div class="cart-notifier-content">
+            <div class="cart-notifier-icon">
+                <img src="../assets/image/icons/trash.svg" alt="Remove">
+            </div>
+            <h3>Confirm Removal</h3>
+            <p>Are you sure you want to remove this item from your cart?</p>
+            <div class="cart-notifier-actions">
+                <button class="cart-notifier-btn continue-btn" id="cancelAction">Cancel</button>
+                <button class="cart-notifier-btn view-cart-btn" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../scripts/cart.js"></script>
 </body>

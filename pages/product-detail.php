@@ -254,7 +254,7 @@ if (empty($thumbnailUrls)) {
                             <span class="product-category"><?php echo htmlspecialchars($product['category']); ?></span>
                             <span class="product-seller">
                                 by <strong><?php echo htmlspecialchars($product['business_name']); ?></strong>
-                                <?php if ($product['is_verified']): ?>
+                                <?php if ($product['is_verified'] === 'verified'): ?>
                                 <span class="verified-badge">Verified</span>
                                 <?php endif; ?>
                             </span>

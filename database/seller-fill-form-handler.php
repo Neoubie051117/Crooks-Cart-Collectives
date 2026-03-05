@@ -128,10 +128,9 @@ function handleSellerUpdate() {
                 $updateSellerSQL .= ", id_document_path = :id_document_path";
             }
             
-            // Reset verification status to pending if files were updated
-            if ($identityPath || $idDocumentPath) {
-                $updateSellerSQL .= ", is_verified = 0, verification_date = NULL";
-            }
+            // Reset verification status to pending if files were updated OR if coming from rejected
+            // This ensures rejected sellers can reapply and be set to pending again
+            $updateSellerSQL .= ", is_verified = 'pending', verification_date = NULL";
             
             $updateSellerSQL .= " WHERE user_id = :user_id";
             
@@ -150,7 +149,7 @@ function handleSellerUpdate() {
             
             $stmt->execute($params);
         } else {
-            // Insert new seller - always set is_verified = 0 (pending)
+            // Insert new seller - set is_verified = 'pending'
             $insertSellerSQL = "
                 INSERT INTO sellers (
                     user_id, 
@@ -164,7 +163,7 @@ function handleSellerUpdate() {
                     :business_name,
                     :identity_path,
                     :id_document_path,
-                    0,
+                    'pending',
                     NOW()
                 )
             ";
@@ -189,7 +188,16 @@ function handleSellerUpdate() {
             $seller = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($seller) {
                 $_SESSION['seller_id'] = $seller['seller_id'];
-                $_SESSION['seller_verified'] = false;
+                $_SESSION['seller_verified'] = false; // Pending by default
+            }
+        } else {
+            // Existing seller - update session with pending status
+            $_SESSION['is_seller'] = true;
+            $_SESSION['seller_verified'] = false; // Reset to pending
+            
+            // Make sure seller_id is set
+            if (!isset($_SESSION['seller_id']) && isset($existingSeller['seller_id'])) {
+                $_SESSION['seller_id'] = $existingSeller['seller_id'];
             }
         }
         
@@ -200,7 +208,7 @@ function handleSellerUpdate() {
         
         echo json_encode([
             'status' => 'success',
-            'message' => $isSeller ? 'Seller information updated successfully!' : 'Seller application submitted successfully! Your application is now pending admin verification.',
+            'message' => $isSeller ? 'Seller information updated successfully! Your application has been resubmitted for verification.' : 'Seller application submitted successfully! Your application is now pending admin verification.',
             'data' => [
                 'first_name' => $userData['first_name'],
                 'last_name' => $userData['last_name']

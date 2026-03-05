@@ -29,7 +29,7 @@ if ($action === 'get_all_sellers') {
         }
         
         // Get all sellers with user information
-        // IMPORTANT: is_verified = 0 means pending verification
+        // MODIFIED: is_verified now uses ENUM values 'pending', 'verified', 'rejected'
         $stmt = $connection->prepare("
             SELECT 
                 s.seller_id, 
@@ -45,10 +45,10 @@ if ($action === 'get_all_sellers') {
             FROM sellers s
             LEFT JOIN users u ON s.user_id = u.user_id
             ORDER BY 
-                CASE 
-                    WHEN s.is_verified = 0 THEN 1  -- Pending first
-                    WHEN s.is_verified = 1 THEN 2  -- Verified second
-                    WHEN s.is_verified = 2 THEN 3  -- Rejected third
+                CASE s.is_verified
+                    WHEN 'pending' THEN 1
+                    WHEN 'verified' THEN 2
+                    WHEN 'rejected' THEN 3
                     ELSE 4
                 END,
                 s.date_applied DESC
@@ -60,20 +60,28 @@ if ($action === 'get_all_sellers') {
         
         // Count pending for debugging
         $pendingCount = 0;
+        $verifiedCount = 0;
+        $rejectedCount = 0;
+        
         foreach ($sellers as $seller) {
-            if ($seller['is_verified'] == 0) {
+            if ($seller['is_verified'] == 'pending') {
                 $pendingCount++;
                 error_log("Pending seller: ID=" . $seller['seller_id'] . 
                          ", Business=" . $seller['business_name'] . 
                          ", Name=" . $seller['first_name'] . " " . $seller['last_name']);
+            } elseif ($seller['is_verified'] == 'verified') {
+                $verifiedCount++;
+            } elseif ($seller['is_verified'] == 'rejected') {
+                $rejectedCount++;
             }
         }
+        
         error_log("Pending sellers count: " . $pendingCount);
+        error_log("Verified sellers count: " . $verifiedCount);
+        error_log("Rejected sellers count: " . $rejectedCount);
         
         // Format the data for display
         foreach ($sellers as &$seller) {
-            // Ensure is_verified is treated as integer
-            $seller['is_verified'] = (int)$seller['is_verified'];
             // Handle null business_name
             $seller['business_name'] = $seller['business_name'] ?? 'No Business Name';
             // Handle null user data
@@ -87,7 +95,9 @@ if ($action === 'get_all_sellers') {
             'status' => 'success', 
             'data' => $sellers,
             'count' => count($sellers),
-            'pending' => $pendingCount
+            'pending' => $pendingCount,
+            'verified' => $verifiedCount,
+            'rejected' => $rejectedCount
         ]);
         
     } catch (PDOException $e) {
@@ -105,18 +115,18 @@ if ($action === 'get_stats') {
     try {
         $stats = [];
         
-        // Count pending verifications (is_verified = 0)
-        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 0");
+        // Count pending verifications (is_verified = 'pending')
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'pending'");
         $stmt->execute();
         $stats['pending_verifications'] = $stmt->fetch()['count'];
         
-        // Count verified sellers (is_verified = 1)
-        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 1");
+        // Count verified sellers (is_verified = 'verified')
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'verified'");
         $stmt->execute();
         $stats['verified_sellers'] = $stmt->fetch()['count'];
         
-        // Count rejected sellers (is_verified = 2)
-        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 2");
+        // Count rejected sellers (is_verified = 'rejected')
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'rejected'");
         $stmt->execute();
         $stats['rejected_sellers'] = $stmt->fetch()['count'];
         
@@ -138,7 +148,7 @@ if ($action === 'get_stats') {
 if ($action === 'verify' && isset($_POST['seller_id'])) {
     $seller_id = (int)$_POST['seller_id'];
     try {
-        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 1, verification_date = NOW() WHERE seller_id = ?");
+        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 'verified', verification_date = NOW() WHERE seller_id = ?");
         $stmt->execute([$seller_id]);
         $rowCount = $stmt->rowCount();
         error_log("Verified seller ID $seller_id, rows affected: $rowCount");
@@ -153,7 +163,7 @@ if ($action === 'verify' && isset($_POST['seller_id'])) {
 if ($action === 'reject' && isset($_POST['seller_id'])) {
     $seller_id = (int)$_POST['seller_id'];
     try {
-        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 2, verification_date = NOW() WHERE seller_id = ?");
+        $stmt = $connection->prepare("UPDATE sellers SET is_verified = 'rejected', verification_date = NOW() WHERE seller_id = ?");
         $stmt->execute([$seller_id]);
         $rowCount = $stmt->rowCount();
         error_log("Rejected seller ID $seller_id, rows affected: $rowCount");

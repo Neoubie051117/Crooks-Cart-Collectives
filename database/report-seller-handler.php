@@ -30,13 +30,11 @@ $reporter_id = $_SESSION['user_id'];
 
 try {
     // Check if seller exists and is verified
-    $checkSeller = $connection->prepare("SELECT seller_id FROM sellers WHERE seller_id = ? AND is_verified = 1");
+    $checkSeller = $connection->prepare("SELECT seller_id FROM sellers WHERE seller_id = ? AND is_verified = 'verified'");
     $checkSeller->execute([$seller_id]);
     
-    if (!$checkSeller->fetch()) {
-        echo json_encode(["status" => "error", "message" => "Seller not found or not verified."]);
-        exit;
-    }
+    // Should be (check for 'verified'):
+    $checkSeller = $connection->prepare("SELECT seller_id FROM sellers WHERE seller_id = ? AND is_verified = 'verified'");
     
     // Insert report
     $query = "INSERT INTO seller_reports (reporter_id, seller_id, reason, details, status, created_at) 

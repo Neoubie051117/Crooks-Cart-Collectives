@@ -91,7 +91,8 @@ function getDataStorageRoot() {
     $projectRoot = dirname($currentDir, 2);  // /.../Crooks-Cart-Collectives/
     $parentDir = dirname($projectRoot);  // /.../ (parent of project root)
     
-    $storagePath = $parentDir . '/Crooks-Data-Storage/';
+    // FIXED: Ensure consistent path separator and no trailing slash issues
+    $storagePath = rtrim($parentDir, '/\\') . '/Crooks-Data-Storage/';
     
     logStorageMessage("Path calculation", "DEBUG", [
         'current_dir' => $currentDir,
@@ -101,6 +102,50 @@ function getDataStorageRoot() {
     ]);
     
     return $storagePath;
+}
+
+/**
+ * Get the full server path for a stored file
+ * 
+ * @param string $relativePath Path relative to project root (should start with Crooks-Data-Storage/)
+ * @return string Full server path to the file
+ */
+function getAdminStoragePath($relativePath) {
+    if (empty($relativePath)) {
+        return null;
+    }
+    
+    // FIXED: Don't prepend project root - the path should already be absolute or relative to filesystem
+    // The relativePath should be something like: "Crooks-Data-Storage/administrators/1/profile/profile.png"
+    
+    // Check if it's already an absolute path
+    if (strpos($relativePath, 'D:\\') === 0 || strpos($relativePath, '/') === 0) {
+        return $relativePath;
+    }
+    
+    // Get the storage root
+    $storageRoot = getDataStorageRoot();
+    
+    // Extract just the filename part from the relative path
+    // The relativePath might be "Crooks-Data-Storage/administrators/1/profile/profile.png"
+    // We need to get the part after "Crooks-Data-Storage/"
+    if (strpos($relativePath, 'Crooks-Data-Storage/') === 0) {
+        $relativePath = substr($relativePath, strlen('Crooks-Data-Storage/'));
+    }
+    
+    // Combine storage root with the remaining path
+    $fullPath = $storageRoot . $relativePath;
+    
+    // Normalize path separators
+    $fullPath = str_replace('\\', '/', $fullPath);
+    
+    logStorageMessage("getAdminStoragePath result", "DEBUG", [
+        'input_path' => $relativePath,
+        'storage_root' => $storageRoot,
+        'full_path' => $fullPath
+    ]);
+    
+    return $fullPath;
 }
 
 /**
@@ -165,9 +210,7 @@ function ensureDataStorageExists() {
         $result['details']['writable'] = is_writable($storageRoot);
         $result['details']['permissions'] = substr(sprintf('%o', fileperms($storageRoot)), -4);
         
-        // Create security files
-        file_put_contents($storageRoot . 'index.html', '<!DOCTYPE html><html><head><title>Access Denied</title></head><body><h1>Access Denied</h1></body></html>');
-        file_put_contents($storageRoot . '.htaccess', "Order Deny,Allow\nDeny from all");
+        // REMOVED: No .htaccess or index.html files are created
         
         logStorageMessage("Successfully created storage directory", "INFO", $result['details']);
         
@@ -277,6 +320,145 @@ function createAdminStorage($adminId) {
 }
 
 /**
+ * ===== FIXED: Get the URL to access an admin file =====
+ * This is the missing function that was causing the error
+ * 
+ * @param string $path Path to the file (relative to project root)
+ * @return string URL to access the file
+ */
+function getAdminFileUrl($path) {
+    if (empty($path)) {
+        return '../assets/image/icons/user-profile-circle.svg';
+    }
+    
+    logStorageMessage("Generating URL for path", "DEBUG", ['path' => $path]);
+    
+    // If the path already starts with a protocol (http://, https://), return as is
+    if (filter_var($path, FILTER_VALIDATE_URL)) {
+        return $path;
+    }
+    
+    // If the path is already a relative path to an icon
+    if (strpos($path, '../assets/') === 0) {
+        return $path;
+    }
+    
+    // For files in Crooks-Data-Storage, use this same file as a server
+    if (strpos($path, 'Crooks-Data-Storage/') === 0) {
+        $encodedPath = urlencode($path);
+        return '../database/admin-data-storage-handler.php?action=serve&path=' . $encodedPath;
+    }
+    
+    // Default fallback
+    return '../assets/image/icons/user-profile-circle.svg';
+}
+
+/**
+ * Serve an admin file (outputs file directly)
+ * 
+ * @param string $relativePath Path relative to project root
+ */
+function serveAdminFile($relativePath) {
+    if (empty($relativePath)) {
+        http_response_code(400);
+        die('File path required');
+    }
+    
+    logStorageMessage("Serving admin file", "INFO", ['path' => $relativePath]);
+    
+    // Security: Prevent directory traversal
+    $relativePath = str_replace(['../', '..\\', './', '.\\'], '', $relativePath);
+    
+    // FIXED: More flexible path validation - allow both admin and user paths
+    // Check if path starts with Crooks-Data-Storage/ (any subpath)
+    if (strpos($relativePath, 'Crooks-Data-Storage/') !== 0) {
+        logStorageMessage("Invalid file path - doesn't start with Crooks-Data-Storage/", "ERROR", ['path' => $relativePath]);
+        http_response_code(403);
+        die('Invalid file path');
+    }
+    
+    // Check authentication - allow if admin is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        logStorageMessage("Authentication required for file access", "ERROR");
+        http_response_code(403);
+        die('Authentication required');
+    }
+    
+    // FIXED: Remove the strict admin ID checking - admins should be able to view seller files
+    // This was causing the 403 error for user/seller files
+    
+    $fullPath = getAdminStoragePath($relativePath);
+    
+    logStorageMessage("Attempting to serve file", "INFO", [
+        'relative_path' => $relativePath,
+        'full_path' => $fullPath,
+        'file_exists' => file_exists($fullPath)
+    ]);
+    
+    if (!$fullPath || !file_exists($fullPath)) {
+        http_response_code(404);
+        logStorageMessage("File not found", "ERROR", ['path' => $fullPath]);
+        die('File not found');
+    }
+    
+    // Get file extension
+    $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+    
+    // Set appropriate content type
+    $contentTypes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'svg' => 'image/svg+xml'
+    ];
+    
+    $contentType = $contentTypes[$extension] ?? 'application/octet-stream';
+    
+    // Set headers
+    header('Content-Type: ' . $contentType);
+    header('Content-Length: ' . filesize($fullPath));
+    header('Cache-Control: public, max-age=86400'); // Cache for 1 day
+    header('X-Content-Type-Options: nosniff');
+    
+    // Output file
+    readfile($fullPath);
+    exit;
+}
+
+/**
+ * Delete admin media files
+ * 
+ * @param int $adminId
+ * @param string $type 'profile' or other
+ * @return bool
+ */
+function deleteAdminMedia($adminId, $type = 'profile') {
+    if (empty($adminId) || !is_numeric($adminId)) {
+        return false;
+    }
+    
+    $storageRoot = getDataStorageRoot();
+    
+    if ($type === 'profile') {
+        $profileDir = $storageRoot . 'administrators/' . $adminId . '/profile/';
+        if (is_dir($profileDir)) {
+            $files = glob($profileDir . '*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            logStorageMessage("Deleted admin profile files", "INFO", ['admin_id' => $adminId]);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
  * Process admin file upload
  */
 function processAdminFileUpload($type, $adminId, $file) {
@@ -380,20 +562,12 @@ function processAdminFileUpload($type, $adminId, $file) {
     ];
 }
 
-// Export functions for other files
-$storageFunctions = [
-    'logStorageMessage',
-    'getDataStorageRoot',
-    'ensureDataStorageExists',
-    'createAdminStorage',
-    'processAdminFileUpload',
-    'processAdminProfileUpload',
-    'getAdminStorageFullPath',
-    'adminStorageFileExists',
-    'getAdminFileUrl',
-    'serveAdminFile',
-    'deleteAdminMedia'
-];
+/**
+ * Alias for processAdminFileUpload for profile pictures
+ */
+function processAdminProfileUpload($adminId, $file) {
+    return processAdminFileUpload('profile', $adminId, $file);
+}
 
 // Handle direct requests
 if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {

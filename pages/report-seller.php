@@ -16,7 +16,7 @@ try {
         SELECT s.seller_id, u.username, s.business_name 
         FROM sellers s
         JOIN users u ON s.user_id = u.user_id
-        WHERE s.is_verified = 1 AND u.user_id != ?
+        WHERE s.is_verified = 'verified' AND u.user_id != ?
     ");
     $stmt->execute([$userId]);
     $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);

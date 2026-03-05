@@ -11,10 +11,10 @@ filesToCheck = [
     # DATABASE
     # =========================
     
-    "/database/schema/dbCreation.sql",
-    "/database/schema/dummyAdmin.sql",
-    "/database/schema/dummySeller.sql",
-    "/database/schema/dummyUser.sql",
+    "/admin/schema/dbCreation.sql",
+    "/admin/schema/dummyAdmin.sql",
+    "/admin/schema/dummySeller.sql",
+    "/admin/schema/dummyUser.sql",
     
     # =========================
     # ADMIN ROOT
@@ -90,7 +90,7 @@ filesToCheck = [
     # "/admin/styles/admin-sign-out.css",
     # "/admin/styles/admin-sign-up.css",
     # "/admin/styles/admin-terms-and-conditions.css",
-    # "/admin/styles/admin-verify-sellers.css"
+    # "/admin/styles/admin-verify-sellers.css",
 
     "/database/database-connect.php",
     "/database/sign-in-handler.php",

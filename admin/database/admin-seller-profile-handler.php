@@ -47,7 +47,7 @@ function getSellerDetails($sellerId) {
     global $connection;
     
     try {
-        // Get seller with user information - FIXED: Changed u.date_joined to u.date_created
+        // Get seller with user information - MODIFIED: is_verified now uses ENUM
         $stmt = $connection->prepare("
             SELECT 
                 s.seller_id,
@@ -103,39 +103,43 @@ function getSellerDetails($sellerId) {
             $seller['age'] = $age;
         }
         
-        // Get document URLs using the admin data storage handler
-        // These paths are from sellers table: identity_path and id_document_path
-        // They point to files in Crooks-Data-Storage/users/...
+        // ===== FIXED: Get document URLs using the admin data storage handler =====
         $seller['identity_url'] = '';
         $seller['id_document_url'] = '';
         
         if (!empty($seller['identity_path'])) {
-            // Check if it's already a full path with Crooks-Data-Storage prefix
+            // Check if the path is already in the external storage format
             if (strpos($seller['identity_path'], 'Crooks-Data-Storage/') === 0) {
-                // Use the admin file serving mechanism
-                $seller['identity_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['identity_path']);
+                // Use the getAdminFileUrl function to generate the correct URL
+                $seller['identity_url'] = getAdminFileUrl($seller['identity_path']);
+                error_log("Seller identity URL generated: " . $seller['identity_url']);
             } else {
-                // For backward compatibility, assume it's a relative path
+                // Fallback for old paths
                 $seller['identity_url'] = '../../' . $seller['identity_path'];
             }
         }
         
         if (!empty($seller['id_document_path'])) {
             if (strpos($seller['id_document_path'], 'Crooks-Data-Storage/') === 0) {
-                $seller['id_document_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['id_document_path']);
+                $seller['id_document_url'] = getAdminFileUrl($seller['id_document_path']);
+                error_log("Seller ID document URL generated: " . $seller['id_document_url']);
             } else {
                 $seller['id_document_url'] = '../../' . $seller['id_document_path'];
             }
         }
         
-        // Profile picture from users table
+        // ===== FIXED: Profile picture from users table =====
         $seller['profile_picture_url'] = '';
         if (!empty($seller['profile_picture'])) {
             if (strpos($seller['profile_picture'], 'Crooks-Data-Storage/') === 0) {
-                $seller['profile_picture_url'] = '../database/admin-data-storage-handler.php?action=serve&path=' . urlencode($seller['profile_picture']);
+                $seller['profile_picture_url'] = getAdminFileUrl($seller['profile_picture']);
+                error_log("Seller profile picture URL generated: " . $seller['profile_picture_url']);
             } else {
                 $seller['profile_picture_url'] = '../../' . $seller['profile_picture'];
             }
+        } else {
+            // Default profile picture
+            $seller['profile_picture_url'] = '../assets/image/icons/user-profile-circle.svg';
         }
         
         // Get full name
@@ -172,7 +176,7 @@ function getSellerDetails($sellerId) {
 }
 
 /**
- * Verify a seller (set is_verified = 1)
+ * Verify a seller (set is_verified = 'verified')
  */
 function verifySeller($sellerId) {
     global $connection;
@@ -180,7 +184,7 @@ function verifySeller($sellerId) {
     try {
         $stmt = $connection->prepare("
             UPDATE sellers 
-            SET is_verified = 1, verification_date = NOW() 
+            SET is_verified = 'verified', verification_date = NOW() 
             WHERE seller_id = ?
         ");
         $stmt->execute([$sellerId]);
@@ -204,7 +208,7 @@ function verifySeller($sellerId) {
 }
 
 /**
- * Reject a seller (set is_verified = 2)
+ * Reject a seller (set is_verified = 'rejected')
  */
 function rejectSeller($sellerId) {
     global $connection;
@@ -212,7 +216,7 @@ function rejectSeller($sellerId) {
     try {
         $stmt = $connection->prepare("
             UPDATE sellers 
-            SET is_verified = 2, verification_date = NOW() 
+            SET is_verified = 'rejected', verification_date = NOW() 
             WHERE seller_id = ?
         ");
         $stmt->execute([$sellerId]);

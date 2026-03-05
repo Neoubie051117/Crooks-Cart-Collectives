@@ -40,9 +40,10 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
         try {
             // Include database connection
             require_once(dirname(__FILE__) . '/../database/admin-database-connect.php');
+            require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
             
-            // Fetch admin data including profile picture
-            $stmt = $connection->prepare("SELECT first_name, last_name, profile_picture FROM administrators WHERE admin_id = ?");
+            // Fetch admin data including profile picture - FIXED: Changed created_at to date_joined
+            $stmt = $connection->prepare("SELECT first_name, last_name, profile_picture, date_joined FROM administrators WHERE admin_id = ?");
             $stmt->execute([$adminId]);
             $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -57,20 +58,26 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
                 if (!empty($adminData['profile_picture'])) {
                     $_SESSION['admin_profile_picture'] = $adminData['profile_picture'];
                     
-                    // ===== FIXED: Handle external storage path =====
-                    // The profile_picture path is stored as: "Crooks-Data-Storage/administrators/1/profile/profile.jpg"
-                    $profilePath = $adminData['profile_picture'];
-                    
-                    // Check if it's an external storage path (starts with Crooks-Data-Storage/)
-                    if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
-                        // Use the admin-data-storage-handler.php to serve the file
-                        // The handler is at: ../database/admin-data-storage-handler.php
-                        $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                    // ===== FIXED: Use getAdminFileUrl function from data-storage-handler =====
+                    // Check if the function exists
+                    if (function_exists('getAdminFileUrl')) {
+                        $adminProfilePic = getAdminFileUrl($adminData['profile_picture']);
+                        error_log("Admin header - using getAdminFileUrl: " . $adminProfilePic);
                     } else {
-                        // It's a relative path within the project
-                        $adminProfilePic = $pathPrefix . $profilePath;
+                        // Fallback to manual URL generation
+                        $profilePath = $adminData['profile_picture'];
+                        if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                            $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                        } else {
+                            $adminProfilePic = $pathPrefix . $profilePath;
+                        }
+                        error_log("Admin header - using fallback URL: " . $adminProfilePic);
                     }
+                } else {
+                    error_log("Admin header - no profile picture in database for admin ID: " . $adminId);
                 }
+            } else {
+                error_log("Admin header - no admin data found for ID: " . $adminId);
             }
         } catch (Exception $e) {
             error_log("Error fetching admin data in header: " . $e->getMessage());
@@ -80,14 +87,34 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
         if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
             $profilePath = $_SESSION['admin_profile_picture'];
             
-            // ===== FIXED: Handle external storage path =====
-            if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
-                // Use the admin-data-storage-handler.php to serve the file
-                $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
-            } else {
-                // It's a relative path within the project
-                $adminProfilePic = $pathPrefix . $profilePath;
+            // ===== FIXED: Use getAdminFileUrl function from data-storage-handler =====
+            try {
+                // Try to include the handler if not already included
+                if (!function_exists('getAdminFileUrl')) {
+                    require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
+                }
+                
+                if (function_exists('getAdminFileUrl')) {
+                    $adminProfilePic = getAdminFileUrl($profilePath);
+                } else {
+                    // Fallback
+                    if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                        $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                    } else {
+                        $adminProfilePic = $pathPrefix . $profilePath;
+                    }
+                }
+            } catch (Exception $e) {
+                error_log("Error generating profile URL from session: " . $e->getMessage());
+                // Fallback
+                if (strpos($profilePath, 'Crooks-Data-Storage/') === 0) {
+                    $adminProfilePic = $pathPrefix . 'database/admin-data-storage-handler.php?action=serve&path=' . urlencode($profilePath);
+                } else {
+                    $adminProfilePic = $pathPrefix . $profilePath;
+                }
             }
+        } else {
+            error_log("Admin header - no profile picture in session for admin ID: " . $adminId);
         }
     }
 }

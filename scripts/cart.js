@@ -1,12 +1,37 @@
 /* Crooks-Cart-Collectives/scripts/cart.js */
-/* Shopping Cart JavaScript - Updated to handle inactive products */
+/* REVISED: Refreshes page when last item is removed */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
-    console.log('Cart.js loaded');
+    console.log('Cart.js loaded - Final version');
 
-    // ===== UTILITY FUNCTIONS =====
+    // ===== MODAL ELEMENTS =====
+    const confirmModal = document.getElementById('confirmModal');
+    const cancelAction = document.getElementById('cancelAction');
+    const confirmAction = document.getElementById('confirmAction');
+
+    // ===== STATE =====
+    let currentRemoveId = null;
+    let isProcessing = false;
+
+    // ===== MODAL FUNCTIONS =====
+    function showConfirmModal(itemId) {
+        currentRemoveId = itemId;
+        if (confirmModal) {
+            confirmModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function hideConfirmModal() {
+        if (confirmModal) {
+            confirmModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        currentRemoveId = null;
+    }
+
     function showMessage(message, type = 'error') {
         const existingMsg = document.querySelector('.cart-message');
         if (existingMsg) existingMsg.remove();
@@ -19,57 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             if (msgDiv.parentNode) msgDiv.remove();
         }, 3000);
-    }
-
-    function showConfirmation(title, message) {
-        return new Promise((resolve) => {
-            const existingModal = document.querySelector('.cart-notifier-modal');
-            if (existingModal) existingModal.remove();
-
-            const modal = document.createElement('div');
-            modal.className = 'cart-notifier-modal active';
-            modal.id = 'confirmModal';
-            modal.innerHTML = `
-                <div class="cart-notifier-content">
-                    <div class="cart-notifier-icon">
-                        <img src="../assets/image/icons/trash.svg" 
-                             alt="Delete" 
-                             style="width: 60px; height: 60px; filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);"
-                             onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
-                    </div>
-                    <h3>${title}</h3>
-                    <p>${message}</p>
-                    <div class="cart-notifier-actions">
-                        <button id="cancelAction" class="cart-notifier-btn continue-btn">Cancel</button>
-                        <button id="confirmAction" class="cart-notifier-btn view-cart-btn">Confirm</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            function cleanup() {
-                if (modal.parentNode) modal.remove();
-            }
-
-            document.getElementById('cancelAction').addEventListener('click', (e) => {
-                e.preventDefault();
-                cleanup();
-                resolve(false);
-            });
-
-            document.getElementById('confirmAction').addEventListener('click', (e) => {
-                e.preventDefault();
-                cleanup();
-                resolve(true);
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    cleanup();
-                    resolve(false);
-                }
-            });
-        });
     }
 
     async function updateHeaderCartCount() {
@@ -85,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ===== QUANTITY INPUT HANDLERS - Only for active items =====
+    // ===== QUANTITY INPUT HANDLERS =====
     document.querySelectorAll('.cart-item[data-active="1"] .quantity-input').forEach(input => {
         let timeoutId;
 
@@ -160,9 +134,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     this.defaultValue = quantity;
                     showMessage('Cart updated successfully', 'success');
+                    
+                } else if (result.inactive) {
+                    showMessage(result.message, 'error');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
                 } else {
                     this.value = originalValue;
                     showMessage(result.message || 'Error updating quantity', 'error');
+                    
+                    if (result.max_stock) {
+                        this.max = result.max_stock;
+                        if (parseInt(this.value) > result.max_stock) {
+                            this.value = result.max_stock;
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Update error:', error);
@@ -182,25 +169,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== REMOVE BUTTON HANDLERS - Works for all items =====
+    // ===== REMOVE BUTTON HANDLERS =====
     document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const itemId = this.dataset.id;
+            showConfirmModal(itemId);
+        });
+    });
+
+    // ===== MODAL BUTTON HANDLERS =====
+    if (cancelAction) {
+        cancelAction.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideConfirmModal();
+        });
+    }
+
+    if (confirmAction) {
+        confirmAction.addEventListener('click', async function(e) {
             e.preventDefault();
             
-            const confirmed = await showConfirmation(
-                'Confirm Removal',
-                'Are you sure you want to remove this item from your cart?'
-            );
+            if (!currentRemoveId || isProcessing) return;
 
-            if (!confirmed) return;
-
-            const itemId = this.dataset.id;
-            const cartItem = this.closest('.cart-item');
-
-            this.disabled = true;
+            isProcessing = true;
             const originalText = this.textContent;
             this.textContent = 'Removing...';
-            if (cartItem) cartItem.classList.add('loading');
+            this.disabled = true;
+
+            const cartItem = document.querySelector(`.cart-item[data-id="${currentRemoveId}"]`);
 
             try {
                 const response = await fetch('../database/cart-handler.php', {
@@ -210,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: new URLSearchParams({
                         action: 'remove',
-                        cart_item_id: itemId
+                        cart_item_id: currentRemoveId
                     })
                 });
 
@@ -224,6 +221,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         setTimeout(() => {
                             if (cartItem.parentNode) cartItem.remove();
 
+                            // Check if cart is now empty
+                            if (document.querySelectorAll('.cart-item').length === 0) {
+                                // Reload the page to show empty state
+                                window.location.reload();
+                                return;
+                            }
+
+                            // Recalculate total from remaining active items
                             let newTotal = 0;
                             document.querySelectorAll('.cart-item[data-active="1"] .subtotal-amount').forEach(span => {
                                 newTotal += parseFloat(span.textContent.replace(/[^0-9.-]+/g, ''));
@@ -234,43 +239,67 @@ document.addEventListener('DOMContentLoaded', function() {
                                 totalElement.textContent = '₱' + newTotal.toFixed(2);
                             }
 
-                            showMessage('Item removed from cart', 'success');
-                            updateHeaderCartCount();
-
-                            if (document.querySelectorAll('.cart-item').length === 0) {
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1500);
-                            } else {
-                                // Check if all remaining items are inactive
-                                const activeItems = document.querySelectorAll('.cart-item[data-active="1"]');
-                                const checkoutBtn = document.querySelector('.cart-actions .btn-primary');
-                                if (checkoutBtn && activeItems.length === 0) {
-                                    checkoutBtn.textContent = 'No Active Items';
-                                    checkoutBtn.disabled = true;
-                                    checkoutBtn.style.opacity = '0.5';
-                                    checkoutBtn.style.cursor = 'not-allowed';
+                            // Check if all remaining items are unavailable
+                            const activeItems = document.querySelectorAll('.cart-item[data-active="1"]');
+                            const unavailableItems = document.querySelectorAll('.cart-item[data-active="0"]');
+                            
+                            // Update summary section if needed
+                            const cartSummary = document.querySelector('.cart-summary');
+                            if (cartSummary) {
+                                if (activeItems.length === 0 && unavailableItems.length > 0) {
+                                    // Only unavailable items left - disable checkout
+                                    const checkoutBtn = cartSummary.querySelector('.btn-primary');
+                                    if (checkoutBtn) {
+                                        checkoutBtn.textContent = 'Cannot Checkout';
+                                        checkoutBtn.disabled = true;
+                                        checkoutBtn.removeAttribute('href');
+                                        checkoutBtn.style.pointerEvents = 'none';
+                                    }
+                                    
+                                    // Update total to 0
+                                    if (totalElement) {
+                                        totalElement.textContent = '₱0.00';
+                                    }
                                 }
                             }
+
+                            showMessage('Item removed from cart', 'success');
+                            updateHeaderCartCount();
                         }, 300);
                     }
                 } else {
                     showMessage(result.message || 'Error removing item', 'error');
-                    this.disabled = false;
-                    this.textContent = originalText;
-                    if (cartItem) cartItem.classList.remove('loading');
                 }
             } catch (error) {
                 console.error('Remove error:', error);
                 showMessage('Network error. Please try again.', 'error');
-                this.disabled = false;
+            } finally {
+                isProcessing = false;
                 this.textContent = originalText;
-                if (cartItem) cartItem.classList.remove('loading');
+                this.disabled = false;
+                hideConfirmModal();
             }
         });
+    }
+
+    // Close modal when clicking outside
+    if (confirmModal) {
+        confirmModal.addEventListener('click', function(e) {
+            if (e.target === confirmModal) {
+                hideConfirmModal();
+            }
+        });
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && confirmModal && confirmModal.classList.contains('active')) {
+            hideConfirmModal();
+        }
     });
 
-    // Update cart count on page load
+    // ===== INITIALIZATION =====
     updateHeaderCartCount();
+    
     console.log('Cart.js initialization complete');
 });

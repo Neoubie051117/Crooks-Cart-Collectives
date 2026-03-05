@@ -1,6 +1,6 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- REVISED SCHEMA - Following the requested changes
+-- REVISED SCHEMA - is_verify changed from BOOLEAN to ENUM
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -25,7 +25,7 @@ CREATE TABLE users (
 );
 
 -- =====================================================
--- ADMINISTRATORS TABLE (REVISED with profile_picture)
+-- ADMINISTRATORS TABLE
 -- =====================================================
 CREATE TABLE administrators (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,7 +35,7 @@ CREATE TABLE administrators (
     contact_number VARCHAR(15),
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    profile_picture VARCHAR(255),  -- Added profile_picture field
+    profile_picture VARCHAR(255),
     date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -52,15 +52,15 @@ CREATE TABLE customers (
 );
 
 -- =====================================================
--- SELLERS TABLE
+-- SELLERS TABLE - MODIFIED: is_verified changed from BOOLEAN to ENUM
 -- =====================================================
 CREATE TABLE sellers (
     seller_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     business_name VARCHAR(100),
-    identity_path VARCHAR(255),       -- path to formal picture
-    id_document_path VARCHAR(255),    -- path to valid ID document
-    is_verified BOOLEAN DEFAULT FALSE,
+    identity_path VARCHAR(255),
+    id_document_path VARCHAR(255),
+    is_verified ENUM('pending', 'rejected', 'verified') DEFAULT 'pending',
     verification_date TIMESTAMP NULL,
     date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     rating DECIMAL(3, 2) DEFAULT 0.00,

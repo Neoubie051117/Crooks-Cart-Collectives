@@ -79,6 +79,7 @@ if ($action === 'get_logs') {
         }
         
         // ===== SELLER APPLICATIONS (from sellers table) =====
+        // MODIFIED: is_verified now uses ENUM values 'pending', 'verified', 'rejected'
         if ($type === 'all' || $type === 'seller_application') {
             if (isset($columnInfo['sellers']) && isset($columnInfo['users'])) {
                 $dateColumn = getDateColumn($columnInfo['sellers'], ['date_applied', 'created_at', 'application_date', 'joined_date']);
@@ -89,13 +90,13 @@ if ($action === 'get_logs') {
                             s.seller_id,
                             COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Unknown User') as user_name,
                             COALESCE(s.business_name, 'No Business Name') as business_name,
-                            CASE 
-                                WHEN s.is_verified = 0 THEN 'Pending'
-                                WHEN s.is_verified = 1 THEN 'Verified'
-                                WHEN s.is_verified = 2 THEN 'Rejected'
+                            s.is_verified as verification_status,
+                            CASE s.is_verified
+                                WHEN 'pending' THEN 'Pending'
+                                WHEN 'verified' THEN 'Verified'
+                                WHEN 'rejected' THEN 'Rejected'
                                 ELSE 'Unknown'
-                            END as verification_status,
-                            s.is_verified as status_code,
+                            END as status_display,
                             'Seller Applicant' as role,
                             s.$dateColumn as timestamp
                         FROM sellers s
@@ -108,7 +109,7 @@ if ($action === 'get_logs') {
                     
                     // Format the logs for display
                     foreach ($sellerLogs as &$log) {
-                        $statusText = $log['verification_status'];
+                        $statusText = $log['status_display'];
                         $log['description'] = $log['user_name'] . ' applied as seller - Business: "' . $log['business_name'] . '" (Status: ' . $statusText . ')';
                     }
                     

@@ -1,4 +1,3 @@
-<?php // PHP File Content ?>
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -8,13 +7,28 @@ if (session_status() === PHP_SESSION_NONE) {
 // Check if user is logged in (regular user/customer/seller)
 $isUserLoggedIn = isset($_SESSION['user_id']);
 
-// Check if user is a seller
+// Check if user is a seller AND verified (from session or database)
 $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+$sellerVerified = isset($_SESSION['seller_verified']) && $_SESSION['seller_verified'] === true;
 
-// ===== IMPORTANT: DO NOT check for admin_id in public header =====
-// Admin users should use the admin panel, not the public interface
-// If an admin tries to access public pages, treat them as NOT logged in
-// This prevents admin session from affecting public navigation
+// If user is logged in but seller status might be stale, verify from database
+if ($isUserLoggedIn && $isSeller) {
+    // Only attempt to verify if we have a user_id
+    if (isset($_SESSION['user_id'])) {
+        try {
+            // Include database connection if not already included
+            if (!isset($connection)) {
+                $connection = null; // Will be set by including database-connect.php
+            }
+            
+            // We'll check database in a separate block if needed
+            // For performance, we rely on session for header
+            // But if header is included after database connection, we can verify
+        } catch (Exception $e) {
+            // Silently fail - use session values
+        }
+    }
+}
 
 // Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -71,13 +85,19 @@ if ($is_root) {
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
                 <?php else: ?>
                 <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
-                <?php if ($isSeller): ?>
-                <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
+                <?php if ($isSeller && $sellerVerified): ?>
+                <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Sell -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
                 <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
+                <?php elseif ($isSeller): ?>
+                <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders (NO SELL LINK) -->
+                <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+                <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
+                <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+                <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
                 <?php else: ?>
                 <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
@@ -105,13 +125,19 @@ if ($is_root) {
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
         <?php else: ?>
         <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
-        <?php if ($isSeller): ?>
-        <!-- LOGGED IN & SELLER: My Account, Shop, Cart, Orders, Sell -->
+        <?php if ($isSeller && $sellerVerified): ?>
+        <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Sell -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
         <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
         <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
+        <?php elseif ($isSeller): ?>
+        <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders (NO SELL LINK) -->
+        <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
+        <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
+        <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
+        <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
         <?php else: ?>
         <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>

@@ -150,47 +150,141 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ============= FIXED: Function to test if image loads =============
+    function testImageLoad(url, callback) {
+        const img = new Image();
+        img.onload = function() {
+            console.log('Image loaded successfully:', url);
+            callback(true);
+        };
+        img.onerror = function() {
+            console.log('Image failed to load:', url);
+            callback(false);
+        };
+        img.src = url;
+    }
+
+    // ============= FIXED: Function to set document preview =============
+    function setDocumentPreview(previewElement, statusElement, linkElement, url, label) {
+        if (!previewElement) {
+            console.error('Preview element not found for', label);
+            return;
+        }
+
+        if (url) {
+            console.log(`Setting ${label} preview with URL:`, url);
+            
+            // Test if image loads first
+            testImageLoad(url, function(success) {
+                if (success) {
+                    // Set background image
+                    previewElement.style.backgroundImage = `url('${url}')`;
+                    previewElement.style.backgroundSize = 'cover';
+                    previewElement.style.backgroundPosition = 'center';
+                    previewElement.style.backgroundRepeat = 'no-repeat';
+                    
+                    // Add a class to indicate image is loaded
+                    previewElement.classList.add('image-loaded');
+                    
+                    // Update status
+                    if (statusElement) {
+                        statusElement.textContent = 'Uploaded';
+                    }
+                    
+                    // Update link
+                    if (linkElement) {
+                        linkElement.href = url;
+                        linkElement.style.display = 'inline-block';
+                        linkElement.onclick = function(e) {
+                            e.preventDefault();
+                            window.open(url, '_blank');
+                        };
+                    }
+                    
+                    console.log(`${label} preview set successfully`);
+                } else {
+                    // Image failed to load
+                    previewElement.style.backgroundImage = 'none';
+                    previewElement.classList.remove('image-loaded');
+                    
+                    if (statusElement) {
+                        statusElement.textContent = 'Failed to load';
+                    }
+                    
+                    if (linkElement) {
+                        linkElement.style.display = 'none';
+                    }
+                    
+                    console.error(`${label} image failed to load:`, url);
+                }
+            });
+        } else {
+            // No URL provided
+            previewElement.style.backgroundImage = 'none';
+            previewElement.classList.remove('image-loaded');
+            
+            if (statusElement) {
+                statusElement.textContent = 'Not uploaded';
+            }
+            
+            if (linkElement) {
+                linkElement.style.display = 'none';
+            }
+            
+            console.log(`No ${label} URL provided`);
+        }
+    }
+
     // ============= POPULATE SELLER DATA =============
     function populateSellerData(data) {
+        console.log('Populating seller data:', data);
+        
         // Profile header
         if (sellerFullName) sellerFullName.textContent = data.full_name || 'Unknown User';
         if (sellerBusinessName) sellerBusinessName.textContent = data.business_name || 'No Business Name';
         
         // Status badge
         if (sellerStatus) {
-            sellerStatus.textContent = data.is_verified === 0 ? 'Pending' :
-                                      data.is_verified === 1 ? 'Verified' : 'Rejected';
+            sellerStatus.textContent = data.is_verified === 'pending' ? 'Pending' :
+                                      data.is_verified === 'verified' ? 'Verified' : 'Rejected';
             sellerStatus.className = 'status-badge ' + 
-                (data.is_verified === 0 ? 'pending' :
-                 data.is_verified === 1 ? 'verified' : 'rejected');
+                (data.is_verified === 'pending' ? 'pending' :
+                 data.is_verified === 'verified' ? 'verified' : 'rejected');
         }
 
         // Profile avatar
-        if (profileAvatar && data.profile_picture_url) {
-            profileAvatar.src = data.profile_picture_url;
-            profileAvatar.onerror = function() {
-                this.src = '../assets/image/icons/user-profile-circle.svg';
-            };
+        if (profileAvatar) {
+            if (data.profile_picture_url) {
+                console.log('Setting profile avatar URL:', data.profile_picture_url);
+                profileAvatar.src = data.profile_picture_url;
+                profileAvatar.onerror = function() {
+                    console.log('Profile avatar failed to load, using fallback');
+                    this.src = '../assets/image/icons/user-profile-circle.svg';
+                    this.onerror = null;
+                };
+            } else {
+                profileAvatar.src = '../assets/image/icons/user-profile-circle.svg';
+            }
         }
 
-        // Document images
-        if (data.identity_url) {
-            identityPreview.style.backgroundImage = `url('${data.identity_url}')`;
-            identityStatus.textContent = 'Uploaded';
-            identityLink.href = data.identity_url;
-            identityLink.style.display = 'inline-block';
-        } else {
-            identityStatus.textContent = 'Not uploaded';
-        }
+        // ===== FIXED: Document previews =====
+        // Identity document (Formal Picture)
+        setDocumentPreview(
+            identityPreview, 
+            identityStatus, 
+            identityLink, 
+            data.identity_url, 
+            'identity'
+        );
 
-        if (data.id_document_url) {
-            idDocumentPreview.style.backgroundImage = `url('${data.id_document_url}')`;
-            idDocumentStatus.textContent = 'Uploaded';
-            idDocumentLink.href = data.id_document_url;
-            idDocumentLink.style.display = 'inline-block';
-        } else {
-            idDocumentStatus.textContent = 'Not uploaded';
-        }
+        // ID Document (Valid ID)
+        setDocumentPreview(
+            idDocumentPreview, 
+            idDocumentStatus, 
+            idDocumentLink, 
+            data.id_document_url, 
+            'ID document'
+        );
 
         // Personal Information fields
         if (firstName) firstName.value = data.first_name || '';
@@ -206,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (address) address.value = data.address || '';
         if (businessName) businessName.value = data.business_name || '';
 
-        // New date fields - populate as inputs
+        // New date fields
         if (dateApplied) {
             dateApplied.value = data.date_applied_formatted || '';
             if (!data.date_applied_formatted) dateApplied.placeholder = 'Not applied yet';
@@ -224,8 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Show verify/reject buttons only for pending sellers
         if (profileActions) {
-            if (data.is_verified === 0) {
-                // For pending sellers, show both buttons
+            if (data.is_verified === 'pending') {
                 profileActions.innerHTML = `
                     <button class="btn btn-secondary" id="rejectSellerBtn">
                         <img src="../assets/image/icons/cancel.svg" alt="Reject" class="btn-icon">
@@ -237,11 +330,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                 `;
             } else {
-                // For non-pending sellers, clear any buttons
                 profileActions.innerHTML = '';
             }
 
-            // Add event listeners to buttons
             const verifyBtn = document.getElementById('verifySellerBtn');
             const rejectBtn = document.getElementById('rejectSellerBtn');
 
@@ -292,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.status === 'success') {
                     showNotification(result.message);
                     
-                    // Reload seller data after a short delay
                     setTimeout(() => {
                         hideConfirmationModal();
                         loadSellerData();

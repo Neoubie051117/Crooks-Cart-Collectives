@@ -7,6 +7,14 @@ if (!isset($_SESSION['is_seller']) || !$_SESSION['is_seller']) {
     exit;
 }
 
+// Check if seller is verified - MODIFIED: Check for 'verified' status
+if (!isset($_SESSION['seller_verified']) || !$_SESSION['seller_verified']) {
+    // If not verified, show a message instead of dashboard
+    $showUnverifiedMessage = true;
+} else {
+    $showUnverifiedMessage = false;
+}
+
 $sellerId = $_SESSION['seller_id'];
 
 // Fetch seller info
@@ -15,61 +23,63 @@ $stmt->execute([$sellerId]);
 $seller = $stmt->fetch();
 $business_name = $seller['business_name'] ?? 'Your Store';
 
-// Fetch stats - FIXED: Removed references to non-existent columns
+// Fetch stats - only if verified
 $stats = [];
-try {
-    // Total products
-    $stmt = $connection->prepare("SELECT COUNT(*) as total FROM products WHERE seller_id = ?");
-    $stmt->execute([$sellerId]);
-    $stats['products'] = $stmt->fetch()['total'];
+if (!$showUnverifiedMessage) {
+    try {
+        // Total products
+        $stmt = $connection->prepare("SELECT COUNT(*) as total FROM products WHERE seller_id = ?");
+        $stmt->execute([$sellerId]);
+        $stats['products'] = $stmt->fetch()['total'];
 
-    // Total orders
-    $stmt = $connection->prepare("SELECT COUNT(*) as orders FROM orders WHERE seller_id = ?");
-    $stmt->execute([$sellerId]);
-    $stats['orders'] = $stmt->fetch()['orders'];
+        // Total orders
+        $stmt = $connection->prepare("SELECT COUNT(*) as orders FROM orders WHERE seller_id = ?");
+        $stmt->execute([$sellerId]);
+        $stats['orders'] = $stmt->fetch()['orders'];
 
-    // Items sold (sum of quantity where status = 'delivered')
-    $stmt = $connection->prepare("
-        SELECT COALESCE(SUM(quantity), 0) as items_sold 
-        FROM orders 
-        WHERE seller_id = ? AND status = 'delivered'
-    ");
-    $stmt->execute([$sellerId]);
-    $stats['items_sold'] = $stmt->fetch()['items_sold'];
+        // Items sold (sum of quantity where status = 'delivered')
+        $stmt = $connection->prepare("
+            SELECT COALESCE(SUM(quantity), 0) as items_sold 
+            FROM orders 
+            WHERE seller_id = ? AND status = 'delivered'
+        ");
+        $stmt->execute([$sellerId]);
+        $stats['items_sold'] = $stmt->fetch()['items_sold'];
 
-    // Total revenue (sum of subtotal where status = 'delivered')
-    $stmt = $connection->prepare("
-        SELECT COALESCE(SUM(subtotal), 0) as revenue 
-        FROM orders 
-        WHERE seller_id = ? AND status = 'delivered'
-    ");
-    $stmt->execute([$sellerId]);
-    $stats['revenue'] = $stmt->fetch()['revenue'];
+        // Total revenue (sum of subtotal where status = 'delivered')
+        $stmt = $connection->prepare("
+            SELECT COALESCE(SUM(subtotal), 0) as revenue 
+            FROM orders 
+            WHERE seller_id = ? AND status = 'delivered'
+        ");
+        $stmt->execute([$sellerId]);
+        $stats['revenue'] = $stmt->fetch()['revenue'];
 
-} catch (PDOException $e) {
-    error_log("Seller dashboard stats error: " . $e->getMessage());
-}
+    } catch (PDOException $e) {
+        error_log("Seller dashboard stats error: " . $e->getMessage());
+    }
 
-// Fetch recent 5 orders
-$recentOrders = [];
-try {
-    $stmt = $connection->prepare("
-        SELECT 
-            o.order_id,
-            o.status,
-            o.order_date,
-            o.quantity,
-            p.name as product_name
-        FROM orders o
-        JOIN products p ON o.product_id = p.product_id
-        WHERE o.seller_id = ?
-        ORDER BY o.order_date DESC
-        LIMIT 5
-    ");
-    $stmt->execute([$sellerId]);
-    $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    error_log("Error fetching recent orders: " . $e->getMessage());
+    // Fetch recent 5 orders
+    $recentOrders = [];
+    try {
+        $stmt = $connection->prepare("
+            SELECT 
+                o.order_id,
+                o.status,
+                o.order_date,
+                o.quantity,
+                p.name as product_name
+            FROM orders o
+            JOIN products p ON o.product_id = p.product_id
+            WHERE o.seller_id = ?
+            ORDER BY o.order_date DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$sellerId]);
+        $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error fetching recent orders: " . $e->getMessage());
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -83,12 +93,65 @@ try {
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/seller-dashboard.css">
     <script defer src="../scripts/seller-dashboard.js"></script>
+    <style>
+    .unverified-message {
+        text-align: center;
+        padding: 60px 20px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        margin: 30px 0;
+    }
+
+    .unverified-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 130, 70, 0.1);
+        border-radius: 50%;
+        padding: 15px;
+    }
+
+    .unverified-icon img {
+        width: 50px;
+        height: 50px;
+        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    }
+
+    .unverified-message h2 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        color: #000000;
+    }
+
+    .unverified-message p {
+        color: #666666;
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    </style>
 </head>
 
 <body>
     <?php include_once('header.php'); ?>
 
     <div class="content">
+        <?php if ($showUnverifiedMessage): ?>
+        <!-- Unverified Seller Message -->
+        <div class="unverified-message">
+            <div class="unverified-icon">
+                <img src="../assets/image/icons/cancel.svg" alt="Pending verification">
+            </div>
+            <h2>Verification Pending</h2>
+            <p>Your seller application is currently under review. You'll be able to access your seller dashboard once an
+                administrator verifies your account.</p>
+        </div>
+        <?php else: ?>
         <!-- Welcome Section -->
         <div class="welcome-section">
             <h1>Welcome back, <span><?php echo htmlspecialchars($business_name); ?></span>!</h1>
@@ -102,7 +165,7 @@ try {
                     <img src="../assets/image/icons/package.svg" alt="Products icon"
                         onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                 </div>
-                <div class="stat-number"><?= $stats['products'] ?></div>
+                <div class="stat-number"><?= $stats['products'] ?? 0 ?></div>
                 <div class="stat-label">Total Products</div>
                 <div class="stat-subtext">Active listings</div>
             </div>
@@ -112,7 +175,7 @@ try {
                     <img src="../assets/image/icons/order.svg" alt="Orders icon"
                         onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                 </div>
-                <div class="stat-number"><?= $stats['orders'] ?></div>
+                <div class="stat-number"><?= $stats['orders'] ?? 0 ?></div>
                 <div class="stat-label">Orders Received</div>
                 <div class="stat-subtext">Across all products</div>
             </div>
@@ -122,7 +185,7 @@ try {
                     <img src="../assets/image/icons/cart-shopping-fast.svg" alt="Items sold icon"
                         onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                 </div>
-                <div class="stat-number"><?= $stats['items_sold'] ?></div>
+                <div class="stat-number"><?= $stats['items_sold'] ?? 0 ?></div>
                 <div class="stat-label">Items Sold</div>
                 <div class="stat-subtext">Total quantity</div>
             </div>
@@ -132,7 +195,7 @@ try {
                     <img src="../assets/image/icons/chart-line-up.svg" alt="Revenue icon"
                         onerror="this.onerror=null; this.src='../assets/image/brand/Logo.png';">
                 </div>
-                <div class="stat-number">₱<?= number_format($stats['revenue'], 2) ?></div>
+                <div class="stat-number">₱<?= number_format($stats['revenue'] ?? 0, 2) ?></div>
                 <div class="stat-label">Total Revenue</div>
                 <div class="stat-subtext">From completed orders</div>
             </div>
@@ -202,6 +265,7 @@ try {
             }
             ?>
         </div>
+        <?php endif; ?>
     </div>
 
     <?php include_once('footer.php'); ?>

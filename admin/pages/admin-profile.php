@@ -14,7 +14,7 @@ $dateJoined = '';
 $profilePicUrl = '../assets/image/icons/user-profile-circle.svg'; // Default
 
 try {
-    // Fetch admin data
+    // Fetch admin data - FIXED: Changed created_at to date_joined
     $stmt = $connection->prepare("SELECT * FROM administrators WHERE admin_id = ?");
     $stmt->execute([$adminId]);
     $admin = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,6 +35,8 @@ try {
     if (!empty($admin['profile_picture'])) {
         $profilePicUrl = getAdminFileUrl($admin['profile_picture']);
         error_log("Admin profile page - using URL: " . $profilePicUrl);
+    } else {
+        error_log("Admin profile page - no profile picture in database for admin ID: " . $adminId);
     }
     
 } catch (PDOException $e) {
@@ -81,7 +83,7 @@ try {
                     <!-- Profile Avatar -->
                     <div class="profile-avatar-wrapper">
                         <img id="profilePicturePreview" src="<?php echo $profilePicUrl; ?>" alt="Profile Picture"
-                            onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg';">
+                            onerror="this.onerror=null; this.src='../assets/image/icons/user-profile-circle.svg'; console.log('Failed to load profile image, using fallback');">
 
                         <div class="profile-avatar-edit" id="profilePictureUpload" style="display: none;">
                             <label for="profile_picture" class="file-upload-label" title="Upload profile picture">

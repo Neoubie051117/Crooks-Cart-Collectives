@@ -1,6 +1,18 @@
 filesToCheck = [
+    
+    #File Structure
     "logs/requirement/Instructions.md",
-    "logs/output/Project_Structure.md",
+    "/logs/output/Project_Structure.md",
+
+    # =========================
+    # DATABASE
+    # =========================
+    
+    "/admin/schema/dbCreation.sql",
+    "/admin/schema/dummyAdmin.sql",
+    "/admin/schema/dummySeller.sql",
+    "/admin/schema/dummyUser.sql",
+    
     # =========================
     # ADMIN ROOT
     # =========================
@@ -75,6 +87,5 @@ filesToCheck = [
     # "/admin/styles/admin-sign-out.css",
     # "/admin/styles/admin-sign-up.css",
     # "/admin/styles/admin-terms-and-conditions.css",
-    # "/admin/styles/admin-verify-sellers.css"
-
+    # "/admin/styles/admin-verify-sellers.css",
 ]

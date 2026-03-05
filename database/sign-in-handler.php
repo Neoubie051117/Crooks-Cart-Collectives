@@ -79,7 +79,7 @@ function handleSignin() {
             $customer_id = $customer['customer_id'];
         }
         
-        // Check if seller
+        // Check if seller - MODIFIED: Check if is_verified = 'verified'
         $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
         $stmt->execute([$user['user_id']]);
         $seller = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -97,7 +97,7 @@ function handleSignin() {
         if ($seller) {
             $_SESSION['seller_id'] = $seller['seller_id'];
             $_SESSION['is_seller'] = true;
-            $_SESSION['seller_verified'] = (bool)$seller['is_verified'];
+            $_SESSION['seller_verified'] = ($seller['is_verified'] === 'verified');
         } else {
             $_SESSION['is_seller'] = false;
             $_SESSION['seller_verified'] = false;

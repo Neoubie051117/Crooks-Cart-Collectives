@@ -43,7 +43,7 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
         // Check stock
         if ($quantity > $singleProduct['stock_quantity']) {
             $_SESSION['checkout_error'] = 'Insufficient stock for selected quantity.';
-            header('Location: product-details.php?id=' . $productId);
+            header('Location: product-detail.php?id=' . $productId);
             exit;
         }
 
@@ -103,28 +103,50 @@ try {
     error_log("Checkout user fetch error: " . $e->getMessage());
 }
 
-// Helper function to get product image URL
+// ===== FIXED: Helper function to get product image URL with proper thumbnail discovery =====
 function getCheckoutImageUrl($mediaPath) {
+    // Default fallback - using an existing icon from your project
+    $fallbackImage = '../assets/image/icons/package.svg';
+    
     if (empty($mediaPath)) {
-        return '../assets/image/icons/package.svg';
+        return $fallbackImage;
     }
     
-    // Check if it's a media directory path
+    // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        return '../database/data-storage-handler.php?action=serve&path=' . urlencode($mediaDir . 'thumbnail_1.png');
+        
+        // Build the full server path to look for thumbnail_1.*
+        $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
+        $thumbFiles = glob($fullDir . 'thumbnail_1.*');
+        
+        if (!empty($thumbFiles)) {
+            // Found a thumbnail file – get its basename and build URL via data-storage-handler
+            $thumbFile = basename($thumbFiles[0]);
+            return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
+        } else {
+            // No thumbnail found – use fallback
+            return $fallbackImage;
+        }
     }
     
-    // Direct file path
+    // Check if it's already a full URL
+    if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
+        return $mediaPath;
+    }
+    
+    // Check if it's a relative path starting with assets/
     if (strpos($mediaPath, 'assets/') === 0) {
         return '../' . $mediaPath;
     }
     
-    if (strpos($mediaPath, 'http') === 0) {
-        return $mediaPath;
+    // Check if it's just a filename
+    if (strpos($mediaPath, '/') === false) {
+        return '../assets/image/icons/' . $mediaPath;
     }
     
-    return '../' . $mediaPath;
+    // Any other relative path
+    return $mediaPath;
 }
 
 // Get safe values for display with null checks
@@ -164,7 +186,7 @@ $userPhone = !empty($user['contact_number']) ? htmlspecialchars($user['contact_n
                 <h2>Order Summary</h2>
                 <div class="checkout-items">
                     <?php foreach ($cartItems as $item): 
-                        // FIXED: Use the helper function to get image URL
+                        // FIXED: Use the helper function to get image URL with proper thumbnail discovery
                         $imageUrl = getCheckoutImageUrl($item['media_path'] ?? '');
                         $itemName = !empty($item['name']) ? htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') : 'Product';
                         $sellerName = !empty($item['business_name']) ? htmlspecialchars($item['business_name'], ENT_QUOTES, 'UTF-8') : 'Seller';
@@ -205,7 +227,6 @@ $userPhone = !empty($user['contact_number']) ? htmlspecialchars($user['contact_n
                 </div>
 
                 <div class="checkout-actions">
-                    <!-- FIXED: Changed from products.php to product.php -->
                     <a href="product.php" class="btn btn-secondary">Back to Shop</a>
                     <button id="placeOrderBtn" class="btn btn-primary">Place Order</button>
                 </div>

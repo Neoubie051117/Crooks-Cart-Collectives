@@ -12,6 +12,83 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 $customer_id = $_SESSION['customer_id'];
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+// ===== FUNCTION: Validate cart items WITHOUT deleting them =====
+// Scenarios 1, 2, 3: Products become unavailable but remain in cart
+function validateCartItems($connection, $customer_id) {
+    try {
+        // Get all cart items with current product info
+        $stmt = $connection->prepare("
+            SELECT 
+                c.cart_id,
+                c.product_id,
+                c.quantity as cart_quantity,
+                p.stock_quantity,
+                p.is_active,
+                p.name,
+                p.price as current_price
+            FROM carts c
+            JOIN products p ON c.product_id = p.product_id
+            WHERE c.customer_id = ?
+        ");
+        $stmt->execute([$customer_id]);
+        $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $validationResults = [
+            'inactive_found' => [],      // Products that are inactive (scenario 1 & 3)
+            'stock_adjusted' => [],       // Products that need quantity adjustment
+            'valid_items' => []           // Items that are perfectly valid
+        ];
+        
+        foreach ($cartItems as $item) {
+            // Scenario 1 & 3: Product is inactive (ordered by someone else OR removed/delisted by seller)
+            if (!$item['is_active']) {
+                // DO NOT DELETE - just mark as inactive in the response
+                $validationResults['inactive_found'][] = [
+                    'product_name' => $item['name'],
+                    'cart_id' => $item['cart_id'],
+                    'quantity' => $item['cart_quantity']
+                ];
+                continue;
+            }
+            
+            // Scenario: Stock has changed (product was ordered by someone else)
+            if ($item['cart_quantity'] > $item['stock_quantity']) {
+                if ($item['stock_quantity'] > 0) {
+                    // We'll suggest adjustment but not automatically update
+                    $validationResults['stock_adjusted'][] = [
+                        'product_name' => $item['name'],
+                        'cart_id' => $item['cart_id'],
+                        'old_quantity' => $item['cart_quantity'],
+                        'new_quantity' => $item['stock_quantity'],
+                        'action' => 'adjust'
+                    ];
+                } else {
+                    // Out of stock - mark as unavailable but don't delete
+                    $validationResults['stock_adjusted'][] = [
+                        'product_name' => $item['name'],
+                        'cart_id' => $item['cart_id'],
+                        'old_quantity' => $item['cart_quantity'],
+                        'new_quantity' => 0,
+                        'action' => 'out_of_stock'
+                    ];
+                }
+            } else {
+                // Item is valid
+                $validationResults['valid_items'][] = $item;
+            }
+        }
+        
+        return $validationResults;
+        
+    } catch (PDOException $e) {
+        error_log("Cart validation error: " . $e->getMessage());
+        return ['error' => $e->getMessage()];
+    }
+}
+
+// Run validation but DON'T auto-delete
+$validationResults = validateCartItems($connection, $customer_id);
+
 switch ($action) {
     case 'add_to_cart':
         $product_id = $_POST['product_id'] ?? 0;
@@ -23,7 +100,7 @@ switch ($action) {
         }
         
         try {
-            // Check if product exists and is active
+            // Check if product exists, is active, and has sufficient stock
             $stmt = $connection->prepare("
                 SELECT p.*, s.seller_id 
                 FROM products p 
@@ -39,7 +116,10 @@ switch ($action) {
             }
             
             if ($product['stock_quantity'] < $quantity) {
-                echo json_encode(['status' => 'error', 'message' => 'Insufficient stock']);
+                echo json_encode([
+                    'status' => 'error', 
+                    'message' => 'Insufficient stock. Available: ' . $product['stock_quantity']
+                ]);
                 exit;
             }
             
@@ -52,7 +132,7 @@ switch ($action) {
             $existing = $stmt->fetch();
             
             if ($existing) {
-                // Update existing
+                // Update existing - check if new total exceeds stock
                 $newQuantity = $existing['quantity'] + $quantity;
                 if ($newQuantity > $product['stock_quantity']) {
                     $newQuantity = $product['stock_quantity'];
@@ -64,6 +144,11 @@ switch ($action) {
                     WHERE cart_id = ?
                 ");
                 $stmt->execute([$newQuantity, $product['price'], $existing['cart_id']]);
+                
+                $message = $newQuantity < $existing['quantity'] + $quantity 
+                    ? 'Added to cart (quantity adjusted to available stock)' 
+                    : 'Added to cart';
+                    
             } else {
                 // Insert new
                 $stmt = $connection->prepare("
@@ -71,9 +156,13 @@ switch ($action) {
                     VALUES (?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([$customer_id, $product_id, $product['seller_id'], $quantity, $product['price']]);
+                $message = 'Added to cart';
             }
             
-            echo json_encode(['status' => 'success', 'message' => 'Added to cart']);
+            echo json_encode([
+                'status' => 'success', 
+                'message' => $message
+            ]);
             
         } catch (PDOException $e) {
             error_log("Add to cart error: " . $e->getMessage());
@@ -88,7 +177,7 @@ switch ($action) {
         try {
             // Get product stock and check if product is active
             $stmt = $connection->prepare("
-                SELECT c.cart_id, p.stock_quantity, p.is_active 
+                SELECT c.cart_id, p.stock_quantity, p.is_active, p.name
                 FROM carts c
                 JOIN products p ON c.product_id = p.product_id
                 WHERE c.cart_id = ? AND c.customer_id = ?
@@ -101,17 +190,23 @@ switch ($action) {
                 exit;
             }
             
-            // Check if product is still active
+            // Scenario 1 & 3: Check if product is still active
             if (!$cartItem['is_active']) {
-                // Remove inactive product from cart
-                $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ?");
-                $stmt->execute([$cart_item_id]);
-                echo json_encode(['status' => 'error', 'message' => 'Product is no longer available and has been removed from cart']);
+                // DON'T delete - just inform the user it's inactive
+                echo json_encode([
+                    'status' => 'error', 
+                    'message' => 'Product "' . $cartItem['name'] . '" is no longer available',
+                    'inactive' => true
+                ]);
                 exit;
             }
             
             if ($quantity > $cartItem['stock_quantity']) {
-                echo json_encode(['status' => 'error', 'message' => 'Quantity exceeds available stock']);
+                echo json_encode([
+                    'status' => 'error', 
+                    'message' => 'Quantity exceeds available stock. Available: ' . $cartItem['stock_quantity'],
+                    'max_stock' => $cartItem['stock_quantity']
+                ]);
                 exit;
             }
             
@@ -130,6 +225,7 @@ switch ($action) {
         $cart_item_id = $_POST['cart_item_id'] ?? 0;
         
         try {
+            // Scenario 2: User proceeds to click remove - ONLY then delete
             $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ? AND customer_id = ?");
             $stmt->execute([$cart_item_id, $customer_id]);
             
@@ -143,12 +239,11 @@ switch ($action) {
         
     case 'get_count':
         try {
-            // Only count active products in cart
+            // Count all cart items (including inactive - they still count toward cart count)
             $stmt = $connection->prepare("
                 SELECT COUNT(*) as count 
                 FROM carts c
-                JOIN products p ON c.product_id = p.product_id
-                WHERE c.customer_id = ? AND p.is_active = 1
+                WHERE c.customer_id = ?
             ");
             $stmt->execute([$customer_id]);
             $count = $stmt->fetch()['count'];
@@ -161,6 +256,77 @@ switch ($action) {
         }
         break;
         
+    case 'validate':
+        try {
+            $validationResults = validateCartItems($connection, $customer_id);
+            
+            if (isset($validationResults['error'])) {
+                echo json_encode(['status' => 'error', 'message' => 'Validation failed']);
+                exit;
+            }
+            
+            $hasIssues = !empty($validationResults['inactive_found']) || 
+                         !empty($validationResults['stock_adjusted']);
+            
+            echo json_encode([
+                'status' => 'success',
+                'has_issues' => $hasIssues,
+                'inactive_found' => $validationResults['inactive_found'],
+                'stock_adjusted' => $validationResults['stock_adjusted'],
+                'valid_count' => count($validationResults['valid_items'])
+            ]);
+            
+        } catch (PDOException $e) {
+            error_log("Validate cart error: " . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        }
+        break;
+        
+    case 'get_cart':
+        try {
+            // Get current cart items with full details - DON'T auto-delete anything
+            $stmt = $connection->prepare("
+                SELECT 
+                    c.cart_id,
+                    c.quantity,
+                    c.price,
+                    p.product_id,
+                    p.name,
+                    p.price AS current_price,
+                    p.media_path,
+                    p.stock_quantity,
+                    p.is_active,
+                    s.business_name,
+                    s.seller_id
+                FROM carts c
+                JOIN products p ON c.product_id = p.product_id
+                JOIN sellers s ON c.seller_id = s.seller_id
+                WHERE c.customer_id = ?
+                ORDER BY c.added_at DESC
+            ");
+            $stmt->execute([$customer_id]);
+            $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $total = 0;
+            foreach ($cartItems as $item) {
+                if ($item['is_active']) {
+                    $total += $item['price'] * $item['quantity'];
+                }
+            }
+            
+            echo json_encode([
+                'status' => 'success',
+                'data' => $cartItems,
+                'total' => $total
+            ]);
+            
+        } catch (PDOException $e) {
+            error_log("Get cart error: " . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        }
+        break;
+        
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
 }
+?>

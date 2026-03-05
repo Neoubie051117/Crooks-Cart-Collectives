@@ -9,8 +9,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_customer'])) {
 
 $userId = $_SESSION['user_id'];
 
-// VERIFY seller status from database, don't rely solely on session
+// Fetch seller status from database
+$sellerData = null;
 $isSeller = false;
+$sellerStatus = null; // 'pending', 'rejected', 'verified', or null if not applied
+
 try {
     $stmt = $connection->prepare("SELECT seller_id, is_verified FROM sellers WHERE user_id = ?");
     $stmt->execute([$userId]);
@@ -18,21 +21,23 @@ try {
     
     if ($sellerData) {
         $isSeller = true;
+        $sellerStatus = $sellerData['is_verified']; // 'pending', 'rejected', 'verified'
+        
         // Update session to match database
         $_SESSION['is_seller'] = true;
         $_SESSION['seller_id'] = $sellerData['seller_id'];
-        $_SESSION['seller_verified'] = (bool)$sellerData['is_verified'];
+        $_SESSION['seller_verified'] = ($sellerData['is_verified'] === 'verified');
     } else {
         // Clear seller session flags if user is not a seller in database
         unset($_SESSION['is_seller']);
         unset($_SESSION['seller_id']);
         unset($_SESSION['seller_verified']);
         $isSeller = false;
+        $sellerStatus = null;
     }
 } catch (PDOException $e) {
     error_log("Error checking seller status: " . $e->getMessage());
-    // On database error, keep session as is but log the error
-    $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+    $sellerStatus = null;
 }
 
 try {
@@ -62,7 +67,6 @@ try {
     <link rel="stylesheet" href="../styles/customer-dashboard.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <style>
-    /* Dashboard card icon styling - using actual img tags instead of pseudo-elements */
     .dashboard-card {
         position: relative;
         padding-top: 20px;
@@ -95,10 +99,55 @@ try {
         transform: scale(1.1);
     }
 
-    /* Remove any pseudo-element icons */
-    .dashboard-card::before,
-    .dashboard-card::after {
-        display: none;
+    /* Seller status card styles */
+    .seller-status-card {
+        background: #f9f9f9;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 10px 0;
+        text-transform: uppercase;
+    }
+
+    .status-badge.pending {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .status-badge.rejected {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .status-badge.verified {
+        background: #FF8246;
+        color: #000000;
+    }
+
+    .status-message {
+        color: #666666;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        line-height: 1.5;
+        padding: 0 10px;
+    }
+
+    .btn-primary[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+        background: #cccccc;
+        color: #666666;
+    }
+
+    .btn-primary[disabled]:hover {
+        transform: none;
+        box-shadow: none;
     }
     </style>
 </head>
@@ -123,18 +172,8 @@ try {
                 <a href="customer-profile.php" class="btn-primary">View Profile</a>
             </div>
 
-            <?php if ($isSeller): ?>
-            <!-- SELLER: Show Selling dashboard link (only if actually a seller in database) -->
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <img src="../assets/image/icons/fill-form.svg" alt="Seller dashboard">
-                </div>
-                <h3>Selling Dashboard</h3>
-                <p>Manage your products, view orders, and track your sales</p>
-                <a href="seller-dashboard.php" class="btn-primary">Manage</a>
-            </div>
-            <?php else: ?>
-            <!-- CUSTOMER ONLY: Show Become a Seller -->
+            <?php if (!$isSeller): ?>
+            <!-- SELLER CARD: Not applied yet -->
             <div class="dashboard-card">
                 <div class="card-icon">
                     <img src="../assets/image/icons/fill-form.svg" alt="Become a seller">
@@ -142,6 +181,38 @@ try {
                 <h3>Become a Seller</h3>
                 <p>Start your entrepreneurial journey with our community</p>
                 <a href="seller-fill-form.php" class="btn-primary">Apply Now</a>
+            </div>
+            <?php elseif ($sellerStatus === 'pending'): ?>
+            <!-- SELLER CARD: Applied but pending -->
+            <div class="dashboard-card seller-status-card">
+                <div class="card-icon">
+                    <img src="../assets/image/icons/time-update.svg" alt="Pending verification">
+                </div>
+                <h3>Seller Application</h3>
+                <div class="status-badge pending">Pending</div>
+                <p class="status-message">Wait for your application form to be verified by our management</p>
+                <a href="#" class="btn-primary" disabled style="pointer-events: none; opacity: 0.5;">Pending</a>
+            </div>
+            <?php elseif ($sellerStatus === 'rejected'): ?>
+            <!-- SELLER CARD: Rejected -->
+            <div class="dashboard-card seller-status-card">
+                <div class="card-icon">
+                    <img src="../assets/image/icons/cancel.svg" alt="Application rejected">
+                </div>
+                <h3>Seller Application</h3>
+                <div class="status-badge rejected">Rejected</div>
+                <p class="status-message">Your application is rejected</p>
+                <a href="seller-fill-form.php" class="btn-primary">Apply Again</a>
+            </div>
+            <?php elseif ($sellerStatus === 'verified'): ?>
+            <!-- SELLER CARD: Verified -->
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <img src="../assets/image/icons/fill-form.svg" alt="Seller dashboard">
+                </div>
+                <h3>Selling Dashboard</h3>
+                <p>Manage your products, view orders, and track your sales</p>
+                <a href="seller-dashboard.php" class="btn-primary">Manage</a>
             </div>
             <?php endif; ?>
 

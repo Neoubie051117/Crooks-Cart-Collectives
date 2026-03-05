@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Otherwise generate based on log type and available data
         switch(log.log_type) {
             case 'user_registration':
-                // Try different possible field names
                 const userName = log.user_name || 
                                 (log.first_name && log.last_name ? `${log.first_name} ${log.last_name}` : null) ||
                                 log.username ||
@@ -88,7 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sellerName = log.user_name || 
                                   (log.first_name && log.last_name ? `${log.first_name} ${log.last_name}` : 'A seller');
                 const business = log.business_name ? ` with business "${log.business_name}"` : '';
-                const status = log.verification_status ? ` [${log.verification_status}]` : '';
+                // MODIFIED: Use verification_status which is now 'pending', 'verified', 'rejected'
+                const status = log.verification_status ? ` [Status: ${log.verification_status}]` : '';
                 return `${sellerName} applied as seller${business}${status}`;
                 
             case 'product_added':

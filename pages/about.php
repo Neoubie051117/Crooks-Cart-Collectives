@@ -118,7 +118,7 @@ $current_page = 'about';
 
                 <div class="team-card">
                     <div class="team-image">
-                        <img src="../assets/image/team/rylle-bernardino.png" alt="Rylle Javerick S. Bernardino">
+                        <img src="../assets/image/team/rylle-bernardino.jpg" alt="Rylle Javerick S. Bernardino">
                     </div>
                     <h3>Rylle Javerick S. Bernardino</h3>
                     <p class="team-role">Member</p>
