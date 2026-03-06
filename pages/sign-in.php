@@ -64,7 +64,7 @@ $redirect = $_GET['redirect'] ?? '';
             </p>
 
             <p class="forgot-password-link">
-                <a href="forgot-password.php">Forgot your password?</a>
+                <a href="../admin/pages/admin-sign-in.php">Log in as admin?</a>
             </p>
         </form>
     </div>

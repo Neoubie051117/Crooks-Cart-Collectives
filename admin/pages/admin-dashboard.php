@@ -58,11 +58,6 @@ try {
     $stmt->execute();
     $stats['total_orders'] = $stmt->fetch()['count'];
     
-    // Pending reports
-    $stmt = $connection->prepare("SELECT COUNT(*) as count FROM seller_reports WHERE status = 'pending'");
-    $stmt->execute();
-    $stats['pending_reports'] = $stmt->fetch()['count'];
-    
 } catch (PDOException $e) {
     error_log("Error fetching admin stats: " . $e->getMessage());
 }

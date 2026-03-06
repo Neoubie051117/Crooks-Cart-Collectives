@@ -2,19 +2,22 @@ filesToCheck = [
     
     #File Structure
     "logs/requirement/Instructions.md",
-    "/logs/output/Project_Structure.md",
+    "logs/output/Project_Structure.md",
+    
+    # #Docker Configs
+    # "/docker/docker-compose.yml",
+    # "/docker/database/init.sql",
+    # "/docker/database/dummy_data.sql",
 
-    # oot
+    # Root
     "/index.php",
 
     # =========================
-    # DATABASE
+    # SQL
     # =========================
     
-    "/admin/schema/dbCreation.sql",
-    "/admin/schema/dummyAdmin.sql",
-    "/admin/schema/dummySeller.sql",
-    "/admin/schema/dummyUser.sql",
+    "/sql/init.sql",
+    # "/sql/dummy_data.sql",
     
     # =========================
     # ADMIN ROOT
@@ -32,7 +35,6 @@ filesToCheck = [
     "/admin/database/admin-database-connect.php",
     "/admin/database/admin-logs-handler.php",
     "/admin/database/admin-profile-handler.php",
-    "/admin/database/admin-reports-handler.php",
     "/admin/database/admin-seller-profile-handler.php",
     "/admin/database/admin-sign-in-handler.php",
     "/admin/database/admin-sign-out-handler.php",
@@ -45,7 +47,6 @@ filesToCheck = [
 
     "/admin/pages/admin-dashboard.php",
     "/admin/pages/admin-logs.php",
-    "/admin/pages/admin-manage-report.php",
     "/admin/pages/admin-profile.php",
     "/admin/pages/admin-seller-profile.php",
     "/admin/pages/admin-sign-in.php",
@@ -102,7 +103,6 @@ filesToCheck = [
     "/database/checkout-handler.php",
     "/database/order-handler.php",
     "/database/review-handler.php",
-    "/database/report-seller-handler.php",
     "/database/validation.php",
     "/database/error_log.txt",
     "/database/data-storage-handler.php",
@@ -125,7 +125,6 @@ filesToCheck = [
     "/pages/checkout.php",
     "/pages/product-detail.php",
     "/pages/product.php",
-    "/pages/report-seller.php",
     "/pages/orders.php",
     "/pages/customer-dashboard.php",
     "/pages/customer-profile.php",
@@ -148,7 +147,6 @@ filesToCheck = [
     "/scripts/error-handler.js",
     "/scripts/showcase-slider.js",
     "/scripts/product-detail.js",
-    "/scripts/report-seller.js",
     "/scripts/checkout.js",
     "/scripts/orders.js",
     "/scripts/seller-manage-product.js",
@@ -176,7 +174,6 @@ filesToCheck = [
     # "/styles/product-detail.css",
     # "/styles/product.css",
     # "/styles/profile.css",
-    # "/styles/report-seller.css",
     # "/styles/seller-process-order.css",
     # "/styles/seller-registration.css",
     # "/styles/seller-dashboard.css",

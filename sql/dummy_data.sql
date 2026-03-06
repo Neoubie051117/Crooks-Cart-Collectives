@@ -47,7 +47,7 @@ WHERE u.username = 'alingbebang';
 
 -- Folder: ballpen-for-sale → Product: Ballpen
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Second Hand Ballpen', 'Mga lumang ballpen na may tinta pa', 5.00, 'School Supplies', 50,
+SELECT s.seller_id, 'Second Ballpen', 'Mga lumang ballpen na may tinta pa', 5.00, 'School Supplies', 50,
 'Crooks-Data-Storage/products/ballpen-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'alingbebang';

@@ -11,22 +11,38 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
 $isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
 $sellerVerified = isset($_SESSION['seller_verified']) && $_SESSION['seller_verified'] === true;
 
-// If user is logged in but seller status might be stale, verify from database
-if ($isUserLoggedIn && $isSeller) {
-    // Only attempt to verify if we have a user_id
-    if (isset($_SESSION['user_id'])) {
-        try {
-            // Include database connection if not already included
-            if (!isset($connection)) {
-                $connection = null; // Will be set by including database-connect.php
+// Default profile picture (logo for not logged in)
+$profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
+
+// If user is logged in, try to get their profile picture
+if ($isUserLoggedIn && isset($_SESSION['user_id'])) {
+    try {
+        // Include database and data storage handler
+        require_once(dirname(__FILE__, 2) . '/database/database-connect.php');
+        require_once(dirname(__FILE__, 2) . '/database/data-storage-handler.php');
+        
+        // Fetch user's profile picture
+        $stmt = $connection->prepare("SELECT profile_picture FROM users WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($userData && !empty($userData['profile_picture'])) {
+            // Generate URL for profile picture
+            if (function_exists('getFileUrl')) {
+                $profilePictureUrl = getFileUrl($userData['profile_picture']);
+            } else {
+                // Fallback
+                if (strpos($userData['profile_picture'], 'Crooks-Data-Storage/') === 0) {
+                    $profilePictureUrl = '../database/data-storage-handler.php?action=serve&path=' . urlencode($userData['profile_picture']);
+                } else {
+                    $profilePictureUrl = $pathPrefix . $userData['profile_picture'];
+                }
             }
-            
-            // We'll check database in a separate block if needed
-            // For performance, we rely on session for header
-            // But if header is included after database connection, we can verify
-        } catch (Exception $e) {
-            // Silently fail - use session values
         }
+    } catch (Exception $e) {
+        error_log("Error fetching profile picture: " . $e->getMessage());
+        // Fallback to logo
+        $profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
     }
 }
 
@@ -64,8 +80,17 @@ if ($is_root) {
         <div class="header-logo">
             <a href="<?php echo $pathPrefix; ?>index.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <?php if ($isUserLoggedIn): ?>
+                <!-- CIRCULAR PROFILE PICTURE WHEN LOGGED IN -->
+                <div class="profile-circle">
+                    <img src="<?php echo $profilePictureUrl; ?>" alt="Profile" class="profile-circle-image"
+                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
+                </div>
+                <?php else: ?>
+                <!-- LOGO WHEN NOT LOGGED IN -->
                 <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
                     style="height: 40px; width: auto;">
+                <?php endif; ?>
                 <div class="title"><span>Crook's</span> Cart <span>Collectives</span></div>
             </a>
         </div>

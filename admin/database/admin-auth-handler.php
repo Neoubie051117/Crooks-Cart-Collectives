@@ -135,6 +135,21 @@ if ($action === 'get_stats') {
         $stmt->execute();
         $stats['total_sellers'] = $stmt->fetch()['count'];
         
+        // Total users
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM users");
+        $stmt->execute();
+        $stats['total_users'] = $stmt->fetch()['count'];
+        
+        // Total products
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM products");
+        $stmt->execute();
+        $stats['total_products'] = $stmt->fetch()['count'];
+        
+        // Total orders
+        $stmt = $connection->prepare("SELECT COUNT(*) as count FROM orders");
+        $stmt->execute();
+        $stats['total_orders'] = $stmt->fetch()['count'];
+        
         echo json_encode(['status' => 'success', 'data' => $stats]);
         
     } catch (PDOException $e) {

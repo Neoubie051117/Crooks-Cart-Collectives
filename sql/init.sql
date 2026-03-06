@@ -1,6 +1,6 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- REVISED SCHEMA - is_verify changed from BOOLEAN to ENUM
+-- REVISED SCHEMA - REMOVED seller_reports TABLE
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -156,27 +156,6 @@ CREATE TABLE product_reviews (
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
     INDEX idx_product_reviews (product_id, rating),
     INDEX idx_user_reviews (user_id)
-);
-
--- =====================================================
--- SELLER REPORTS TABLE
--- =====================================================
-CREATE TABLE seller_reports (
-    report_id INT AUTO_INCREMENT PRIMARY KEY,
-    reporter_id INT NOT NULL,
-    seller_id INT NOT NULL,
-    reason VARCHAR(100) NOT NULL,
-    details TEXT NOT NULL,
-    status ENUM('pending', 'investigating', 'resolved', 'dismissed') DEFAULT 'pending',
-    admin_notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (seller_id) REFERENCES sellers(seller_id) ON DELETE CASCADE,
-    
-    INDEX idx_reports_seller_status (seller_id, status),
-    INDEX idx_reports_reporter (reporter_id)
 );
 
 -- =====================================================

@@ -26,9 +26,9 @@ if ($is_includes || $is_pages || $is_database) {
 
 // Get admin info for profile display
 $adminName = '';
-$adminProfilePic = $pathPrefix . 'assets/image/icons/user-profile-circle.svg';
+$adminProfilePic = $pathPrefix . 'assets/image/brand/Logo.png'; // Default to logo
 
-// ===== FIXED: Load admin profile picture from database and handle external storage =====
+// ===== FIXED: Load admin profile picture from database if logged in =====
 if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
     $adminId = $_SESSION['admin_id'];
     $adminFirstName = $_SESSION['admin_first_name'] ?? '';
@@ -42,7 +42,7 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
             require_once(dirname(__FILE__) . '/../database/admin-database-connect.php');
             require_once(dirname(__FILE__) . '/../database/admin-data-storage-handler.php');
             
-            // Fetch admin data including profile picture - FIXED: Changed created_at to date_joined
+            // Fetch admin data including profile picture
             $stmt = $connection->prepare("SELECT first_name, last_name, profile_picture, date_joined FROM administrators WHERE admin_id = ?");
             $stmt->execute([$adminId]);
             $adminData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -58,11 +58,9 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
                 if (!empty($adminData['profile_picture'])) {
                     $_SESSION['admin_profile_picture'] = $adminData['profile_picture'];
                     
-                    // ===== FIXED: Use getAdminFileUrl function from data-storage-handler =====
                     // Check if the function exists
                     if (function_exists('getAdminFileUrl')) {
                         $adminProfilePic = getAdminFileUrl($adminData['profile_picture']);
-                        error_log("Admin header - using getAdminFileUrl: " . $adminProfilePic);
                     } else {
                         // Fallback to manual URL generation
                         $profilePath = $adminData['profile_picture'];
@@ -71,13 +69,8 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
                         } else {
                             $adminProfilePic = $pathPrefix . $profilePath;
                         }
-                        error_log("Admin header - using fallback URL: " . $adminProfilePic);
                     }
-                } else {
-                    error_log("Admin header - no profile picture in database for admin ID: " . $adminId);
                 }
-            } else {
-                error_log("Admin header - no admin data found for ID: " . $adminId);
             }
         } catch (Exception $e) {
             error_log("Error fetching admin data in header: " . $e->getMessage());
@@ -87,7 +80,6 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
         if (isset($_SESSION['admin_profile_picture']) && !empty($_SESSION['admin_profile_picture'])) {
             $profilePath = $_SESSION['admin_profile_picture'];
             
-            // ===== FIXED: Use getAdminFileUrl function from data-storage-handler =====
             try {
                 // Try to include the handler if not already included
                 if (!function_exists('getAdminFileUrl')) {
@@ -113,8 +105,6 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
                     $adminProfilePic = $pathPrefix . $profilePath;
                 }
             }
-        } else {
-            error_log("Admin header - no profile picture in session for admin ID: " . $adminId);
         }
     }
 }
@@ -145,30 +135,20 @@ if ($isAdminLoggedIn) {
 <body>
     <header class="header-bar no-transition">
         <div class="header-logo">
-            <?php if ($isAdminLoggedIn): ?>
-            <!-- Show profile picture and admin name - FIXED: Consistent logo link -->
             <a href="<?php echo $logoLink; ?>" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <!-- ALWAYS SHOW CIRCLE WITH EITHER PROFILE PIC OR LOGO -->
                 <div class="admin-profile-mini">
-                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar" onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/icons/user-profile-circle.svg'; 
-                                 console.log('Failed to load profile image: ' + this.src);">
+                    <img src="<?php echo $adminProfilePic; ?>" alt="Admin" class="admin-avatar"
+                        onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
-                    <?php if (!empty($adminName)): ?>
+                    <?php if (!empty($adminName) && $isAdminLoggedIn): ?>
                     <span class="admin-name">(<?php echo htmlspecialchars($adminName); ?>)</span>
                     <?php endif; ?>
                 </div>
             </a>
-            <?php else: ?>
-            <!-- Show logo for non-logged in visitors - FIXED: Consistent logo link -->
-            <a href="<?php echo $logoLink; ?>" class="logo-link"
-                style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
-                    style="height: 40px; width: auto;">
-                <div class="title"><span>Admin</span> Panel</div>
-            </a>
-            <?php endif; ?>
         </div>
 
         <button class="hamburger-menu" id="menuButton" aria-label="Toggle menu">
@@ -221,8 +201,7 @@ if ($isAdminLoggedIn) {
             <h2>Confirm Logout</h2>
             <p>Are you sure you want to logout?</p>
             <div class="logout-modal-buttons">
-                <button id="cancelLogout" class="logout-modal-btn btn-cancel"
-                    style="background: #000000; color: #ffffff;">Cancel</button>
+                <button id="cancelLogout" class="logout-modal-btn btn-cancel">Cancel</button>
                 <button id="confirmLogout" class="logout-modal-btn btn-confirm">Logout</button>
             </div>
         </div>

@@ -1,13 +1,13 @@
 <?php
 // Crooks-Cart-Collectives/index.php
-// FIXED VERSION - Fixed image fetching with proper path handling for root location
+// REVISED - Show maximum 4 featured products
 ?>
 <?php
 session_start();
 require_once('database/database-connect.php');
 require_once('database/data-storage-handler.php');
 
-// Fetch featured products
+// Fetch featured products - MAXIMUM 4 products
 $featured_products = [];
 try {
     $stmt = $connection->prepare("
@@ -16,7 +16,7 @@ try {
         JOIN sellers s ON p.seller_id = s.seller_id 
         WHERE p.is_active = 1 AND p.stock_quantity > 0
         ORDER BY RAND() 
-        LIMIT 5
+        LIMIT 4
     ");
     $stmt->execute();
     $featured_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -172,8 +172,9 @@ function getIndexProductImageUrl($mediaPath) {
         <section class="featured-products-section">
             <div class="products-container">
                 <h2>Featured Products</h2>
+
+                <?php if (!empty($featured_products)): ?>
                 <div class="products-grid" id="productsGrid">
-                    <?php if (!empty($featured_products)): ?>
                     <?php foreach ($featured_products as $product): ?>
                     <div class="product-card">
                         <div class="product-image-container">
@@ -198,16 +199,17 @@ function getIndexProductImageUrl($mediaPath) {
                         </div>
                     </div>
                     <?php endforeach; ?>
-                    <?php else: ?>
-                    <div class="no-products-message">
-                        <p>No featured products available at the moment.</p>
-                        <p>
-                            <a href="pages/seller-fill-form.php" class="become-seller-link">Become a seller</a> to
-                            add products!
-                        </p>
-                    </div>
-                    <?php endif; ?>
                 </div>
+                <?php else: ?>
+                <div class="no-products-message">
+                    <p>No featured products available at the moment.</p>
+                    <p>
+                        <a href="pages/seller-fill-form.php" class="become-seller-link">Become a seller</a> to
+                        add products!
+                    </p>
+                </div>
+                <?php endif; ?>
+
                 <a href="pages/product.php" class="view-all-products-btn">View All Products</a>
             </div>
         </section>

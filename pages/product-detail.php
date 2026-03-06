@@ -10,7 +10,7 @@ $reviews = [];
 try {
     // Fetch product details
     $stmt = $connection->prepare("
-        SELECT p.*, s.business_name, s.is_verified 
+        SELECT p.*, s.business_name, s.is_verified, s.seller_id 
         FROM products p 
         JOIN sellers s ON p.seller_id = s.seller_id 
         WHERE p.product_id = ? AND p.is_active = 1
@@ -37,6 +37,12 @@ try {
 if (!$product) {
     header('Location: product.php');
     exit;
+}
+
+// Check if current user is the seller who owns this product
+$isOwner = false;
+if (isset($_SESSION['user_id']) && isset($_SESSION['seller_id'])) {
+    $isOwner = ($_SESSION['seller_id'] == $product['seller_id']);
 }
 
 // Helper function to format username with user ID (like @username #00001)
@@ -113,86 +119,6 @@ if (empty($thumbnailUrls)) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/product-detail.css">
     <link rel="stylesheet" href="../styles/footer.css">
-    <style>
-    /* Review section fixes */
-    .review-card {
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        background: #ffffff;
-    }
-
-    .review-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .reviewer-profile {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: #f5f5f5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #FF8246;
-    }
-
-    .reviewer-profile img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .reviewer-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .reviewer-username {
-        font-size: 1rem;
-        color: #000000;
-    }
-
-    .review-rating {
-        display: flex;
-        gap: 5px;
-        margin-bottom: 10px;
-    }
-
-    .star {
-        width: 18px;
-        height: 18px;
-        filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
-    }
-
-    .review-comment {
-        color: #333333;
-        line-height: 1.6;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-    }
-
-    .review-date {
-        font-size: 0.8rem;
-        color: #999999;
-    }
-
-    .no-reviews-message {
-        text-align: center;
-        padding: 40px;
-        background: #f5f5f5;
-        border-radius: 8px;
-        color: #666666;
-        font-size: 1rem;
-    }
-    </style>
 </head>
 
 <body>
@@ -284,9 +210,15 @@ if (empty($thumbnailUrls)) {
                             </div>
                         </div>
 
-                        <!-- Action buttons inside info column -->
+                        <!-- Action buttons inside info column - MODIFIED for seller view -->
                         <div class="product-actions">
-                            <?php if (isset($_SESSION['user_id'])): ?>
+                            <?php if ($isOwner): ?>
+                            <!-- SELLER VIEWING THEIR OWN PRODUCT - Show unavailable button (black like login button) -->
+                            <button class="btn btn-secondary product-unavailable-btn" id="productUnavailableBtn">
+                                <span class="btn-text">Product Unavailable</span>
+                            </button>
+                            <?php elseif (isset($_SESSION['user_id'])): ?>
+                            <!-- REGISTERED USER (NOT SELLER) VIEWING PRODUCT -->
                             <button class="btn btn-primary add-to-cart-btn"
                                 data-product-id="<?php echo $product['product_id']; ?>"
                                 <?php echo $product['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
@@ -298,8 +230,9 @@ if (empty($thumbnailUrls)) {
                                 <span class="btn-text">Buy Now</span>
                             </button>
                             <?php else: ?>
+                            <!-- NOT LOGGED IN -->
                             <a href="sign-in.php?redirect=<?php echo urlencode('product-detail.php?id=' . $product['product_id']); ?>"
-                                class="btn btn-primary login-to-purchase-btn">
+                                class="btn btn-secondary login-to-purchase-btn">
                                 <span class="btn-text">Login to Purchase</span>
                             </a>
                             <?php endif; ?>
@@ -308,7 +241,7 @@ if (empty($thumbnailUrls)) {
                 </div>
             </div>
 
-            <!-- Reviews Section (full width below) - FIXED: Only show username with user ID, no full name -->
+            <!-- Reviews Section (full width below) -->
             <div class="reviews-section">
                 <h2 class="reviews-title">Customer Reviews (<?php echo count($reviews); ?>)</h2>
 

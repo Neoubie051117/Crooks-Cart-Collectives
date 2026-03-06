@@ -1,6 +1,6 @@
-/* Crooks-Cart-Collectives/scripts/product-details.js */
+/* Crooks-Cart-Collectives/scripts/product-detail.js */
 /* Revised with seller-new-product style hover preview and thumbnail navigation */
-/* Fixed: Proper handling of placeholder images */
+/* Added seller product unavailable button handler */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
     const buyNowBtn = document.querySelector('.buy-now-btn');
+    const unavailableBtn = document.getElementById('productUnavailableBtn');
     
     // ===== STATE =====
     let currentIndex = 0;
@@ -156,53 +157,26 @@ document.addEventListener('DOMContentLoaded', function() {
         notification.appendChild(iconSpan);
         notification.appendChild(messageSpan);
         
-        // Add styles for the notification content
-        notification.style.cssText = `
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 12px 20px;
-            background: #000000;
-            color: white;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 9999;
-            animation: slideInRight 0.3s ease;
-            font-weight: 500;
-            max-width: 300px;
-            word-break: break-word;
-            border-left: 4px solid ${type === 'success' ? '#FF8246' : '#FF8246'};
-        `;
-        
         document.body.appendChild(notification);
         
-        // Add animation styles if not present
-        if (!document.getElementById('notification-animations')) {
-            const style = document.createElement('style');
-            style.id = 'notification-animations';
-            style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOutRight {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
-        // Remove notification after 3 seconds
+        // Remove notification after 2 seconds
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease';
             setTimeout(() => {
                 notification.remove();
             }, 300);
-        }, 3000);
+        }, 2000);
+    }
+    
+    // ===== HANDLE UNAVAILABLE BUTTON (FOR SELLERS) =====
+    if (unavailableBtn) {
+        unavailableBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Show notification
+            showNotification('You sell this product', 'info');
+        });
     }
     
     // ===== CART ACTION =====
@@ -326,37 +300,10 @@ window.ProductDetails = {
     showNotification: function(message, type) {
         const notification = document.createElement('div');
         notification.className = `product-notification ${type}`;
-        notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 12px 20px;
-            background: #000000;
-            color: white;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-left: 4px solid #FF8246;
-        `;
-        
-        const iconImg = document.createElement('img');
-        iconImg.src = `../assets/image/icons/${type === 'success' ? 'mail.svg' : 'cancel.svg'}`;
-        iconImg.alt = type === 'success' ? 'Success' : 'Error';
-        iconImg.style.width = '20px';
-        iconImg.style.height = '20px';
-        
-        const messageSpan = document.createElement('span');
-        messageSpan.textContent = message;
-        
-        notification.appendChild(iconImg);
-        notification.appendChild(messageSpan);
         document.body.appendChild(notification);
         
         setTimeout(() => {
             notification.remove();
-        }, 3000);
+        }, 2000);
     }
 };

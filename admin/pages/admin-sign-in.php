@@ -48,7 +48,7 @@ if (isset($_SESSION['admin_id'])) {
             <button type="submit" class="btn btn-primary">Sign In</button>
 
             <p class="signup-link">
-                Don't have an admin account? <a href="admin-sign-up.php">Register</a>
+                Sign in as user? <a href="/pages/sign-in.php">Back</a>
             </p>
         </form>
     </div>
