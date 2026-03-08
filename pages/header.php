@@ -3,49 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ===== FIXED: Separate user login from admin login =====
-// Check if user is logged in (regular user/customer/seller)
-$isUserLoggedIn = isset($_SESSION['user_id']);
-
-// Check if user is a seller AND verified (from session or database)
-$isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
-$sellerVerified = isset($_SESSION['seller_verified']) && $_SESSION['seller_verified'] === true;
-
-// Default profile picture (logo for not logged in)
-$profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
-
-// If user is logged in, try to get their profile picture
-if ($isUserLoggedIn && isset($_SESSION['user_id'])) {
-    try {
-        // Include database and data storage handler
-        require_once(dirname(__FILE__, 2) . '/database/database-connect.php');
-        require_once(dirname(__FILE__, 2) . '/database/data-storage-handler.php');
-        
-        // Fetch user's profile picture
-        $stmt = $connection->prepare("SELECT profile_picture FROM users WHERE user_id = ?");
-        $stmt->execute([$_SESSION['user_id']]);
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($userData && !empty($userData['profile_picture'])) {
-            // Generate URL for profile picture
-            if (function_exists('getFileUrl')) {
-                $profilePictureUrl = getFileUrl($userData['profile_picture']);
-            } else {
-                // Fallback
-                if (strpos($userData['profile_picture'], 'Crooks-Data-Storage/') === 0) {
-                    $profilePictureUrl = '../database/data-storage-handler.php?action=serve&path=' . urlencode($userData['profile_picture']);
-                } else {
-                    $profilePictureUrl = $pathPrefix . $userData['profile_picture'];
-                }
-            }
-        }
-    } catch (Exception $e) {
-        error_log("Error fetching profile picture: " . $e->getMessage());
-        // Fallback to logo
-        $profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
-    }
-}
-
+// ===== DEFINE PATH PREFIX FIRST =====
 // Path detection
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_dir = dirname($_SERVER['PHP_SELF']);
@@ -60,6 +18,56 @@ if ($is_root) {
 } else {
     $depth = substr_count($current_dir, '/') - 1;
     $pathPrefix = str_repeat('../', $depth);
+}
+
+// ===== CHECK USER LOGIN STATUS =====
+// Check if user is logged in (regular user/customer/seller)
+$isUserLoggedIn = isset($_SESSION['user_id']);
+
+// Check if user is a seller AND verified (from session or database)
+$isSeller = isset($_SESSION['is_seller']) && $_SESSION['is_seller'] === true;
+$sellerVerified = isset($_SESSION['seller_verified']) && $_SESSION['seller_verified'] === true;
+
+// Default profile picture (always starts as logo)
+$profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
+
+// If user is logged in, try to get their profile picture from database
+if ($isUserLoggedIn && isset($_SESSION['user_id'])) {
+    try {
+        // Include database and data storage handler
+        $database_path = dirname(__FILE__, 2) . '/database/database-connect.php';
+        $storage_path = dirname(__FILE__, 2) . '/database/data-storage-handler.php';
+        
+        if (file_exists($database_path) && file_exists($storage_path)) {
+            require_once($database_path);
+            require_once($storage_path);
+            
+            // Fetch user's profile picture
+            $stmt = $connection->prepare("SELECT profile_picture FROM users WHERE user_id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Only update if profile picture exists and is not empty
+            if ($userData && !empty($userData['profile_picture'])) {
+                // Generate URL for profile picture
+                if (function_exists('getFileUrl')) {
+                    $profilePictureUrl = getFileUrl($userData['profile_picture']);
+                } else {
+                    // Fallback
+                    if (strpos($userData['profile_picture'], 'Crooks-Data-Storage/') === 0) {
+                        $profilePictureUrl = $pathPrefix . 'database/data-storage-handler.php?action=serve&path=' . urlencode($userData['profile_picture']);
+                    } else {
+                        $profilePictureUrl = $pathPrefix . $userData['profile_picture'];
+                    }
+                }
+            }
+            // If profile_picture is NULL or empty, $profilePictureUrl remains the default logo
+        }
+    } catch (Exception $e) {
+        error_log("Error fetching profile picture: " . $e->getMessage());
+        // On error, keep using the default logo
+        $profilePictureUrl = $pathPrefix . 'assets/image/brand/Logo.png';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -80,17 +88,15 @@ if ($is_root) {
         <div class="header-logo">
             <a href="<?php echo $pathPrefix; ?>index.php" class="logo-link"
                 style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                <?php if ($isUserLoggedIn): ?>
-                <!-- CIRCULAR PROFILE PICTURE WHEN LOGGED IN -->
+
+                <!-- ALWAYS SHOW THE PROFILE CIRCLE CONTAINER -->
+                <!-- IMAGE INSIDE CHANGES BASED ON LOGIN STATUS -->
                 <div class="profile-circle">
-                    <img src="<?php echo $profilePictureUrl; ?>" alt="Profile" class="profile-circle-image"
+                    <img src="<?php echo htmlspecialchars($profilePictureUrl); ?>" alt="Profile"
+                        class="profile-circle-image"
                         onerror="this.onerror=null; this.src='<?php echo $pathPrefix; ?>assets/image/brand/Logo.png';">
                 </div>
-                <?php else: ?>
-                <!-- LOGO WHEN NOT LOGGED IN -->
-                <img id="logo" src="<?php echo $pathPrefix; ?>assets/image/brand/Logo.png" alt="Logo"
-                    style="height: 40px; width: auto;">
-                <?php endif; ?>
+
                 <div class="title"><span>Crook's</span> Cart <span>Collectives</span></div>
             </a>
         </div>

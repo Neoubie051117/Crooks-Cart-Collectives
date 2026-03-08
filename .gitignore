@@ -2,3 +2,4 @@
 database/error_log.txt
 admin/databaase/error_log.txt
 logs/output/*
+backup/*

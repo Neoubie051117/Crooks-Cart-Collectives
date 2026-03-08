@@ -427,13 +427,12 @@ html {
 /* Confirm button - ORANGE background with BLACK text */
 .logout-modal-btn.btn-confirm {
     background-color: #FF8246 !important;
-    color: #000000 !important;
+    color: #ffffff !important;
     border: 1px solid #FF8246 !important;
 }
 
 .logout-modal-btn.btn-confirm:hover {
     background-color: #e66a2e !important;
-    color: #000000 !important;
 }
 
 .logout-modal-btn.btn-confirm:disabled {
