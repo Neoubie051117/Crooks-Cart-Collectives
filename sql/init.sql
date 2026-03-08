@@ -2,6 +2,7 @@
 -- DATABASE: crooks_cart_collectives
 -- REVISED SCHEMA - REMOVED seller_reports TABLE
 -- ADDED payment_method ENUM for orders table
+-- ADDED last_log field to administrators table for log tracking
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -26,7 +27,7 @@ CREATE TABLE users (
 );
 
 -- =====================================================
--- ADMINISTRATORS TABLE
+-- ADMINISTRATORS TABLE - ADDED last_log field
 -- =====================================================
 CREATE TABLE administrators (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,7 +38,8 @@ CREATE TABLE administrators (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255),
-    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_log TIMESTAMP NULL DEFAULT NULL
 );
 
 -- =====================================================

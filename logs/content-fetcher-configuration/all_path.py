@@ -17,7 +17,7 @@ filesToCheck = [
     # =========================
     
     "/sql/init.sql",
-    # "/sql/dummy_data.sql",
+    "/sql/dummy_data.sql",
     
     # =========================
     # ADMIN ROOT
@@ -25,14 +25,20 @@ filesToCheck = [
 
     "/admin/admin-index.php",
     
-
+    #Database Connect
+    # "/admin/database/admin-database-connect.php",
+    # "/database/database-connect.php",
+    
+    #Database Public
+    "/backup/build/admin-database-connect.php",
+    "/backup/build/database-connect.php",
+    
     # =========================
     # ADMIN DATABASE
     # =========================
-
+    "/admin/database/admin-notification-handler.php",
     "/admin/database/admin-auth-handler.php",
     "/admin/database/admin-data-storage-handler.php",
-    "/admin/database/admin-database-connect.php",
     "/admin/database/admin-logs-handler.php",
     "/admin/database/admin-profile-handler.php",
     "/admin/database/admin-seller-profile-handler.php",
@@ -79,21 +85,20 @@ filesToCheck = [
     # ADMIN STYLES
     # =========================
 
-    "/admin/styles/admin-dashboard.css",
-    "/admin/styles/admin-footer.css",
-    "/admin/styles/admin-header.css",
-    "/admin/styles/admin-index.css",
-    "/admin/styles/admin-logs.css",
-    "/admin/styles/admin-privacy-policy.css",
-    "/admin/styles/admin-profile.css",
-    "/admin/styles/admin-seller-profile.css",
-    "/admin/styles/admin-sign-in.css",
-    "/admin/styles/admin-sign-out.css",
-    "/admin/styles/admin-sign-up.css",
-    "/admin/styles/admin-terms-and-conditions.css",
-    "/admin/styles/admin-verify-sellers.css",
-
-    "/database/database-connect.php",
+    # "/admin/styles/admin-dashboard.css",
+    # "/admin/styles/admin-footer.css",
+    # "/admin/styles/admin-header.css",
+    # "/admin/styles/admin-index.css",
+    # "/admin/styles/admin-logs.css",
+    # "/admin/styles/admin-privacy-policy.css",
+    # "/admin/styles/admin-profile.css",
+    # "/admin/styles/admin-seller-profile.css",
+    # "/admin/styles/admin-sign-in.css",
+    # "/admin/styles/admin-sign-out.css",
+    # "/admin/styles/admin-sign-up.css",
+    # "/admin/styles/admin-terms-and-conditions.css",
+    # "/admin/styles/admin-verify-sellers.css",
+    
     "/database/sign-in-handler.php",
     "/database/sign-out-handler.php",
     "/database/sign-up-handler.php",
@@ -161,28 +166,28 @@ filesToCheck = [
     # STYLES
     # =========================
     
-    "/styles/about.css",
-    "/styles/cart.css",
-    "/styles/checkout.css",
-    "/styles/contact.css",
-    "/styles/customer-dashboard.css",
-    "/styles/footer.css",
+    # "/styles/about.css",
+    # "/styles/cart.css",
+    # "/styles/checkout.css",
+    # "/styles/contact.css",
+    # "/styles/customer-dashboard.css",
+    # "/styles/footer.css",
     "/styles/header.css",
-    "/styles/index.css",
-    "/styles/orders.css",
-    "/styles/privacy-policy.css",
-    "/styles/product-detail.css",
-    "/styles/product.css",
-    "/styles/profile.css",
-    "/styles/seller-process-order.css",
-    "/styles/seller-registration.css",
-    "/styles/seller-dashboard.css",
-    "/styles/seller-manage-product.css",
-    "/styles/seller-new-product.css",
-    "/styles/sign-in.css",
-    "/styles/sign-out.css",
-    "/styles/sign-up.css",
-    "/styles/terms-and-conditions.css",
+    # "/styles/index.css",
+    # "/styles/orders.css",
+    # "/styles/privacy-policy.css",
+    # "/styles/product-detail.css",
+    # "/styles/product.css",
+    # "/styles/profile.css",
+    # "/styles/seller-process-order.css",
+    # "/styles/seller-registration.css",
+    # "/styles/seller-dashboard.css",
+    # "/styles/seller-manage-product.css",
+    # "/styles/seller-new-product.css",
+    # "/styles/sign-in.css",
+    # "/styles/sign-out.css",
+    # "/styles/sign-up.css",
+    # "/styles/terms-and-conditions.css",
     
     # =========================
     # STYLES

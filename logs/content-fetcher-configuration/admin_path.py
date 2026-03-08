@@ -2,16 +2,22 @@ filesToCheck = [
     
     #File Structure
     "logs/requirement/Instructions.md",
-    "/logs/output/Project_Structure.md",
+    "logs/output/Project_Structure.md",
+    
+    # #Docker Configs
+    # "/docker/docker-compose.yml",
+    # "/docker/database/init.sql",
+    # "/docker/database/dummy_data.sql",
+
+    # Root
+    "/index.php",
 
     # =========================
-    # DATABASE
+    # SQL
     # =========================
     
-    "/admin/schema/dbCreation.sql",
-    "/admin/schema/dummyAdmin.sql",
-    "/admin/schema/dummySeller.sql",
-    "/admin/schema/dummyUser.sql",
+    "/sql/init.sql",
+    "/sql/dummy_data.sql",
     
     # =========================
     # ADMIN ROOT
@@ -19,17 +25,22 @@ filesToCheck = [
 
     "/admin/admin-index.php",
     
-
+    #Database Connect
+    # "/admin/database/admin-database-connect.php",
+    # "/database/database-connect.php",
+    
+    #Database Public
+    "/backup/build/admin-database-connect.php",
+    "/backup/build/database-connect.php",
+    
     # =========================
     # ADMIN DATABASE
     # =========================
-
+    "/admin/database/admin-notification-handler.php",
     "/admin/database/admin-auth-handler.php",
     "/admin/database/admin-data-storage-handler.php",
-    "/admin/database/admin-database-connect.php",
     "/admin/database/admin-logs-handler.php",
     "/admin/database/admin-profile-handler.php",
-    "/admin/database/admin-reports-handler.php",
     "/admin/database/admin-seller-profile-handler.php",
     "/admin/database/admin-sign-in-handler.php",
     "/admin/database/admin-sign-out-handler.php",
@@ -42,7 +53,6 @@ filesToCheck = [
 
     "/admin/pages/admin-dashboard.php",
     "/admin/pages/admin-logs.php",
-    "/admin/pages/admin-manage-report.php",
     "/admin/pages/admin-profile.php",
     "/admin/pages/admin-seller-profile.php",
     "/admin/pages/admin-sign-in.php",

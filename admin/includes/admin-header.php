@@ -28,7 +28,16 @@ if ($is_includes || $is_pages || $is_database) {
 $adminName = '';
 $adminProfilePic = $pathPrefix . 'assets/image/brand/Logo.png'; // Default to logo
 
-// ===== FIXED: Load admin profile picture from database if logged in =====
+// Initialize session timestamps for notifications if not set
+if (!isset($_SESSION['last_queue_view']) && $isAdminLoggedIn) {
+    $_SESSION['last_queue_view'] = 0; // Start at 0 so dot shows if any pending exist
+    error_log("INIT: Set last_queue_view to 0 for admin " . ($_SESSION['admin_id'] ?? 'unknown'));
+}
+
+// Check for pending notifications
+$pendingQueueCount = 0;
+
+// ===== Get data from database =====
 if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
     $adminId = $_SESSION['admin_id'];
     $adminFirstName = $_SESSION['admin_first_name'] ?? '';
@@ -72,8 +81,17 @@ if ($isAdminLoggedIn && isset($_SESSION['admin_id'])) {
                     }
                 }
             }
+            
+            // ===== CHECK FOR PENDING QUEUE ITEMS =====
+            if ($connection) {
+                // Count pending seller applications for QUEUE
+                $stmt = $connection->prepare("SELECT COUNT(*) as count FROM sellers WHERE is_verified = 'pending'");
+                $stmt->execute();
+                $pendingQueueCount = $stmt->fetch()['count'] ?? 0;
+            }
+            
         } catch (Exception $e) {
-            error_log("Error fetching admin data in header: " . $e->getMessage());
+            error_log("Error fetching admin data or pending counts in header: " . $e->getMessage());
         }
     } else {
         // Use session data if available
@@ -118,6 +136,14 @@ if ($isAdminLoggedIn) {
 } else {
     $logoLink .= 'admin-index.php';
 }
+
+// Determine if we're on queue or logs page
+$isQueuePage = ($current_page === 'admin-verify-sellers.php');
+$isLogsPage = ($current_page === 'admin-logs.php');
+
+// For debugging
+error_log("Page: $current_page, isQueuePage: " . ($isQueuePage ? 'true' : 'false') . ", isLogsPage: " . ($isLogsPage ? 'true' : 'false'));
+error_log("Pending queue count: $pendingQueueCount");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,6 +156,22 @@ if ($isAdminLoggedIn) {
 
     <script defer src="<?php echo $pathPrefix; ?>scripts/admin-header.js"></script>
     <script defer src="<?php echo $pathPrefix; ?>scripts/admin-sign-out.js"></script>
+
+    <?php if ($isAdminLoggedIn): ?>
+    <!-- Pass session timestamps and page info to JavaScript -->
+    <script>
+    window.lastQueueView = <?php echo (int)($_SESSION['last_queue_view'] ?? 0); ?>;
+    window.pendingQueueCount = <?php echo (int)$pendingQueueCount; ?>;
+    window.currentPage = '<?php echo $current_page; ?>';
+    window.isQueuePage = <?php echo $isQueuePage ? 'true' : 'false'; ?>;
+    window.isLogsPage = <?php echo $isLogsPage ? 'true' : 'false'; ?>;
+    console.log('Last queue view:', window.lastQueueView);
+    console.log('Pending queue count:', window.pendingQueueCount);
+    console.log('Current page:', window.currentPage);
+    console.log('Is queue page:', window.isQueuePage);
+    console.log('Is logs page:', window.isLogsPage);
+    </script>
+    <?php endif; ?>
 </head>
 
 <body>
@@ -144,9 +186,6 @@ if ($isAdminLoggedIn) {
                 </div>
                 <div class="title">
                     <span>Admin</span> Panel
-                    <?php if (!empty($adminName) && $isAdminLoggedIn): ?>
-                    <!-- <span class="admin-name">(<?php echo htmlspecialchars($adminName); ?>)</span> -->
-                    <?php endif; ?>
                 </div>
             </a>
         </div>
@@ -162,8 +201,14 @@ if ($isAdminLoggedIn) {
                 <!-- Logged in admin navigation - DESKTOP -->
                 <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">MANAGE</a>
                 <a href="<?php echo $pathPrefix; ?>pages/admin-profile.php" class="nav-link">PROFILE</a>
-                <a href="<?php echo $pathPrefix; ?>pages/admin-verify-sellers.php" class="nav-link">QUEUE</a>
-                <a href="<?php echo $pathPrefix; ?>pages/admin-logs.php" class="nav-link">LOGS</a>
+                <a href="<?php echo $pathPrefix; ?>pages/admin-verify-sellers.php" class="nav-link queue-link">
+                    QUEUE
+                    <span class="notification-dot" id="queueDotDesktop"></span>
+                </a>
+                <a href="<?php echo $pathPrefix; ?>pages/admin-logs.php" class="nav-link logs-link">
+                    LOGS
+                    <span class="notification-dot" id="logsDotDesktop"></span>
+                </a>
                 <?php else: ?>
                 <!-- Not logged in - show sign in link -->
                 <a href="<?php echo $pathPrefix; ?>pages/admin-sign-in.php" class="nav-link">SIGN IN</a>
@@ -181,8 +226,14 @@ if ($isAdminLoggedIn) {
         <!-- Mobile navigation for logged in admin -->
         <a href="<?php echo $pathPrefix; ?>pages/admin-dashboard.php" class="nav-link">MANAGE</a>
         <a href="<?php echo $pathPrefix; ?>pages/admin-profile.php" class="nav-link">PROFILE</a>
-        <a href="<?php echo $pathPrefix; ?>pages/admin-verify-sellers.php" class="nav-link">QUEUE</a>
-        <a href="<?php echo $pathPrefix; ?>pages/admin-logs.php" class="nav-link">LOGS</a>
+        <a href="<?php echo $pathPrefix; ?>pages/admin-verify-sellers.php" class="nav-link queue-link">
+            QUEUE
+            <span class="notification-dot" id="queueDotMobile"></span>
+        </a>
+        <a href="<?php echo $pathPrefix; ?>pages/admin-logs.php" class="nav-link logs-link">
+            LOGS
+            <span class="notification-dot" id="logsDotMobile"></span>
+        </a>
         <a href="#" class="social-button logout-trigger">LOG OUT</a>
         <?php else: ?>
         <!-- Mobile navigation for not logged in -->

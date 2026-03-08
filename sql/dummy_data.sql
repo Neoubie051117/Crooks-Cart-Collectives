@@ -113,7 +113,7 @@ WHERE u.username = 'hotdog';
 
 -- Folder: ballpen-for-sale → Product: Ballpen (for Pure Foods - school supplies section)
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'PandaBallpen - Bulto', 'Isang dosenang ballpen - iba\'t ibang kulay', 45.00, 'School Supplies', 40,
+SELECT s.seller_id, 'PandaBallpen - Bulto', 'Isang dosenang ballpen - iba''t ibang kulay', 45.00, 'School Supplies', 40,
 'Crooks-Data-Storage/products/ballpen-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'hotdog';
@@ -152,7 +152,8 @@ INSERT INTO administrators (
     contact_number, 
     username, 
     password, 
-    profile_picture
+    profile_picture,
+    last_log
 ) VALUES (
     'Admin', 
     'User', 
@@ -160,5 +161,6 @@ INSERT INTO administrators (
     '09123456789', 
     'admin', 
     'admin', 
-    'Crooks-Data-Storage/administrators/dummy/profile/profile.png'
+    'Crooks-Data-Storage/administrators/dummy/profile/profile.png',
+    NOW()
 );
