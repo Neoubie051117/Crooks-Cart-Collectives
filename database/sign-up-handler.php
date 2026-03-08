@@ -159,13 +159,16 @@ function handleSignup() {
         exit;
     }
     
+    // ===== FIXED: Hash the password before storing =====
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
     $user_data = [
         ':first_name' => htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8'),
         ':middle_name' => !empty($_POST['middle_name']) ? htmlspecialchars(trim($_POST['middle_name']), ENT_QUOTES, 'UTF-8') : null,
         ':last_name' => htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8'),
         ':email' => $email,
         ':username' => htmlspecialchars($username, ENT_QUOTES, 'UTF-8'),
-        ':password' => $password,
+        ':password' => $hashed_password,
         ':birthdate' => $_POST['birthdate'],
         ':gender' => $_POST['gender'],
         ':contact_number' => $storage_contact,

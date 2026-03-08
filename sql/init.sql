@@ -1,6 +1,7 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
 -- REVISED SCHEMA - REMOVED seller_reports TABLE
+-- ADDED payment_method ENUM for orders table
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -110,7 +111,7 @@ CREATE TABLE carts (
 );
 
 -- =====================================================
--- ORDERS TABLE
+-- ORDERS TABLE - MODIFIED: Enhanced payment_method with ENUM
 -- =====================================================
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,7 +124,7 @@ CREATE TABLE orders (
     subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
     
     shipping_address VARCHAR(255) NOT NULL,
-    payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
+    payment_method ENUM('COD', 'Online') NOT NULL DEFAULT 'COD',
     
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'delivered', 'cancelled') DEFAULT 'pending',
@@ -201,7 +202,7 @@ JOIN customers cu ON o.customer_id = cu.customer_id
 JOIN users u ON cu.user_id = u.user_id
 ORDER BY o.order_date DESC;
 
--- Seller orders view
+-- Seller orders view - payment_method is already included in o.*
 CREATE VIEW seller_orders_view AS
 SELECT 
     o.*,

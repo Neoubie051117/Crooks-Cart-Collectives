@@ -62,6 +62,29 @@ function getSellerProcessImageUrl($mediaPath) {
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/footer.css">
     <link rel="stylesheet" href="../styles/seller-process-order.css">
+    <style>
+    /* Additional styles for payment method display */
+    .payment-method-info {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px dashed #e0e0e0;
+    }
+
+    .payment-method-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        background: #f0f0f0;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #000000;
+    }
+
+    .payment-method-badge img {
+        margin-right: 5px;
+    }
+    </style>
 </head>
 
 <body>

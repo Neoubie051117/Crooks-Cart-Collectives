@@ -1,5 +1,6 @@
 /* Crooks-Cart-Collectives/styles/orders.css */
 /* Unified styling with page-title-header, consistent cards, and proper empty state */
+/* REVISED: Payment method moved to top of shipping details, full width like buttons */
 
 * {
     margin: 0;
@@ -302,7 +303,7 @@ body {
     word-break: break-word;
 }
 
-/* Column 3: Shipping Information */
+/* Column 3: Shipping Information - REVISED */
 .order-shipping-column {
     background: #ffffff;
     padding: 20px;
@@ -314,6 +315,52 @@ body {
     border-radius: 10px;
     padding: 15px;
     border: 1px solid #f0f0f0;
+}
+
+/* Payment method at top - full width like buttons */
+.payment-method-wrapper {
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    width: 100%;
+}
+
+.payment-method-label {
+    font-size: 0.8rem;
+    color: #666666;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+    display: block;
+}
+
+.payment-method-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 6px 12px;
+    background: #ffffff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.payment-method-badge img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(96%) saturate(374%) hue-rotate(338deg) brightness(101%) contrast(101%);
+    flex-shrink: 0;
+}
+
+.payment-method-text {
+    flex: 1;
+    text-align: left;
 }
 
 .shipping-address-text {
@@ -876,6 +923,11 @@ body {
     .action-btn .btn-icon {
         width: 14px;
         height: 14px;
+    }
+    
+    .payment-method-badge {
+        padding: 5px 10px;
+        font-size: 0.85rem;
     }
     
     .empty-state-content {

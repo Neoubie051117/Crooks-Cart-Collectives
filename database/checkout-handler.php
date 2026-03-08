@@ -18,8 +18,28 @@ if ($action !== 'place_order') {
     exit;
 }
 
+// Get payment method from POST
+$payment_method = $_POST['payment_method'] ?? 'COD';
+if (!in_array($payment_method, ['COD', 'Online'])) {
+    $payment_method = 'COD'; // Default to COD if invalid
+}
+
+// Get shipping address from POST (this is the current displayed address)
+$shipping_address = $_POST['shipping_address'] ?? '';
+
+// Validate shipping address
+if (empty(trim($shipping_address))) {
+    echo json_encode(['status' => 'error', 'message' => 'Shipping address is required']);
+    exit;
+}
+
 try {
     $connection->beginTransaction();
+    
+    // Update user's address in database with the current shipping address
+    // This ensures the address is saved for future orders
+    $updateStmt = $connection->prepare("UPDATE users SET address = ? WHERE user_id = ?");
+    $updateStmt->execute([trim($shipping_address), $user_id]);
     
     // Check if this is a direct order (single product without cart) or cart checkout
     $product_id = $_POST['product_id'] ?? 0;
@@ -49,20 +69,27 @@ try {
             exit;
         }
         
-        // Get user shipping address
-        $stmt = $connection->prepare("SELECT address FROM users WHERE user_id = ?");
+        // Double-check that customer exists
+        $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
         $stmt->execute([$user_id]);
-        $user = $stmt->fetch();
+        $customer_check = $stmt->fetch();
         
-        $shipping_address = $user['address'] ?? '';
+        if (!$customer_check) {
+            // Create customer record if missing
+            $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
+            $stmt->execute([$user_id]);
+            $customer_id = $connection->lastInsertId();
+            $_SESSION['customer_id'] = $customer_id; // Update session
+        }
+        
         $subtotal = $product['price'] * $quantity;
         
-        // Create order
+        // Create order with payment method
         $stmt = $connection->prepare("
             INSERT INTO orders (
                 customer_id, seller_id, product_id, quantity, 
-                price, subtotal, shipping_address, status, order_date
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+                price, subtotal, shipping_address, payment_method, status, order_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
         ");
         $stmt->execute([
             $customer_id, 
@@ -71,7 +98,8 @@ try {
             $quantity, 
             $product['price'], 
             $subtotal, 
-            $shipping_address
+            $shipping_address,
+            $payment_method
         ]);
         
         // Update stock
@@ -83,7 +111,7 @@ try {
         // Cart checkout - only include active products
         // Get cart items with product active status check
         $stmt = $connection->prepare("
-            SELECT c.*, p.stock_quantity, p.is_active, p.price as current_price, p.name
+            SELECT c.*, p.stock_quantity, p.is_active, p.price as current_price, p.name, p.seller_id
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
             WHERE c.customer_id = ?
@@ -121,21 +149,28 @@ try {
             }
         }
         
-        // Get user shipping address
-        $stmt = $connection->prepare("SELECT address FROM users WHERE user_id = ?");
+        // Double-check that customer exists
+        $stmt = $connection->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
         $stmt->execute([$user_id]);
-        $user = $stmt->fetch();
-        $shipping_address = $user['address'] ?? '';
+        $customer_check = $stmt->fetch();
         
-        // Create orders and update stock
+        if (!$customer_check) {
+            // Create customer record if missing
+            $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
+            $stmt->execute([$user_id]);
+            $customer_id = $connection->lastInsertId();
+            $_SESSION['customer_id'] = $customer_id; // Update session
+        }
+        
+        // Create orders with payment method and update stock
         foreach ($cartItems as $item) {
             $subtotal = $item['price'] * $item['quantity'];
             
             $stmt = $connection->prepare("
                 INSERT INTO orders (
                     customer_id, seller_id, product_id, quantity, 
-                    price, subtotal, shipping_address, status, order_date
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+                    price, subtotal, shipping_address, payment_method, status, order_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
             ");
             $stmt->execute([
                 $customer_id, 
@@ -144,7 +179,8 @@ try {
                 $item['quantity'], 
                 $item['price'], 
                 $subtotal, 
-                $shipping_address
+                $shipping_address,
+                $payment_method
             ]);
             
             // Update stock
@@ -159,10 +195,18 @@ try {
     }
     
     $connection->commit();
-    echo json_encode(['status' => 'success', 'message' => 'Order placed successfully', 'redirect' => 'orders.php']);
+    
+    // Determine payment method display message
+    $payment_message = ($payment_method === 'Online') ? 'Online payment selected (Gcash/Maya)' : 'Cash on Delivery selected';
+    
+    echo json_encode([
+        'status' => 'success', 
+        'message' => 'Order placed successfully. ' . $payment_message, 
+        'redirect' => 'orders.php'
+    ]);
     
 } catch (PDOException $e) {
     $connection->rollBack();
     error_log("Checkout error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
+    echo json_encode(['status' => 'error', 'message' => 'Database error occurred: ' . $e->getMessage()]);
 }

@@ -33,11 +33,11 @@ INSERT INTO sellers (user_id, business_name, identity_path, id_document_path, is
 SELECT user_id, 'Ninja''s Hidden Treasures', 'Crooks-Data-Storage/users/dummy/verification/identity.png', 'Crooks-Data-Storage/users/dummy/verification/id_document.png', 'verified', NOW() FROM users WHERE username = 'ninja';
 
 -- =========================
--- INSERT 2 PRODUCTS PER SELLER WITH NAMES MATCHING THEIR FOLDERS
--- Using the actual directory structure from your file system
+-- INSERT PRODUCTS PER SELLER USING ALL AVAILABLE FOLDERS
+-- Total folders: bag, ballpen, bed, creatine, gpu, hotdogs, ice, mio-motor-cycle, tall-ice, travel-bag
 -- =========================
 
--- ALING BEBANG
+-- ALING BEBANG (3 products)
 -- Folder: bag-for-sale → Product: Bag
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
 SELECT s.seller_id, 'Lumang Bag', 'Second hand na bag - medyo luma pero maganda pa', 120.00, 'Accessories', 15,
@@ -47,12 +47,19 @@ WHERE u.username = 'alingbebang';
 
 -- Folder: ballpen-for-sale → Product: Ballpen
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Second Ballpen', 'Mga lumang ballpen na may tinta pa', 5.00, 'School Supplies', 50,
+SELECT s.seller_id, 'Second Hand Ballpen', 'Mga lumang ballpen na may tinta pa', 5.00, 'School Supplies', 50,
 'Crooks-Data-Storage/products/ballpen-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'alingbebang';
 
--- TOTOY BIBO
+-- Folder: travel-bag-for-sale → Product: Travel Bag
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Pang-Travel na Bag', 'Malaking bag pang-outing - may konting dumi', 180.00, 'Accessories', 7,
+'Crooks-Data-Storage/products/travel-bag-for-sale/'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'alingbebang';
+
+-- TOTOY BIBO (3 products)
 -- Folder: bed-for-sale → Product: Bed
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
 SELECT s.seller_id, 'Lumang Kama', 'Second hand na kama - wooden frame, may konting gasgas', 800.00, 'Furniture', 3,
@@ -67,14 +74,14 @@ SELECT s.seller_id, 'Gamit na Creatine', 'Bukas na pero half pa ang laman - pang
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'totoybibo';
 
--- EL BIMBO
 -- Folder: gpu-for-sale → Product: GPU
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
 SELECT s.seller_id, 'Second Hand GPU', 'Lumang graphics card - GTX 1050 Ti, working condition', 2500.00, 'Electronics', 2,
 'Crooks-Data-Storage/products/gpu-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'thelastelbimby';
+WHERE u.username = 'totoybibo';
 
+-- EL BIMBO (3 products)
 -- Folder: hotdogs-for-sale → Product: Hotdogs
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
 SELECT s.seller_id, 'Tender Juicy Hotdogs', 'Bultong hotdogs - 1 kilo pack, malapit na mag-expire', 80.00, 'Food', 25,
@@ -82,33 +89,47 @@ SELECT s.seller_id, 'Tender Juicy Hotdogs', 'Bultong hotdogs - 1 kilo pack, mala
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'thelastelbimby';
 
--- PURE FOODS
--- Folder: ice-for-sale → Product: Ice
+-- Folder: mio-motor-cycle-for-sale → Product: Mio Motorcycle
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Yelo (Ice)', 'Cracked ice - isang sako, perfect for inuman', 50.00, 'Food', 10,
+SELECT s.seller_id, 'Lumang Mio Motor', 'Yamaha Mio - 2010 model, need ng konting ayos', 15000.00, 'Vehicles', 1,
+'Crooks-Data-Storage/products/mio-motor-cycle-for-sale/'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'thelastelbimby';
+
+-- Folder: ice-for-sale → Product: Ice (regular)
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Yelo (Cracked Ice)', 'Isang sako na yelo - pang-inuman', 50.00, 'Food', 15,
 'Crooks-Data-Storage/products/ice-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
-WHERE u.username = 'hotdog';
+WHERE u.username = 'thelastelbimby';
 
--- Folder: travel-bag-for-sale → Product: Travel Bag
+-- PURE FOODS (2 products - food focused)
+-- Folder: tall-ice-for-sale → Product: Tall Ice (yelong matataas)
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Lumang Travel Bag', 'Malaking bag pang-travel - may sira ang zipper', 150.00, 'Accessories', 8,
-'Crooks-Data-Storage/products/travel-bag-for-sale/'
+SELECT s.seller_id, 'Tall Ice - Matataas na Yelo', 'Pang-kape at softdrinks - mahaba at matigas', 25.00, 'Food', 30,
+'Crooks-Data-Storage/products/tall-ice-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'hotdog';
 
--- LEBRON JAMES
--- Folder: bag-for-sale → Product: Bag (another seller)
+-- Folder: ballpen-for-sale → Product: Ballpen (for Pure Foods - school supplies section)
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Second Hand Backpack', 'Lumang backpack - pang-school', 100.00, 'Accessories', 12,
-'Crooks-Data-Storage/products/bag-for-sale/'
+SELECT s.seller_id, 'PandaBallpen - Bulto', 'Isang dosenang ballpen - iba\'t ibang kulay', 45.00, 'School Supplies', 40,
+'Crooks-Data-Storage/products/ballpen-for-sale/'
+FROM sellers s JOIN users u ON s.user_id = u.user_id
+WHERE u.username = 'hotdog';
+
+-- LEBRON JAMES (2 products)
+-- Folder: travel-bag-for-sale → Product: Travel Bag (another seller)
+INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
+SELECT s.seller_id, 'Lumang Travel Duffel Bag', 'Malaking bag pang-outing - may butas sa gilid', 120.00, 'Accessories', 5,
+'Crooks-Data-Storage/products/travel-bag-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'ninja';
 
--- Folder: ballpen-for-sale → Product: Ballpen (another seller)
+-- Folder: bed-for-sale → Product: Bed (another seller)
 INSERT INTO products (seller_id, name, description, price, category, stock_quantity, media_path)
-SELECT s.seller_id, 'Bulk Ballpens', 'Dose-na ballpen - iba-ibang kulay', 30.00, 'School Supplies', 40,
-'Crooks-Data-Storage/products/ballpen-for-sale/'
+SELECT s.seller_id, 'Second Hand Double Deck', 'Double deck na kama - pang-dorm', 1200.00, 'Furniture', 2,
+'Crooks-Data-Storage/products/bed-for-sale/'
 FROM sellers s JOIN users u ON s.user_id = u.user_id
 WHERE u.username = 'ninja';
 

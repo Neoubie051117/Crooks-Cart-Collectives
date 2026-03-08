@@ -1,5 +1,5 @@
 <?php
-// Admin Sign In Handler - MODIFIED for plain text passwords
+// Admin Sign In Handler - MODIFIED for password hashing with backward compatibility
 session_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
@@ -60,11 +60,26 @@ function handleAdminSignin() {
         
         error_log("Admin found: ID=" . $admin['admin_id'] . ", Username=" . $admin['username'] . ", Email=" . $admin['email']);
         
-        // ===== FIXED: Plain text password comparison (demo only) =====
-        // No hashing - direct string comparison as per instructions
-        if ($password !== $admin['password']) {
+        // ===== FIXED: Password verification with backward compatibility =====
+        $password_valid = false;
+        
+        // First try password_verify (for hashed passwords)
+        if (password_verify($password, $admin['password'])) {
+            $password_valid = true;
+        }
+        // Fallback to plain text comparison for existing accounts
+        else if ($password === $admin['password']) {
+            $password_valid = true;
+            
+            // Automatically rehash the password for future security
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $update_stmt = $connection->prepare("UPDATE administrators SET password = ? WHERE admin_id = ?");
+            $update_stmt->execute([$hashed_password, $admin['admin_id']]);
+            error_log("Admin password rehashed for ID: " . $admin['admin_id']);
+        }
+        
+        if (!$password_valid) {
             error_log("Signin failed: Password mismatch for admin ID: " . $admin['admin_id']);
-            error_log("Expected: " . $admin['password'] . ", Received: " . $password);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }

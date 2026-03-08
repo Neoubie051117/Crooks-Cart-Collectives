@@ -1,0 +1,92 @@
+# BEGIN Custom Security Rules
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect sensitive files from direct access
+<FilesMatch "\.(env|ini|log|sql|txt|md|json|lock|config|yml|xml|bak|backup|swp|dist|db|inc|phps|phtml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Hide .htaccess itself
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to hidden files (like .git, .svn, .idea)
+RedirectMatch 404 /\..*$
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Prevent clickjacking - strict
+    Header set X-Frame-Options "DENY"
+    
+    # Enable XSS protection
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Restrict referrer information
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # HSTS (Force HTTPS) - Uncomment if using HTTPS
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Content Security Policy - adjust as needed
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Prevent access to PHP files in database folder
+RewriteEngine On
+RewriteRule ^database/.*\.php$ - [F,L]
+
+# Prevent access to PHP files in admin/database folder
+RewriteRule ^admin/database/.*\.php$ - [F,L]
+
+# Block common exploit attempts
+RewriteCond %{QUERY_STRING} (eval\() [NC,OR]
+RewriteCond %{QUERY_STRING} (base64_encode|base64_decode) [NC,OR]
+RewriteCond %{QUERY_STRING} (union.*select.*from) [NC,OR]
+RewriteCond %{QUERY_STRING} (concat.*\() [NC,OR]
+RewriteCond %{QUERY_STRING} (information_schema) [NC,OR]
+RewriteCond %{QUERY_STRING} (drop\s+table) [NC,OR]
+RewriteCond %{QUERY_STRING} (insert\s+into) [NC,OR]
+RewriteCond %{QUERY_STRING} (delete\s+from) [NC,OR]
+RewriteCond %{QUERY_STRING} (select.*from.*where) [NC,OR]
+RewriteCond %{QUERY_STRING} (load_file) [NC,OR]
+RewriteCond %{QUERY_STRING} (outfile) [NC]
+RewriteRule .* - [F,L]
+
+# Block suspicious user agents
+RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|curl|python|nikto|scanner|sqlmap|havij|acunetix|nessus|nsauditor|paros|webinspect|openvas|netsparker) [NC]
+RewriteRule .* - [F,L]
+
+# Protect against PHP injection
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_flag expose_php Off
+    php_flag log_errors On
+    php_value error_log "logs/php_errors.log"
+    php_value max_execution_time 30
+    php_value max_input_time 60
+    php_value memory_limit 128M
+    php_value post_max_size 8M
+    php_value upload_max_filesize 2M
+</IfModule>
+
+# END Custom Security Rules
+
+# Your existing InfinityFree rules (DO NOT REMOVE)
+DirectoryIndex index.php index.html index.htm index2.html
+
+ErrorDocument 403 https://errors.infinityfree.net/errors/403/
+ErrorDocument 404 https://errors.infinityfree.net/errors/404/
+ErrorDocument 500 https://errors.infinityfree.net/errors/500/

@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-process-order.js */
-/* Updated to handle inactive products with "Product Unavailable" message */
+/* Updated to handle payment method display at top of shipping details and inactive products */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -171,6 +171,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return '../' + mediaPath;
     }
 
+    // ============= FORMAT PAYMENT METHOD =============
+    function formatPaymentMethod(method) {
+        if (!method) return 'COD';
+        
+        switch(method) {
+            case 'COD':
+                return 'Cash on Delivery';
+            case 'Online':
+                return 'Online Payment';
+            default:
+                return method;
+        }
+    }
+
+    // ============= GET PAYMENT ICON =============
+    function getPaymentIcon(method) {
+        if (method === 'Online') {
+            return '../assets/image/icons/mail.svg';
+        }
+        return '../assets/image/icons/cart-shopping.svg';
+    }
+
     // ============= ESCAPE HTML =============
     function escapeHtml(text) {
         if (!text) return '';
@@ -207,6 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const subtotal = Number(order.subtotal).toFixed(2);
             const total = Number(order.subtotal).toFixed(2);
+            
+            // Format payment method
+            const paymentMethodDisplay = formatPaymentMethod(order.payment_method);
+            const paymentIcon = getPaymentIcon(order.payment_method);
             
             // Check if product is active
             const isProductActive = order.is_active ? true : false;
@@ -264,6 +290,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="order-shipping-column">
                             <div class="column-title">Customer Details</div>
                             <div class="shipping-details">
+                                <!-- Payment Method at the TOP of shipping details -->
+                                <div class="payment-method-wrapper">
+                                    <span class="payment-method-label">Payment Method</span>
+                                    <span class="payment-method-badge">
+                                        <img src="${paymentIcon}" alt="${paymentMethodDisplay}">
+                                        <span class="payment-method-text">${paymentMethodDisplay}</span>
+                                    </span>
+                                </div>
+                                
                                 <p><strong>Name:</strong> ${customerName}</p>
                                 <p class="shipping-address-text"><strong>Address:</strong> ${escapeHtml(order.shipping_address || 'No address provided')}</p>
                                 <p><strong>Contact:</strong> ${escapeHtml(order.contact_number || 'N/A')}</p>

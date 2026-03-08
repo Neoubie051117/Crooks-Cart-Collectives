@@ -58,9 +58,26 @@ function handleSignin() {
             exit;
         }
         
-        // Plain text comparison (keep as per project)
-        if ($password !== $user['password']) {
-            error_log("Password mismatch for user: " . $identifier);
+        // ===== FIXED: Password verification with backward compatibility =====
+        $password_valid = false;
+        
+        // First try password_verify (for hashed passwords)
+        if (password_verify($password, $user['password'])) {
+            $password_valid = true;
+        }
+        // Fallback to plain text comparison for existing accounts
+        else if ($password === $user['password']) {
+            $password_valid = true;
+            
+            // Automatically rehash the password for future security
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $update_stmt = $connection->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+            $update_stmt->execute([$hashed_password, $user['user_id']]);
+            error_log("Password rehashed for user ID: " . $user['user_id']);
+        }
+        
+        if (!$password_valid) {
+            error_log("Password verification failed for user: " . $identifier);
             echo json_encode(['status' => 'error', 'message' => 'invalid-credentials']);
             exit;
         }

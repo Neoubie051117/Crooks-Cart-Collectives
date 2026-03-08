@@ -1,0 +1,31 @@
+# Extra security for admin folder
+Options -Indexes
+
+# Protect PHP files in admin/database
+RewriteEngine On
+RewriteRule ^database/.*\.php$ - [F,L]
+
+# Security Headers (stronger for admin)
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin"
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Limit access to admin area (optional - uncomment if you want IP restriction)
+# Order Deny,Allow
+# Deny from all
+# Allow from 127.0.0.1 192.168. # Allow local network
+# Allow from your-office-ip
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "\.(ini|log|sql|txt|md|json|lock|bak|backup)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

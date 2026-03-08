@@ -22,6 +22,7 @@ switch ($action) {
         
         try {
             // Get orders with product info, handling inactive products
+            // INCLUDED payment_method in the SELECT
             $stmt = $connection->prepare("
                 SELECT 
                     o.order_id,
@@ -34,6 +35,7 @@ switch ($action) {
                     o.cancelled_at,
                     o.cancelled_by,
                     o.shipping_address,
+                    o.payment_method,
                     p.product_id,
                     p.name as product_name,
                     p.media_path as image_path,
@@ -67,6 +69,7 @@ switch ($action) {
         
         try {
             // Get orders with customer info, including inactive product flag
+            // INCLUDED payment_method in the SELECT
             $stmt = $connection->prepare("
                 SELECT 
                     o.order_id,
@@ -79,6 +82,7 @@ switch ($action) {
                     o.cancelled_at,
                     o.cancelled_by,
                     o.shipping_address,
+                    o.payment_method,
                     p.product_id,
                     p.name as product_name,
                     p.media_path as image_path,
@@ -100,7 +104,7 @@ switch ($action) {
             echo json_encode(['status' => 'success', 'data' => $orders]);
             
         } catch (PDOException $e) {
-            error_log("Get seller orders error: " . $e->message);
+            error_log("Get seller orders error: " . $e->getMessage());
             echo json_encode(['status' => 'error', 'message' => 'Database error']);
         }
         break;

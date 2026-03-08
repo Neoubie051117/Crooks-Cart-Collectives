@@ -124,9 +124,12 @@ try {
         exit;
     }
     
-    // Create admin - STORE PASSWORD AS PLAIN TEXT (demo only)
+    // ===== FIXED: Hash the admin password before storing =====
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+    // Create admin - STORE PASSWORD AS HASHED
     $stmt = $connection->prepare("INSERT INTO administrators (first_name, last_name, email, contact_number, username, password, date_joined) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-    $stmt->execute([$first_name, $last_name, $email, $phone, $username, $password]);
+    $stmt->execute([$first_name, $last_name, $email, $phone, $username, $hashed_password]);
     
     // Get the new admin ID
     $admin_id = $connection->lastInsertId();

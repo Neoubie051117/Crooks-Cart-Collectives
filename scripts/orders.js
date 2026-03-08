@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/orders.js */
-/* Updated to handle inactive products with "Product Unavailable" message */
+/* Updated to handle inactive products and display payment method at top of shipping details */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
@@ -208,6 +208,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleDateString(undefined, options);
     }
 
+    // ============= FORMAT PAYMENT METHOD =============
+    function formatPaymentMethod(method) {
+        if (!method) return 'COD';
+        
+        switch(method) {
+            case 'COD':
+                return 'Cash on Delivery';
+            case 'Online':
+                return 'Online Payment';
+            default:
+                return method;
+        }
+    }
+
+    // ============= GET PAYMENT ICON =============
+    function getPaymentIcon(method) {
+        if (method === 'Online') {
+            return '../assets/image/icons/mail.svg';
+        }
+        return '../assets/image/icons/cart-shopping.svg';
+    }
+
     // ============= GET IMAGE PATH =============
     function getProductImageUrl(mediaPath) {
         if (!mediaPath) {
@@ -280,6 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const subtotal = Number(order.subtotal).toFixed(2);
             const total = Number(order.subtotal).toFixed(2);
             
+            // Format payment method
+            const paymentMethodDisplay = formatPaymentMethod(order.payment_method);
+            const paymentIcon = getPaymentIcon(order.payment_method);
+            
             // Check if product is active
             const isProductActive = order.is_active ? true : false;
 
@@ -336,7 +362,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="order-shipping-column">
                             <div class="column-title">Shipping Information</div>
                             <div class="shipping-details" data-order-id="${order.order_id}" data-original="${escapeHtml(order.shipping_address || 'No address provided')}">
+                                <!-- Payment Method at the TOP of shipping details -->
+                                <div class="payment-method-wrapper">
+                                    <span class="payment-method-label">Payment Method</span>
+                                    <span class="payment-method-badge">
+                                        <img src="${paymentIcon}" alt="${paymentMethodDisplay}">
+                                        <span class="payment-method-text">${paymentMethodDisplay}</span>
+                                    </span>
+                                </div>
+                                
+                                <span class="payment-method-label">Address</span>
                                 <p class="shipping-address-text">${escapeHtml(order.shipping_address || 'No address provided')}</p>
+                                
                                 <div class="shipping-edit-controls" style="${isEditable ? 'display: flex;' : 'display: none;'}">
                                     <textarea class="shipping-edit-textarea" rows="3" style="display: none;">${escapeHtml(order.shipping_address || '')}</textarea>
                                     <div class="shipping-buttons">

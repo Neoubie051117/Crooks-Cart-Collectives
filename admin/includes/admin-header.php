@@ -145,7 +145,7 @@ if ($isAdminLoggedIn) {
                 <div class="title">
                     <span>Admin</span> Panel
                     <?php if (!empty($adminName) && $isAdminLoggedIn): ?>
-                    <span class="admin-name">(<?php echo htmlspecialchars($adminName); ?>)</span>
+                    <!-- <span class="admin-name">(<?php echo htmlspecialchars($adminName); ?>)</span> -->
                     <?php endif; ?>
                 </div>
             </a>
