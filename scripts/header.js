@@ -1,5 +1,7 @@
-/* JavaScript File Content */
 document.addEventListener("DOMContentLoaded", () => {
+    // Fix favicon dynamically based on current location
+    fixFavicon();
+    
     // Content fade in effect
     const content = document.querySelector('.content');
     if (content) {
@@ -11,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // Initialize header after a short delay to ensure DOM is ready
-    // Use a flag to prevent double initialization
     if (!window.headerInitialized) {
         setTimeout(() => {
             initializeHeader();
@@ -29,6 +30,96 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// DYNAMIC FAVICON FIX - detects correct path based on current URL
+function fixFavicon() {
+    // Get current path
+    const currentPath = window.location.pathname;
+    console.log('Current path:', currentPath);
+    
+    // Determine if we're in admin area
+    const isAdmin = currentPath.includes('/admin/');
+    
+    // Calculate the correct relative path to the favicon
+    let faviconPath;
+    
+    if (isAdmin) {
+        // We're in admin area
+        if (currentPath.includes('/admin/pages/') || currentPath.includes('/admin/includes/')) {
+            // In admin subfolder - need to go up twice
+            faviconPath = '../../admin/assets/image/brand/Logo.ico';
+        } else {
+            // In admin root
+            faviconPath = 'assets/image/brand/Logo.ico';
+        }
+    } else {
+        // We're in main site
+        if (currentPath.includes('/pages/')) {
+            // In pages folder - go up one level
+            faviconPath = '../assets/image/brand/Logo.ico';
+        } else {
+            // In root
+            faviconPath = 'assets/image/brand/Logo.ico';
+        }
+    }
+    
+    console.log('Setting favicon to:', faviconPath);
+    
+    // Remove any existing favicon links
+    const existingLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+    existingLinks.forEach(link => link.remove());
+    
+    // Create and add the new favicon link
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/x-icon';
+    link.href = faviconPath;
+    document.head.appendChild(link);
+    
+    // Also add shortcut icon for older browsers
+    const shortcutLink = document.createElement('link');
+    shortcutLink.rel = 'shortcut icon';
+    shortcutLink.href = faviconPath;
+    document.head.appendChild(shortcutLink);
+    
+    // Verify the favicon loaded
+    const img = new Image();
+    img.onload = function() {
+        console.log('Favicon loaded successfully:', faviconPath);
+    };
+    img.onerror = function() {
+        console.log('Favicon failed to load:', faviconPath);
+        // Try alternative path if first attempt fails
+        setTimeout(() => {
+            tryAlternativeFavicon(isAdmin);
+        }, 100);
+    };
+    img.src = faviconPath;
+}
+
+// Try alternative paths if first attempt fails
+function tryAlternativeFavicon(isAdmin) {
+    console.log('Trying alternative favicon path...');
+    
+    let altPath;
+    if (isAdmin) {
+        altPath = '/Crooks-Cart-Collectives/admin/assets/image/brand/Logo.ico';
+    } else {
+        altPath = '/Crooks-Cart-Collectives/assets/image/brand/Logo.ico';
+    }
+    
+    const link = document.querySelector('link[rel="icon"]');
+    if (link) {
+        link.href = altPath;
+    }
+    
+    const shortcutLink = document.querySelector('link[rel="shortcut icon"]');
+    if (shortcutLink) {
+        shortcutLink.href = altPath;
+    }
+    
+    console.log('Tried alternative path:', altPath);
+}
+
 function initializeHeader() {
     const menuButton = document.getElementById('menuButton');
     const mobileNav = document.getElementById('mobileNav');
@@ -44,9 +135,9 @@ function initializeHeader() {
         };
     }
     
-    // Mobile menu functionality - FIXED VERSION
+    // Mobile menu functionality
     if (menuButton && mobileNav) {
-        console.log('Initializing mobile menu'); // Debug log
+        console.log('Initializing mobile menu');
         
         // Remove any existing inline styles that might interfere
         mobileNav.style.transform = '';
@@ -67,7 +158,6 @@ function initializeHeader() {
         // Function to toggle menu
         function toggleMenu() {
             const isOpen = mobileNav.classList.contains('open');
-            console.log('Toggling menu, currently open:', isOpen); // Debug log
             
             if (!isOpen) {
                 // Open menu
@@ -88,9 +178,6 @@ function initializeHeader() {
             
             // Force a reflow to ensure CSS transition picks up the change
             void mobileNav.offsetHeight;
-            
-            // Debug - log final computed transform
-            console.log('After toggle, computed transform:', window.getComputedStyle(mobileNav).transform);
         }
         
         // Function to close menu
@@ -100,7 +187,7 @@ function initializeHeader() {
                 backdrop.classList.remove('active');
                 document.body.style.overflow = '';
                 menuButton.classList.remove('active');
-                mobileNav.style.transform = ''; // clear any inline
+                mobileNav.style.transform = '';
             }
         }
         
@@ -139,25 +226,16 @@ function initializeHeader() {
             }
         });
         
-        // Debug - log initial state
-        console.log('Mobile nav initial classes:', mobileNav.className);
-        console.log('Mobile nav initial transform:', window.getComputedStyle(mobileNav).transform);
-        
-        // Mark as initialized
-        window.menuInitialized = true;
-        
+        console.log('Mobile menu initialized');
     } else {
-        console.error('Menu elements not found on first attempt:', {
-            menuButton: !!menuButton,
-            mobileNav: !!mobileNav
-        });
+        console.error('Menu elements not found');
         
-        // Try again after a short delay (in case elements are loaded dynamically)
+        // Try again after a short delay
         if (!window.menuRetryAttempted) {
             window.menuRetryAttempted = true;
             setTimeout(() => {
                 console.log('Retrying menu initialization...');
-                initializeHeader(); // Recursive call to try again
+                initializeHeader();
             }, 500);
         }
     }
@@ -203,15 +281,13 @@ function adjustContentMargin() {
 
 // Function to update cart count
 async function updateCartCount() {
-    // Check if user is logged in by looking for logout modal or checking session via PHP
     const logoutModal = document.getElementById('logoutModal');
-    if (!logoutModal) return; // User not logged in
+    if (!logoutModal) return;
     
     const cartCountEl = document.getElementById('cartCount');
     if (!cartCountEl) return;
     
     try {
-        // Determine correct path for API call
         const currentPath = window.location.pathname;
         let apiPath = '../database/cart-handler.php?action=get_count';
         
@@ -235,44 +311,8 @@ async function updateCartCount() {
     }
 }
 
-// Export functions for use in other scripts if needed
 window.HeaderFunctions = {
     updateCartCount: updateCartCount,
     highlightActiveLink: highlightActiveLink,
     adjustContentMargin: adjustContentMargin
 };
-
-// Add a small test to verify the menu is working
-window.testMenu = function() {
-    const menuButton = document.getElementById('menuButton');
-    const mobileNav = document.getElementById('mobileNav');
-    
-    if (menuButton && mobileNav) {
-        console.log('Menu button found:', menuButton);
-        console.log('Mobile nav found:', mobileNav);
-        console.log('Mobile nav current classes:', mobileNav.className);
-        console.log('Mobile nav computed style display:', window.getComputedStyle(mobileNav).display);
-        console.log('Mobile nav computed style transform:', window.getComputedStyle(mobileNav).transform);
-        console.log('Mobile nav computed style visibility:', window.getComputedStyle(mobileNav).visibility);
-        console.log('Mobile nav computed style opacity:', window.getComputedStyle(mobileNav).opacity);
-        
-        // Manually toggle to test
-        if (mobileNav.classList.contains('open')) {
-            mobileNav.classList.remove('open');
-        } else {
-            mobileNav.classList.add('open');
-        }
-        mobileNav.style.transform = ''; // clear any inline
-        console.log('Mobile nav classes after manual toggle:', mobileNav.className);
-        console.log('Mobile nav computed transform after toggle:', window.getComputedStyle(mobileNav).transform);
-    } else {
-        console.log('Menu elements not found for test');
-    }
-};
-
-// Run test after a short delay
-setTimeout(() => {
-    if (window.location.href.includes('debug') || window.location.hash === '#debug') {
-        window.testMenu();
-    }
-}, 1000);

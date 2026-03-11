@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log('Admin header JS loaded');
     
+    // Fix favicon dynamically based on current location
+    fixFavicon();
+    
     // Content fade in effect
     const content = document.querySelector('.content');
     if (content) {
@@ -33,6 +36,87 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeNotificationDots();
     }, 100);
 });
+
+// DYNAMIC FAVICON FIX - detects correct path based on current URL
+function fixFavicon() {
+    // Get current path
+    const currentPath = window.location.pathname;
+    console.log('Admin current path:', currentPath);
+    
+    // Calculate the correct relative path to the favicon
+    let faviconPath;
+    
+    // We're in admin area
+    if (currentPath.includes('/admin/pages/') || currentPath.includes('/admin/includes/')) {
+        // In admin subfolder - need to go up twice to reach admin root
+        faviconPath = '../../admin/assets/image/brand/Logo.ico';
+    } else if (currentPath.includes('/admin/')) {
+        // In admin root
+        faviconPath = 'assets/image/brand/Logo.ico';
+    } else {
+        // Fallback path
+        faviconPath = 'admin/assets/image/brand/Logo.ico';
+    }
+    
+    console.log('Setting admin favicon to:', faviconPath);
+    
+    // Remove any existing favicon links
+    const existingLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+    existingLinks.forEach(link => link.remove());
+    
+    // Create and add the new favicon link
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/x-icon';
+    link.href = faviconPath;
+    document.head.appendChild(link);
+    
+    // Also add shortcut icon for older browsers
+    const shortcutLink = document.createElement('link');
+    shortcutLink.rel = 'shortcut icon';
+    shortcutLink.href = faviconPath;
+    document.head.appendChild(shortcutLink);
+    
+    // Verify the favicon loaded
+    const img = new Image();
+    img.onload = function() {
+        console.log('Admin favicon loaded successfully:', faviconPath);
+    };
+    img.onerror = function() {
+        console.log('Admin favicon failed to load:', faviconPath);
+        // Try alternative path if first attempt fails
+        setTimeout(() => {
+            tryAlternativeFavicon();
+        }, 100);
+    };
+    img.src = faviconPath;
+}
+
+// Try alternative paths if first attempt fails
+function tryAlternativeFavicon() {
+    console.log('Trying alternative admin favicon path...');
+    
+    let altPath;
+    const currentPath = window.location.pathname;
+    
+    if (currentPath.includes('/admin/')) {
+        altPath = '/Crooks-Cart-Collectives/admin/assets/image/brand/Logo.ico';
+    } else {
+        altPath = '/Crooks-Cart-Collectives/assets/image/brand/Logo.ico';
+    }
+    
+    const link = document.querySelector('link[rel="icon"]');
+    if (link) {
+        link.href = altPath;
+    }
+    
+    const shortcutLink = document.querySelector('link[rel="shortcut icon"]');
+    if (shortcutLink) {
+        shortcutLink.href = altPath;
+    }
+    
+    console.log('Tried alternative admin path:', altPath);
+}
 
 function initializeHeader() {
     const menuButton = document.getElementById('menuButton');

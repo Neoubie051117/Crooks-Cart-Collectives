@@ -33,21 +33,21 @@ session_start();
                 <h3>Personal Information</h3>
 
                 <div class="form-group">
-                    <label for="first_name">First Name *</label>
+                    <label for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name"
                         autocomplete="given-name">
                     <div class="error-message" id="firstNameError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="last_name">Last Name *</label>
+                    <label for="last_name">Last Name</label>
                     <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name"
                         autocomplete="family-name">
                     <div class="error-message" id="lastNameError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="contact_number">Contact Number *</label>
+                    <label for="contact_number">Contact Number</label>
                     <input type="tel" id="contact_number" name="contact_number" required placeholder="09XX XXX XXXX"
                         autocomplete="tel">
                     <div class="help-text">Philippine mobile number (e.g., 0912 345 6789)</div>
@@ -55,14 +55,14 @@ session_start();
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email *</label>
+                    <label for="email">Email</label>
                     <input type="email" id="email" name="email" required placeholder="admin@example.com"
                         autocomplete="email">
                     <div class="error-message" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="username">Username *</label>
+                    <label for="username">Username</label>
                     <input type="text" id="username" name="username" required placeholder="Choose a username"
                         autocomplete="username">
                     <div class="help-text">3-20 characters (letters, numbers, underscore)</div>
@@ -74,7 +74,7 @@ session_start();
                 <h3>Account Security</h3>
 
                 <div class="form-group">
-                    <label for="password">Password *</label>
+                    <label for="password">Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" name="password" required
                             placeholder="Create a strong password" autocomplete="new-password">
@@ -88,7 +88,7 @@ session_start();
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm_password">Confirm Password *</label>
+                    <label for="confirm_password">Confirm Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="confirm_password" name="confirm_password" required
                             placeholder="Confirm your password" autocomplete="new-password">

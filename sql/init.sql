@@ -1,8 +1,5 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
--- REVISED SCHEMA - REMOVED seller_reports TABLE
--- ADDED payment_method ENUM for orders table
--- ADDED last_log field to administrators table for log tracking
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 USE crooks_cart_collectives;
@@ -27,7 +24,7 @@ CREATE TABLE users (
 );
 
 -- =====================================================
--- ADMINISTRATORS TABLE - ADDED last_log field
+-- ADMINISTRATORS TABLE
 -- =====================================================
 CREATE TABLE administrators (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +52,7 @@ CREATE TABLE customers (
 );
 
 -- =====================================================
--- SELLERS TABLE - MODIFIED: is_verified changed from BOOLEAN to ENUM
+-- SELLERS TABLE - rating field removed
 -- =====================================================
 CREATE TABLE sellers (
     seller_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -66,7 +63,6 @@ CREATE TABLE sellers (
     is_verified ENUM('pending', 'rejected', 'verified') DEFAULT 'pending',
     verification_date TIMESTAMP NULL,
     date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    rating DECIMAL(3, 2) DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
         ON DELETE CASCADE
@@ -113,7 +109,7 @@ CREATE TABLE carts (
 );
 
 -- =====================================================
--- ORDERS TABLE - MODIFIED: Enhanced payment_method with ENUM
+-- ORDERS TABLE
 -- =====================================================
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -172,7 +168,7 @@ CREATE INDEX idx_orders_seller_status ON orders(seller_id, status, order_date);
 -- VIEWS for Easy Data Access
 -- =====================================================
 
--- Customer cart view
+-- Customer cart view (KEEP THIS - it's used in cart.php)
 CREATE VIEW customer_cart AS
 SELECT 
     c.*,
@@ -185,7 +181,7 @@ JOIN products p ON c.product_id = p.product_id
 JOIN sellers s ON c.seller_id = s.seller_id
 ORDER BY c.added_at DESC;
 
--- Customer orders view
+-- Customer orders view (KEEP THIS - used in orders.php via order-handler.php)
 CREATE VIEW customer_orders AS
 SELECT 
     o.*,
@@ -200,22 +196,6 @@ SELECT
 FROM orders o
 JOIN products p ON o.product_id = p.product_id
 JOIN sellers s ON o.seller_id = s.seller_id
-JOIN customers cu ON o.customer_id = cu.customer_id
-JOIN users u ON cu.user_id = u.user_id
-ORDER BY o.order_date DESC;
-
--- Seller orders view - payment_method is already included in o.*
-CREATE VIEW seller_orders_view AS
-SELECT 
-    o.*,
-    p.name AS product_name,
-    p.media_path AS product_media,
-    u.first_name,
-    u.last_name,
-    u.email,
-    u.contact_number
-FROM orders o
-JOIN products p ON o.product_id = p.product_id
 JOIN customers cu ON o.customer_id = cu.customer_id
 JOIN users u ON cu.user_id = u.user_id
 ORDER BY o.order_date DESC;

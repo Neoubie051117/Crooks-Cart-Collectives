@@ -151,6 +151,9 @@ error_log("Pending queue count: $pendingQueueCount");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Admin favicon - using ICO format -->
+    <link rel="icon" type="image/x-icon" href="/Crooks-Cart-Collectives/admin/assets/image/brand/favicon.ico">
+    <link rel="shortcut icon" href="/Crooks-Cart-Collectives/admin/assets/image/brand/favicon.ico">
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/admin-header.css">
     <link rel="stylesheet" href="<?php echo $pathPrefix; ?>styles/admin-sign-out.css">
 

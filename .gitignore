@@ -4,3 +4,4 @@ admin/databaase/error_log.txt
 logs/output/*
 tests/build/*
 backup/build/*
+out
