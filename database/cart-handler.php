@@ -13,10 +13,11 @@ $customer_id = $_SESSION['customer_id'];
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 // ===== FUNCTION: Validate cart items WITHOUT deleting them =====
-// Scenarios 1, 2, 3: Products become unavailable but remain in cart
+// Products that become inactive should remain in cart but be marked unavailable
 function validateCartItems($connection, $customer_id) {
     try {
-        // Get all cart items with current product info
+        // Get all cart items with current product info - DO NOT filter by is_active
+        // This ensures inactive products are still returned
         $stmt = $connection->prepare("
             SELECT 
                 c.cart_id,
@@ -34,15 +35,14 @@ function validateCartItems($connection, $customer_id) {
         $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $validationResults = [
-            'inactive_found' => [],      // Products that are inactive (scenario 1 & 3)
+            'inactive_found' => [],      // Products that are inactive
             'stock_adjusted' => [],       // Products that need quantity adjustment
             'valid_items' => []           // Items that are perfectly valid
         ];
         
         foreach ($cartItems as $item) {
-            // Scenario 1 & 3: Product is inactive (ordered by someone else OR removed/delisted by seller)
+            // Product is inactive - keep in cart but mark as unavailable
             if (!$item['is_active']) {
-                // DO NOT DELETE - just mark as inactive in the response
                 $validationResults['inactive_found'][] = [
                     'product_name' => $item['name'],
                     'cart_id' => $item['cart_id'],
@@ -51,10 +51,10 @@ function validateCartItems($connection, $customer_id) {
                 continue;
             }
             
-            // Scenario: Stock has changed (product was ordered by someone else)
+            // Stock has changed (product was ordered by someone else)
             if ($item['cart_quantity'] > $item['stock_quantity']) {
                 if ($item['stock_quantity'] > 0) {
-                    // We'll suggest adjustment but not automatically update
+                    // Stock reduced but still available - suggest adjustment
                     $validationResults['stock_adjusted'][] = [
                         'product_name' => $item['name'],
                         'cart_id' => $item['cart_id'],
@@ -86,9 +86,6 @@ function validateCartItems($connection, $customer_id) {
     }
 }
 
-// Run validation but DON'T auto-delete
-$validationResults = validateCartItems($connection, $customer_id);
-
 switch ($action) {
     case 'add_to_cart':
         $product_id = $_POST['product_id'] ?? 0;
@@ -100,7 +97,7 @@ switch ($action) {
         }
         
         try {
-            // Check if product exists, is active, and has sufficient stock
+            // Check if product exists and is active (only active products can be added)
             $stmt = $connection->prepare("
                 SELECT p.*, s.seller_id 
                 FROM products p 
@@ -190,12 +187,11 @@ switch ($action) {
                 exit;
             }
             
-            // Scenario 1 & 3: Check if product is still active
+            // If product is inactive, prevent update but keep in cart
             if (!$cartItem['is_active']) {
-                // DON'T delete - just inform the user it's inactive
                 echo json_encode([
                     'status' => 'error', 
-                    'message' => 'Product "' . $cartItem['name'] . '" is no longer available',
+                    'message' => 'Product "' . $cartItem['name'] . '" is no longer available and cannot be modified',
                     'inactive' => true
                 ]);
                 exit;
@@ -225,7 +221,7 @@ switch ($action) {
         $cart_item_id = $_POST['cart_item_id'] ?? 0;
         
         try {
-            // Scenario 2: User proceeds to click remove - ONLY then delete
+            // User initiated removal - ONLY then delete
             $stmt = $connection->prepare("DELETE FROM carts WHERE cart_id = ? AND customer_id = ?");
             $stmt->execute([$cart_item_id, $customer_id]);
             
@@ -284,7 +280,8 @@ switch ($action) {
         
     case 'get_cart':
         try {
-            // Get current cart items with full details - DON'T auto-delete anything
+            // Get ALL cart items - DO NOT filter by is_active
+            // This ensures inactive products are still returned to the frontend
             $stmt = $connection->prepare("
                 SELECT 
                     c.cart_id,
@@ -302,13 +299,17 @@ switch ($action) {
                 JOIN products p ON c.product_id = p.product_id
                 JOIN sellers s ON c.seller_id = s.seller_id
                 WHERE c.customer_id = ?
-                ORDER BY c.added_at DESC
+                ORDER BY 
+                    p.is_active DESC,  -- Active products first
+                    p.stock_quantity > 0 DESC, -- In stock first
+                    c.added_at DESC    -- Then by date added
             ");
             $stmt->execute([$customer_id]);
             $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             $total = 0;
             foreach ($cartItems as $item) {
+                // Only count active items in total
                 if ($item['is_active']) {
                     $total += $item['price'] * $item['quantity'];
                 }

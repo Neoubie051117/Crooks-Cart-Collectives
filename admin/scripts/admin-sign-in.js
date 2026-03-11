@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Handle specific error messages
                 if (result.message === 'invalid-credentials') {
-                    showNotifier('Invalid email/username or password. Please try again.');
+                    showNotifier('Invalid credentials. Please try again.');
                     identifierInput.classList.add('error');
                     passwordInput.classList.add('error');
                 } else if (result.message === 'All fields are required') {

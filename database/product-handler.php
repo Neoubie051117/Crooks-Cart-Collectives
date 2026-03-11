@@ -26,7 +26,11 @@ error_log("Product handler action: " . $action . " for seller: " . $seller_id);
 
 switch ($action) {
     case 'delete':
-        handleDelete($connection, $seller_id);
+        handleSoftDelete($connection, $seller_id);
+        break;
+        
+    case 'restore':
+        handleRestore($connection, $seller_id);
         break;
         
     case 'toggle_status':
@@ -42,7 +46,7 @@ switch ($action) {
 /**
  * Handle soft delete (set is_active = 0) and cancel pending orders
  */
-function handleDelete($connection, $seller_id) {
+function handleSoftDelete($connection, $seller_id) {
     try {
         $product_id = $_POST['product_id'] ?? 0;
         
@@ -68,8 +72,7 @@ function handleDelete($connection, $seller_id) {
         $stmt = $connection->prepare("UPDATE products SET is_active = 0 WHERE product_id = ?");
         $stmt->execute([$product_id]);
         
-        // ===== CRITICAL: Cancel any pending orders for this product =====
-        // Get all pending orders for this product
+        // Cancel any pending orders for this product
         $stmt = $connection->prepare("
             SELECT order_id, quantity 
             FROM orders 
@@ -81,7 +84,7 @@ function handleDelete($connection, $seller_id) {
         $cancelledCount = 0;
         
         if (!empty($pendingOrders)) {
-            // Update all pending orders to cancelled (removed notes column)
+            // Update all pending orders to cancelled
             $stmt = $connection->prepare("
                 UPDATE orders 
                 SET status = 'cancelled', 
@@ -105,14 +108,8 @@ function handleDelete($connection, $seller_id) {
             error_log("Product removal: Cancelled {$cancelledCount} pending orders for product ID {$product_id}");
         }
         
-        // Check if there are any carts containing this product and remove them
-        $stmt = $connection->prepare("DELETE FROM carts WHERE product_id = ?");
-        $stmt->execute([$product_id]);
-        $cartsRemoved = $stmt->rowCount();
-        
-        if ($cartsRemoved > 0) {
-            error_log("Product removal: Removed {$cartsRemoved} cart entries for product ID {$product_id}");
-        }
+        // Note: DO NOT delete from carts - let customers see unavailable items
+        // This way, customers will see the product as "unavailable" in their cart
         
         $connection->commit();
         
@@ -126,7 +123,6 @@ function handleDelete($connection, $seller_id) {
             'message' => $message,
             'data' => [
                 'cancelled_orders' => $cancelledCount,
-                'carts_removed' => $cartsRemoved,
                 'product_name' => $product['name']
             ]
         ]);
@@ -135,7 +131,56 @@ function handleDelete($connection, $seller_id) {
         if ($connection->inTransaction()) {
             $connection->rollBack();
         }
-        error_log("Product delete error: " . $e->getMessage());
+        error_log("Product soft delete error: " . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
+    }
+}
+
+/**
+ * Handle restore product (set is_active = 1)
+ */
+function handleRestore($connection, $seller_id) {
+    try {
+        $product_id = $_POST['product_id'] ?? 0;
+        
+        if (!$product_id) {
+            echo json_encode(['status' => 'error', 'message' => 'Product ID required']);
+            return;
+        }
+        
+        // Verify product belongs to this seller and is currently inactive
+        $stmt = $connection->prepare("
+            SELECT product_id, name, is_active 
+            FROM products 
+            WHERE product_id = ? AND seller_id = ?
+        ");
+        $stmt->execute([$product_id, $seller_id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$product) {
+            echo json_encode(['status' => 'error', 'message' => 'Product not found or unauthorized']);
+            return;
+        }
+        
+        if ($product['is_active'] == 1) {
+            echo json_encode(['status' => 'error', 'message' => 'Product is already active']);
+            return;
+        }
+        
+        // Restore the product (set is_active = 1)
+        $stmt = $connection->prepare("UPDATE products SET is_active = 1 WHERE product_id = ?");
+        $stmt->execute([$product_id]);
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Product restored successfully',
+            'data' => [
+                'product_name' => $product['name']
+            ]
+        ]);
+        
+    } catch (PDOException $e) {
+        error_log("Product restore error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
     }
 }
@@ -162,11 +207,14 @@ function handleToggleStatus($connection, $seller_id) {
             return;
         }
         
+        // Start transaction
+        $connection->beginTransaction();
+        
         // Toggle status
         $stmt = $connection->prepare("UPDATE products SET is_active = ? WHERE product_id = ?");
         $stmt->execute([$status, $product_id]);
         
-        // If setting to inactive, also handle pending orders
+        // If setting to inactive, handle pending orders
         if ($status == 0) {
             // Get all pending orders for this product
             $stmt = $connection->prepare("
@@ -178,7 +226,7 @@ function handleToggleStatus($connection, $seller_id) {
             $pendingOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             if (!empty($pendingOrders)) {
-                // Update all pending orders to cancelled (removed notes column)
+                // Update all pending orders to cancelled
                 $stmt = $connection->prepare("
                     UPDATE orders 
                     SET status = 'cancelled', 
@@ -199,17 +247,21 @@ function handleToggleStatus($connection, $seller_id) {
                 }
             }
             
-            // Remove from carts
-            $stmt = $connection->prepare("DELETE FROM carts WHERE product_id = ?");
-            $stmt->execute([$product_id]);
+            // DO NOT remove from carts - keep for customer visibility
         }
         
+        $connection->commit();
+        
+        $statusText = $status == 1 ? 'activated' : 'deactivated';
         echo json_encode([
             'status' => 'success',
-            'message' => 'Product status updated successfully'
+            'message' => "Product {$statusText} successfully"
         ]);
         
     } catch (PDOException $e) {
+        if ($connection->inTransaction()) {
+            $connection->rollBack();
+        }
         error_log("Product toggle error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
     }

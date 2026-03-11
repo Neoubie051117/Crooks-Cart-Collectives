@@ -25,7 +25,7 @@ try {
     error_log("Error fetching seller products: " . $e->getMessage());
 }
 
-// Add filter tabs separation
+// Count active and inactive products
 $activeCount = 0;
 $inactiveCount = 0;
 foreach ($products as $product) {
@@ -38,47 +38,37 @@ foreach ($products as $product) {
 
 // Helper function to get product image URL for seller manage page
 function getSellerManageImageUrl($mediaPath) {
-    // Default fallback - using an existing icon from your project
     $fallbackImage = '../assets/image/icons/package.svg';
     
     if (empty($mediaPath)) {
         return $fallbackImage;
     }
     
-    // Check if it's a media directory path (from products table)
     if (strpos($mediaPath, 'Crooks-Data-Storage/products/') === 0) {
         $mediaDir = rtrim($mediaPath, '/') . '/';
-        
-        // Build the full server path to look for thumbnail_1.*
         $fullDir = dirname(__DIR__, 2) . '/' . $mediaDir;
         $thumbFiles = glob($fullDir . 'thumbnail_1.*');
         
         if (!empty($thumbFiles)) {
-            // Found a thumbnail file – get its basename and build URL via data-storage-handler
             $thumbFile = basename($thumbFiles[0]);
             return '../database/data-storage-handler.php?action=serve&path=' . rawurlencode($mediaDir . $thumbFile);
         } else {
-            // No thumbnail found – use fallback
             return $fallbackImage;
         }
     }
     
-    // Check if it's already a full URL
     if (filter_var($mediaPath, FILTER_VALIDATE_URL)) {
         return $mediaPath;
     }
     
-    // Check if it's a relative path starting with assets/
     if (strpos($mediaPath, 'assets/') === 0) {
         return '../' . $mediaPath;
     }
     
-    // Check if it's just a filename
     if (strpos($mediaPath, '/') === false) {
         return '../assets/image/icons/' . $mediaPath;
     }
     
-    // Any other relative path
     return $mediaPath;
 }
 ?>
@@ -142,8 +132,10 @@ function getSellerManageImageUrl($mediaPath) {
         color: #666666;
     }
 
-    .product-card.inactive .product-price {
-        color: #999999;
+    /* Hide price and stock for inactive products */
+    .product-card.inactive .product-price,
+    .product-card.inactive .product-stock {
+        display: none !important;
     }
 
     .inactive-badge {
@@ -162,18 +154,35 @@ function getSellerManageImageUrl($mediaPath) {
         color: #999999;
     }
 
-    /* Hide delete button for inactive products */
-    .product-card.inactive .delete-btn {
+    /* Button visibility based on product status */
+    .product-card:not(.inactive) .edit-btn,
+    .product-card:not(.inactive) .delete-btn {
+        display: inline-block;
+    }
+
+    .product-card:not(.inactive) .restore-btn {
         display: none;
     }
 
-    /* Show a different message for inactive products edit button */
-    .product-card.inactive .edit-btn {
-        opacity: 0.7;
+    .product-card.inactive .edit-btn,
+    .product-card.inactive .delete-btn {
+        display: none !important;
     }
 
-    .product-card.inactive .edit-btn:hover {
-        opacity: 1;
+    .product-card.inactive .restore-btn {
+        display: inline-block;
+    }
+
+    /* Restore button styling */
+    .restore-btn {
+        background-color: #000000;
+        color: #ffffff;
+        border: 1px solid #000000;
+        width: 100%;
+    }
+
+    .restore-btn:hover {
+        background-color: #333333;
     }
 
     .product-count {
@@ -201,17 +210,16 @@ function getSellerManageImageUrl($mediaPath) {
         </div>
 
         <div class="product-count" id="productCount">
-            Showing all products
+            Showing all products (<?= count($products) ?>)
         </div>
 
         <div class="products-grid" id="productsGrid">
             <?php foreach ($products as $product): 
-                    $isActive = $product['is_active'] ? true : false;
+                    $isActive = (bool)$product['is_active'];
                     $inactiveClass = $isActive ? '' : 'inactive';
                 ?>
             <div class="product-card <?= $inactiveClass ?>" data-active="<?= $isActive ? '1' : '0' ?>">
                 <?php 
-                    // FIXED: Use the helper function to get image URL
                     $imageUrl = getSellerManageImageUrl($product['media_path'] ?? '');
                     ?>
                 <div class="product-image-container">
@@ -226,24 +234,28 @@ function getSellerManageImageUrl($mediaPath) {
                         <span class="inactive-badge">Removed</span>
                         <?php endif; ?>
                     </h3>
+
+                    <!-- Only show price and stock for active products -->
                     <?php if ($isActive): ?>
                     <p class="product-price">₱<?php echo number_format($product['price'], 2); ?></p>
                     <p class="product-stock">Stock: <?php echo (int)$product['stock_quantity']; ?></p>
-                    <?php else: ?>
-                    <p class="product-price" style="display: none;">₱<?php echo number_format($product['price'], 2); ?>
-                    </p>
-                    <p class="product-stock" style="display: none;">Stock:
-                        <?php echo (int)$product['stock_quantity']; ?></p>
                     <?php endif; ?>
+
                     <p class="product-status status-<?php echo $isActive ? 'active' : 'inactive'; ?>">
                         <?php echo $isActive ? 'Available' : 'Removed'; ?>
                     </p>
+
                     <div class="product-actions">
+                        <?php if ($isActive): ?>
+                        <!-- Active product: Show Edit and Remove buttons -->
                         <a href="seller-new-product.php?id=<?php echo $product['product_id']; ?>"
                             class="btn btn-primary edit-btn">Edit</a>
-                        <?php if ($isActive): ?>
                         <button class="btn btn-secondary delete-btn"
                             data-id="<?php echo $product['product_id']; ?>">Remove</button>
+                        <?php else: ?>
+                        <!-- Inactive product: Show ONLY Restore button -->
+                        <button class="btn restore-btn" data-id="<?php echo $product['product_id']; ?>">Restore
+                            Product</button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -271,10 +283,27 @@ function getSellerManageImageUrl($mediaPath) {
             </div>
             <h3 class="modal-title">Confirm Removal</h3>
             <p class="modal-message">Are you sure you want to remove this product? It will no longer be available for
-                purchase, but order history will remain.</p>
+                purchase, but order history will remain. Customers with this product in their cart will see it as
+                unavailable.</p>
             <div class="modal-actions">
                 <button id="cancelDelete" class="modal-btn modal-btn-cancel">Cancel</button>
                 <button id="confirmDelete" class="modal-btn modal-btn-confirm">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restore Confirmation Modal -->
+    <div id="restoreConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <img src="../assets/image/icons/update.svg" alt="Restore">
+            </div>
+            <h3 class="modal-title">Confirm Restore</h3>
+            <p class="modal-message">Are you sure you want to restore this product? It will become available for
+                purchase again.</p>
+            <div class="modal-actions">
+                <button id="cancelRestore" class="modal-btn modal-btn-cancel">Cancel</button>
+                <button id="confirmRestore" class="modal-btn modal-btn-confirm">Restore</button>
             </div>
         </div>
     </div>
@@ -313,13 +342,13 @@ function getSellerManageImageUrl($mediaPath) {
                 count = document.querySelectorAll('.product-card[data-active="0"]').length;
             }
 
-            if (filter === 'all') {
-                productCount.textContent = `Showing all products (${count})`;
-            } else if (filter === 'active') {
-                productCount.textContent = `Showing available products (${count})`;
-            } else if (filter === 'inactive') {
-                productCount.textContent = `Showing removed products (${count})`;
-            }
+            const filterNames = {
+                'all': 'all products',
+                'active': 'available products',
+                'inactive': 'removed products'
+            };
+
+            productCount.textContent = `Showing ${filterNames[filter]} (${count})`;
         }
 
         filterTabs.forEach(tab => {

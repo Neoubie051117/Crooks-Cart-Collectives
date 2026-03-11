@@ -621,3 +621,124 @@ body {
     white-space: nowrap;
     border-width: 0;
 }
+
+/* Crooks-Cart-Collectives/styles/cart.css */
+/* Add these styles to your existing cart.css */
+
+/* Available items label */
+.available-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000000;
+    margin: 0 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #FF8246;
+}
+
+/* Unavailable items styling within same container */
+.unavailable-divider {
+    margin: 30px 0 15px 0;
+    padding: 10px 0 5px 0;
+    border-top: 1px dashed #cccccc;
+    color: #666666;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cart-item.unavailable {
+    opacity: 0.6;
+    background-color: #f9f9f9;
+    border-color: #dddddd;
+}
+
+.cart-item.unavailable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item.unavailable .quantity-input,
+.cart-item.unavailable .item-subtotal,
+.cart-item.unavailable .cart-item-price,
+.cart-item.unavailable .stock-status {
+    display: none;
+}
+
+.unavailable-badge {
+    display: inline-block;
+    background: #000000;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 5px;
+    width: fit-content;
+}
+
+.stock-status {
+    color: #28a745;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+/* Disabled button state */
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Ensure modal buttons stack properly on mobile */
+@media (max-width: 768px) {
+    .cart-notifier-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cart-notifier-btn {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* Update this section in your cart.css */
+
+.cart-notifier-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cart-notifier-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .cart-notifier-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cart-notifier-btn {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .cart-notifier-content {
+        width: 90%;
+        max-width: 350px;
+        padding: 25px 20px;
+    }
+}

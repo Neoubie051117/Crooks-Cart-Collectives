@@ -480,6 +480,7 @@ body {
     min-height: var(--input-height);
     padding: 12px;
     line-height: 1.5;
+    resize: none;
 }
 
 /* Allow text wrapping in all textareas on hover/focus for editing */

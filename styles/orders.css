@@ -539,6 +539,10 @@ body {
     color: #ffffff;
 }
 
+.action-btn.edit-shipping{
+    display: none;
+}
+
 .action-btn.view,
 .action-btn.save-shipping {
     background: #FF8246;

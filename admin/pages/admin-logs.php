@@ -30,7 +30,7 @@ if (!isset($_SESSION['admin_id'])) {
         <!-- Filter Tabs -->
         <div class="filter-tabs" id="filterTabs">
             <span class="filter-tab active" data-filter="all">All Activities</span>
-            <span class="filter-tab" data-filter="user_login">User Logins</span>
+            <span class="filter-tab" data-filter="user_registration">User Registrations</span>
             <span class="filter-tab" data-filter="seller_application">Seller Applications</span>
             <span class="filter-tab" data-filter="product_added">Product Additions</span>
             <span class="filter-tab" data-filter="order_placed">Orders</span>

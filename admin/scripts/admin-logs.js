@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sellerName = log.user_name || 
                                   (log.first_name && log.last_name ? `${log.first_name} ${log.last_name}` : 'A seller');
                 const business = log.business_name ? ` with business "${log.business_name}"` : '';
-                // MODIFIED: Use verification_status which is now 'pending', 'verified', 'rejected'
                 const status = log.verification_status ? ` [Status: ${log.verification_status}]` : '';
                 return `${sellerName} applied as seller${business}${status}`;
                 

@@ -36,11 +36,6 @@ if (empty(trim($shipping_address))) {
 try {
     $connection->beginTransaction();
     
-    // Update user's address in database with the current shipping address
-    // This ensures the address is saved for future orders
-    $updateStmt = $connection->prepare("UPDATE users SET address = ? WHERE user_id = ?");
-    $updateStmt->execute([trim($shipping_address), $user_id]);
-    
     // Check if this is a direct order (single product without cart) or cart checkout
     $product_id = $_POST['product_id'] ?? 0;
     $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
