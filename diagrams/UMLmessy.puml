@@ -1,0 +1,148 @@
+@startuml
+
+' ============= LAYOUT SETTINGS =============
+left to right direction
+hide circle
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ============= CORE USER TABLE =============
+class Users {
+    -user_id : int
+    -first_name : string
+    -middle_name : string
+    -last_name : string
+    -email : string
+    -username : string
+    -password : string
+    -profile_picture : string
+    -contact_number : string
+    -address : string
+    -birthdate : date
+    -gender : enum
+    -date_created : timestamp
+    --
+    +login()
+    +updateProfile()
+}
+
+' ============= USER ROLES =============
+class Customers {
+    -customer_id : int
+    -date_joined : timestamp
+    --
+    +manageCart(action,item)
+    +manageOrder(action,order_id)
+    +addReview(product_id,rating,comment)
+}
+
+class Sellers {
+    -seller_id : int
+    -business_name : string
+    -identity_path : string
+    -id_document_path : string
+    -is_verified : enum [pending,rejected,verified]
+    -verification_date : timestamp
+    -date_applied : timestamp
+    --
+    +manageProducts(action,data)
+    +manageOrders(action,order_id)
+    +getStoreStats()
+}
+
+class Administrators {
+    -admin_id : int
+    -last_log : timestamp
+    --
+    +manageUsers(action,user_id)
+    +manageSellers(action,seller_id)
+    +viewSystemLogs()
+}
+
+' ============= PRODUCT MANAGEMENT =============
+class Products {
+    -product_id : int
+    -seller_id : int
+    -name : string
+    -description : text
+    -price : decimal
+    -category : string
+    -stock_quantity : int
+    -media_path : string
+    -is_active : boolean
+    -date_added : timestamp
+    --
+    +updateDetails(data)
+    +adjustStock(quantity)
+    +getMedia()
+}
+
+class ProductReviews {
+    -review_id : int
+    -product_id : int
+    -user_id : int
+    -order_id : int
+    -rating : int
+    -comment : text
+    -date_posted : timestamp
+}
+
+' ============= SHOPPING FLOW =============
+class Carts {
+    -cart_id : int
+    -customer_id : int
+    -seller_id : int
+    -product_id : int
+    -quantity : int
+    -price : decimal
+    -added_at : timestamp
+    --
+    +updateQuantity(quantity)
+    +getSubtotal()
+}
+
+class Orders {
+    -order_id : int
+    -customer_id : int
+    -seller_id : int
+    -product_id : int
+    -quantity : int
+    -price : decimal
+    -subtotal : decimal
+    -shipping_address : string
+    -payment_method : enum [COD,Online]
+    -status : enum [pending,delivered,cancelled]
+    -order_date : timestamp
+    -delivered_at : timestamp
+    -cancelled_at : timestamp
+    -cancelled_by : enum [customer,seller]
+    --
+    +updateStatus(newStatus)
+    +calculateTotal()
+}
+
+' ============= INHERITANCE =============
+Users <|-- Customers
+Users <|-- Sellers
+Users <|-- Administrators
+
+' ============= RELATIONSHIPS =============
+Customers "1" --> "0..*" Carts
+Customers "1" --> "0..*" Orders
+Customers "1" --> "0..*" ProductReviews
+
+Sellers "1" --> "0..*" Products
+Sellers "1" --> "0..*" Orders
+
+Products "1" --> "0..*" Carts
+Products "1" --> "0..*" Orders
+Products "1" --> "0..*" ProductReviews
+
+Orders "1" --> "0..*" ProductReviews
+
+@enduml

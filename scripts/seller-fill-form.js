@@ -1,4 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/seller-fill-form.js */
+/* FIXED: Added validation for formal picture and valid ID uploads */
 /* Fixed: Birthdate validation only triggers on save, not on input/change; custom unsaved changes modal */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -31,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const idDocumentPreview = document.getElementById('idDocumentPreview');
     const identityFileName = document.getElementById('identityFileName');
     const idDocumentFileName = document.getElementById('idDocumentFileName');
+    
+    // Upload box elements
+    const identityUploadBox = document.getElementById('identityUploadBox');
+    const idDocumentUploadBox = document.getElementById('idDocumentUploadBox');
     
     // Modal elements
     const modal = document.getElementById('feedbackModal');
@@ -69,6 +74,32 @@ document.addEventListener('DOMContentLoaded', function() {
     let initialFormState = {}; // Store initial form values
     let pendingNavigationUrl = null; // URL to navigate to after unsaved changes decision
     let birthdateValid = true; // Track birthdate validity separately
+    
+    // Track which files have been uploaded (including existing ones)
+    let identityUploaded = false;
+    let idDocumentUploaded = false;
+
+    // ============= CHECK FOR EXISTING UPLOADS =============
+    // Check if there are existing preview images (meaning files already uploaded)
+    function checkExistingUploads() {
+        // Check identity preview
+        if (identityPreview) {
+            const identityBg = window.getComputedStyle(identityPreview).backgroundImage;
+            if (identityBg && identityBg !== 'none') {
+                identityUploaded = true;
+            }
+        }
+        
+        // Check ID document preview
+        if (idDocumentPreview) {
+            const idBg = window.getComputedStyle(idDocumentPreview).backgroundImage;
+            if (idBg && idBg !== 'none') {
+                idDocumentUploaded = true;
+            }
+        }
+        
+        console.log('Existing uploads check:', { identityUploaded, idDocumentUploaded });
+    }
 
     // ============= MODAL FUNCTIONS =============
     function showModal(message) {
@@ -143,6 +174,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (middleNameField) {
             initialFormState[middleNameField.id] = middleNameField.value || '';
         }
+        
+        // Check existing uploads
+        checkExistingUploads();
     }
     
     // ============= CHECK IF FORM ACTUALLY CHANGED =============
@@ -203,6 +237,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
+        // ===== FIXED: Check if both files are uploaded =====
+        // For new sellers, both files must be uploaded
+        // For existing sellers, they must have at least the existing files or new uploads
+        if (!identityUploaded && (!identityPhoto || identityPhoto.files.length === 0)) {
+            console.log('Validation failed: Identity photo missing');
+            return false;
+        }
+        
+        if (!idDocumentUploaded && (!idDocument || idDocument.files.length === 0)) {
+            console.log('Validation failed: ID document missing');
+            return false;
+        }
+        
         return true;
     }
     
@@ -239,6 +286,21 @@ document.addEventListener('DOMContentLoaded', function() {
             birthdateField.style.borderColor = '#FF8246';
             birthdateField.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
         }
+        
+        // Highlight missing file uploads
+        if (!identityUploaded && (!identityPhoto || identityPhoto.files.length === 0)) {
+            if (identityUploadBox) {
+                identityUploadBox.style.borderColor = '#FF8246';
+                identityUploadBox.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+            }
+        }
+        
+        if (!idDocumentUploaded && (!idDocument || idDocument.files.length === 0)) {
+            if (idDocumentUploadBox) {
+                idDocumentUploadBox.style.borderColor = '#FF8246';
+                idDocumentUploadBox.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+            }
+        }
     }
     
     function clearHighlights() {
@@ -248,6 +310,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 field.style.boxShadow = '';
             }
         });
+        
+        // Clear upload box highlights
+        if (identityUploadBox) {
+            identityUploadBox.style.borderColor = '';
+            identityUploadBox.style.boxShadow = '';
+        }
+        if (idDocumentUploadBox) {
+            idDocumentUploadBox.style.borderColor = '';
+            idDocumentUploadBox.style.boxShadow = '';
+        }
     }
     
     // ============= UPDATE SAVE BUTTON STATE =============
@@ -286,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ============= FILE UPLOAD HANDLING - TRACK CHANGES =============
-    function handleFileUpload(input, previewElement, fileNameElement) {
+    function handleFileUpload(input, previewElement, fileNameElement, uploadBox, isIdentity) {
         if (!input || !previewElement || !fileNameElement) return;
         
         input.addEventListener('change', function() {
@@ -294,30 +366,55 @@ document.addEventListener('DOMContentLoaded', function() {
             if (file) {
                 fileNameElement.textContent = file.name;
                 
+                // Update uploaded flag
+                if (isIdentity) {
+                    identityUploaded = true;
+                } else {
+                    idDocumentUploaded = true;
+                }
+                
                 // Show preview
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewElement.style.backgroundImage = `url('${e.target.result}')`;
                     previewElement.style.backgroundSize = 'cover';
                     previewElement.style.backgroundPosition = 'center';
+                    
+                    // Add visual feedback for successful upload
+                    previewElement.style.border = '2px solid #FF8246';
+                    
+                    // Clear highlight from upload box
+                    if (uploadBox) {
+                        uploadBox.style.borderColor = '';
+                        uploadBox.style.boxShadow = '';
+                    }
                 };
                 reader.readAsDataURL(file);
-                
-                // Add visual feedback
-                previewElement.style.border = '2px solid #FF8246';
             } else {
                 fileNameElement.textContent = '';
                 previewElement.style.backgroundImage = '';
                 previewElement.style.border = '';
+                
+                // Update uploaded flag - check if there's still a preview (existing upload)
+                if (isIdentity) {
+                    const bg = window.getComputedStyle(previewElement).backgroundImage;
+                    identityUploaded = bg && bg !== 'none';
+                } else {
+                    const bg = window.getComputedStyle(previewElement).backgroundImage;
+                    idDocumentUploaded = bg && bg !== 'none';
+                }
             }
             
             // Check if form actually changed
             formChanged = hasFormChanged();
+            
+            // Update save button state
+            updateSaveButtonState();
         });
     }
     
-    handleFileUpload(identityPhoto, identityPreview, identityFileName);
-    handleFileUpload(idDocument, idDocumentPreview, idDocumentFileName);
+    handleFileUpload(identityPhoto, identityPreview, identityFileName, identityUploadBox, true);
+    handleFileUpload(idDocument, idDocumentPreview, idDocumentFileName, idDocumentUploadBox, false);
     
     // ============= CAPTURE INITIAL STATE AFTER PAGE LOAD =============
     captureInitialState();
@@ -361,10 +458,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
+            // ===== FIXED: Check if both files are uploaded =====
+            if (!identityUploaded && (!identityPhoto || identityPhoto.files.length === 0)) {
+                highlightMissingFields();
+                showModal('Please upload a formal picture. This is required for seller verification.');
+                return;
+            }
+            
+            if (!idDocumentUploaded && (!idDocument || idDocument.files.length === 0)) {
+                highlightMissingFields();
+                showModal('Please upload a valid ID. This is required for seller verification.');
+                return;
+            }
+            
             // Check if form is valid (required fields only)
             if (!validateForm()) {
                 highlightMissingFields();
-                showModal('Please fill in all required fields including Store Name.');
+                showModal('Please fill in all required fields including Store Name and upload both required documents.');
                 return;
             }
             

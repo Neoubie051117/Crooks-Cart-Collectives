@@ -12,6 +12,8 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['customer_id'])) {
 $customer_id = $_SESSION['customer_id'];
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+error_log("Cart handler action received: " . $action); // Add this for debugging
+
 // ===== FUNCTION: Validate cart items WITHOUT deleting them =====
 // Products that become inactive should remain in cart but be marked unavailable
 function validateCartItems($connection, $customer_id) {
@@ -90,6 +92,8 @@ switch ($action) {
     case 'add_to_cart':
         $product_id = $_POST['product_id'] ?? 0;
         $quantity = max(1, (int)($_POST['quantity'] ?? 1));
+        
+        error_log("Adding to cart - Product ID: $product_id, Quantity: $quantity");
         
         if (!$product_id) {
             echo json_encode(['status' => 'error', 'message' => 'Product ID required']);
@@ -328,6 +332,7 @@ switch ($action) {
         break;
         
     default:
-        echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+        error_log("Invalid cart action: " . $action);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid action: ' . $action]);
 }
 ?>

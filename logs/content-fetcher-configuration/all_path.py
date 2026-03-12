@@ -26,8 +26,8 @@ filesToCheck = [
     "/admin/admin-index.php",
     
     #Database Connect
-    # "/admin/database/admin-database-connect.php",
-    # "/database/database-connect.php",
+    "/admin/database/admin-database-connect.php",
+    "/database/database-connect.php",
     
     #Database Public
     "/backup/build/admin-database-connect.php",
@@ -177,12 +177,12 @@ filesToCheck = [
     # "/styles/orders.css",
     # "/styles/privacy-policy.css",
     # "/styles/product-detail.css",
-    # "/styles/product.css",
+    "/styles/product.css",
     # "/styles/profile.css",
     # "/styles/seller-process-order.css",
     # "/styles/seller-registration.css",
     # "/styles/seller-dashboard.css",
-    # "/styles/seller-manage-product.css",
+    "/styles/seller-manage-product.css",
     # "/styles/seller-new-product.css",
     # "/styles/sign-in.css",
     # "/styles/sign-out.css",

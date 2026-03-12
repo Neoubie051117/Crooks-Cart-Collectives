@@ -1,0 +1,98 @@
+@startuml
+' ============= CLEAN ARCHITECTURE - LANDSCAPE =============
+skinparam linetype ortho
+skinparam backgroundColor White
+skinparam componentStyle rectangle
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 5
+
+skinparam component {
+    BorderColor #2E4053
+    BackgroundColor #F8F9F9
+    FontColor #1C2833
+    FontSize 12
+    FontStyle bold
+}
+
+skinparam folder {
+    BorderColor #2E4053
+    BackgroundColor #F8F9F9
+    FontColor #1C2833
+    FontSize 11
+    BackgroundColor #F0F3F4
+}
+
+skinparam package {
+    BorderColor #2E4053
+    BackgroundColor #FDFEFE
+    FontColor #1C2833
+    FontSize 14
+    FontStyle bold
+}
+
+title <size:18><b>Crooks Cart Collectives</b>\n<size:14>Simplified System Architecture</size>
+
+' ============= PRESENTATION TIER =============
+package "PRESENTATION TIER\nClient Browser" <<presentation>> #F8F9F9 {
+    component "User Interface\nHTML5/CSS3" as UI
+    component "JavaScript Modules" as JS
+    component "PHP Views" as Views
+    
+    UI --> JS
+    UI --> Views
+}
+
+' ============= APPLICATION TIER =============
+package "APPLICATION TIER\nPHP 8.x / Apache" <<application>> #FFF8E7 {
+    component "Front Controller\nRouter" as Router
+    component "Auth Handler" as Auth
+    component "Product Handler" as Product
+    component "Order Handler" as Order
+    component "Cart Handler" as Cart
+    component "Database Layer" as DB
+    component "Validation Service" as Validate
+    component "File Manager" as File
+
+    Router --> Auth
+    Router --> Product
+    Router --> Order
+    Router --> Cart
+
+    Auth --> DB
+    Product --> DB
+    Order --> DB
+    Cart --> DB
+
+    Product --> File
+    Order --> Validate
+}
+
+' ============= DATA TIER =============
+package "DATA TIER" <<data>> #E8F5E9 {
+    database "MySQL\nDatabase" as MySQL {
+    }
+    
+    folder "users/[user_id]/profile/" as UserProfile
+    folder "users/[user_id]/verification/" as UserVerification
+    folder "products/[product_id]/media/" as ProductMedia
+    folder "administrators/[admin_id]/profile/" as AdminProfile
+}
+
+' ============= TIER CONNECTIONS =============
+UI --> Router : "HTTP Requests"
+Router --> UI : "HTTP Responses"
+
+' ============= APPLICATION TO DATABASE CONNECTIONS =============
+Auth --> MySQL
+Product --> MySQL
+Order --> MySQL
+Cart --> MySQL
+
+' ============= FILE SYSTEM CONNECTIONS =============
+File --> UserProfile
+File --> UserVerification
+File --> ProductMedia
+File --> AdminProfile
+
+@enduml

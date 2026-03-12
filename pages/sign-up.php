@@ -34,19 +34,28 @@ if (isset($_SESSION['user_id'])) {
                 <div class="form-group">
                     <label for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name"
-                        autocomplete="given-name">
+                        autocomplete="given-name" pattern="[A-Za-z\s\-']+"
+                        title="First name can only contain letters, spaces, hyphens, and apostrophes"
+                        oninput="this.value = this.value.replace(/[^A-Za-z\s\-']/g, '')">
+                    <div class="error-message" id="firstNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="middle_name">Middle Name (Optional)</label>
                     <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name"
-                        autocomplete="additional-name">
+                        autocomplete="additional-name" pattern="[A-Za-z\s\-']*"
+                        title="Middle name can only contain letters, spaces, hyphens, and apostrophes"
+                        oninput="this.value = this.value.replace(/[^A-Za-z\s\-']/g, '')">
+                    <div class="error-message" id="middleNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="last_name">Last Name</label>
                     <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name"
-                        autocomplete="family-name">
+                        autocomplete="family-name" pattern="[A-Za-z\s\-']+"
+                        title="Last name can only contain letters, spaces, hyphens, and apostrophes"
+                        oninput="this.value = this.value.replace(/[^A-Za-z\s\-']/g, '')">
+                    <div class="error-message" id="lastNameError"></div>
                 </div>
 
                 <div class="form-group">
@@ -134,9 +143,9 @@ if (isset($_SESSION['user_id'])) {
                     <p class="login-link">
                         Already have an account? <a href="sign-in.php">Sign In</a>
                     </p>
-                    <p class="seller-link">
+                    <!-- <p class="seller-link">
                         Want to sell products? <a href="seller-fill-form.php">Become a Seller</a>
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </form>

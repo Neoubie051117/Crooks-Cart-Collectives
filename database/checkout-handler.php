@@ -21,10 +21,10 @@ if ($action !== 'place_order') {
 // Get payment method from POST
 $payment_method = $_POST['payment_method'] ?? 'COD';
 if (!in_array($payment_method, ['COD', 'Online'])) {
-    $payment_method = 'COD'; // Default to COD if invalid
+    $payment_method = 'COD';
 }
 
-// Get shipping address from POST (this is the current displayed address)
+// Get shipping address from POST
 $shipping_address = $_POST['shipping_address'] ?? '';
 
 // Validate shipping address
@@ -74,12 +74,12 @@ try {
             $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
             $stmt->execute([$user_id]);
             $customer_id = $connection->lastInsertId();
-            $_SESSION['customer_id'] = $customer_id; // Update session
+            $_SESSION['customer_id'] = $customer_id;
         }
         
         $subtotal = $product['price'] * $quantity;
         
-        // Create order with payment method
+        // Create order
         $stmt = $connection->prepare("
             INSERT INTO orders (
                 customer_id, seller_id, product_id, quantity, 
@@ -102,9 +102,11 @@ try {
         $stmt = $connection->prepare("UPDATE products SET stock_quantity = ? WHERE product_id = ?");
         $stmt->execute([$new_stock, $product_id]);
         
+        // ===== NO CART DELETION =====
+        // For single product checkout, there's no cart item to delete anyway
+        
     } else {
-        // Cart checkout - only include active products
-        // Get cart items with product active status check
+        // Cart checkout - get cart items
         $stmt = $connection->prepare("
             SELECT c.*, p.stock_quantity, p.is_active, p.price as current_price, p.name, p.seller_id
             FROM carts c
@@ -112,34 +114,40 @@ try {
             WHERE c.customer_id = ?
         ");
         $stmt->execute([$customer_id]);
-        $cartItems = $stmt->fetchAll();
+        $allCartItems = $stmt->fetchAll();
         
-        if (empty($cartItems)) {
+        if (empty($allCartItems)) {
             $connection->rollBack();
             echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
             exit;
         }
         
-        // Check for inactive products
-        $inactiveProducts = [];
-        foreach ($cartItems as $item) {
-            if (!$item['is_active']) {
-                $inactiveProducts[] = $item['name'];
+        // Filter to only active items for ordering
+        $activeItems = [];
+        foreach ($allCartItems as $item) {
+            if ($item['is_active'] == 1) {
+                $activeItems[] = $item;
             }
         }
         
-        if (!empty($inactiveProducts)) {
+        // If no active items, abort
+        if (empty($activeItems)) {
             $connection->rollBack();
-            $productList = implode(', ', $inactiveProducts);
-            echo json_encode(['status' => 'error', 'message' => 'The following products are no longer available: ' . $productList]);
+            echo json_encode([
+                'status' => 'error', 
+                'message' => 'No available items in cart'
+            ]);
             exit;
         }
         
-        // Check stock for all items
-        foreach ($cartItems as $item) {
+        // Check stock for all active items
+        foreach ($activeItems as $item) {
             if ($item['quantity'] > $item['stock_quantity']) {
                 $connection->rollBack();
-                echo json_encode(['status' => 'error', 'message' => 'Insufficient stock for ' . $item['name']]);
+                echo json_encode([
+                    'status' => 'error', 
+                    'message' => 'Insufficient stock for ' . $item['name']
+                ]);
                 exit;
             }
         }
@@ -154,11 +162,11 @@ try {
             $stmt = $connection->prepare("INSERT INTO customers (user_id) VALUES (?)");
             $stmt->execute([$user_id]);
             $customer_id = $connection->lastInsertId();
-            $_SESSION['customer_id'] = $customer_id; // Update session
+            $_SESSION['customer_id'] = $customer_id;
         }
         
-        // Create orders with payment method and update stock
-        foreach ($cartItems as $item) {
+        // Create orders for ACTIVE items only
+        foreach ($activeItems as $item) {
             $subtotal = $item['price'] * $item['quantity'];
             
             $stmt = $connection->prepare("
@@ -184,15 +192,15 @@ try {
             $stmt->execute([$new_stock, $item['product_id']]);
         }
         
-        // Clear cart
-        $stmt = $connection->prepare("DELETE FROM carts WHERE customer_id = ?");
-        $stmt->execute([$customer_id]);
+        // ===== ABSOLUTELY NO CART DELETION =====
+        // NO DELETE QUERIES - ALL CART ITEMS REMAIN
+        // BOTH ACTIVE AND INACTIVE ITEMS STAY IN CART
     }
     
     $connection->commit();
     
-    // Determine payment method display message
-    $payment_message = ($payment_method === 'Online') ? 'Online payment selected (Gcash/Maya)' : 'Cash on Delivery selected';
+    // Success message
+    $payment_message = ($payment_method === 'Online') ? 'Online payment selected' : 'Cash on Delivery selected';
     
     echo json_encode([
         'status' => 'success', 
@@ -203,5 +211,6 @@ try {
 } catch (PDOException $e) {
     $connection->rollBack();
     error_log("Checkout error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => 'Database error occurred: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Database error occurred']);
 }
+?>

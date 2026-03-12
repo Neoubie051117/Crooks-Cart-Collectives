@@ -5,6 +5,17 @@ if (isset($_SESSION['admin_id'])) {
     header('Location: admin-dashboard.php');
     exit;
 }
+
+// ===== FIXED: Detect base path for proper relative linking =====
+$basePath = '';
+$currentDir = dirname($_SERVER['PHP_SELF']);
+
+// If we're in a subdirectory, adjust the base path
+if (strpos($currentDir, '/admin/pages') !== false) {
+    $basePath = '../../';
+} elseif (strpos($currentDir, '/admin/') !== false) {
+    $basePath = '../';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +59,8 @@ if (isset($_SESSION['admin_id'])) {
             <button type="submit" class="btn btn-primary">Sign In</button>
 
             <p class="signup-link">
-                Sign in as user? <a href="/pages/sign-in.php">Back</a>
+                Sign in as user?
+                <a href="<?php echo $basePath; ?>pages/sign-in.php">Back</a>
             </p>
         </form>
     </div>

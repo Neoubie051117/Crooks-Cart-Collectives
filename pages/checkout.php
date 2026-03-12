@@ -23,7 +23,7 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
     $quantity = isset($_GET['quantity']) ? (int)$_GET['quantity'] : 1;
     if ($quantity < 1) $quantity = 1;
 
-    // Fetch product details
+    // Fetch product details - only active products
     try {
         $stmt = $connection->prepare("
             SELECT p.*, s.business_name, s.seller_id
@@ -35,7 +35,7 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
         $singleProduct = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$singleProduct) {
-            // Invalid product, redirect to products
+            // Invalid or inactive product, redirect to products
             header('Location: product.php');
             exit;
         }
@@ -58,7 +58,8 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
                 'seller_id' => $singleProduct['seller_id'],
                 'quantity' => $quantity,
                 'price' => $singleProduct['price'],
-                'stock_quantity' => $singleProduct['stock_quantity']
+                'stock_quantity' => $singleProduct['stock_quantity'],
+                'is_active' => 1
             ]
         ];
         $total = $singleProduct['price'] * $quantity;
@@ -68,25 +69,34 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
         exit;
     }
 } else {
-    // Normal cart checkout
+    // Normal cart checkout - FILTER OUT INACTIVE PRODUCTS
     try {
+        // Get ALL cart items first to check for inactive ones
         $stmt = $connection->prepare("
-            SELECT c.*, p.name, p.media_path, s.business_name
+            SELECT c.*, p.name, p.media_path, p.is_active, p.stock_quantity, s.business_name
             FROM carts c
             JOIN products p ON c.product_id = p.product_id
             JOIN sellers s ON p.seller_id = s.seller_id
             WHERE c.customer_id = ?
         ");
         $stmt->execute([$customer_id]);
-        $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($cartItems as $item) {
-            $total += $item['price'] * $item['quantity'];
+        $allCartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Filter out inactive products for checkout display
+        $cartItems = [];
+        
+        foreach ($allCartItems as $item) {
+            if ($item['is_active'] == 1) {
+                $cartItems[] = $item;
+                $total += $item['price'] * $item['quantity'];
+            }
         }
+        
     } catch (PDOException $e) {
         error_log("Checkout cart fetch error: " . $e->getMessage());
     }
 
+    // If no active items remain after filtering, redirect to cart
     if (empty($cartItems)) {
         header('Location: cart.php');
         exit;

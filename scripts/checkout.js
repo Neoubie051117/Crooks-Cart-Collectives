@@ -1,5 +1,5 @@
 /* Crooks-Cart-Collectives/scripts/checkout.js */
-/* Handles checkout functionality: address editing, payment method selection, order placement */
+/* Updated to handle inactive product removal messages */
 
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const notifier = document.getElementById('checkoutNotifier');
     const messageEl = document.getElementById('checkoutMessage');
     const closeBtn = document.getElementById('checkoutCloseBtn');
+    
+    // Message elements
+    const checkoutMessage = document.getElementById('checkoutMessage');
+    const inactiveRemovedMessage = document.getElementById('inactiveRemovedMessage');
     
     // Address elements
     const editAddressBtn = document.getElementById('editAddressBtn');
@@ -21,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Payment elements
     const paymentOptions = document.querySelectorAll('.payment-option');
-    const onlineMethods = document.getElementById('onlineMethods');
     
     // Hidden inputs
     const singleProductMode = document.getElementById('singleProductMode')?.value === '1';
@@ -41,20 +44,41 @@ document.addEventListener('DOMContentLoaded', function() {
             hiddenAddressInput.value = shippingAddressText.textContent;
         }
         
-        // Append to form (assuming there's a form, or to body as fallback)
-        const form = document.querySelector('form');
-        if (form) {
-            form.appendChild(hiddenAddressInput);
-        } else {
-            document.body.appendChild(hiddenAddressInput);
-        }
+        // Append to body
+        document.body.appendChild(hiddenAddressInput);
         console.log('Created hidden address input with value:', hiddenAddressInput.value);
     }
 
     // ============= STATE =============
     let selectedPaymentMethod = 'COD';
     let isProcessing = false;
-    let addressChanged = false; // Track if address was changed
+    let addressChanged = false;
+
+    // ============= AUTO-HIDE MESSAGES =============
+    // Auto-hide warning messages after 5 seconds
+    if (checkoutMessage) {
+        setTimeout(() => {
+            checkoutMessage.style.transition = 'opacity 0.5s ease';
+            checkoutMessage.style.opacity = '0';
+            setTimeout(() => {
+                if (checkoutMessage.parentNode) {
+                    checkoutMessage.style.display = 'none';
+                }
+            }, 500);
+        }, 5000);
+    }
+    
+    if (inactiveRemovedMessage) {
+        setTimeout(() => {
+            inactiveRemovedMessage.style.transition = 'opacity 0.5s ease';
+            inactiveRemovedMessage.style.opacity = '0';
+            setTimeout(() => {
+                if (inactiveRemovedMessage.parentNode) {
+                    inactiveRemovedMessage.style.display = 'none';
+                }
+            }, 500);
+        }, 5000);
+    }
 
     // ============= NOTIFIER FUNCTIONS =============
     function showNotifier(msg, redirect = null) {
@@ -89,17 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============= ADDRESS EDITING FUNCTIONS =============
-    console.log('Address elements:', {
-        editAddressBtn: !!editAddressBtn,
-        cancelEditAddress: !!cancelEditAddress,
-        saveAddressBtn: !!saveAddressBtn,
-        addressDisplay: !!addressDisplay,
-        addressEditForm: !!addressEditForm,
-        shippingAddressText: !!shippingAddressText,
-        newAddress: !!newAddress,
-        hiddenAddressInput: !!hiddenAddressInput
-    });
-
     // Show edit form when Edit button is clicked
     if (editAddressBtn && addressDisplay && addressEditForm && shippingAddressText && newAddress) {
         editAddressBtn.addEventListener('click', function() {
@@ -119,12 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Address edit elements not found');
     }
 
-    // Cancel editing - NO MODAL, just revert
+    // Cancel editing
     if (cancelEditAddress && addressDisplay && addressEditForm && editAddressBtn && shippingAddressText && newAddress) {
         cancelEditAddress.addEventListener('click', function() {
             console.log('Cancel edit clicked');
             
-            // Reset textarea to current address from hidden input (not original)
+            // Reset textarea to current address from hidden input
             newAddress.value = hiddenAddressInput ? hiddenAddressInput.value : shippingAddressText.textContent;
             
             // Hide form, show display
@@ -134,14 +147,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Save new address - UPDATED to update hidden input
+    // Save new address
     if (saveAddressBtn && addressDisplay && addressEditForm && editAddressBtn && shippingAddressText && newAddress && hiddenAddressInput) {
         saveAddressBtn.addEventListener('click', function() {
             console.log('Save address clicked');
             const newAddressValue = newAddress.value.trim();
             
             if (!newAddressValue) {
-                // Just show a temporary visual feedback without modal
+                // Show temporary visual feedback without modal
                 newAddress.style.borderColor = '#FF8246';
                 newAddress.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
                 setTimeout(() => {
@@ -154,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update the displayed address
             shippingAddressText.textContent = newAddressValue;
             
-            // CRITICAL FIX: Update the hidden input that will be submitted
+            // Update the hidden input that will be submitted
             hiddenAddressInput.value = newAddressValue;
             
             // Mark that address was changed
@@ -185,15 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (radio) {
                     radio.checked = true;
                     selectedPaymentMethod = radio.value;
-                    
-                    // Dispatch change event for any listeners
-                    const event = new Event('change', { bubbles: true });
-                    radio.dispatchEvent(event);
-                }
-                
-                // Show/hide online methods description
-                if (onlineMethods) {
-                    onlineMethods.style.display = selectedPaymentMethod === 'Online' ? 'block' : 'none';
                 }
             });
         });
@@ -212,135 +216,137 @@ document.addEventListener('DOMContentLoaded', function() {
                         opt.classList.remove('selected');
                     }
                 });
-                
-                // Show/hide online methods description
-                if (onlineMethods) {
-                    onlineMethods.style.display = selectedPaymentMethod === 'Online' ? 'block' : 'none';
-                }
             });
         });
     }
 
     // ============= PLACE ORDER FUNCTION =============
-async function placeOrder() {
-    if (isProcessing) return;
-    
-    // FIX: Check if address edit form is open and use textarea value directly
-    let currentAddress;
-    
-    if (addressEditForm && addressEditForm.style.display === 'block') {
-        // User is in edit mode - use the textarea value directly
-        currentAddress = newAddress ? newAddress.value.trim() : '';
-        console.log('Edit mode active - using textarea value:', currentAddress);
+    async function placeOrder() {
+        if (isProcessing) return;
         
-        // Optional: Auto-save the address if they place order while in edit mode
-        if (currentAddress && hiddenAddressInput) {
-            // Update hidden input so future operations have the correct value
-            hiddenAddressInput.value = currentAddress;
-            if (shippingAddressText) {
-                shippingAddressText.textContent = currentAddress;
+        // Get current address
+        let currentAddress;
+        
+        if (addressEditForm && addressEditForm.style.display === 'block') {
+            // User is in edit mode - use the textarea value directly
+            currentAddress = newAddress ? newAddress.value.trim() : '';
+            console.log('Edit mode active - using textarea value:', currentAddress);
+            
+            // Auto-save the address
+            if (currentAddress && hiddenAddressInput) {
+                hiddenAddressInput.value = currentAddress;
+                if (shippingAddressText) {
+                    shippingAddressText.textContent = currentAddress;
+                }
+                addressChanged = true;
+                console.log('Auto-saved address from textarea');
             }
-            addressChanged = true;
-            console.log('Auto-saved address from textarea');
-        }
-    } else {
-        // Not in edit mode - use hidden input value
-        currentAddress = hiddenAddressInput ? hiddenAddressInput.value : (shippingAddressText ? shippingAddressText.textContent : '');
-    }
-    
-    if (!currentAddress) {
-        showNotifier('Please provide a shipping address');
-        
-        // Highlight the address section
-        if (editAddressBtn) {
-            editAddressBtn.style.borderColor = '#FF8246';
-            editAddressBtn.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
-            setTimeout(() => {
-                editAddressBtn.style.borderColor = '';
-                editAddressBtn.style.boxShadow = '';
-            }, 2000);
-        }
-        return;
-    }
-    
-    isProcessing = true;
-    
-    // Disable button and show loading state
-    if (placeOrderBtn) {
-        placeOrderBtn.disabled = true;
-        placeOrderBtn.textContent = 'Processing...';
-    }
-
-    try {
-        // Create form data
-        const formData = new URLSearchParams();
-        
-        // Add action
-        formData.append('action', 'place_order');
-        
-        // Add payment method
-        formData.append('payment_method', selectedPaymentMethod);
-        
-        // Send the current address (whether from textarea or hidden input)
-        formData.append('shipping_address', currentAddress);
-        
-        // If single product mode, add product details
-        if (singleProductMode && singleProductId && singleQuantity) {
-            formData.append('product_id', singleProductId);
-            formData.append('quantity', singleQuantity);
-        }
-
-        console.log('Placing order with:', {
-            payment_method: selectedPaymentMethod,
-            shipping_address: currentAddress,
-            singleProductMode,
-            product_id: singleProductId,
-            quantity: singleQuantity,
-            addressChanged,
-            editModeActive: addressEditForm ? addressEditForm.style.display === 'block' : false
-        });
-
-        // Send request
-        const response = await fetch('../database/checkout-handler.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData
-        });
-
-        // Handle response
-        let result;
-        const responseText = await response.text();
-        
-        try {
-            result = JSON.parse(responseText);
-        } catch (e) {
-            console.error('JSON parse error:', e);
-            console.error('Response text:', responseText);
-            throw new Error('Invalid server response');
-        }
-
-        if (result.status === 'success') {
-            showNotifier(result.message, result.redirect || 'orders.php');
         } else {
-            showNotifier('Error: ' + (result.message || 'Failed to place order'));
+            // Not in edit mode - use hidden input value
+            currentAddress = hiddenAddressInput ? hiddenAddressInput.value : (shippingAddressText ? shippingAddressText.textContent : '');
+        }
+        
+        if (!currentAddress) {
+            showNotifier('Please provide a shipping address');
+            
+            // Highlight the address section
+            if (editAddressBtn) {
+                editAddressBtn.style.borderColor = '#FF8246';
+                editAddressBtn.style.boxShadow = '0 0 0 3px rgba(255, 130, 70, 0.1)';
+                setTimeout(() => {
+                    editAddressBtn.style.borderColor = '';
+                    editAddressBtn.style.boxShadow = '';
+                }, 2000);
+            }
+            return;
+        }
+        
+        isProcessing = true;
+        
+        // Disable button and show loading state
+        if (placeOrderBtn) {
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.textContent = 'Processing...';
+        }
+
+        try {
+            // Create form data
+            const formData = new URLSearchParams();
+            
+            // Add action
+            formData.append('action', 'place_order');
+            
+            // Add payment method
+            formData.append('payment_method', selectedPaymentMethod);
+            
+            // Send the current address
+            formData.append('shipping_address', currentAddress);
+            
+            // If single product mode, add product details
+            if (singleProductMode && singleProductId && singleQuantity) {
+                formData.append('product_id', singleProductId);
+                formData.append('quantity', singleQuantity);
+            }
+
+            console.log('Placing order with:', {
+                payment_method: selectedPaymentMethod,
+                shipping_address: currentAddress,
+                singleProductMode,
+                product_id: singleProductId,
+                quantity: singleQuantity
+            });
+
+            // Send request
+            const response = await fetch('../database/checkout-handler.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+
+            // Handle response
+            let result;
+            const responseText = await response.text();
+            
+            try {
+                result = JSON.parse(responseText);
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                console.error('Response text:', responseText);
+                throw new Error('Invalid server response');
+            }
+
+            if (result.status === 'success') {
+                showNotifier(result.message, result.redirect || 'orders.php');
+            } else {
+                // Check if this is an error about inactive products
+                if (result.inactive_removed) {
+                    // If inactive products were removed, reload the page to show updated cart
+                    showNotifier(result.message || 'Some items were unavailable. Refreshing cart...');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showNotifier('Error: ' + (result.message || 'Failed to place order'));
+                }
+                
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = 'Place Order';
+                }
+            }
+        } catch (error) {
+            console.error('Checkout error:', error);
+            showNotifier('Network error. Please try again.');
             if (placeOrderBtn) {
                 placeOrderBtn.disabled = false;
                 placeOrderBtn.textContent = 'Place Order';
             }
+        } finally {
+            isProcessing = false;
         }
-    } catch (error) {
-        console.error('Checkout error:', error);
-        showNotifier('Network error. Please try again.');
-        if (placeOrderBtn) {
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = 'Place Order';
-        }
-    } finally {
-        isProcessing = false;
     }
-}
 
     // ============= PLACE ORDER BUTTON CLICK =============
     if (placeOrderBtn) {
@@ -359,7 +365,7 @@ async function placeOrder() {
         }
         
         // Ctrl+Enter in textarea saves if form is open
-        if (e.key === 'Enter' && e.ctrlKey && addressEditForm && addressEditForm.style.display === 'block') {
+        if (e.key === 'Enter' && e.ctrlKieu && addressEditForm && addressEditForm.style.display === 'block') {
             e.preventDefault();
             if (saveAddressBtn) {
                 saveAddressBtn.click();
@@ -367,7 +373,7 @@ async function placeOrder() {
         }
         
         // Enter in textarea without Ctrl does nothing (prevents form submission)
-        if (e.key === 'Enter' && !e.ctrlKey && addressEditForm && addressEditForm.style.display === 'block') {
+        if (e.key === 'Enter' && !e.ctrlKieu && addressEditForm && addressEditForm.style.display === 'block') {
             e.preventDefault();
         }
     });
@@ -375,7 +381,7 @@ async function placeOrder() {
     // Prevent form submission on Enter in textarea
     if (newAddress) {
         newAddress.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.ctrlKey) {
+            if (e.key === 'Enter' && !e.ctrlKieu) {
                 e.preventDefault();
             }
         });
@@ -394,11 +400,6 @@ async function placeOrder() {
                 opt.classList.add('selected');
             }
         });
-        
-        // Show/hide online methods
-        if (onlineMethods) {
-            onlineMethods.style.display = selectedPaymentMethod === 'Online' ? 'block' : 'none';
-        }
     }
 
     console.log('Checkout.js initialized with hidden input:', hiddenAddressInput ? hiddenAddressInput.value : 'none');

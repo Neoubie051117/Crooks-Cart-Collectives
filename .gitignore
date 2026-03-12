@@ -5,3 +5,5 @@ logs/output/*
 tests/build/*
 backup/build/*
 out
+*.env
+private

@@ -1,0 +1,61 @@
+@startuml
+title Crooks Cart Collectives - MVC Architecture
+
+' Simple color definitions
+!define ORANGE #FF8246
+
+' Layers
+package "VIEW" {
+  component "Public Pages" as VIEW1
+  component "User Dashboards" as VIEW2
+  component "Admin Pages" as VIEW3
+}
+
+package "CONTROLLER" {
+  component "AuthController" as CTRL1
+  component "ProductController" as CTRL2
+  component "OrderController" as CTRL3
+  component "ProfileController" as CTRL4
+  component "AdminController" as CTRL5
+}
+
+package "MODEL" {
+  database "MySQL" as DB
+  component "FileHandler" as FILE
+  database "Storage" as STORAGE
+}
+
+' Relationships
+VIEW1 --> CTRL1
+VIEW1 --> CTRL2
+VIEW1 --> CTRL3
+VIEW2 --> CTRL2
+VIEW2 --> CTRL3
+VIEW2 --> CTRL4
+VIEW3 --> CTRL4
+VIEW3 --> CTRL5
+
+CTRL1 --> DB
+CTRL2 --> DB
+CTRL3 --> DB
+CTRL4 --> DB
+CTRL5 --> DB
+
+CTRL2 --> FILE
+CTRL4 --> FILE
+CTRL5 --> FILE
+FILE --> STORAGE
+
+' Legend
+legend right
+  View = Interface
+  Controller = Logic
+  Model = Data
+end legend
+
+note bottom of CONTROLLER
+  Simple MVC Flow:
+  View -> Controller -> Model
+end note
+
+@enduml

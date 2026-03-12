@@ -35,22 +35,26 @@ session_start();
                 <div class="form-group">
                     <label for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name"
-                        autocomplete="given-name">
+                        autocomplete="given-name" pattern="[A-Za-z\s\-']+"
+                        title="First name can only contain letters, spaces, hyphens, and apostrophes"
+                        oninput="this.value = this.value.replace(/[^A-Za-z\s\-']/g, '')">
                     <div class="error-message" id="firstNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="last_name">Last Name</label>
                     <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name"
-                        autocomplete="family-name">
+                        autocomplete="family-name" pattern="[A-Za-z\s\-']+"
+                        title="Last name can only contain letters, spaces, hyphens, and apostrophes"
+                        oninput="this.value = this.value.replace(/[^A-Za-z\s\-']/g, '')">
                     <div class="error-message" id="lastNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="contact_number">Contact Number</label>
                     <input type="tel" id="contact_number" name="contact_number" required placeholder="09XX XXX XXXX"
-                        autocomplete="tel">
-                    <div class="help-text">Philippine mobile number (e.g., 0912 345 6789)</div>
+                        autocomplete="tel" pattern="[0-9\s\+]+" title="Please enter a valid phone number"
+                        oninput="this.value = this.value.replace(/[^0-9\s\+]/g, '')">
                     <div class="error-message" id="contactError"></div>
                 </div>
 
@@ -64,8 +68,9 @@ session_start();
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required placeholder="Choose a username"
-                        autocomplete="username">
-                    <div class="help-text">3-20 characters (letters, numbers, underscore)</div>
+                        autocomplete="username" pattern="[A-Za-z0-9_]{3,20}"
+                        title="Username must be 3-20 characters and can only contain letters, numbers, and underscores"
+                        oninput="this.value = this.value.replace(/[^A-Za-z0-9_]/g, '')">
                     <div class="error-message" id="usernameError"></div>
                 </div>
             </div>
@@ -77,13 +82,14 @@ session_start();
                     <label for="password">Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" name="password" required
-                            placeholder="Create a strong password" autocomplete="new-password">
+                            placeholder="Create a strong password" autocomplete="new-password"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$"
+                            title="Password must be 8-16 characters with at least one uppercase letter, one lowercase letter, and one number">
                         <button type="button" class="password-toggle" id="togglePassword" tabindex="-1"
                             aria-label="Toggle password visibility">
                             <img src="../assets/image/icons/password-hide.svg" alt="Hide password" id="passwordIcon">
                         </button>
                     </div>
-                    <div class="help-text">8-16 characters, with uppercase, lowercase, and number</div>
                     <div class="error-message" id="passwordError"></div>
                 </div>
 
