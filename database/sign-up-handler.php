@@ -36,7 +36,7 @@ $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 $confirm = $_POST['confirm_password'] ?? '';
 
-// Address fields
+// Address fields (for address_list)
 $block = trim($_POST['block'] ?? '');
 $barangay = trim($_POST['barangay'] ?? '');
 $city = trim($_POST['city'] ?? '');
@@ -45,10 +45,10 @@ $region = trim($_POST['region'] ?? '');
 $postal_code = trim($_POST['postal_code'] ?? '');
 $country = trim($_POST['country'] ?? 'Philippines');
 
-// Check required fields (basic ones)
+// Check required fields (basic ones + address fields)
 if (empty($first_name) || empty($last_name) || empty($birthdate) || empty($gender) || 
     empty($contact) || empty($email) || empty($username) || empty($password) ||
-    empty($block) || empty($city) || empty($postal_code)) {
+    empty($block) || empty($city) || empty($postal_code) || empty($country)) {
     echo json_encode(['status' => 'error', 'message' => 'missing-field']);
     exit;
 }
@@ -84,7 +84,7 @@ if (!preg_match('/^[A-Za-z0-9_]+$/', $username)) {
     exit;
 }
 
-// ===== FIXED: Hash the password before storing =====
+// Validate password
 if (strlen($password) < 8) {
     echo json_encode(['status' => 'error', 'message' => 'password-too-short']);
     exit;
@@ -159,39 +159,12 @@ try {
     // Begin transaction
     $connection->beginTransaction();
     
-    // ===== FIXED: Create concatenated address without empty commas =====
-    $addressParts = [];
-    $addressParts[] = $block;
-    
-    // Only add barangay if not empty (for non-Philippines addresses)
-    if (!empty($barangay)) {
-        $addressParts[] = $barangay;
-    }
-    
-    $addressParts[] = $city;
-    
-    // Only add province if not empty (for non-Philippines addresses)
-    if (!empty($province)) {
-        $addressParts[] = $province;
-    }
-    
-    // Only add region if not empty (for non-Philippines addresses)
-    if (!empty($region)) {
-        $addressParts[] = $region;
-    }
-    
-    $addressParts[] = $postal_code;
-    $addressParts[] = $country;
-    
-    $fullAddress = implode(', ', $addressParts);
-    
-    // Insert into users table (keeping address field for backward compatibility)
-    // ===== FIXED: Store hashed password instead of plain text =====
+    // ===== STEP 1: Insert into users table FIRST (with address_id = NULL) =====
     $stmt = $connection->prepare("
         INSERT INTO users (
             first_name, middle_name, last_name, email, username, password, 
-            birthdate, gender, contact_number, address, date_created
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+            birthdate, gender, contact_number, address_id, date_created
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW())
     ");
     $stmt->execute([
         $first_name, 
@@ -199,34 +172,42 @@ try {
         $last_name, 
         $email, 
         $username, 
-        $hashed_password, // Store hashed password
+        $hashed_password, 
         $birthdate, 
         $gender, 
-        $phone, 
-        $fullAddress
+        $phone
     ]);
     
     // Get the new user ID
     $user_id = $connection->lastInsertId();
     
-    // ===== FIXED: Insert into address_list table with NULL for empty fields =====
+    // ===== STEP 2: Insert into address_list with the user_id =====
     $stmt = $connection->prepare("
         INSERT INTO address_list (
             user_id, block, barangay, city, province, region, postal_code, country, date_added
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, NOW()
+        )
     ");
     $stmt->execute([
         $user_id,
         $block,
-        !empty($barangay) ? $barangay : null, // Store null if empty
+        !empty($barangay) ? $barangay : null,
         $city,
-        !empty($province) ? $province : null, // Store null if empty
-        !empty($region) ? $region : null,   // Store null if empty
+        !empty($province) ? $province : null,
+        !empty($region) ? $region : null,
         $postal_code,
         $country
     ]);
     
-    // Insert into customers table
+    // Get the new address ID
+    $address_id = $connection->lastInsertId();
+    
+    // ===== STEP 3: Update users table with the address_id =====
+    $stmt = $connection->prepare("UPDATE users SET address_id = ? WHERE user_id = ?");
+    $stmt->execute([$address_id, $user_id]);
+    
+    // ===== STEP 4: Insert into customers table =====
     $stmt = $connection->prepare("INSERT INTO customers (user_id, date_joined) VALUES (?, NOW())");
     $stmt->execute([$user_id]);
     

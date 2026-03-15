@@ -118,26 +118,29 @@ if ($isUserLoggedIn && isset($_SESSION['user_id'])) {
                 <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
                 <?php else: ?>
-                <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
+                <!-- LOGGED IN USER (CUSTOMER/SELLER) - WALLET ADDED HERE -->
                 <?php if ($isSeller && $sellerVerified): ?>
-                <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Sell -->
+                <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Wallet, Sell -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
                 <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
                 <?php elseif ($isSeller): ?>
-                <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders (NO SELL LINK) -->
+                <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders, Wallet (NO SELL LINK) -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
                 <?php else: ?>
-                <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
+                <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders, Wallet -->
                 <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
                 <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
                 <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
                 <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+                <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
                 <?php endif; ?>
                 <?php endif; ?>
             </nav>
@@ -158,26 +161,29 @@ if ($isUserLoggedIn && isset($_SESSION['user_id'])) {
         <a href="<?php echo $pathPrefix; ?>pages/about.php" class="nav-link">ABOUT</a>
         <a href="<?php echo $pathPrefix; ?>pages/contact.php" class="nav-link">CONTACT</a>
         <?php else: ?>
-        <!-- LOGGED IN USER (CUSTOMER/SELLER) - NO ADMIN LINKS HERE -->
+        <!-- LOGGED IN USER (CUSTOMER/SELLER) - WALLET ADDED HERE -->
         <?php if ($isSeller && $sellerVerified): ?>
-        <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Sell -->
+        <!-- LOGGED IN & SELLER (VERIFIED): My Account, Shop, Cart, Orders, Wallet, Sell -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
         <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
         <a href="<?php echo $pathPrefix; ?>pages/seller-dashboard.php" class="nav-link sell-link">SELL</a>
         <?php elseif ($isSeller): ?>
-        <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders (NO SELL LINK) -->
+        <!-- LOGGED IN & SELLER (PENDING/REJECTED): My Account, Shop, Cart, Orders, Wallet (NO SELL LINK) -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
         <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
         <?php else: ?>
-        <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders -->
+        <!-- LOGGED IN & CUSTOMER ONLY: My Account, Shop, Cart, Orders, Wallet -->
         <a href="<?php echo $pathPrefix; ?>pages/customer-dashboard.php" class="nav-link">MY ACCOUNT</a>
         <a href="<?php echo $pathPrefix; ?>pages/product.php" class="nav-link">SHOP</a>
         <a href="<?php echo $pathPrefix; ?>pages/cart.php" class="nav-link">CART</a>
         <a href="<?php echo $pathPrefix; ?>pages/orders.php" class="nav-link">ORDERS</a>
+        <a href="<?php echo $pathPrefix; ?>pages/wallet.php" class="nav-link">WALLET</a>
         <?php endif; ?>
         <?php endif; ?>
 

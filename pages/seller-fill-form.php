@@ -167,7 +167,7 @@ if ($isSeller) {
 
                 <!-- Editable seller fields -->
                 <div class="form-group full-width">
-                    <label for="address">Address *</label>
+                    <label for="address">Business Address</label>
                     <textarea id="address" name="address" rows="3"
                         required><?= htmlspecialchars($user['address'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
                     <div class="error-message" id="addressError"></div>

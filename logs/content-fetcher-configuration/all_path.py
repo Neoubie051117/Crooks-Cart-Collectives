@@ -113,6 +113,7 @@ filesToCheck = [
     "/database/data-storage-handler.php",
     "/database/seller-fill-form-handler.php",
     "/database/seller-new-product-handler.php",
+    "//database/wallet-handler.php",
 
     # =========================
     # PAGES
@@ -138,6 +139,7 @@ filesToCheck = [
     "/pages/seller-new-product.php",
     "/pages/seller-manage-product.php",
     "/pages/seller-process-order.php",
+    "/pages/wallet.php",
     
      # =========================
     # SCRIPTS
@@ -161,6 +163,7 @@ filesToCheck = [
     "/scripts/seller-fill-form.js",
     "/scripts/cart.js",
     "/scripts/customer-profile.js",
+    "/scripts/wallet.js",
 
     # =========================
     # STYLES
@@ -172,22 +175,23 @@ filesToCheck = [
     # "/styles/contact.css",
     # "/styles/customer-dashboard.css",
     # "/styles/footer.css",
-    "/styles/header.css",
+    # "/styles/header.css",
     # "/styles/index.css",
     # "/styles/orders.css",
     # "/styles/privacy-policy.css",
     # "/styles/product-detail.css",
-    "/styles/product.css",
+    # "/styles/product.css",
     # "/styles/profile.css",
     # "/styles/seller-process-order.css",
     # "/styles/seller-registration.css",
     # "/styles/seller-dashboard.css",
-    "/styles/seller-manage-product.css",
+    # "/styles/seller-manage-product.css",
     # "/styles/seller-new-product.css",
     # "/styles/sign-in.css",
     # "/styles/sign-out.css",
     # "/styles/sign-up.css",
     # "/styles/terms-and-conditions.css",
+    # "/styles/wallet.css",
     
     # =========================
     # STYLES

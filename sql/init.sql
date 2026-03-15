@@ -1,13 +1,15 @@
 -- =====================================================
 -- DATABASE: crooks_cart_collectives
 -- STRICTLY FOLLOWING DATA DICTIONARY SPECIFICATIONS
+-- REVISED: Added wallets and refunds tables
+-- FIXED: All primary keys use your correct syntax (AUTO_INCREMENT PRIMARY KEY)
 -- =====================================================
 CREATE DATABASE IF NOT EXISTS crooks_cart_collectives;
 
 USE crooks_cart_collectives;
 
 -- =====================================================
--- ADMINISTRATORS TABLE
+-- ADMINISTRATORS TABLE (no dependencies)
 -- =====================================================
 CREATE TABLE
     IF NOT EXISTS administrators (
@@ -26,7 +28,29 @@ CREATE TABLE
     ) COMMENT = 'Admin accounts for system management';
 
 -- =====================================================
--- USERS TABLE
+-- ADDRESS_LIST TABLE (created BEFORE users)
+-- =====================================================
+CREATE TABLE
+    IF NOT EXISTS address_list (
+        address_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        block VARCHAR(120) NOT NULL,
+        barangay VARCHAR(100),
+        city VARCHAR(100) NOT NULL,
+        province VARCHAR(100),
+        region VARCHAR(100),
+        postal_code VARCHAR(10) NOT NULL,
+        country VARCHAR(100) DEFAULT 'Philippines',
+        is_default BOOLEAN DEFAULT FALSE,
+        date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_user_addresses (user_id),
+        INDEX idx_address_city (city),
+        INDEX idx_address_province (province),
+        INDEX idx_default (is_default)
+    ) COMMENT = 'Structured addresses for users, allows multiple addresses per user';
+
+-- =====================================================
+-- USERS TABLE (now can reference address_list)
 -- =====================================================
 CREATE TABLE
     IF NOT EXISTS users (
@@ -40,35 +64,21 @@ CREATE TABLE
         birthdate DATE,
         gender ENUM ('Male', 'Female', 'Other'),
         contact_number VARCHAR(13),
-        address VARCHAR(150),
+        address_id INT,
         profile_picture VARCHAR(120),
         date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (address_id) REFERENCES address_list (address_id) ON DELETE SET NULL,
         INDEX idx_email (email),
         INDEX idx_username (username),
-        INDEX idx_contact (contact_number)
+        INDEX idx_contact (contact_number),
+        INDEX idx_address (address_id)
     ) COMMENT = 'Stores all user account information';
 
 -- =====================================================
--- ADDRESS_LIST TABLE
+-- Now add the foreign key to address_list that references users
+-- This creates the bidirectional relationship
 -- =====================================================
--- FIXED: Changed barangay and province from NOT NULL to allow NULL for non-Philippines addresses
-CREATE TABLE
-    IF NOT EXISTS address_list (
-        address_id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        block VARCHAR(120) NOT NULL,
-        barangay VARCHAR(100), -- Changed from NOT NULL to NULL allowed
-        city VARCHAR(100) NOT NULL,
-        province VARCHAR(100), -- Changed from NOT NULL to NULL allowed
-        region VARCHAR(100),
-        postal_code VARCHAR(10) NOT NULL,
-        country VARCHAR(100) DEFAULT 'Philippines',
-        date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-        INDEX idx_user_addresses (user_id),
-        INDEX idx_address_city (city),
-        INDEX idx_address_province (province)
-    ) COMMENT = 'Structured addresses for users, allows multiple addresses per user';
+ALTER TABLE address_list ADD FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE;
 
 -- =====================================================
 -- CUSTOMERS TABLE
@@ -90,14 +100,17 @@ CREATE TABLE
         seller_id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL UNIQUE,
         business_name VARCHAR(50),
+        address_id INT,
         identity_path VARCHAR(120),
         id_document_path VARCHAR(120),
         is_verified ENUM ('pending', 'verified', 'rejected') DEFAULT 'pending',
         date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         verification_date TIMESTAMP NULL DEFAULT NULL,
         FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+        FOREIGN KEY (address_id) REFERENCES address_list (address_id) ON DELETE SET NULL,
         INDEX idx_seller_user (user_id),
-        INDEX idx_verification_status (is_verified)
+        INDEX idx_verification_status (is_verified),
+        INDEX idx_seller_address (address_id)
     ) COMMENT = 'Seller accounts with verification status';
 
 -- =====================================================
@@ -143,7 +156,7 @@ CREATE TABLE
     ) COMMENT = 'Shopping cart items';
 
 -- =====================================================
--- ORDERS TABLE
+-- ORDERS TABLE (modified to add address_id and address_snapshot, update status ENUM)
 -- =====================================================
 CREATE TABLE
     IF NOT EXISTS orders (
@@ -154,20 +167,29 @@ CREATE TABLE
         quantity INT NOT NULL CHECK (quantity > 0),
         price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
         subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
-        shipping_address VARCHAR(150) NOT NULL,
+        address_id INT NOT NULL,
+        address_snapshot VARCHAR(250) NOT NULL,
         payment_method ENUM ('COD', 'Online') NOT NULL DEFAULT 'COD',
         order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        status ENUM ('pending', 'delivered', 'cancelled') DEFAULT 'pending',
+        status ENUM (
+            'pending',
+            'for delivery',
+            'delivered',
+            'cancelled',
+            'refunded'
+        ) DEFAULT 'pending',
         cancelled_by ENUM ('customer', 'seller') NULL,
         delivered_at TIMESTAMP NULL DEFAULT NULL,
         cancelled_at TIMESTAMP NULL DEFAULT NULL,
         FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE,
         FOREIGN KEY (seller_id) REFERENCES sellers (seller_id) ON DELETE CASCADE,
         FOREIGN KEY (product_id) REFERENCES products (product_id),
+        FOREIGN KEY (address_id) REFERENCES address_list (address_id),
         INDEX idx_customer_orders (customer_id, status, order_date),
         INDEX idx_seller_orders (seller_id, status, order_date),
         INDEX idx_order_status (status, order_date),
-        INDEX idx_order_date (order_date)
+        INDEX idx_order_date (order_date),
+        INDEX idx_order_address (address_id)
     ) COMMENT = 'Order transactions between customers and sellers';
 
 -- =====================================================
@@ -194,6 +216,63 @@ CREATE TABLE
     ) COMMENT = 'Product ratings and reviews from customers';
 
 -- =====================================================
+-- REFUNDS TABLE
+-- =====================================================
+CREATE TABLE
+    IF NOT EXISTS refunds (
+        refund_id INT AUTO_INCREMENT PRIMARY KEY,
+        order_id INT NOT NULL UNIQUE,
+        wallet_id INT NULL,
+        refund_amount DECIMAL(10, 2) NOT NULL,
+        refund_type ENUM ('cancellation', 'return') NOT NULL,
+        refund_status ENUM (
+            'pending',
+            'approved',
+            'rejected',
+            'processed',
+            'failed'
+        ) DEFAULT 'pending',
+        requested_by ENUM ('customer', 'seller', 'system') NOT NULL,
+        requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        request_reason VARCHAR(120) NULL,
+        reviewed_by ENUM ('seller') NULL,
+        reviewed_at TIMESTAMP NULL,
+        review_notes VARCHAR(120) NULL,
+        refunded_by ENUM ('system', 'seller') NULL,
+        refunded_at TIMESTAMP NULL,
+        refund_notes VARCHAR(120) NULL,
+        original_payment_method ENUM ('COD', 'Online') NOT NULL,
+        original_order_total DECIMAL(10, 2) NOT NULL,
+        original_order_status VARCHAR(20) NOT NULL,
+        FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,
+        INDEX idx_refund_status (refund_status, requested_at),
+        INDEX idx_requested_by (requested_by)
+    ) COMMENT = 'Tracks refund requests and their lifecycle';
+
+-- =====================================================
+-- WALLETS TABLE (single-table design with transaction history)
+-- =====================================================
+CREATE TABLE
+    IF NOT EXISTS wallets (
+        wallet_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00 CHECK (balance >= 0),
+        previous_balance DECIMAL(10, 2) NOT NULL,
+        transaction_amount DECIMAL(10, 2) NOT NULL,
+        transaction_type ENUM ('refund', 'payment', 'deposit', 'initial') NOT NULL,
+        refund_id INT NULL,
+        order_id INT NULL,
+        description VARCHAR(120) NOT NULL,
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+        FOREIGN KEY (refund_id) REFERENCES refunds (refund_id) ON DELETE SET NULL,
+        FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE SET NULL,
+        INDEX idx_user_wallet (user_id, transaction_date DESC),
+        UNIQUE INDEX idx_refund_link (refund_id),
+        UNIQUE INDEX idx_order_payment (order_id)
+    ) COMMENT = 'Single-table wallet with transaction history';
+
+-- =====================================================
 -- ADDITIONAL INDEXES for Performance
 -- =====================================================
 CREATE INDEX idx_carts_customer ON carts (customer_id);
@@ -201,94 +280,3 @@ CREATE INDEX idx_carts_customer ON carts (customer_id);
 CREATE INDEX idx_orders_customer_status ON orders (customer_id, status, order_date);
 
 CREATE INDEX idx_orders_seller_status ON orders (seller_id, status, order_date);
-
--- =====================================================
--- VIEWS for Easy Data Access
--- =====================================================
--- Customer cart view
-CREATE
-OR REPLACE VIEW customer_cart AS
-SELECT
-    c.*,
-    p.name AS product_name,
-    p.media_path AS product_media,
-    p.stock_quantity AS available_stock,
-    s.business_name AS seller_name
-FROM
-    carts c
-    JOIN products p ON c.product_id = p.product_id
-    JOIN sellers s ON c.seller_id = s.seller_id
-ORDER BY
-    c.added_at DESC;
-
--- Customer orders view
-CREATE
-OR REPLACE VIEW customer_orders AS
-SELECT
-    o.*,
-    p.name AS product_name,
-    p.media_path AS product_media,
-    s.business_name AS seller_name,
-    u.first_name,
-    u.last_name,
-    u.email,
-    u.contact_number,
-    (
-        SELECT
-            COUNT(*)
-        FROM
-            product_reviews pr
-        WHERE
-            pr.order_id = o.order_id
-    ) AS has_review
-FROM
-    orders o
-    JOIN products p ON o.product_id = p.product_id
-    JOIN sellers s ON o.seller_id = s.seller_id
-    JOIN customers cu ON o.customer_id = cu.customer_id
-    JOIN users u ON cu.user_id = u.user_id
-ORDER BY
-    o.order_date DESC;
-
--- Seller orders view
-CREATE
-OR REPLACE VIEW seller_orders AS
-SELECT
-    o.*,
-    p.name AS product_name,
-    p.media_path AS product_media,
-    u.first_name,
-    u.last_name,
-    u.email,
-    u.contact_number
-FROM
-    orders o
-    JOIN products p ON o.product_id = p.product_id
-    JOIN customers cu ON o.customer_id = cu.customer_id
-    JOIN users u ON cu.user_id = u.user_id
-ORDER BY
-    o.order_date DESC;
-
--- User addresses view
-CREATE
-OR REPLACE VIEW user_addresses AS
-SELECT
-    u.user_id,
-    u.first_name,
-    u.last_name,
-    u.email,
-    a.address_id,
-    a.block,
-    a.barangay,
-    a.city,
-    a.province,
-    a.region,
-    a.postal_code,
-    a.country,
-    a.date_added
-FROM
-    users u
-    LEFT JOIN address_list a ON u.user_id = a.user_id
-ORDER BY
-    u.user_id,
-    a.date_added DESC;

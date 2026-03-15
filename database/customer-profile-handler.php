@@ -35,26 +35,20 @@ function handleProfileUpdate($userId) {
     $connection->beginTransaction();
     
     try {
-        // Build update list – include empty values for nullable fields (set to NULL)
+        // ===== STEP 1: Update user basic info =====
         $updates = [];
         $params = [];
         
-        // Fields that can be updated (all are nullable except first/last/address, but we treat them separately)
-        $allowedFields = ['first_name', 'middle_name', 'last_name', 'birthdate', 'gender', 'address'];
-        // Fields that should be set to NULL when empty (others will keep old value if empty)
+        $allowedFields = ['first_name', 'middle_name', 'last_name', 'birthdate', 'gender'];
         $nullableFields = ['middle_name', 'birthdate', 'gender'];
         
         foreach ($allowedFields as $field) {
             if (isset($_POST[$field])) {
                 $value = trim($_POST[$field]);
-                if ($value === '') {
-                    // If field is nullable, set to NULL; otherwise skip update (keep old value)
-                    if (in_array($field, $nullableFields)) {
-                        $updates[] = "$field = ?";
-                        $params[] = null;
-                    }
-                    // else: required field empty – skip update, keep existing value
-                } else {
+                if ($value === '' && in_array($field, $nullableFields)) {
+                    $updates[] = "$field = ?";
+                    $params[] = null;
+                } elseif ($value !== '') {
                     $updates[] = "$field = ?";
                     $params[] = $value;
                 }
@@ -69,33 +63,67 @@ function handleProfileUpdate($userId) {
             $stmt->execute($params);
         }
         
-        // Handle profile picture upload
-        $profilePicturePath = null;
-        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $uploadResult = processFileUpload('profile', $userId, $_FILES['profile_picture']);
+        // ===== STEP 2: Handle address update =====
+        $addressId = $_POST['address_id'] ?? null;
+        
+        if ($addressId) {
+            // Verify this address belongs to the user
+            $stmt = $connection->prepare("SELECT address_id FROM address_list WHERE address_id = ? AND user_id = ?");
+            $stmt->execute([$addressId, $userId]);
             
-            if ($uploadResult['status'] === 'success') {
-                $profilePicturePath = $uploadResult['path'];
+            if ($stmt->fetch()) {
+                // Update the address
+                $addressUpdates = [];
+                $addressParams = [];
                 
-                $stmt = $connection->prepare("UPDATE users SET profile_picture = ? WHERE user_id = ?");
-                $stmt->execute([$profilePicturePath, $userId]);
+                $addressFields = ['block', 'barangay', 'city', 'province', 'region', 'postal_code', 'country'];
+                $nullableAddressFields = ['barangay', 'province', 'region'];
+                
+                foreach ($addressFields as $field) {
+                    if (isset($_POST[$field])) {
+                        $value = trim($_POST[$field]);
+                        if ($value === '' && in_array($field, $nullableAddressFields)) {
+                            $addressUpdates[] = "$field = ?";
+                            $addressParams[] = null;
+                        } elseif ($value !== '') {
+                            $addressUpdates[] = "$field = ?";
+                            $addressParams[] = $value;
+                        }
+                    }
+                }
+                
+                if (!empty($addressUpdates)) {
+                    $sql = "UPDATE address_list SET " . implode(', ', $addressUpdates) . " WHERE address_id = ?";
+                    $addressParams[] = $addressId;
+                    
+                    $stmt = $connection->prepare($sql);
+                    $stmt->execute($addressParams);
+                }
             }
         }
         
         $connection->commit();
         
-        // Fetch updated user data
-        $stmt = $connection->prepare("SELECT first_name, middle_name, last_name, email, username, contact_number, birthdate, gender, address, profile_picture FROM users WHERE user_id = ?");
+        // ===== STEP 3: Fetch updated user data with address =====
+        $stmt = $connection->prepare("
+            SELECT 
+                u.first_name, u.middle_name, u.last_name, u.email, u.username, 
+                u.contact_number, u.birthdate, u.gender, u.profile_picture,
+                a.address_id, a.block, a.barangay, a.city, a.province, a.region, 
+                a.postal_code, a.country
+            FROM users u
+            LEFT JOIN address_list a ON u.address_id = a.address_id
+            WHERE u.user_id = ?
+        ");
         $stmt->execute([$userId]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Generate URL for profile picture using data-storage-handler
+        // Generate URL for profile picture
         $profilePictureUrl = null;
         if (!empty($userData['profile_picture'])) {
             $profilePictureUrl = getFileUrl($userData['profile_picture']);
         }
         
-        // Return success with data
         echo json_encode([
             'status' => 'success',
             'message' => 'Profile updated successfully',
@@ -107,7 +135,7 @@ function handleProfileUpdate($userId) {
     } catch (Exception $e) {
         $connection->rollBack();
         error_log("Profile update error: " . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update profile']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update profile: ' . $e->getMessage()]);
     }
 }
 ?>
