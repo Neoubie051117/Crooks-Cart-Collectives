@@ -7,6 +7,7 @@
 ---
 
 ### RULE 001: REVIEW BEFORE CHANGING
+
 - You MUST review ALL provided files completely before making ANY changes
 - Read through the entire context first
 - Understand the full project structure before modifying anything
@@ -15,15 +16,17 @@
 ---
 
 ### RULE 002: NO EMOJIS - STRICTLY FORBIDDEN
+
 - **YOU ARE ABSOLUTELY FORBIDDEN FROM USING ANY EMOJIS IN CODE, COMMENTS, OR OUTPUT**
 - This includes: 😊 🎉 ✅ ❌ ⚠️ 🔴 🟢 🔵 💰 📦 👤 📅 📋 ✗ ✓ • or ANY other emoji
 - Use only plain text characters: letters, numbers, and standard punctuation
-- Use simple bullet points like "-" or "*" if needed
+- Use simple bullet points like "-" or "\*" if needed
 - **VIOLATION: Adding ANY emoji = FAILURE TO FOLLOW INSTRUCTIONS**
 
 ---
 
 ### RULE 003: STRICT COLOR PALETTE - ONLY THREE COLORS ALLOWED
+
 - **COLORS PERMITTED:** White (#FFFFFF), Orange (#FF8246), and Black (#000000)
 - **NO OTHER COLORS WHATSOEVER** - This means:
   - NO blues, greens, reds, yellows, purples, grays (except black/white)
@@ -38,6 +41,7 @@
 ---
 
 ### RULE 004: MODIFY ONLY REQUESTED FILES
+
 - Change ONLY the files explicitly mentioned in the request
 - If told "revise seller orders js and css" - ONLY change those two files
 - Do NOT touch other JavaScript files, CSS files, PHP files, or HTML
@@ -48,6 +52,7 @@
 ---
 
 ### RULE 005: REWRITE ENTIRE FILES - NO SNIPPETS
+
 - When modifying a file, you MUST output the COMPLETE file content
 - Do NOT send partial code snippets or diffs
 - The entire file must be shown from start to end
@@ -57,6 +62,7 @@
 ---
 
 ### RULE 006: FILE PATH FORMAT - STRICT REQUIREMENT
+
 - When outputting any file, you MUST start with:
 
 - Example: /Crooks-Cart-Collectives/scripts/seller-orders.js
@@ -66,6 +72,7 @@
 ---
 
 ### RULE 007: USE EXISTING SVG ICONS ONLY
+
 - NEVER create or hardcode vector icons
 - ONLY use SVG files from `/assets/image/icons/`
 - Do NOT edit SVG files directly
@@ -74,18 +81,8 @@
 - NO animations that move cards up/down
 - **VIOLATION: Creating new icons or using non-existent icons = FAILURE**
 
----
-
-### RULE 008: PLAIN TEXT PASSWORDS FOR DEMO
-- Passwords MUST be stored as plain text
-- NO password hashing implementation
-- NO suggesting hashing in comments
-- This is intentional for demo purposes
-- **VIOLATION: Implementing or suggesting hashing = FAILURE**
-
----
-
 ### RULE 009: ORDER STATUSES - EXACTLY THREE
+
 - Only three statuses allowed: `pending`, `cancelled`, `delivered`
 - NO additional statuses like "processing", "shipped", "completed"
 - NO tracking simulation
@@ -94,6 +91,7 @@
 ---
 
 ### RULE 010: SIMPLE ERROR MESSAGES ONLY
+
 - User interface errors: ONLY simple messages like "Invalid credentials. Please try again."
 - Detailed errors go ONLY to `/database/error_log.txt`
 - NO exposing system details to users
@@ -102,6 +100,7 @@
 ---
 
 ### RULE 011: DO NOT ADD EXTRA FEATURES
+
 - Implement ONLY what is explicitly requested
 - If you notice something that needs improvement but wasn't requested:
 - Mention it as a suggestion in a comment
@@ -111,7 +110,6 @@
 ---
 
 ## 📋 CURRENT REQUEST (COPY THIS TO YOUR CONTEXT)
-
 
 ---
 
@@ -134,19 +132,18 @@ Before you output your response, verify ALL of these:
 
 ## ⚡ AI REMINDER - READ THIS EVERY TIME ⚡
 
-
 ---
 
 ## 📌 SUMMARY OF THIS REQUEST
 
-| Aspect | Requirement |
-|--------|-------------|
-| Files to modify | `/scripts/seller-orders.js` and `/styles/seller-orders.css` ONLY |
-| Colors allowed | White (#FFFFFF), Orange (#FF8246), Black (#000000) ONLY |
-| Emojis | ABSOLUTELY FORBIDDEN |
-| Event text | Fix inconsistent sizing, prevent incomplete sentences |
+| Aspect           | Requirement                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| Files to modify  | `/scripts/seller-orders.js` and `/styles/seller-orders.css` ONLY   |
+| Colors allowed   | White (#FFFFFF), Orange (#FF8246), Black (#000000) ONLY            |
+| Emojis           | ABSOLUTELY FORBIDDEN                                               |
+| Event text       | Fix inconsistent sizing, prevent incomplete sentences              |
 | Event separation | Make each event a separate statement (customer order, seller sold) |
-| Column depth | Balance colors for more visual depth |
+| Column depth     | Balance colors for more visual depth                               |
 
 ---
 

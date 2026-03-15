@@ -1,29 +1,44 @@
-/* Crooks-Cart-Collectives/styles/sign-up.css */
+/*-------------------------------------------*\
+  #VARIABLES
+\*-------------------------------------------*/
 
 :root {
-    /* Form Layout */
-    --form-section-gap: 30px;
-    --form-group-gap: 20px;
-    --input-height: 50px;
-    --border-radius: 12px;
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 15px;
+    --spacing-xl: 20px;
+    --spacing-2xl: 25px;
+    --spacing-3xl: 30px;
+
+    /* Form Elements */
+    --input-height: 45px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 12px;
+
+    /* Colors - Using your existing variables */
+    --error-color: #e74c3c;
+    --optional-color: #888;
+    --checkbox-accent: #FF8246;
     
     /* Effects */
-    --effect-box-shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --effect-box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --effect-transition-default: all 0.3s ease;
-    --effect-glow-B: 0 0 10px rgba(255, 130, 70, 0.4);
-    --effect-glow-A: 0 0 8px rgba(255, 130, 70, 0.3);
-    --effect-glow-error: 0 0 10px rgba(231, 76, 60, 0.4);
+    --shadow-default: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --transition-default: all 0.3s ease;
+    --transition-modal: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-content: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/*-------------------------------------------*\
+  #RESET & BASE
+\*-------------------------------------------*/
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow-x: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    outline: none;
 }
 
 body {
@@ -35,9 +50,19 @@ body {
     flex-direction: column;
 }
 
-::-webkit-scrollbar {
+/* Hide scrollbars but maintain functionality */
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
     display: none;
 }
+
+/*-------------------------------------------*\
+  #LAYOUT
+\*-------------------------------------------*/
 
 .content {
     flex: 1;
@@ -60,389 +85,127 @@ body {
     font-weight: var(--font-weight-bold);
 }
 
-/* Form Container */
+/*-------------------------------------------*\
+  #FORM CONTAINER
+\*-------------------------------------------*/
+
 .signup-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--form-section-gap);
-    padding: 0 20px;
+    gap: var(--spacing-3xl);
+    padding: 0 var(--spacing-xl);
     width: 100%;
-    max-width: 100%;
 }
 
-/* Form Sections - Barangay Style */
+/* Form Sections */
 .form-section {
     flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    padding: 25px 30px;
-    border-radius: var(--border-radius);
-    border: 1px solid;
-    margin-bottom: var(--form-section-gap);
-    transition: var(--effect-transition-default);
-    display: flex;
-    flex-direction: column;
+    min-width: 280px;
+    max-width: 380px;
+    padding: var(--spacing-2xl);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-border-A);
+    background-color: var(--color-background-B);
+    transition: var(--transition-default);
 }
 
 .form-section:hover {
-    box-shadow: var(--effect-box-shadow-default);
+    box-shadow: var(--shadow-default);
 }
 
 .form-section h3 {
     font-size: 1.5rem;
     color: var(--color-text-C);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--color-accent-A);
 }
 
-/* Form Groups - Barangay Style */
+/*-------------------------------------------*\
+  #FORM GROUPS
+\*-------------------------------------------*/
+
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px; /* Reduced from 20px */
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
     width: 100%;
 }
 
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+}
+
+.half-width {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-group.half-width {
+    margin-bottom: 0;
+}
+
+/* Labels */
 .form-group label {
-    font-size: var(--font-size-base);
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--color-text-C);
-    margin-bottom: 5px;
 }
 
+.optional {
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: var(--optional-color);
+    margin-left: var(--spacing-xs);
+}
+
+/* Inputs & Selects */
 .form-group input,
-.form-group select,
-.form-group textarea {
+.form-group select {
     width: 100%;
     height: var(--input-height);
-    font-size: var(--font-size-base);
-    padding: 0 15px;
-    border: 1px solid;
-    border-radius: 8px;
+    font-size: 0.95rem;
+    padding: 0 var(--spacing-md);
+    border: 1px solid var(--color-border-A);
+    border-radius: var(--border-radius-sm);
     background-color: #ffffff;
     color: var(--color-text-A);
-    transition: var(--effect-transition-default);
-}
-
-/* Address textarea - fixed initial size, auto-expands */
-.form-group textarea#address {
-    height: 100px;
-    min-height: 100px;
-    max-height: 300px;
-    padding: 15px;
-    resize: none;
-    overflow-y: hidden;
-    line-height: 1.5;
-    transition: height 0.2s ease;
-}
-
-.form-group textarea#address.expanding {
-    height: auto;
-    min-height: 100px;
-    overflow-y: auto;
+    transition: var(--transition-default);
 }
 
 .form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group select:focus {
     border-color: var(--color-accent-A);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
 }
 
+/* Error States */
 .form-group.error input,
-.form-group.error select,
-.form-group.error textarea {
-    border-color: #e74c3c;
+.form-group.error select {
+    border-color: var(--error-color);
 }
 
 .form-group.error label {
-    color: #e74c3c;
+    color: var(--error-color);
 }
 
-/* Error Messages */
 .error-message {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 5px;
-    min-height: 20px;
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: var(--spacing-xs);
+    min-height: 18px;
 }
 
-/* Button Container - Always Stacked */
-.btn-container {
-    display: flex;
-    flex-direction: column; /* always vertical */
-    justify-content: center;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    width: 100%;
-}
+/*-------------------------------------------*\
+  #PASSWORD TOGGLE
+\*-------------------------------------------*/
 
-.btn {
-    padding: var(--size-button-padding);
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    border-radius: var(--size-button-radius);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    width: 100%; /* Full width when stacked */
-    min-width: unset; /* Remove min-width constraint */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--color-accent-A);
-    color: var(--color-text-B);
-}
-
-
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-secondary {
-    background-color: var(--color-background-C);
-    border: 1px solid;
-    border-color: var(--color-border-A);
-    color: var(--color-text-B);
-}
-
-/* Remove extra spacing from button wrapper */
-.form-section .form-group:last-of-type {
-    margin-bottom: 10px;
-}
-
-/* Links Group - Better Spacing */
-.links-group {
-    text-align: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--color-border-A);
-    width: 100%;
-}
-
-.login-link,
-.seller-link {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--color-text-C);
-}
-
-.login-link a,
-.seller-link a {
-    text-decoration: none;
-    color: var(--color-accent-A);
-    font-weight: var(--font-weight-bold);
-    transition: var(--effect-transition-default);
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.login-link a:hover,
-.seller-link a:hover {
-    color: var(--color-hover-A);
-    background-color: rgba(255, 130, 70, 0.1);
-}
-
-/* Notifier Modal - Barangay Style */
-.notifier {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.notifier.hidden {
-    display: none;
-}
-
-.notifier-content {
-    background-color: var(--color-background-B);
-    color: var(--color-text-A);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: var(--effect-box-shadow-default);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    animation: fadeScale 0.3s ease-in-out;
-}
-
-.notifier-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-}
-
-@keyframes fadeScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Last Form Section (Contact & Registration) Layout Fix */
-.form-section:last-child {
-    padding-bottom: 25px;
-}
-
-/* Form submitted state - Barangay Style */
-.signup-container.submitted .form-group:has(input:invalid),
-.signup-container.submitted .form-group:has(select:invalid),
-.signup-container.submitted .form-group:has(textarea:invalid) {
-    animation: pulseWarning 0.5s ease-in-out;
-}
-
-@keyframes pulseWarning {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-/* Barangay-style color themes for form sections */
-.form-section {
-    background-color: var(--color-background-B);
-    border-color: var(--color-border-A);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    border-color: var(--color-border-A);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-accent-A);
-}
-
-/* Responsive Design - Barangay Style Adjustments */
-@media (max-width: 1024px) {
-    .signup-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .form-section {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 768px) {
-    .content {
-        padding: 20px 15px;
-    }
-    
-    .pageTitleHeader {
-        font-size: 1.5rem;
-        padding: 15px 10px;
-        margin: 10px auto 30px;
-    }
-    
-    .form-section {
-        padding: 20px;
-        min-width: 100%;
-        margin: 0 0 10px;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 20px;
-    }
-    
-    .form-section h3 {
-        font-size: 1.3rem;
-    }
-    
-    .btn-container {
-        margin-top: 15px;
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 14px;
-        font-size: 1rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-        height: 45px;
-        font-size: 0.95rem;
-    }
-    
-    .form-group textarea#address {
-        height: 90px;
-        min-height: 90px;
-    }
-    
-    .links-group {
-        margin-top: 12px;
-        padding-top: 12px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.9rem;
-        margin: 5px 0;
-    }
-    
-    .signup-container {
-        padding: 0 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-section {
-        padding: 18px 15px;
-    }
-    
-    .form-section:last-child {
-        padding-bottom: 18px;
-    }
-    
-    .btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
-    
-    .btn-container {
-        gap: 8px;
-        margin-top: 12px;
-    }
-    
-    .links-group {
-        margin-top: 10px;
-        padding-top: 10px;
-    }
-    
-    .login-link,
-    .seller-link {
-        font-size: 0.85rem;
-        margin: 4px 0;
-    }
-}
-
-/* Password toggle styles */
 .password-wrapper {
     position: relative;
     width: 100%;
@@ -455,18 +218,17 @@ body {
 
 .password-toggle {
     position: absolute;
-    right: 12px;
+    right: var(--spacing-md);
     top: 50%;
     transform: translateY(-50%);
+    background: none;
+    border: none;
     cursor: pointer;
     width: 24px;
     height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: none;
-    border: none;
-    padding: 0;
     z-index: 2;
 }
 
@@ -481,7 +243,417 @@ body {
     opacity: 1;
 }
 
-/* Ensure password fields have proper padding */
-.form-group input[type="password"] {
-    padding-right: 45px;
+/*-------------------------------------------*\
+  #CHECKBOX - SIMPLIFIED, NO ANIMATION
+\*-------------------------------------------*/
+
+.terms-group {
+    margin: var(--spacing-lg) 0 var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: rgba(255, 130, 70, 0.05);
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    position: relative;
+}
+
+/* Hide default checkbox but keep accessible */
+.checkbox-wrapper input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Custom checkbox - no transitions/animations */
+.checkbox-wrapper .custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background: white;
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* Checked state */
+.checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox {
+    background: var(--checkbox-accent);
+    border-color: var(--checkbox-accent);
+}
+
+/* Checkmark */
+.checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox::after {
+    content: '✔';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Focus state for accessibility - no animation */
+.checkbox-wrapper input[type="checkbox"]:focus + .custom-checkbox {
+    outline: 2px solid var(--checkbox-accent);
+    outline-offset: 2px;
+}
+
+.terms-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333333;
+    line-height: 1.5;
+    cursor: pointer;
+    flex: 1;
+}
+
+.terms-label a {
+    color: var(--checkbox-accent);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.terms-label a:hover {
+    color: #e65c2e;
+}
+
+/* Error state for terms */
+.terms-group.error {
+    background: rgba(231, 76, 60, 0.05);
+    border-color: var(--error-color);
+}
+
+.terms-group.error .terms-label {
+    color: var(--error-color);
+}
+
+.terms-group.error .custom-checkbox {
+    border-color: var(--error-color);
+}
+
+/*-------------------------------------------*\
+  #BUTTONS
+\*-------------------------------------------*/
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xl);
+    width: 100%;
+}
+
+.btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition-default);
+    width: 100%;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-A);
+    color: var(--color-text-B);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-hover-A);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: var(--color-background-C);
+    border: 1px solid var(--color-border-A);
+    color: var(--color-text-B);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/*-------------------------------------------*\
+  #LINKS
+\*-------------------------------------------*/
+
+.links-group {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border-A);
+    width: 100%;
+}
+
+.login-link,
+.seller-link {
+    margin: var(--spacing-xs) 0;
+    font-size: 0.9rem;
+    color: var(--color-text-C);
+}
+
+.login-link a,
+.seller-link a {
+    color: var(--color-accent-A);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.login-link a:hover,
+.seller-link a:hover {
+    color: var(--color-hover-A);
+}
+
+/*-------------------------------------------*\
+  #UTILITY CLASSES
+\*-------------------------------------------*/
+
+.error-field {
+    border-color: var(--checkbox-accent) !important;
+    box-shadow: 0 0 0 3px rgba(255, 130, 70, 0.1);
+}
+
+input:required:invalid:not(:placeholder-shown) {
+    border-color: var(--checkbox-accent);
+}
+
+/*-------------------------------------------*\
+  #RESPONSIVE DESIGN
+\*-------------------------------------------*/
+
+@media (max-width: 1100px) {
+    .form-section {
+        min-width: 300px;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .signup-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-section {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+    
+    .pageTitleHeader {
+        font-size: 1.5rem;
+        padding: var(--spacing-lg) var(--spacing-sm);
+        margin: 10px auto var(--spacing-3xl);
+    }
+    
+    .form-section {
+        padding: var(--spacing-xl);
+        max-width: 100%;
+    }
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+    
+    .half-width {
+        width: 100%;
+    }
+    
+    .btn-container {
+        margin-top: var(--spacing-xl);
+        gap: var(--spacing-sm);
+    }
+    
+    .btn {
+        padding: 14px;
+    }
+    
+    .terms-group {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .checkbox-wrapper {
+        gap: var(--spacing-sm);
+    }
+    
+    .terms-label {
+        font-size: 0.9rem;
+    }
+    
+    /* Modal responsive adjustments */
+    .notifier-content {
+        padding: var(--spacing-xl) var(--spacing-xl);
+        max-width: 350px;
+    }
+    
+    .notifier-content p {
+        font-size: 16px;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .notifier-content .btn-primary {
+        min-width: 100px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .form-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .btn {
+        padding: var(--spacing-md);
+        font-size: 0.95rem;
+    }
+    
+    .links-group {
+        margin-top: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
+    
+    .login-link,
+    .seller-link {
+        font-size: 0.85rem;
+    }
+    
+    .terms-group {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .terms-label {
+        font-size: 0.85rem;
+    }
+    
+    /* Modal responsive adjustments for small screens */
+    .notifier-content {
+        padding: var(--spacing-lg) var(--spacing-lg);
+        max-width: 300px;
+        width: 95%;
+    }
+    
+    .notifier-content p {
+        font-size: 15px;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .notifier-content .btn-primary {
+        min-width: 80px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Focus state - NO OUTLINE */
+.checkbox-wrapper input[type="checkbox"]:focus + .custom-checkbox,
+.checkbox-wrapper input[type="checkbox"]:focus-visible + .custom-checkbox {
+    outline: none !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+}
+
+/*-------------------------------------------*\
+  #MODAL - OPTIMIZED FOR SMOOTH CLOSE ANIMATION
+\*-------------------------------------------*/
+
+.notifier {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    
+    /* Transition properties - will animate when class changes */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
+}
+
+.notifier.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.notifier-content {
+    background-color: var(--color-background-B);
+    color: var(--color-text-A);
+    padding: var(--spacing-3xl) 40px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-default);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    
+    /* Transform is GPU accelerated and will animate smoothly */
+    transform: scale(1);
+    transition: transform 0.25s ease-out;
+}
+
+/* When modal is hidden, scale down the content */
+.notifier.hidden .notifier-content {
+    transform: scale(0.95);
+}
+
+.notifier-content p {
+    font-size: 18px;
+    margin-bottom: var(--spacing-xl);
+    word-wrap: break-word;
+    color: var(--color-text-A);
+}
+
+/* Button styling within modal */
+.notifier-content .btn-primary {
+    min-width: 120px;
+    transition: all 0.2s ease;
+}
+
+.notifier-content .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 130, 70, 0.3);
+}
+
+/*-------------------------------------------*\
+  #REST OF YOUR CSS (unchanged, keep as is)
+\*-------------------------------------------*/
